@@ -1,0 +1,14 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+
+  // Minimal config: avoid Service Bindings entirely.
+  // For Cloudflare Pages you typically don't need wrangler at all,
+  // but if your CI/CD runs `wrangler deploy`, this prevents OpenNext
+  // from auto-generating bindings like WORKER_SELF_REFERENCE.
+  "name": "webvirtualstudio",
+  "compatibility_date": "2025-09-27",
+  "compatibility_flags": ["nodejs_compat"],
+
+  "observability": { "enabled": true }
+}
+

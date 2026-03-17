@@ -7,6 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "lint": "next lint",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
@@ -23,8 +25,10 @@
     "@types/node": "^24.1.0",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
+    "@opennextjs/cloudflare": "^1.17.1",
     "eslint": "^9.33.0",
     "eslint-config-next": "^15.5.2",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "wrangler": "^4.74.0"
   }
 }

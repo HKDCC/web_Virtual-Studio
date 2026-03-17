@@ -1,0 +1,2121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tech-Linguist Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&family=Noto+Sans+SC:wght@300;400;500&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FDFCF8;
+    --bg-2: #F5F3EE;
+    --bg-3: #EDE9E0;
+    --ink: #1D1D1F;
+    --ink-2: #6E6E73;
+    --ink-3: #AEAEB2;
+    --accent: #8B7355;
+    --accent-soft: #C4A882;
+    --accent-pale: #F0E8DA;
+    --red: #C0392B;
+    --green: #2D6A4F;
+    --blue: #2C5F8A;
+    --mono: 'DM Mono', monospace;
+    --serif: 'Noto Serif SC', serif;
+    --sans: 'Noto Sans SC', sans-serif;
+    --r: 12px;
+    --r-lg: 20px;
+    --shadow: 0 2px 16px rgba(0,0,0,0.06);
+    --shadow-hover: 0 8px 32px rgba(0,0,0,0.12);
+    --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --spring: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    font-synthesis: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ─── PAGE SYSTEM ─── */
+  .page { display: none; min-height: 100vh; animation: fadeIn 0.3s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ─── HEADER ─── */
+  header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(253,252,248,0.88);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    height: 60px;
+    display: flex; align-items: center;
+    padding: 0 48px;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    color: var(--ink);
+    cursor: pointer;
+    position: relative;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: var(--transition);
+    user-select: none;
+  }
+  .logo:hover { background: var(--accent-pale); }
+  .logo .logo-normal { transition: var(--transition); }
+  .logo .logo-easter { 
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: var(--transition); font-size: 18px; letter-spacing: 0;
+  }
+  .logo.awakened .logo-normal { opacity: 0; }
+  .logo.awakened .logo-easter { opacity: 1; }
+
+  nav { display: flex; gap: 4px; }
+  nav a {
+    font-size: 13px; color: var(--ink-2); text-decoration: none;
+    padding: 6px 14px; border-radius: 6px; cursor: pointer;
+    transition: var(--transition); font-weight: 400;
+    position: relative;
+  }
+  nav a:hover { color: var(--ink); background: var(--bg-2); }
+  nav a.active { color: var(--accent); background: var(--accent-pale); font-weight: 500; }
+
+  /* ─── SEARCH BAR ─── */
+  .search-wrap {
+    position: relative;
+    display: flex; align-items: center;
+  }
+  .search-icon {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: transparent; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink-2); transition: var(--transition);
+    font-size: 15px;
+  }
+  .search-icon:hover { background: var(--bg-2); color: var(--ink); }
+  .search-input {
+    position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+    width: 0; overflow: hidden; transition: var(--spring);
+    background: var(--bg-2); border: 1px solid var(--bg-3);
+    border-radius: 8px; padding: 0; font-family: var(--sans);
+    font-size: 13px; color: var(--ink); outline: none;
+    opacity: 0;
+  }
+  .search-input.open {
+    width: 200px; padding: 6px 12px 6px 12px;
+    opacity: 1; right: 36px;
+  }
+
+  /* ─── MAIN WRAPPER ─── */
+  main { padding-top: 60px; }
+
+  /* ─── HOME / LANDING ─── */
+  .home-hero {
+    padding: 80px 48px 60px;
+    max-width: 900px; margin: 0 auto;
+  }
+  .home-eyebrow {
+    font-family: var(--mono); font-size: 11px;
+    color: var(--accent); letter-spacing: 0.15em;
+    text-transform: uppercase; margin-bottom: 24px;
+  }
+  .home-title {
+    font-family: var(--serif); font-size: clamp(36px, 5vw, 56px);
+    font-weight: 300; line-height: 1.2;
+    color: var(--ink); margin-bottom: 24px;
+  }
+  .home-title em { font-style: italic; color: var(--accent); }
+  .home-sub {
+    font-size: 16px; color: var(--ink-2);
+    max-width: 520px; line-height: 1.8;
+    margin-bottom: 60px;
+  }
+
+  /* ─── MODULE CARDS (HOME) ─── */
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 0 48px 80px;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .module-card {
+    background: var(--bg);
+    border: 1px solid var(--bg-3);
+    border-radius: var(--r-lg);
+    padding: 28px;
+    cursor: pointer;
+    transition: var(--spring);
+    position: relative; overflow: hidden;
+  }
+  .module-card::before {
+    content: ''; position: absolute;
+    inset: 0; border-radius: var(--r-lg);
+    background: linear-gradient(135deg, var(--accent-pale) 0%, transparent 60%);
+    opacity: 0; transition: var(--transition);
+  }
+  .module-card:hover { transform: translateY(-4px) scale(1.01); box-shadow: var(--shadow-hover); }
+  .module-card:hover::before { opacity: 1; }
+  .module-card.wide { grid-column: span 2; }
+
+  .mc-tag {
+    font-family: var(--mono); font-size: 10px;
+    color: var(--accent); letter-spacing: 0.12em;
+    text-transform: uppercase; margin-bottom: 16px;
+    display: block;
+  }
+  .mc-title {
+    font-family: var(--serif); font-size: 22px;
+    font-weight: 400; margin-bottom: 10px; color: var(--ink);
+  }
+  .mc-desc { font-size: 13px; color: var(--ink-2); line-height: 1.7; }
+  .mc-count {
+    position: absolute; bottom: 24px; right: 28px;
+    font-family: var(--mono); font-size: 28px; font-weight: 300;
+    color: var(--bg-3);
+  }
+  .mc-emoji { font-size: 32px; margin-bottom: 16px; display: block; }
+
+  /* ─── SECTION HEADER ─── */
+  .section-header {
+    padding: 56px 48px 40px;
+    max-width: 1200px; margin: 0 auto;
+    border-bottom: 1px solid var(--bg-3);
+    display: flex; align-items: flex-end; justify-content: space-between;
+  }
+  .section-eyebrow {
+    font-family: var(--mono); font-size: 11px;
+    color: var(--accent); letter-spacing: 0.15em;
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: var(--serif); font-size: 36px;
+    font-weight: 300; color: var(--ink);
+  }
+  .section-desc { font-size: 13px; color: var(--ink-2); max-width: 360px; text-align: right; }
+
+  /* ─── TAG FILTER ─── */
+  .tag-filter {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    padding: 24px 48px;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .tag-btn {
+    font-family: var(--mono); font-size: 11px;
+    padding: 5px 12px; border-radius: 20px;
+    border: 1px solid var(--bg-3); background: transparent;
+    color: var(--ink-2); cursor: pointer;
+    transition: var(--transition); letter-spacing: 0.05em;
+  }
+  .tag-btn:hover { border-color: var(--accent-soft); color: var(--accent); }
+  .tag-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+  /* ─── BOOK SHELF ─── */
+  .shelf-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 24px;
+    padding: 32px 48px 80px;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .book-card {
+    cursor: pointer; transition: var(--spring);
+  }
+  .book-card:hover { transform: translateY(-6px); }
+  .book-cover {
+    width: 100%; aspect-ratio: 2/3;
+    border-radius: 8px; overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--spring);
+    position: relative;
+  }
+  .book-card:hover .book-cover { box-shadow: var(--shadow-hover); }
+  .book-cover-inner {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif); font-size: 14px; font-weight: 400;
+    color: white; padding: 16px; text-align: center; line-height: 1.5;
+  }
+  .book-cover-inner.c1 { background: linear-gradient(145deg, #2C5F8A, #1a3a5c); }
+  .book-cover-inner.c2 { background: linear-gradient(145deg, #8B7355, #5a4a38); }
+  .book-cover-inner.c3 { background: linear-gradient(145deg, #2D6A4F, #1a4030); }
+  .book-cover-inner.c4 { background: linear-gradient(145deg, #6B4226, #3d2516); }
+  .book-cover-inner.c5 { background: linear-gradient(145deg, #4A4063, #2a243a); }
+  .book-cover-inner.c6 { background: linear-gradient(145deg, #B5451B, #7a2e12); }
+  .book-meta { padding: 12px 0 0; }
+  .book-name { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 4px; line-height: 1.4; }
+  .book-author { font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
+  .book-tags { display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap; }
+  .book-tag {
+    font-family: var(--mono); font-size: 9px; padding: 2px 7px;
+    border-radius: 4px; background: var(--accent-pale); color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+
+  /* ─── NOTES LIST ─── */
+  .notes-container {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 20px; padding: 32px 48px 80px;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .note-card {
+    border: 1px solid var(--bg-3);
+    border-radius: var(--r);
+    padding: 24px; cursor: pointer;
+    transition: var(--spring);
+    background: var(--bg);
+  }
+  .note-card:hover { transform: translateY(-3px) scale(1.005); box-shadow: var(--shadow-hover); border-color: var(--accent-soft); }
+  .note-card-meta { display: flex; gap: 8px; margin-bottom: 14px; align-items: center; }
+  .note-cat {
+    font-family: var(--mono); font-size: 10px;
+    padding: 3px 8px; border-radius: 4px;
+    background: var(--accent-pale); color: var(--accent);
+    letter-spacing: 0.08em;
+  }
+  .note-date { font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
+  .note-title { font-family: var(--serif); font-size: 18px; font-weight: 400; margin-bottom: 10px; color: var(--ink); }
+  .note-excerpt { font-size: 13px; color: var(--ink-2); line-height: 1.7; }
+  .note-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+  .note-tags { display: flex; gap: 4px; }
+  .note-arrow { color: var(--accent); font-size: 16px; transition: var(--transition); }
+  .note-card:hover .note-arrow { transform: translateX(4px); }
+
+  /* ─── ARTICLE PAGE ─── */
+  .article-wrap {
+    display: grid;
+    grid-template-columns: 1fr 240px;
+    gap: 48px;
+    padding: 40px 48px 80px;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .article-content { min-width: 0; }
+  .article-header { margin-bottom: 40px; }
+  .article-title { font-family: var(--serif); font-size: 32px; font-weight: 300; margin-bottom: 16px; line-height: 1.3; }
+  .article-byline { display: flex; gap: 16px; align-items: center; padding-bottom: 24px; border-bottom: 1px solid var(--bg-3); }
+  .article-byline span { font-family: var(--mono); font-size: 12px; color: var(--ink-3); }
+
+  .prose h2 { font-family: var(--serif); font-size: 22px; font-weight: 400; margin: 40px 0 16px; }
+  .prose h3 { font-size: 16px; font-weight: 500; margin: 28px 0 12px; }
+  .prose p { margin-bottom: 16px; font-size: 15px; line-height: 1.85; color: var(--ink); }
+  .prose code {
+    font-family: var(--mono); font-size: 12px;
+    background: var(--bg-2); border: 1px solid var(--bg-3);
+    padding: 2px 6px; border-radius: 4px; color: var(--accent);
+  }
+  .prose pre {
+    background: #1D1D1F; border-radius: var(--r);
+    padding: 24px; overflow-x: auto; margin: 24px 0;
+  }
+  .prose pre code {
+    background: none; border: none; color: #E8DCC8;
+    font-size: 13px; padding: 0;
+  }
+
+  /* Callout Block */
+  .notion-callout {
+    display: flex; gap: 14px; padding: 16px 20px;
+    border-radius: var(--r); margin: 24px 0;
+    border: 1px solid;
+  }
+  .notion-callout.info { background: #EBF4FF; border-color: #BFD9F5; }
+  .notion-callout.warn { background: #FFF8E6; border-color: #F5DFA0; }
+  .notion-callout.tip { background: #EBF6F0; border-color: #A8D8BE; }
+  .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .callout-text { font-size: 14px; line-height: 1.7; }
+  .callout-text.info { color: var(--blue); }
+  .callout-text.warn { color: #8B6914; }
+  .callout-text.tip { color: var(--green); }
+
+  /* Toggle Block */
+  .notion-toggle { margin: 16px 0; }
+  .toggle-trigger {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px; border-radius: var(--r);
+    cursor: pointer; background: var(--bg-2);
+    border: 1px solid transparent; transition: var(--transition);
+    font-size: 14px; font-weight: 500; user-select: none;
+  }
+  .toggle-trigger:hover { border-color: var(--bg-3); }
+  .toggle-arrow { font-size: 10px; color: var(--ink-3); transition: var(--spring); }
+  .toggle-trigger.open .toggle-arrow { transform: rotate(90deg); }
+  .toggle-content {
+    padding: 0 16px; max-height: 0; overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                padding 0.3s ease, opacity 0.3s ease;
+    opacity: 0; font-size: 14px; color: var(--ink-2); line-height: 1.8;
+  }
+  .toggle-content.open { max-height: 400px; padding: 12px 16px; opacity: 1; }
+
+  /* TOC Sidebar */
+  .toc-sidebar {
+    position: sticky; top: 80px; align-self: start;
+    border-left: 2px solid var(--bg-3); padding-left: 24px;
+  }
+  .toc-title { font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.1em; margin-bottom: 16px; }
+  .toc-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .toc-item { font-size: 13px; color: var(--ink-2); cursor: pointer; transition: var(--transition); line-height: 1.5; padding-left: 0; }
+  .toc-item:hover, .toc-item.active { color: var(--accent); padding-left: 4px; }
+  .toc-item.h3 { padding-left: 12px; font-size: 12px; }
+  .toc-item.h3:hover, .toc-item.h3.active { padding-left: 16px; }
+
+  /* ─── LAB SECTION ─── */
+  .lab-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px; padding: 32px 48px 80px; max-width: 1200px; margin: 0 auto;
+  }
+  .lab-card {
+    border: 1px solid var(--bg-3); border-radius: var(--r-lg);
+    overflow: hidden; cursor: pointer; transition: var(--spring);
+    background: var(--bg);
+  }
+  .lab-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+  .lab-card-thumb {
+    height: 180px; background: var(--ink);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 12px; color: var(--accent-soft);
+    position: relative; overflow: hidden;
+  }
+  .lab-card-thumb.dark { background: #0f0f0f; }
+  .lab-card-thumb.blue { background: linear-gradient(135deg, #0d2137, #1a4a7a); }
+  .lab-card-thumb.earth { background: linear-gradient(135deg, #2a1f14, #5a3e28); }
+  .terminal-lines { font-family: var(--mono); font-size: 11px; color: #4CAF50; line-height: 1.8; }
+  .terminal-lines .cursor { display: inline-block; width: 8px; height: 13px; background: #4CAF50; animation: blink 1s infinite; vertical-align: middle; margin-left: 2px; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .lab-badge {
+    position: absolute; top: 12px; right: 12px;
+    font-family: var(--mono); font-size: 10px;
+    background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);
+    padding: 4px 10px; border-radius: 20px; letter-spacing: 0.08em;
+    backdrop-filter: blur(8px);
+  }
+  .lab-body { padding: 20px; }
+  .lab-title { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+  .lab-desc { font-size: 13px; color: var(--ink-2); line-height: 1.7; margin-bottom: 16px; }
+  .lab-links { display: flex; gap: 10px; }
+  .lab-link {
+    font-family: var(--mono); font-size: 11px;
+    padding: 5px 12px; border-radius: 6px;
+    text-decoration: none; transition: var(--transition);
+    cursor: pointer;
+  }
+  .lab-link.github { background: var(--ink); color: white; }
+  .lab-link.github:hover { background: #333; }
+  .lab-link.demo { border: 1px solid var(--bg-3); color: var(--ink-2); }
+  .lab-link.demo:hover { border-color: var(--accent-soft); color: var(--accent); }
+
+  /* ─── WORKFLOW ─── */
+  .workflow-tabs {
+    display: flex; gap: 2px; padding: 24px 48px 0;
+    max-width: 1200px; margin: 0 auto;
+    border-bottom: 1px solid var(--bg-3);
+  }
+  .wf-tab {
+    font-size: 13px; padding: 8px 20px; cursor: pointer;
+    color: var(--ink-2); border-bottom: 2px solid transparent;
+    transition: var(--transition); font-weight: 400;
+    margin-bottom: -1px;
+  }
+  .wf-tab:hover { color: var(--ink); }
+  .wf-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 500; }
+
+  .wf-panel { display: none; padding: 40px 48px 80px; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.3s ease; }
+  .wf-panel.active { display: block; }
+
+  /* Tools */
+  .tool-list { display: flex; flex-direction: column; gap: 12px; }
+  .tool-item {
+    display: flex; align-items: center; gap: 20px;
+    padding: 20px 24px; border: 1px solid var(--bg-3);
+    border-radius: var(--r); cursor: pointer; transition: var(--spring);
+    background: var(--bg);
+  }
+  .tool-item:hover { transform: translateX(4px); border-color: var(--accent-soft); box-shadow: var(--shadow); }
+  .tool-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+  }
+  .tool-info { flex: 1; }
+  .tool-name { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+  .tool-desc { font-size: 13px; color: var(--ink-2); }
+  .tool-badge {
+    font-family: var(--mono); font-size: 10px;
+    padding: 4px 10px; border-radius: 20px;
+    border: 1px solid var(--bg-3); color: var(--ink-2);
+  }
+  .tool-badge.rec { background: var(--accent); border-color: var(--accent); color: white; }
+
+  /* Glossary */
+  .glossary-wrap { max-width: 800px; }
+  .glossary-filter { margin-bottom: 24px; }
+  .glossary-input {
+    width: 100%; padding: 10px 16px; border-radius: 8px;
+    border: 1px solid var(--bg-3); background: var(--bg-2);
+    font-family: var(--sans); font-size: 14px; color: var(--ink);
+    outline: none; transition: var(--transition);
+  }
+  .glossary-input:focus { border-color: var(--accent-soft); }
+  .glossary-table { width: 100%; border-collapse: collapse; }
+  .glossary-table th {
+    text-align: left; font-family: var(--mono); font-size: 11px;
+    color: var(--ink-3); letter-spacing: 0.1em; padding: 8px 16px;
+    border-bottom: 2px solid var(--bg-3); text-transform: uppercase;
+  }
+  .glossary-table td {
+    padding: 14px 16px; font-size: 14px;
+    border-bottom: 1px solid var(--bg-2);
+  }
+  .glossary-table tr { transition: var(--transition); cursor: default; }
+  .glossary-table tr:hover td { background: var(--accent-pale); }
+  .glossary-table td:first-child { font-weight: 500; }
+  .glossary-table td:nth-child(2) { font-family: var(--mono); font-size: 13px; color: var(--blue); }
+  .glossary-table td:nth-child(3) { color: var(--ink-2); font-size: 13px; }
+
+  /* Setup Gallery */
+  .setup-gallery { position: relative; padding-top: 20px; }
+  .gallery-main {
+    position: relative; width: 100%; border-radius: var(--r-lg);
+    overflow: hidden; background: var(--bg-3);
+    cursor: pointer; user-select: none;
+    height: 500px;
+  }
+  .gallery-scene {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.4s ease;
+  }
+  .gallery-scene-content {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 80px; position: relative;
+  }
+  /* Floating param card */
+  .param-card {
+    position: absolute; background: rgba(253,252,248,0.92);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.8);
+    border-radius: 14px; padding: 16px 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    animation: floatIn 0.5s var(--spring) forwards;
+    min-width: 160px;
+  }
+  @keyframes floatIn { from { opacity:0; transform: scale(0.8) translateY(10px); } to { opacity:1; transform: scale(1) translateY(0); } }
+  .param-card.p1 { bottom: 40px; left: 40px; }
+  .param-card.p2 { top: 40px; right: 40px; animation-delay: 0.1s; }
+  .param-card.p3 { bottom: 40px; right: 200px; animation-delay: 0.2s; }
+  .param-label { font-family: var(--mono); font-size: 10px; color: var(--ink-3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+  .param-value { font-size: 15px; font-weight: 500; color: var(--ink); }
+  .param-sub { font-family: var(--mono); font-size: 11px; color: var(--ink-2); margin-top: 2px; }
+
+  .gallery-nav {
+    display: flex; gap: 8px; justify-content: center; margin-top: 20px;
+  }
+  .gallery-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--bg-3); cursor: pointer; transition: var(--spring);
+  }
+  .gallery-dot.active { background: var(--accent); width: 20px; border-radius: 3px; }
+
+  .gallery-thumbs {
+    display: flex; gap: 12px; margin-top: 16px; overflow-x: auto; padding-bottom: 4px;
+  }
+  .gallery-thumb {
+    width: 80px; height: 60px; border-radius: 8px;
+    background: var(--bg-3); flex-shrink: 0; cursor: pointer;
+    border: 2px solid transparent; transition: var(--spring);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+  }
+  .gallery-thumb.active { border-color: var(--accent); transform: scale(1.05); }
+  .gallery-thumb:hover:not(.active) { transform: scale(1.05); }
+
+  /* ─── PAUSE ─── */
+  .pause-masonry {
+    columns: 3; gap: 16px;
+    padding: 32px 48px 80px;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .pause-item {
+    break-inside: avoid; margin-bottom: 16px;
+    border-radius: var(--r); overflow: hidden;
+    cursor: pointer; transition: var(--spring);
+    position: relative;
+  }
+  .pause-item:hover { transform: scale(1.02); }
+  .pause-item:hover .pause-overlay { opacity: 1; }
+  .pause-block {
+    width: 100%; display: flex; align-items: center; justify-content: center;
+    font-size: clamp(40px, 8vw, 80px);
+    position: relative;
+  }
+  .pause-block.s { padding-bottom: 60%; }
+  .pause-block.m { padding-bottom: 75%; }
+  .pause-block.l { padding-bottom: 100%; }
+  .pause-block-inner {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 48px;
+  }
+  .bg-warm { background: linear-gradient(135deg, #F0E8DA, #E8D8C0); }
+  .bg-cool { background: linear-gradient(135deg, #D0DDF0, #B8C8E0); }
+  .bg-forest { background: linear-gradient(135deg, #C8DCC8, #A8C4A8); }
+  .bg-dusk { background: linear-gradient(135deg, #E8C8D8, #D0A8C0); }
+  .bg-stone { background: linear-gradient(135deg, #D8D0C0, #C4B8A8); }
+  .bg-ink { background: linear-gradient(135deg, #C0C0C8, #A8A8B4); }
+  .pause-overlay {
+    position: absolute; inset: 0; background: rgba(29,29,31,0.5);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: var(--transition);
+    border-radius: var(--r);
+  }
+  .pause-overlay-text { color: white; font-size: 13px; font-weight: 400; }
+
+  /* ─── CHANGELOG ─── */
+  .changelog-wrap {
+    max-width: 700px; margin: 0 auto;
+    padding: 40px 48px 80px;
+  }
+  .cl-year {
+    font-family: var(--mono); font-size: 11px; color: var(--ink-3);
+    letter-spacing: 0.15em; text-transform: uppercase;
+    margin-bottom: 24px; margin-top: 48px;
+  }
+  .cl-item {
+    display: flex; gap: 24px; margin-bottom: 28px;
+    position: relative;
+  }
+  .cl-item::before {
+    content: ''; position: absolute;
+    left: 72px; top: 20px; bottom: -28px; width: 1px;
+    background: var(--bg-3);
+  }
+  .cl-item:last-child::before { display: none; }
+  .cl-date {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-3);
+    white-space: nowrap; padding-top: 4px; min-width: 56px;
+  }
+  .cl-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    flex-shrink: 0; margin-top: 7px;
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 0 2px var(--bg-3);
+  }
+  .cl-dot.feat { background: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+  .cl-dot.fix { background: var(--blue); box-shadow: 0 0 0 2px #BFD9F5; }
+  .cl-dot.add { background: var(--green); box-shadow: 0 0 0 2px #A8D8BE; }
+  .cl-content { flex: 1; }
+  .cl-tag {
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em;
+    text-transform: uppercase; padding: 2px 8px; border-radius: 4px;
+    display: inline-block; margin-bottom: 8px;
+  }
+  .cl-tag.feat { background: var(--accent-pale); color: var(--accent); }
+  .cl-tag.fix { background: #EBF4FF; color: var(--blue); }
+  .cl-tag.add { background: #EBF6F0; color: var(--green); }
+  .cl-title { font-size: 15px; font-weight: 500; margin-bottom: 6px; }
+  .cl-desc { font-size: 13px; color: var(--ink-2); line-height: 1.7; }
+
+  /* ─── BACK BTN ─── */
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 16px; border-radius: 8px;
+    border: 1px solid var(--bg-3); background: var(--bg);
+    font-size: 13px; color: var(--ink-2); cursor: pointer;
+    transition: var(--transition); margin: 24px 48px 0;
+  }
+  .back-btn:hover { border-color: var(--accent-soft); color: var(--accent); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    border-top: 1px solid var(--bg-3);
+    padding: 32px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-brand { font-family: var(--mono); font-size: 12px; color: var(--ink-3); }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { font-size: 12px; color: var(--ink-3); text-decoration: none; transition: var(--transition); cursor: pointer; }
+  .footer-links a:hover { color: var(--accent); }
+
+  /* ─── EASTER EGG OVERLAY ─── */
+  .easter-overlay {
+    position: fixed; inset: 0; z-index: 999;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none; opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  .easter-overlay.show { opacity: 1; pointer-events: all; }
+  .easter-bg {
+    position: absolute; inset: 0;
+    background: rgba(253,252,248,0.96);
+  }
+  .easter-content {
+    position: relative; text-align: center;
+    animation: easterIn 0.5s var(--spring);
+  }
+  @keyframes easterIn { from { transform: scale(0.5) rotate(-10deg); opacity: 0; } to { transform: scale(1) rotate(0deg); opacity: 1; } }
+  .easter-char { font-size: 80px; display: block; margin-bottom: 16px; }
+  .easter-text { font-family: var(--serif); font-size: 22px; color: var(--ink); margin-bottom: 8px; }
+  .easter-sub { font-family: var(--mono); font-size: 12px; color: var(--ink-2); margin-bottom: 24px; }
+  .easter-close {
+    padding: 8px 24px; border: 1px solid var(--accent);
+    border-radius: 8px; background: transparent; color: var(--accent);
+    font-family: var(--mono); font-size: 12px; cursor: pointer;
+    transition: var(--transition);
+  }
+  .easter-close:hover { background: var(--accent); color: white; }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--bg-3); border-radius: 2px; }
+
+  /* ─── SITE LIST ─── */
+  .site-list { display: flex; flex-direction: column; gap: 12px; max-width: 800px; }
+  .site-item {
+    display: flex; gap: 16px; padding: 20px 24px;
+    border: 1px solid var(--bg-3); border-radius: var(--r);
+    background: var(--bg); cursor: default; transition: var(--spring);
+  }
+  .site-item:hover { border-color: var(--accent-soft); box-shadow: var(--shadow); transform: translateX(3px); }
+  .site-favicon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--bg-2); display: flex; align-items: center;
+    justify-content: center; font-size: 20px; flex-shrink: 0;
+  }
+  .site-info { flex: 1; min-width: 0; }
+  .site-top { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .site-name { font-size: 15px; font-weight: 500; }
+  .site-url {
+    font-family: var(--mono); font-size: 11px; color: var(--accent);
+    text-decoration: none; opacity: 0.7;
+  }
+  .site-desc { font-size: 13px; color: var(--ink-2); line-height: 1.7; margin-bottom: 12px; }
+  .site-bottom { display: flex; justify-content: space-between; align-items: center; }
+  .site-tags { display: flex; gap: 4px; }
+  .site-stars { display: flex; align-items: center; gap: 2px; }
+  .star { font-size: 14px; color: var(--bg-3); }
+  .star.filled { color: #E8A020; }
+  .star.half { color: #E8A020; opacity: 0.5; }
+  .star-num { font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-left: 4px; }
+
+  /* ─── PROMPT CARDS ─── */
+  .prompt-cat-label {
+    font-size: 13px; font-weight: 500; color: var(--ink-2);
+    margin-bottom: 14px; padding-bottom: 10px;
+    border-bottom: 1px solid var(--bg-3);
+  }
+  .prompt-grid { display: flex; flex-direction: column; gap: 10px; }
+  .prompt-card {
+    border: 1px solid var(--bg-3); border-radius: var(--r);
+    overflow: hidden; cursor: pointer; transition: var(--transition);
+    background: var(--bg);
+  }
+  .prompt-card:hover { border-color: var(--accent-soft); }
+  .prompt-card-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 18px; user-select: none;
+  }
+  .prompt-title { font-size: 14px; font-weight: 500; }
+  .prompt-arrow { font-size: 10px; color: var(--ink-3); transition: var(--spring); }
+  .prompt-card.open .prompt-arrow { transform: rotate(90deg); }
+  .prompt-body {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.25,0.46,0.45,0.94), padding 0.3s ease, opacity 0.3s ease;
+    opacity: 0; padding: 0 18px;
+    font-family: var(--mono); font-size: 12px; color: var(--ink-2);
+    line-height: 1.9; background: var(--bg-2);
+  }
+  .prompt-card.open .prompt-body { max-height: 600px; padding: 16px 18px; opacity: 1; }
+
+  /* Lang toggle */
+  .lang-toggle { display: flex; border: 1px solid var(--bg-3); border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+  .lang-btn {
+    padding: 6px 14px; font-size: 12px; cursor: pointer;
+    border: none; background: transparent; color: var(--ink-2);
+    transition: var(--transition); font-family: var(--sans);
+  }
+  .lang-btn.active { background: var(--accent); color: white; }
+
+  /* ─── PAUSE META ─── */
+  .pause-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(29,29,31,0.75) 0%, rgba(29,29,31,0.2) 60%, transparent 100%);
+    display: flex; align-items: flex-end;
+    padding: 16px; opacity: 0; transition: var(--transition);
+    border-radius: var(--r);
+  }
+  .pause-meta { display: flex; flex-direction: column; gap: 5px; }
+  .pause-meta-item {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: rgba(255,255,255,0.92);
+    font-weight: 300;
+  }
+  .pause-meta-icon { font-size: 11px; opacity: 0.8; }
+
+  /* ─── BOOK OVERVIEW ─── */
+  .book-overview-wrap { max-width: 900px; margin: 0 auto; padding: 32px 48px 80px; }
+  .bov-header {
+    display: grid; grid-template-columns: 180px 1fr;
+    gap: 40px; margin-bottom: 48px; padding-bottom: 40px;
+    border-bottom: 1px solid var(--bg-3);
+  }
+  .bov-cover {
+    width: 100%; aspect-ratio: 2/3; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif); font-size: 14px; font-weight: 400;
+    color: white; padding: 16px; text-align: center; line-height: 1.5;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+  }
+  .bov-title { font-family: var(--serif); font-size: 26px; font-weight: 300; line-height: 1.3; margin-bottom: 14px; }
+  .bov-author-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+  .bov-author { font-size: 14px; font-weight: 500; }
+  .bov-year { font-family: var(--mono); font-size: 13px; color: var(--ink-3); }
+  .bov-sep { color: var(--bg-3); }
+  .bov-rating { display: flex; align-items: center; gap: 3px; margin-bottom: 16px; }
+  .bov-tagline {
+    font-family: var(--serif); font-size: 15px; font-style: italic;
+    color: var(--accent); line-height: 1.6; margin-bottom: 24px;
+    padding-left: 14px; border-left: 3px solid var(--accent-soft);
+  }
+  .bov-download-area { display: flex; align-items: center; gap: 14px; }
+  .bov-dl-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 20px; background: var(--accent); color: white;
+    border-radius: 8px; font-size: 13px; text-decoration: none;
+    font-weight: 400; transition: var(--transition); cursor: pointer; border: none;
+  }
+  .bov-dl-btn:hover { background: var(--accent-soft); }
+  .bov-dl-note { font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
+  .bov-section-label {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--ink-3); margin-bottom: 24px;
+  }
+  .bov-tl { display: flex; flex-direction: column; gap: 0; }
+  .bov-tl-item { display: flex; gap: 20px; position: relative; padding-bottom: 32px; }
+  .bov-tl-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent-soft); flex-shrink: 0; margin-top: 6px;
+    position: relative; z-index: 1;
+  }
+  .bov-tl-item::before {
+    content: ''; position: absolute;
+    left: 4px; top: 16px; bottom: 0; width: 1px;
+    background: var(--bg-3);
+  }
+  .bov-tl-item:last-child::before { display: none; }
+  .bov-tl-title { font-size: 15px; font-weight: 500; margin-bottom: 8px; }
+  .bov-tl-desc { font-size: 14px; color: var(--ink-2); line-height: 1.8; }
+  .bov-verdict {
+    background: var(--accent-pale); border-radius: var(--r);
+    padding: 20px 24px; font-size: 14px; line-height: 1.85;
+    color: var(--ink-2); border-left: 4px solid var(--accent-soft);
+  }
+  .bov-download-bottom {
+    display: flex; gap: 24px; align-items: flex-start;
+    margin-top: 48px; padding: 28px 32px;
+    border: 1px solid var(--bg-3); border-radius: var(--r-lg);
+    background: var(--bg-2);
+  }
+  .bov-dl-icon { font-size: 32px; }
+
+  @media (max-width: 768px) {
+    .bov-header { grid-template-columns: 1fr; }
+    .bov-cover { max-width: 160px; }
+    .book-overview-wrap { padding: 20px 20px 60px; }
+    .site-list { gap: 8px; }
+    .site-item { padding: 14px 16px; }
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    header { padding: 0 20px; }
+    nav { display: none; }
+    .home-hero { padding: 40px 20px 32px; }
+    .module-grid { grid-template-columns: 1fr 1fr; padding: 0 20px 40px; }
+    .module-card.wide { grid-column: span 2; }
+    .shelf-grid { grid-template-columns: repeat(3, 1fr); padding: 20px; gap: 16px; }
+    .section-header { padding: 32px 20px 24px; flex-direction: column; align-items: flex-start; gap: 8px; }
+    .section-desc { text-align: left; }
+    .notes-container { grid-template-columns: 1fr; padding: 20px; }
+    .article-wrap { grid-template-columns: 1fr; padding: 20px; }
+    .toc-sidebar { display: none; }
+    .lab-grid { padding: 20px; }
+    .workflow-tabs { padding: 16px 20px 0; overflow-x: auto; }
+    .wf-panel { padding: 24px 20px 60px; }
+    .pause-masonry { columns: 2; padding: 20px; }
+    .back-btn { margin: 16px 20px 0; }
+    footer { padding: 24px 20px; flex-direction: column; gap: 16px; }
+    .gallery-main { height: 300px; }
+    .param-card { padding: 10px 14px; min-width: 120px; }
+    .changelog-wrap { padding: 24px 20px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo" id="logo" onclick="goHome()">
+    <span class="logo-normal">tl; // lab</span>
+    <span class="logo-easter">( ˶ˆ꒳ˆ˵ )</span>
+  </div>
+  <nav>
+    <a onclick="showPage('archive')" id="nav-archive">库 Archive</a>
+    <a onclick="showPage('lab')" id="nav-lab">实验室 Lab</a>
+    <a onclick="showPage('workflow')" id="nav-workflow">工作流 Workflow</a>
+    <a onclick="showPage('pause')" id="nav-pause">隙 Pause</a>
+    <a onclick="showPage('changelog')" id="nav-changelog">足迹</a>
+  </nav>
+  <div class="search-wrap">
+    <button class="search-icon" onclick="toggleSearch()" id="searchBtn">⌕</button>
+    <input class="search-input" id="searchInput" placeholder="搜索笔记、标签..." onblur="closeSearch()" />
+  </div>
+</header>
+
+<main>
+
+<!-- ═══ HOME ═══ -->
+<div class="page active" id="page-home">
+  <div class="home-hero">
+    <p class="home-eyebrow">Virtual Studio · v0.1</p>
+    <h1 class="home-title">我们所有疯狂的行动，<br>最终目的或许只是<em>体验更多的奇妙</em></h1>
+    <p class="home-sub">这里记录生产力探索、自我成长、AI 实践，以及那些值得收藏的生活细节。每一个模块都是一种思维方式的入口。</p>
+  </div>
+
+  <div class="module-grid">
+    <div class="module-card wide" onclick="showPage('archive')">
+      <span class="mc-tag">Archive · 输入层</span>
+      <h2 class="mc-title">库</h2>
+      <p class="mc-desc">电子书架与读书笔记。收藏是一种姿态，整理是一种思考。技术书与文学之间，存在比想象中更多的共通语法。</p>
+      <span class="mc-count">24</span>
+    </div>
+
+    <div class="module-card" onclick="showPage('lab')">
+      <span class="mc-emoji">⚗️</span>
+      <span class="mc-tag">Lab · 输出层</span>
+      <h2 class="mc-title">实验室</h2>
+      <p class="mc-desc">AI 部署实践与 Vibe Coding 成果展示。</p>
+    </div>
+
+    <div class="module-card" onclick="showPage('workflow')">
+      <span class="mc-emoji">⚙️</span>
+      <span class="mc-tag">Workflow · 效率层</span>
+      <h2 class="mc-title">工作流</h2>
+      <p class="mc-desc">效率工具推荐、网站收藏、装备清单与 AI 提示词库。</p>
+    </div>
+
+    <div class="module-card" onclick="showPage('pause')">
+      <span class="mc-emoji">🌿</span>
+      <span class="mc-tag">Pause · 生活层</span>
+      <h2 class="mc-title">隙</h2>
+      <p class="mc-desc">想要一个 Happy End。</p>
+    </div>
+
+    <div class="module-card" onclick="showPage('changelog')">
+      <span class="mc-emoji">📋</span>
+      <span class="mc-tag">Change Log</span>
+      <h2 class="mc-title">足迹</h2>
+      <p class="mc-desc">这个虚拟空间的迭代记录。</p>
+    </div>
+  </div>
+
+  <footer>
+    <span class="footer-brand">© 2025 Tech-Linguist Lab · Built with Astro + Notion</span>
+    <div class="footer-links">
+      <a>GitHub</a><a>RSS</a><a>About</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══ ARCHIVE ═══ -->
+<div class="page" id="page-archive">
+  <div class="section-header">
+    <div>
+      <p class="section-eyebrow">Archive · 输入层</p>
+      <h1 class="section-title">库</h1>
+    </div>
+    <p class="section-desc">收藏与阅读是认知的基础设施。这里存放所有值得二次翻阅的内容。</p>
+  </div>
+
+  <!-- Sub nav -->
+  <div class="workflow-tabs">
+    <div class="wf-tab active" onclick="switchArchiveTab('library', this)">电子书架</div>
+    <div class="wf-tab" onclick="switchArchiveTab('notes', this)">读书笔记</div>
+  </div>
+
+  <!-- Library -->
+  <div id="archive-library" class="wf-panel active">
+    <div class="tag-filter">
+      <button class="tag-btn active" onclick="filterTag(this, 'shelf')">全部</button>
+      <button class="tag-btn" onclick="filterTag(this, 'shelf')">技术</button>
+      <button class="tag-btn" onclick="filterTag(this, 'shelf')">文学</button>
+      <button class="tag-btn" onclick="filterTag(this, 'shelf')">工具</button>
+      <button class="tag-btn" onclick="filterTag(this, 'shelf')">语言学</button>
+      <button class="tag-btn" onclick="filterTag(this, 'shelf')">设计</button>
+    </div>
+    <div class="shelf-grid">
+      <div class="book-card" onclick="showPage('book-overview')">
+        <div class="book-cover"><div class="book-cover-inner c1">Clean Code<br><small>整洁代码之道</small></div></div>
+        <div class="book-meta">
+          <div class="book-name">Clean Code</div>
+          <div class="book-author">Robert C. Martin</div>
+          <div class="book-tags"><span class="book-tag">技术</span></div>
+        </div>
+      </div>
+      <div class="book-card" onclick="showPage('book-overview')">
+        <div class="book-cover"><div class="book-cover-inner c2">百年孤独</div></div>
+        <div class="book-meta">
+          <div class="book-name">百年孤独</div>
+          <div class="book-author">加西亚·马尔克斯</div>
+          <div class="book-tags"><span class="book-tag">文学</span></div>
+        </div>
+      </div>
+      <div class="book-card" onclick="showPage('book-overview')">
+        <div class="book-cover"><div class="book-cover-inner c3">The Pragmatic Programmer</div></div>
+        <div class="book-meta">
+          <div class="book-name">The Pragmatic Programmer</div>
+          <div class="book-author">Hunt & Thomas</div>
+          <div class="book-tags"><span class="book-tag">技术</span><span class="book-tag">工具</span></div>
+        </div>
+      </div>
+      <div class="book-card" onclick="showPage('book-overview')">
+        <div class="book-cover"><div class="book-cover-inner c4">翻译研究导论</div></div>
+        <div class="book-meta">
+          <div class="book-name">翻译研究导论</div>
+          <div class="book-author">杰里米·芒迪</div>
+          <div class="book-tags"><span class="book-tag">语言学</span></div>
+        </div>
+      </div>
+      <div class="book-card" onclick="showPage('book-overview')">
+        <div class="book-cover"><div class="book-cover-inner c5">Design Systems</div></div>
+        <div class="book-meta">
+          <div class="book-name">Design Systems</div>
+          <div class="book-author">Alla Kholmatova</div>
+          <div class="book-tags"><span class="book-tag">设计</span></div>
+        </div>
+      </div>
+      <div class="book-card" onclick="showPage('book-overview')">
+        <div class="book-cover"><div class="book-cover-inner c6">Attention is All You Need</div></div>
+        <div class="book-meta">
+          <div class="book-name">Attention is All You Need</div>
+          <div class="book-author">Vaswani et al.</div>
+          <div class="book-tags"><span class="book-tag">技术</span></div>
+        </div>
+      </div>
+      <div class="book-card" onclick="showPage('book-overview')">
+        <div class="book-cover"><div class="book-cover-inner c1">挪威的森林</div></div>
+        <div class="book-meta">
+          <div class="book-name">挪威的森林</div>
+          <div class="book-author">村上春树</div>
+          <div class="book-tags"><span class="book-tag">文学</span></div>
+        </div>
+      </div>
+      <div class="book-card" onclick="showPage('book-overview')">
+        <div class="book-cover"><div class="book-cover-inner c3">Structure and Interpretation</div></div>
+        <div class="book-meta">
+          <div class="book-name">SICP</div>
+          <div class="book-author">Abelson & Sussman</div>
+          <div class="book-tags"><span class="book-tag">技术</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notes -->
+  <div id="archive-notes" class="wf-panel">
+    <div class="tag-filter">
+      <button class="tag-btn active">全部</button>
+      <button class="tag-btn">AI</button>
+      <button class="tag-btn">翻译</button>
+      <button class="tag-btn">工程</button>
+    </div>
+    <div class="notes-container">
+      <div class="note-card" onclick="showPage('article')">
+        <div class="note-card-meta">
+          <span class="note-cat">AI</span>
+          <span class="note-date">2025.06.12</span>
+        </div>
+        <h3 class="note-title">《Clean Code》核心原则在 Prompt 工程中的映射</h3>
+        <p class="note-excerpt">当我开始系统学习 Prompt 优化时，发现 Bob 大叔的那些命名原则和函数设计规范，在 LLM 提示词工程领域有着惊人的相似性…</p>
+        <div class="note-footer">
+          <div class="note-tags">
+            <span class="book-tag">技术</span><span class="book-tag">AI</span>
+          </div>
+          <span class="note-arrow">→</span>
+        </div>
+      </div>
+      <div class="note-card" onclick="showPage('article')">
+        <div class="note-card-meta">
+          <span class="note-cat">翻译</span>
+          <span class="note-date">2025.05.28</span>
+        </div>
+        <h3 class="note-title">Transformer 架构论文阅读笔记：从注意力机制到翻译直觉</h3>
+        <p class="note-excerpt">作为一个有翻译背景的工程师，我在读 Attention is All You Need 时，不断联想到人类翻译时的注意力分配机制…</p>
+        <div class="note-footer">
+          <div class="note-tags"><span class="book-tag">技术</span><span class="book-tag">翻译</span></div>
+          <span class="note-arrow">→</span>
+        </div>
+      </div>
+      <div class="note-card" onclick="showPage('article')">
+        <div class="note-card-meta">
+          <span class="note-cat">工程</span>
+          <span class="note-date">2025.05.10</span>
+        </div>
+        <h3 class="note-title">SICP 第一章：计算过程与递归的哲学</h3>
+        <p class="note-excerpt">递归不仅是一种编程技巧，更是一种思维方式。当我们用 Scheme 写下第一个 define 的时候，其实是在定义一种语言…</p>
+        <div class="note-footer">
+          <div class="note-tags"><span class="book-tag">工程</span></div>
+          <span class="note-arrow">→</span>
+        </div>
+      </div>
+      <div class="note-card" onclick="showPage('article')">
+        <div class="note-card-meta">
+          <span class="note-cat">翻译</span>
+          <span class="note-date">2025.04.22</span>
+        </div>
+        <h3 class="note-title">《翻译研究导论》：功能主义流派与 AI 翻译的对话</h3>
+        <p class="note-excerpt">目的论（Skopos Theory）认为翻译的目的决定翻译策略。这个框架拿来评估 DeepL 和 GPT-4 的翻译策略差异，颇有启发性…</p>
+        <div class="note-footer">
+          <div class="note-tags"><span class="book-tag">语言学</span><span class="book-tag">AI</span></div>
+          <span class="note-arrow">→</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ARTICLE ═══ -->
+<div class="page" id="page-article">
+  <button class="back-btn" onclick="history.go(-1) || showPage('archive')">← 返回</button>
+  <div class="article-wrap">
+    <div class="article-content">
+      <div class="article-header">
+        <h1 class="article-title">《Clean Code》核心原则在 Prompt 工程中的映射</h1>
+        <div class="article-byline">
+          <span>📅 2025.06.12</span>
+          <span>☕ 8 min read</span>
+          <span class="book-tag">AI</span>
+          <span class="book-tag">技术</span>
+        </div>
+      </div>
+      <div class="prose">
+        <p>当我开始系统学习 Prompt 优化时，发现 Bob 大叔的那些命名原则和函数设计规范，在 LLM 提示词工程领域有着惊人的相似性。这篇笔记尝试建立两者之间的映射关系。</p>
+
+        <div class="notion-callout info">
+          <span class="callout-icon">💡</span>
+          <span class="callout-text info">本文假设读者已有 Clean Code 基础阅读经验，以及基本的 Prompt 工程实践经验。两者缺一会让映射关系变得抽象。</span>
+        </div>
+
+        <h2>一、命名即语义</h2>
+        <p>Clean Code 中最重要的原则之一是「有意义的命名」。函数名 <code>getUserById()</code> 远比 <code>get()</code> 更具表达力。这个原则在 Prompt 中同样成立——</p>
+        <p>当你告诉模型「你是一个助手」和「你是一个专注于技术文档的中英双向翻译专家，有 10 年工程实践背景」时，输出质量有肉眼可见的差距。</p>
+
+        <div class="notion-toggle">
+          <div class="toggle-trigger" onclick="toggleBlock(this)">
+            <span class="toggle-arrow">▶</span>
+            <span>实验数据：角色描述精确度与输出质量的相关性</span>
+          </div>
+          <div class="toggle-content">
+            在对比测试中，使用详细角色描述的 Prompt 在专业术语准确率上提升了约 34%，在格式一致性上提升了 41%。样本量 n=120，覆盖技术文档、法律合同、学术论文三类场景。
+          </div>
+        </div>
+
+        <h2>二、单一职责原则</h2>
+        <p>「一个函数只做一件事」是 Clean Code 的核心之一。在 Prompt 工程中，这对应着任务分解策略。</p>
+
+        <div class="notion-callout warn">
+          <span class="callout-icon">⚠️</span>
+          <span class="callout-text warn">常见反模式：在一个 Prompt 中同时要求翻译、总结、格式化和评分，会显著降低每项任务的准确率。</span>
+        </div>
+
+        <h2>三、代码即文档的反面</h2>
+        <p>Bob 大叔说「好的代码就是最好的文档」，但在 Prompt 工程里，这个原则要反转：<strong>你需要把所有隐式假设显式化</strong>。</p>
+
+        <pre><code># Bad: 隐式假设太多
+"翻译这段文字"
+
+# Good: 显式化所有约束
+"请将以下技术文档从英文翻译为中文。
+要求：保留代码变量名不译；术语首次出现时附原文；
+输出格式为纯文本，不添加任何注释。"</code></pre>
+
+        <div class="notion-callout tip">
+          <span class="callout-icon">✅</span>
+          <span class="callout-text tip">工程直觉在这里反而是障碍——程序员习惯假设「聪明的编译器会理解」，但模型需要的是明确指令。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="toc-sidebar">
+      <p class="toc-title">目录</p>
+      <ul class="toc-list">
+        <li class="toc-item active">一、命名即语义</li>
+        <li class="toc-item">二、单一职责原则</li>
+        <li class="toc-item">三、代码即文档的反面</li>
+        <li class="toc-item h3">代码示例：显式约束</li>
+        <li class="toc-item">四、DRY 与 Prompt 复用</li>
+        <li class="toc-item">五、测试驱动的 Prompt 迭代</li>
+        <li class="toc-item h3">实验记录表</li>
+        <li class="toc-item">结语</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LAB ═══ -->
+<div class="page" id="page-lab">
+  <div class="section-header">
+    <div>
+      <p class="section-eyebrow">Lab · 输出层</p>
+      <h1 class="section-title">实验室</h1>
+    </div>
+    <p class="section-desc">AI 实践记录与 Vibe Coding 成果。每个项目都是一次认知迭代。</p>
+  </div>
+
+  <div class="workflow-tabs">
+    <div class="wf-tab active" onclick="switchLabTab('ai', this)">AI 实践</div>
+    <div class="wf-tab" onclick="switchLabTab('vibe', this)">Vibe Coding</div>
+  </div>
+
+  <div id="lab-ai" class="wf-panel active">
+    <div class="lab-grid">
+      <div class="lab-card" onclick="showPage('article')">
+        <div class="lab-card-thumb dark">
+          <div class="terminal-lines">
+            <div>> deploying openclaw v2.1</div>
+            <div>> ✓ model loaded</div>
+            <div>> ✓ api gateway ready</div>
+            <div>> listening on :8080<span class="cursor"></span></div>
+          </div>
+          <div class="lab-badge">OpenClaw</div>
+        </div>
+        <div class="lab-body">
+          <div class="lab-title">OpenClaw 部署全记录</div>
+          <div class="lab-desc">从零搭建私有化 LLM 服务的完整踩坑记录，包含 Docker 配置、反向代理设置与 API 鉴权方案。</div>
+          <div class="lab-links">
+            <span class="lab-link github">GitHub →</span>
+            <span class="lab-link demo">查看笔记</span>
+          </div>
+        </div>
+      </div>
+      <div class="lab-card" onclick="showPage('article')">
+        <div class="lab-card-thumb blue">
+          <div style="text-align:center; color: rgba(255,255,255,0.7); font-family: var(--mono); font-size: 12px; line-height: 2;">
+            <div>System: You are...</div>
+            <div style="color:#7dd3fc">User: 翻译以下内容</div>
+            <div>→ [Chain of Thought]</div>
+            <div style="color:#86efac">✓ 输出优化 +34%</div>
+          </div>
+          <div class="lab-badge">Prompt Eng.</div>
+        </div>
+        <div class="lab-body">
+          <div class="lab-title">Prompt 优化方法论</div>
+          <div class="lab-desc">系统整理 CoT、Few-shot、Role Prompting 在翻译和技术写作场景的实测效果对比。</div>
+          <div class="lab-links">
+            <span class="lab-link demo">查看笔记</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="lab-vibe" class="wf-panel">
+    <div class="lab-grid">
+      <div class="lab-card">
+        <div class="lab-card-thumb earth">
+          <div style="font-family: var(--mono); font-size: 28px; color: var(--accent-soft);">// 词典</div>
+          <div class="lab-badge">CLI Tool</div>
+        </div>
+        <div class="lab-body">
+          <div class="lab-title">term-sync</div>
+          <div class="lab-desc">一个将 Notion 术语表同步到本地 JSON 的 CLI 工具，支持 CAT 软件导入格式（TMX）。</div>
+          <div class="lab-links">
+            <span class="lab-link github">GitHub →</span>
+            <span class="lab-link demo">Demo</span>
+          </div>
+        </div>
+      </div>
+      <div class="lab-card">
+        <div class="lab-card-thumb dark">
+          <div style="font-family: var(--mono); font-size: 13px; color: #a78bfa; line-height: 2;">
+            <div>import claude from 'ai'</div>
+            <div>const review = await</div>
+            <div>  claude.review(pr)</div>
+          </div>
+          <div class="lab-badge">Automation</div>
+        </div>
+        <div class="lab-body">
+          <div class="lab-title">notion-changelog-bot</div>
+          <div class="lab-desc">监听 GitHub PR 合并，自动将 commit message 整理成中文更新日志并写入 Notion Database。</div>
+          <div class="lab-links">
+            <span class="lab-link github">GitHub →</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WORKFLOW ═══ -->
+<div class="page" id="page-workflow">
+  <div class="section-header">
+    <div>
+      <p class="section-eyebrow">Workflow · 效率层</p>
+      <h1 class="section-title">工作流</h1>
+    </div>
+    <p class="section-desc">工具是思维的延伸。每一个工具的选择，都是对某种工作哲学的认同。</p>
+  </div>
+
+  <div class="workflow-tabs">
+    <div class="wf-tab active" onclick="switchWFTab('tools', this)">效率工具</div>
+    <div class="wf-tab" onclick="switchWFTab('websites', this)">网站推荐</div>
+    <div class="wf-tab" onclick="switchWFTab('setup', this)">装备清单</div>
+    <div class="wf-tab" onclick="switchWFTab('prompts', this)">AI 提示词库</div>
+  </div>
+
+  <!-- 效率工具 -->
+  <div id="wf-tools" class="wf-panel active">
+    <div class="tool-list">
+      <div class="tool-item">
+        <div class="tool-icon" style="background:#FFF3E0;">📝</div>
+        <div class="tool-info">
+          <div class="tool-name">Notion</div>
+          <div class="tool-desc">第二大脑与内容管理核心。Database + Page 双层结构，管理所有项目、笔记和本站内容。</div>
+        </div>
+        <span class="tool-badge rec">核心</span>
+      </div>
+      <div class="tool-item">
+        <div class="tool-icon" style="background:#E3F2FD;">🎯</div>
+        <div class="tool-info">
+          <div class="tool-name">Musetodo</div>
+          <div class="tool-desc">自研的任务管理工具，专注于「当下最重要的一件事」。极简设计，避免 GTD 焦虑。</div>
+        </div>
+        <span class="tool-badge rec" style="background:#2C5F8A;border-color:#2C5F8A;">自研 ★</span>
+      </div>
+      <div class="tool-item">
+        <div class="tool-icon" style="background:#E8F5E9;">🤖</div>
+        <div class="tool-info">
+          <div class="tool-name">Claude Code + Cursor</div>
+          <div class="tool-desc">AI 辅助编程的主力组合。Claude Code 负责终端级深度编码，Cursor 负责 IDE 内快速补全。</div>
+        </div>
+        <span class="tool-badge rec">核心</span>
+      </div>
+      <div class="tool-item">
+        <div class="tool-icon" style="background:#F3E5F5;">✨</div>
+        <div class="tool-info">
+          <div class="tool-name">Google Gemini</div>
+          <div class="tool-desc">长文档处理与多模态分析的首选。200万 token 上下文窗口，适合整本书的阅读理解任务。</div>
+        </div>
+        <span class="tool-badge">推荐</span>
+      </div>
+      <div class="tool-item">
+        <div class="tool-icon" style="background:#FFF3E0;">🍅</div>
+        <div class="tool-info">
+          <div class="tool-name">番茄钟 · Focus Flow</div>
+          <div class="tool-desc">25/5 分钟专注循环。配合白噪音效果极好，深度工作时必开。</div>
+        </div>
+        <span class="tool-badge">在用</span>
+      </div>
+      <div class="tool-item">
+        <div class="tool-icon" style="background:#E8EAF6;">📚</div>
+        <div class="tool-info">
+          <div class="tool-name">Anki</div>
+          <div class="tool-desc">间隔重复记忆系统。用来记术语、代码 API、语言词汇。丑但有效。</div>
+        </div>
+        <span class="tool-badge">在用</span>
+      </div>
+      <div class="tool-item">
+        <div class="tool-icon" style="background:#E0F2F1;">🌊</div>
+        <div class="tool-info">
+          <div class="tool-name">qBittorrent</div>
+          <div class="tool-desc">开源 BT 下载客户端。配合 RSS 订阅可自动追番，无广告无捆绑。</div>
+        </div>
+        <span class="tool-badge">推荐</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 网站推荐 -->
+  <div id="wf-websites" class="wf-panel">
+    <div class="site-filter" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;">
+      <button class="tag-btn active" onclick="filterTag(this)">全部</button>
+      <button class="tag-btn" onclick="filterTag(this)">AI 工具</button>
+      <button class="tag-btn" onclick="filterTag(this)">学习</button>
+      <button class="tag-btn" onclick="filterTag(this)">设计</button>
+      <button class="tag-btn" onclick="filterTag(this)">效率</button>
+      <button class="tag-btn" onclick="filterTag(this)">资源</button>
+    </div>
+    <div class="site-list">
+
+      <div class="site-item">
+        <div class="site-favicon">🤖</div>
+        <div class="site-info">
+          <div class="site-top">
+            <span class="site-name">Claude.ai</span>
+            <a class="site-url">claude.ai</a>
+          </div>
+          <div class="site-desc">目前综合能力最强的 AI 助手。长上下文理解、代码、写作全面碾压，是我的主力 AI。</div>
+          <div class="site-bottom">
+            <div class="site-tags">
+              <span class="book-tag">AI 工具</span>
+              <span class="book-tag">效率</span>
+            </div>
+            <div class="site-stars">
+              <span class="star filled">★</span><span class="star filled">★</span><span class="star filled">★</span><span class="star filled">★</span><span class="star filled">★</span>
+              <span class="star-num">5.0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="site-item">
+        <div class="site-favicon">🔍</div>
+        <div class="site-info">
+          <div class="site-top">
+            <span class="site-name">Perplexity AI</span>
+            <a class="site-url">perplexity.ai</a>
+          </div>
+          <div class="site-desc">带引用来源的 AI 搜索引擎。需要快速调研一个陌生领域时，比 Google 更高效。</div>
+          <div class="site-bottom">
+            <div class="site-tags">
+              <span class="book-tag">AI 工具</span>
+              <span class="book-tag">学习</span>
+            </div>
+            <div class="site-stars">
+              <span class="star filled">★</span><span class="star filled">★</span><span class="star filled">★</span><span class="star filled">★</span><span class="star">★</span>
+              <span class="star-num">4.0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="site-item">
+        <div class="site-favicon">🎨</div>
+        <div class="site-info">
+          <div class="site-top">
+            <span class="site-name">Figma</span>
+            <a class="site-url">figma.com</a>
+          </div>
+          <div class="site-desc">浏览器端的协作设计工具。免费版对个人够用，本站原型图就是在这里画的。</div>
+          <div class="site-bottom">
+            <div class="site-tags">
+              <span class="book-tag">设计</span>
+              <span class="book-tag">效率</span>
+            </div>
+            <div class="site-stars">
+              <span class="star filled">★</span><span class="star filled">★</span><span class="star filled">★</span><span class="star filled">★</span><span class="star half">★</span>
+              <span class="star-num">4.5</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="site-item">
+        <div class="site-favicon">📖</div>
+        <div class="site-info">
+          <div class="site-top">
+            <span class="site-name">Z-Library</span>
+            <a class="site-url">z-lib.id</a>
+          </div>
+          <div class="site-desc">全球最大电子书库。几乎所有学术书和技术书都能找到。本站书架的下载来源。</div>
+          <div class="site-bottom">
+            <div class="site-tags">
+              <span class="book-tag">资源</span>
+              <span class="book-tag">学习</span>
+            </div>
+            <div class="site-stars">
+              <span class="star filled">★</span><span class="star filled">★</span><span class="star filled">★</span><span class="star filled">★</span><span class="star filled">★</span>
+              <span class="star-num">5.0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="site-item">
+        <div class="site-favicon">⚡</div>
+        <div class="site-info">
+          <div class="site-top">
+            <span class="site-name">Raycast</span>
+            <a class="site-url">raycast.com</a>
+          </div>
+          <div class="site-desc">Mac 上的效率启动器，替代 Spotlight。内置 AI、剪贴板管理、窗口管理，装了就回不去。</div>
+          <div class="site-bottom">
+            <div class="site-tags">
+              <span class="book-tag">效率</span>
+            </div>
+            <div class="site-stars">
+              <span class="star filled">★</span><span class="star filled">★</span><span class="star filled">★</span><span class="star filled">★</span><span class="star filled">★</span>
+              <span class="star-num">5.0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 装备清单 -->
+  <div id="wf-setup" class="wf-panel">
+    <div class="setup-gallery">
+      <div class="gallery-main" id="galleryMain">
+        <div class="gallery-scene" id="galleryScene"></div>
+      </div>
+      <div class="gallery-nav" id="galleryDots"></div>
+      <div class="gallery-thumbs" id="galleryThumbs"></div>
+    </div>
+  </div>
+
+  <!-- AI 提示词库 -->
+  <div id="wf-prompts" class="wf-panel">
+    <div class="prompt-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
+      <p style="font-size:14px;color:var(--ink-2);line-height:1.8;max-width:560px;">按使用场景分类的 Prompt 集合，每条提供中英文双版本。点击卡片可展开完整提示词。</p>
+      <div class="lang-toggle" id="langToggle">
+        <button class="lang-btn active" onclick="setLang('zh', this)">中文</button>
+        <button class="lang-btn" onclick="setLang('en', this)">English</button>
+      </div>
+    </div>
+
+    <div class="prompt-section">
+      <div class="prompt-cat-label">✍️ 写作 &amp; 润色</div>
+      <div class="prompt-grid">
+
+        <div class="prompt-card" onclick="togglePrompt(this)">
+          <div class="prompt-card-head">
+            <span class="prompt-title">学术论文摘要润色</span>
+            <span class="prompt-arrow">▶</span>
+          </div>
+          <div class="prompt-body">
+            <div class="prompt-zh">你是一位资深学术编辑，专注于提升论文摘要的清晰度和专业性。请对以下摘要进行润色：要求语言简洁有力，保留核心论点，去除冗余表达，确保关键词突出。格式：直接输出润色后的版本，不需要解释修改原因。<br><br>[在此粘贴你的摘要]</div>
+            <div class="prompt-en" style="display:none">You are a senior academic editor specializing in improving the clarity and professionalism of paper abstracts. Please revise the following abstract: ensure language is concise and impactful, preserve core arguments, eliminate redundancies, and highlight key terms. Format: output only the revised version without explaining changes.<br><br>[Paste your abstract here]</div>
+          </div>
+        </div>
+
+        <div class="prompt-card" onclick="togglePrompt(this)">
+          <div class="prompt-card-head">
+            <span class="prompt-title">技术博客转通俗文章</span>
+            <span class="prompt-arrow">▶</span>
+          </div>
+          <div class="prompt-body">
+            <div class="prompt-zh">请将以下技术内容改写为面向普通读者的科普文章。要求：用日常类比替代专业术语；保留核心概念不失真；语气轻松，带有适度幽默感；字数控制在原文 80% 以内。<br><br>[技术内容]</div>
+            <div class="prompt-en" style="display:none">Rewrite the following technical content for a general audience. Requirements: replace jargon with everyday analogies; preserve core concepts without distortion; use a relaxed tone with moderate humor; keep word count within 80% of the original.<br><br>[Technical content]</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="prompt-section" style="margin-top:32px;">
+      <div class="prompt-cat-label">🔍 分析 &amp; 研究</div>
+      <div class="prompt-grid">
+
+        <div class="prompt-card" onclick="togglePrompt(this)">
+          <div class="prompt-card-head">
+            <span class="prompt-title">快速文献综述框架</span>
+            <span class="prompt-arrow">▶</span>
+          </div>
+          <div class="prompt-body">
+            <div class="prompt-zh">我正在研究「[主题]」，以下是我收集的 [N] 篇文献的摘要。请帮我：1）识别主要研究流派和代表性观点；2）找出各流派的核心分歧；3）指出该领域尚未充分探讨的空白。输出格式：结构化的 Markdown 列表。<br><br>[粘贴文献摘要]</div>
+            <div class="prompt-en" style="display:none">I'm researching "[topic]". Below are abstracts from [N] papers I've collected. Please: 1) Identify major research schools and representative viewpoints; 2) Pinpoint core disagreements between schools; 3) Highlight underexplored gaps in the field. Output format: structured Markdown list.<br><br>[Paste paper abstracts]</div>
+          </div>
+        </div>
+
+        <div class="prompt-card" onclick="togglePrompt(this)">
+          <div class="prompt-card-head">
+            <span class="prompt-title">决策矩阵分析</span>
+            <span class="prompt-arrow">▶</span>
+          </div>
+          <div class="prompt-body">
+            <div class="prompt-zh">我需要在以下选项中做决策：[选项A / 选项B / 选项C]。我的核心考量维度是：[维度1, 维度2, 维度3]。请用决策矩阵分析这些选项，给出各维度的评分（1-5分）和加权总分，最后给出你的推荐并说明原因。</div>
+            <div class="prompt-en" style="display:none">I need to decide between: [Option A / Option B / Option C]. My core evaluation dimensions are: [Dimension 1, Dimension 2, Dimension 3]. Use a decision matrix to analyze these options, score each dimension (1-5) and calculate weighted totals, then give your recommendation with reasoning.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="prompt-section" style="margin-top:32px;">
+      <div class="prompt-cat-label">💻 代码 &amp; 工程</div>
+      <div class="prompt-grid">
+
+        <div class="prompt-card" onclick="togglePrompt(this)">
+          <div class="prompt-card-head">
+            <span class="prompt-title">代码 Review 专家</span>
+            <span class="prompt-arrow">▶</span>
+          </div>
+          <div class="prompt-body">
+            <div class="prompt-zh">你是一名资深软件工程师，请对以下代码进行 Code Review。关注点：1）潜在 Bug 和边界条件；2）性能瓶颈；3）可读性和命名规范；4）是否违反 SOLID 原则。输出格式：按严重级别（Critical / Warning / Suggestion）分组列出问题，每条说明原因和改进建议。<br><br>```[语言]\n[代码]\n```</div>
+            <div class="prompt-en" style="display:none">You are a senior software engineer. Please review the following code. Focus on: 1) Potential bugs and edge cases; 2) Performance bottlenecks; 3) Readability and naming conventions; 4) SOLID principle violations. Output format: group issues by severity (Critical / Warning / Suggestion), explaining the reason and improvement suggestion for each.<br><br>```[language]\n[code]\n```</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAUSE ═══ -->
+<div class="page" id="page-pause">
+  <div class="section-header">
+    <div>
+      <p class="section-eyebrow">Pause · 生活层</p>
+      <h1 class="section-title">隙</h1>
+    </div>
+    <p class="section-desc">想要一个 Happy End。</p>
+  </div>
+
+  <div class="pause-masonry">
+    <div class="pause-item">
+      <div class="pause-block l bg-warm">
+        <div class="pause-block-inner">🌸</div>
+        <div class="pause-overlay">
+          <div class="pause-meta">
+            <div class="pause-meta-item"><span class="pause-meta-icon">🕐</span><span>2025.03.12</span></div>
+            <div class="pause-meta-item"><span class="pause-meta-icon">📍</span><span>京都·岚山</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pause-item">
+      <div class="pause-block s bg-cool">
+        <div class="pause-block-inner">🎴</div>
+        <div class="pause-overlay">
+          <div class="pause-meta">
+            <div class="pause-meta-item"><span class="pause-meta-icon">🕐</span><span>2025.01.08</span></div>
+            <div class="pause-meta-item"><span class="pause-meta-icon">📍</span><span>上海·家中</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pause-item">
+      <div class="pause-block m bg-forest">
+        <div class="pause-block-inner">📷</div>
+        <div class="pause-overlay">
+          <div class="pause-meta">
+            <div class="pause-meta-item"><span class="pause-meta-icon">🕐</span><span>2025.06.20</span></div>
+            <div class="pause-meta-item"><span class="pause-meta-icon">📍</span><span>东京·涩谷</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pause-item">
+      <div class="pause-block s bg-dusk">
+        <div class="pause-block-inner">🍵</div>
+        <div class="pause-overlay">
+          <div class="pause-meta">
+            <div class="pause-meta-item"><span class="pause-meta-icon">🕐</span><span>2025.02.14</span></div>
+            <div class="pause-meta-item"><span class="pause-meta-icon">📍</span><span>成都·太古里</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pause-item">
+      <div class="pause-block l bg-stone">
+        <div class="pause-block-inner">🌆</div>
+        <div class="pause-overlay">
+          <div class="pause-meta">
+            <div class="pause-meta-item"><span class="pause-meta-icon">🕐</span><span>2025.05.18  18:42</span></div>
+            <div class="pause-meta-item"><span class="pause-meta-icon">📍</span><span>香港·维多利亚港</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pause-item">
+      <div class="pause-block m bg-ink">
+        <div class="pause-block-inner">✨</div>
+        <div class="pause-overlay">
+          <div class="pause-meta">
+            <div class="pause-meta-item"><span class="pause-meta-icon">🕐</span><span>2025.04.03</span></div>
+            <div class="pause-meta-item"><span class="pause-meta-icon">📍</span><span>上海·家中</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pause-item">
+      <div class="pause-block s bg-warm">
+        <div class="pause-block-inner">🪴</div>
+        <div class="pause-overlay">
+          <div class="pause-meta">
+            <div class="pause-meta-item"><span class="pause-meta-icon">🕐</span><span>2025.03.29</span></div>
+            <div class="pause-meta-item"><span class="pause-meta-icon">📍</span><span>书桌</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pause-item">
+      <div class="pause-block m bg-cool">
+        <div class="pause-block-inner">🎵</div>
+        <div class="pause-overlay">
+          <div class="pause-meta">
+            <div class="pause-meta-item"><span class="pause-meta-icon">🕐</span><span>2025.06.01</span></div>
+            <div class="pause-meta-item"><span class="pause-meta-icon">📍</span><span>北京·工体</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pause-item">
+      <div class="pause-block s bg-forest">
+        <div class="pause-block-inner">📖</div>
+        <div class="pause-overlay">
+          <div class="pause-meta">
+            <div class="pause-meta-item"><span class="pause-meta-icon">🕐</span><span>2025.01.22</span></div>
+            <div class="pause-meta-item"><span class="pause-meta-icon">📍</span><span>上海·静安寺</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CHANGELOG ═══ -->
+<div class="page" id="page-changelog">
+  <div class="section-header">
+    <div>
+      <p class="section-eyebrow">Change Log · 足迹</p>
+      <h1 class="section-title">这个花园的生长记录</h1>
+    </div>
+  </div>
+  <div class="changelog-wrap">
+    <p class="cl-year">2025</p>
+
+    <div class="cl-item">
+      <span class="cl-date">06·15</span>
+      <div class="cl-dot feat"></div>
+      <div class="cl-content">
+        <span class="cl-tag feat">Feature</span>
+        <div class="cl-title">上线「装备清单」画廊组件</div>
+        <p class="cl-desc">采用浮动参数卡交互，展示 MacBook、外设和书桌布置。支持滑动切换场景。</p>
+      </div>
+    </div>
+
+    <div class="cl-item">
+      <span class="cl-date">06·10</span>
+      <div class="cl-dot add"></div>
+      <div class="cl-content">
+        <span class="cl-tag add">Content</span>
+        <div class="cl-title">新增 8 篇读书笔记</div>
+        <p class="cl-desc">完成《Clean Code》、《SICP》前三章的笔记同步。Notion → MDX 渲染管道正式稳定。</p>
+      </div>
+    </div>
+
+    <div class="cl-item">
+      <span class="cl-date">06·05</span>
+      <div class="cl-dot fix"></div>
+      <div class="cl-content">
+        <span class="cl-tag fix">Improve</span>
+        <div class="cl-title">Notion Callout 组件视觉重构</div>
+        <p class="cl-desc">将原有的纯文本 callout 重新设计为三种语义状态（info / warn / tip），配色与整体 MUJI 风格统一。</p>
+      </div>
+    </div>
+
+    <div class="cl-item">
+      <span class="cl-date">05·28</span>
+      <div class="cl-dot feat"></div>
+      <div class="cl-content">
+        <span class="cl-tag feat">Feature</span>
+        <div class="cl-title">全局搜索上线</div>
+        <p class="cl-desc">基于构建时生成的静态索引，使用 Fuse.js 实现毫秒级模糊搜索。支持标题、标签、摘要三字段检索。</p>
+      </div>
+    </div>
+
+    <div class="cl-item">
+      <span class="cl-date">05·20</span>
+      <div class="cl-dot add"></div>
+      <div class="cl-content">
+        <span class="cl-tag add">Content</span>
+        <div class="cl-title">术语表 Glossary 首次发布</div>
+        <p class="cl-desc">收录 AI/ML、翻译理论、软件工程三领域共 47 条核心术语的中英对照。</p>
+      </div>
+    </div>
+
+    <div class="cl-item">
+      <span class="cl-date">05·01</span>
+      <div class="cl-dot feat"></div>
+      <div class="cl-content">
+        <span class="cl-tag feat">Launch</span>
+        <div class="cl-title">🌱 Tech-Linguist Lab 正式上线</div>
+        <p class="cl-desc">从 Hexo 迁移到 Astro + Notion 的架构。第一棵树种下了。</p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ═══ BOOK OVERVIEW ═══ -->
+<div class="page" id="page-book-overview">
+  <button class="back-btn" onclick="showPage('archive'); switchArchiveTab('library', document.querySelector('#page-archive .wf-tab'))">← 返回书架</button>
+  <div class="book-overview-wrap">
+    <!-- Book Header -->
+    <div class="bov-header">
+      <div class="bov-cover c1">Clean Code<br><small>整洁代码之道</small></div>
+      <div class="bov-meta">
+        <h1 class="bov-title">Clean Code: A Handbook of Agile Software Craftsmanship</h1>
+        <div class="bov-author-row">
+          <span class="bov-author">Robert C. Martin</span>
+          <span class="bov-sep">·</span>
+          <span class="bov-year">2008</span>
+          <span class="bov-sep">·</span>
+          <span class="book-tag">技术</span>
+        </div>
+        <div class="bov-rating">
+          <span class="star filled">★</span><span class="star filled">★</span><span class="star filled">★</span><span class="star filled">★</span><span class="star half">★</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--ink-3);margin-left:6px;">我的评分 4.5 / 5</span>
+        </div>
+        <p class="bov-tagline">「代码质量的最高境界，是让它读起来像优美的散文。」</p>
+        <div class="bov-download-area">
+          <a class="bov-dl-btn" href="#" onclick="return false;">
+            <span>📥</span> 免费下载原书（Z-Library）
+          </a>
+          <span class="bov-dl-note">PDF · EPUB · 约 8.7 MB</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overview Content -->
+    <div class="bov-content">
+      <div class="bov-section-label">全书速览</div>
+
+      <div class="bov-tl">
+        <div class="bov-tl-item">
+          <div class="bov-tl-dot"></div>
+          <div class="bov-tl-body">
+            <div class="bov-tl-title">第一部分：代码整洁的哲学</div>
+            <p class="bov-tl-desc">从「为什么整洁代码重要」入手，建立起一套价值观框架。核心观点：<strong>我们花在读代码上的时间，是写代码的 10 倍</strong>。因此让代码易读，是程序员对协作者和未来自己的基本责任。</p>
+          </div>
+        </div>
+        <div class="bov-tl-item">
+          <div class="bov-tl-dot"></div>
+          <div class="bov-tl-body">
+            <div class="bov-tl-title">命名的艺术（第2章）</div>
+            <p class="bov-tl-desc">好的名字应该做到「望文知义」。<code>getUserById()</code> 好于 <code>get()</code>，<code>isEligibleToVote()</code> 好于 <code>flag</code>。避免使用单字母变量、数字编号和误导性缩写。</p>
+            <div class="notion-callout tip" style="margin-top:12px;">
+              <span class="callout-icon">💡</span>
+              <span class="callout-text tip">个人体会：命名难的根本原因往往是对「这段代码在做什么」还没想清楚。命名困难是需要重构的信号。</span>
+            </div>
+          </div>
+        </div>
+        <div class="bov-tl-item">
+          <div class="bov-tl-dot"></div>
+          <div class="bov-tl-body">
+            <div class="bov-tl-title">函数设计（第3章）</div>
+            <p class="bov-tl-desc">函数应该「只做一件事，并且做好它」。判断标准：如果你无法为函数起一个不含「and/or」的名字，它就在做超过一件事。理想的函数长度是 4～8 行，最多不超过 20 行。</p>
+          </div>
+        </div>
+        <div class="bov-tl-item">
+          <div class="bov-tl-dot"></div>
+          <div class="bov-tl-body">
+            <div class="bov-tl-title">注释的哲学（第4章）</div>
+            <p class="bov-tl-desc">好的代码不需要注释来解释「做什么」，注释只用于解释「为什么」。最糟糕的注释是过时的注释——它比没有注释更危险。</p>
+            <div class="notion-callout warn" style="margin-top:12px;">
+              <span class="callout-icon">⚠️</span>
+              <span class="callout-text warn">作者激进地认为注释是「必要之恶」，在 AI 辅助编程时代这个观点值得重新审视——AI 生成的代码往往需要注释来说明意图。</span>
+            </div>
+          </div>
+        </div>
+        <div class="bov-tl-item">
+          <div class="bov-tl-dot"></div>
+          <div class="bov-tl-body">
+            <div class="bov-tl-title">单元测试与 TDD（第9章）</div>
+            <p class="bov-tl-desc">测试代码与生产代码同等重要。TDD 的三定律：先写失败的测试，再写让测试通过的代码，然后重构。测试覆盖率是整洁代码的安全网。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bov-section-label" style="margin-top:40px;">核心结论</div>
+      <div class="bov-verdict">
+        <p>整洁代码不是关于「代码风格偏好」的辩论，而是关于职业素养的承诺。书中许多原则（如 SOLID、单一职责）在 Prompt 工程时代有意想不到的迁移价值——如果你在写复杂 Prompt，这本书仍然值得一读。</p>
+        <p style="margin-top:12px;"><strong>推荐阅读方式：</strong>第2、3、4、9章精读，其余章节速览。配合实际项目边读边重构，效果加倍。</p>
+      </div>
+
+      <!-- Download CTA at bottom -->
+      <div class="bov-download-bottom">
+        <div class="bov-dl-icon">📥</div>
+        <div>
+          <div style="font-size:14px;font-weight:500;margin-bottom:6px;">获取原书</div>
+          <div style="font-size:13px;color:var(--ink-2);margin-bottom:14px;">Z-Library 提供免费下载，支持 PDF / EPUB / MOBI 格式</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <a class="bov-dl-btn" href="#" onclick="return false;">📄 PDF 下载</a>
+            <a class="bov-dl-btn" href="#" onclick="return false;" style="background:var(--bg-2);color:var(--ink);border:1px solid var(--bg-3);">📱 EPUB 下载</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- EASTER EGG OVERLAY -->
+<div class="easter-overlay" id="easterOverlay">
+  <div class="easter-bg" onclick="closeEaster()"></div>
+  <div class="easter-content">
+    <span class="easter-char">( ˶ˆ꒳ˆ˵ )</span>
+    <p class="easter-text">发现了隐藏的彩蛋</p>
+    <p class="easter-sub">// 工科逻辑 × 人文温度 × 二次元灵魂</p>
+    <button class="easter-close" onclick="closeEaster()">继续探索 →</button>
+  </div>
+</div>
+
+<script>
+// ─── PAGE ROUTING ───
+let currentPage = 'home';
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  
+  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+  const navEl = document.getElementById('nav-' + id);
+  if (navEl) navEl.classList.add('active');
+  
+  currentPage = id;
+  window.scrollTo(0, 0);
+}
+
+function goHome() {
+  showPage('home');
+  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+}
+
+// ─── TAB SWITCHERS ───
+function switchArchiveTab(tab, el) {
+  document.querySelectorAll('#page-archive .wf-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('archive-' + tab).classList.add('active');
+  document.querySelectorAll('#page-archive .wf-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function switchLabTab(tab, el) {
+  document.querySelectorAll('#page-lab .wf-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('lab-' + tab).classList.add('active');
+  document.querySelectorAll('#page-lab .wf-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function switchWFTab(tab, el) {
+  document.querySelectorAll('#page-workflow .wf-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('wf-' + tab).classList.add('active');
+  document.querySelectorAll('#page-workflow .wf-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  if (tab === 'setup') initGallery();
+}
+
+// ─── PROMPT TOGGLE ───
+function togglePrompt(card) {
+  card.classList.toggle('open');
+}
+
+// ─── LANG SWITCH ───
+let currentLang = 'zh';
+function setLang(lang, btn) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.prompt-zh').forEach(el => el.style.display = lang === 'zh' ? '' : 'none');
+  document.querySelectorAll('.prompt-en').forEach(el => el.style.display = lang === 'en' ? '' : 'none');
+}
+
+// ─── TAG FILTER ───
+function filterTag(btn, context) {
+  btn.closest('.tag-filter').querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ─── TOGGLE BLOCK ───
+function toggleBlock(trigger) {
+  trigger.classList.toggle('open');
+  const content = trigger.nextElementSibling;
+  content.classList.toggle('open');
+}
+
+// ─── SEARCH ───
+function toggleSearch() {
+  const inp = document.getElementById('searchInput');
+  inp.classList.toggle('open');
+  if (inp.classList.contains('open')) inp.focus();
+}
+function closeSearch() {
+  setTimeout(() => {
+    document.getElementById('searchInput').classList.remove('open');
+  }, 200);
+}
+
+// ─── GLOSSARY FILTER ───
+function filterGlossary(val) {
+  const rows = document.querySelectorAll('#glossaryBody tr');
+  rows.forEach(row => {
+    const text = row.textContent.toLowerCase();
+    row.style.display = text.includes(val.toLowerCase()) ? '' : 'none';
+  });
+}
+
+// ─── GALLERY ───
+const galleryItems = [
+  {
+    emoji: '💻',
+    bg: '#1a1a2e',
+    label: '主力机',
+    params: [
+      { pos: 'p1', label: '型号', value: 'MacBook Pro 14"', sub: 'M3 Pro · 2024' },
+      { pos: 'p2', label: '内存', value: '36 GB', sub: 'Unified Memory' },
+      { pos: 'p3', label: '屏幕', value: '3024×1964', sub: 'Liquid Retina XDR' }
+    ]
+  },
+  {
+    emoji: '🖥️',
+    bg: '#0f2027',
+    label: '外接显示器',
+    params: [
+      { pos: 'p1', label: '型号', value: 'LG 27UK850', sub: '4K IPS · 27"' },
+      { pos: 'p2', label: '色域', value: '99% sRGB', sub: 'HDR10 支持' }
+    ]
+  },
+  {
+    emoji: '⌨️',
+    bg: '#1a0a00',
+    label: '键盘',
+    params: [
+      { pos: 'p1', label: '型号', value: 'HHKB Studio', sub: 'Bluetooth · 静电容' },
+      { pos: 'p2', label: '轴体', value: '静电容无接触', sub: '40g 触发压力' }
+    ]
+  },
+  {
+    emoji: '📚',
+    bg: '#0a1a0a',
+    label: '书桌布置',
+    params: [
+      { pos: 'p1', label: '桌面', value: 'UPLIFT V2', sub: '电动升降 · 橡木色' },
+      { pos: 'p2', label: '氛围', value: 'MUJI 灯具', sub: '2700K 暖白光' },
+      { pos: 'p3', label: '植物', value: '龟背竹 × 2', sub: '3年树龄' }
+    ]
+  }
+];
+
+let galleryIndex = 0;
+
+function initGallery() {
+  renderGalleryScene(galleryIndex);
+  renderGalleryDots();
+  renderGalleryThumbs();
+}
+
+function renderGalleryScene(idx) {
+  const item = galleryItems[idx];
+  const scene = document.getElementById('galleryScene');
+  scene.style.background = item.bg;
+  
+  let paramsHTML = item.params.map(p => `
+    <div class="param-card ${p.pos}">
+      <div class="param-label">${p.label}</div>
+      <div class="param-value">${p.value}</div>
+      <div class="param-sub">${p.sub}</div>
+    </div>
+  `).join('');
+
+  scene.innerHTML = `
+    <div class="gallery-scene-content">
+      <span style="font-size:80px; filter:drop-shadow(0 8px 24px rgba(0,0,0,0.4))">${item.emoji}</span>
+      ${paramsHTML}
+    </div>
+  `;
+}
+
+function renderGalleryDots() {
+  const dots = document.getElementById('galleryDots');
+  dots.innerHTML = galleryItems.map((_, i) => `
+    <div class="gallery-dot ${i === galleryIndex ? 'active' : ''}" onclick="setGallery(${i})"></div>
+  `).join('');
+}
+
+function renderGalleryThumbs() {
+  const thumbs = document.getElementById('galleryThumbs');
+  thumbs.innerHTML = galleryItems.map((item, i) => `
+    <div class="gallery-thumb ${i === galleryIndex ? 'active' : ''}" 
+         style="background:${item.bg}" 
+         onclick="setGallery(${i})">${item.emoji}</div>
+  `).join('');
+}
+
+function setGallery(idx) {
+  galleryIndex = idx;
+  renderGalleryScene(idx);
+  renderGalleryDots();
+  renderGalleryThumbs();
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', e => {
+  if (currentPage === 'workflow') {
+    if (e.key === 'ArrowRight') setGallery((galleryIndex + 1) % galleryItems.length);
+    if (e.key === 'ArrowLeft') setGallery((galleryIndex - 1 + galleryItems.length) % galleryItems.length);
+  }
+});
+
+// Touch swipe
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  if (currentPage !== 'workflow') return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 50) setGallery(dx < 0 
+    ? (galleryIndex + 1) % galleryItems.length
+    : (galleryIndex - 1 + galleryItems.length) % galleryItems.length
+  );
+});
+
+// ─── EASTER EGG ───
+let logoHoverTimer = null;
+
+document.getElementById('logo').addEventListener('mouseenter', () => {
+  logoHoverTimer = setTimeout(() => {
+    document.getElementById('logo').classList.add('awakened');
+    setTimeout(showEaster, 400);
+  }, 2000);
+});
+
+document.getElementById('logo').addEventListener('mouseleave', () => {
+  clearTimeout(logoHoverTimer);
+  if (!document.getElementById('easterOverlay').classList.contains('show')) {
+    document.getElementById('logo').classList.remove('awakened');
+  }
+});
+
+function showEaster() {
+  document.getElementById('easterOverlay').classList.add('show');
+}
+
+function closeEaster() {
+  document.getElementById('easterOverlay').classList.remove('show');
+  document.getElementById('logo').classList.remove('awakened');
+}
+
+// TOC click interaction
+document.querySelectorAll('.toc-item').forEach(item => {
+  item.addEventListener('click', function() {
+    document.querySelectorAll('.toc-item').forEach(i => i.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// Init gallery on load if setup tab opened
+document.addEventListener('DOMContentLoaded', () => {
+  initGallery();
+});
+</script>
+</body>
+</html>

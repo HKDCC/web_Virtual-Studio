@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { EasterEggOverlay } from "@/components/EasterEggOverlay";
+import { useTheme } from "@/components/ThemeProvider";
 
 function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
@@ -17,6 +18,7 @@ export function SiteHeader() {
   const hoverTimer = useRef<number | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const searchCloseTimer = useRef<number | null>(null);
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     return () => {
@@ -79,6 +81,23 @@ export function SiteHeader() {
         </nav>
 
         <div className="search-wrap">
+          <button
+            className="theme-toggle"
+            type="button"
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontSize: 16,
+              padding: "4px 8px",
+              opacity: 0.7,
+              transition: "var(--transition)",
+            }}
+          >
+            {theme === "light" ? "🌙" : "☀️"}
+          </button>
           <button
             className="search-icon"
             type="button"

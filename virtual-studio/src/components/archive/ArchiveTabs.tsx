@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 export type ArchiveBook = {
   id: string;
@@ -49,8 +50,11 @@ function BookCover(props: { title: string; coverUrl?: string | null; tone: numbe
   );
 }
 
-export function ArchiveTabs(props: { books: ArchiveBook[]; notes: ArchiveNote[] }) {
-  const [tab, setTab] = useState<"library" | "notes">("library");
+function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[] }) {
+  const searchParams = useSearchParams();
+  const [tab, setTab] = useState<"library" | "notes">(
+    searchParams.get("tab") === "notes" ? "notes" : "library"
+  );
 
   const books = useMemo(() => props.books, [props.books]);
   const notes = useMemo(() => props.notes, [props.notes]);
@@ -62,7 +66,7 @@ export function ArchiveTabs(props: { books: ArchiveBook[]; notes: ArchiveNote[] 
           电子书架
         </button>
         <button type="button" onClick={() => setTab("notes")} className={`wf-tab ${tab === "notes" ? "active" : ""}`}>
-          读书笔记
+          文档&笔记
         </button>
       </div>
 
@@ -131,3 +135,10 @@ export function ArchiveTabs(props: { books: ArchiveBook[]; notes: ArchiveNote[] 
   );
 }
 
+export function ArchiveTabs(props: { books: ArchiveBook[]; notes: ArchiveNote[] }) {
+  return (
+    <Suspense fallback={<div className="workflow-tabs"><div className="wf-tab active">电子书架</div></div>}>
+      <ArchiveTabsContent {...props} />
+    </Suspense>
+  );
+}

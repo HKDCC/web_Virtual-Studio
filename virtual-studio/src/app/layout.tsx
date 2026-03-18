@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { SiteHeader } from "@/components/SiteHeader";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { DM_Mono, Noto_Sans_SC, Noto_Serif_SC } from "next/font/google";
 
 const dmMono = DM_Mono({
@@ -38,8 +39,10 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <body className={`${dmMono.variable} ${notoSans.variable} ${notoSerif.variable}`}>
-        <SiteHeader />
-        <main>{children}</main>
+        <ThemeProvider>
+          <SiteHeader />
+          <main>{children}</main>
+        </ThemeProvider>
       </body>
     </html>
   );

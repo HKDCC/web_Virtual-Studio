@@ -69,7 +69,7 @@ export default async function HomePage() {
           <p className="mc-desc">这个虚拟空间的迭代记录。</p>
         </Link>
 
-        <Link className="module-card" href="/archive#notes">
+        <Link className="module-card" href="/archive?tab=notes">
           <span className="mc-emoji">🗒️</span>
           <span className="mc-tag">Notes</span>
           <h2 className="mc-title">笔记</h2>

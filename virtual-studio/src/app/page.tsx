@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { queryDatabaseAll } from "@/lib/notion";
 import { requireEnv } from "@/lib/env";
+import { SiteFooter } from "@/components/SiteFooter";
 
 async function safeCount(databaseIdEnv: Parameters<typeof requireEnv>[0]) {
   try {
@@ -76,6 +77,8 @@ export default async function HomePage() {
           <span className="mc-count">{notes ?? "—"}</span>
         </Link>
       </div>
+
+      <SiteFooter />
     </>
   );
 }

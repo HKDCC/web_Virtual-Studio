@@ -15,10 +15,13 @@ export function SiteHeader() {
   const [awakened, setAwakened] = useState(false);
   const [open, setOpen] = useState(false);
   const hoverTimer = useRef<number | null>(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const searchCloseTimer = useRef<number | null>(null);
 
   useEffect(() => {
     return () => {
       if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
+      if (searchCloseTimer.current) window.clearTimeout(searchCloseTimer.current);
     };
   }, []);
 
@@ -74,6 +77,34 @@ export function SiteHeader() {
             足迹
           </Link>
         </nav>
+
+        <div className="search-wrap">
+          <button
+            className="search-icon"
+            type="button"
+            onClick={() => {
+              setSearchOpen((v) => !v);
+              if (!searchOpen) {
+                window.setTimeout(() => {
+                  const el = document.getElementById("searchInput") as HTMLInputElement | null;
+                  el?.focus();
+                }, 0);
+              }
+            }}
+            aria-label="Search"
+          >
+            ⌕
+          </button>
+          <input
+            id="searchInput"
+            className={`search-input ${searchOpen ? "open" : ""}`}
+            placeholder="搜索笔记、标签..."
+            onBlur={() => {
+              // match preview's delayed close to allow clicking results later
+              searchCloseTimer.current = window.setTimeout(() => setSearchOpen(false), 200);
+            }}
+          />
+        </div>
       </header>
 
       <EasterEggOverlay

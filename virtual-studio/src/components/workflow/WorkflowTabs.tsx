@@ -8,6 +8,7 @@ export type WorkflowItem = {
   title: string;
   description?: string | null;
   emoji?: string | null;
+  iconUrl?: string | null;
   badge?: string | null;
 
   // websites
@@ -24,35 +25,6 @@ export type WorkflowItem = {
   promptEn?: string | null;
 };
 
-function wfTab(active: boolean): React.CSSProperties {
-  return {
-    fontSize: 13,
-    padding: "8px 20px",
-    cursor: "pointer",
-    color: active ? "var(--accent)" : "var(--ink-2)",
-    borderBottom: active ? "2px solid var(--accent)" : "2px solid transparent",
-    transition: "var(--transition)",
-    fontWeight: active ? 500 : 400,
-    marginBottom: -1,
-    background: "transparent",
-    borderTop: "none",
-    borderLeft: "none",
-    borderRight: "none",
-  };
-}
-
-function tagStyle(): React.CSSProperties {
-  return {
-    fontFamily: "var(--mono)",
-    fontSize: 9,
-    padding: "2px 7px",
-    borderRadius: 4,
-    background: "var(--accent-pale)",
-    color: "var(--accent)",
-    letterSpacing: "0.05em",
-  };
-}
-
 function stars(rating: number | null | undefined) {
   if (!rating) return null;
   const r = Math.max(0, Math.min(5, rating));
@@ -60,23 +32,23 @@ function stars(rating: number | null | undefined) {
   const half = r - full >= 0.5 ? 1 : 0;
   const empty = 5 - full - half;
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
+    <div className="site-stars">
       {Array.from({ length: full }).map((_, i) => (
-        <span key={`f-${i}`} style={{ fontSize: 14, color: "#E8A020" }}>
+        <span key={`f-${i}`} className="star filled">
           ★
         </span>
       ))}
       {half ? (
-        <span style={{ fontSize: 14, color: "#E8A020", opacity: 0.5 }}>
+        <span className="star half">
           ★
         </span>
       ) : null}
       {Array.from({ length: empty }).map((_, i) => (
-        <span key={`e-${i}`} style={{ fontSize: 14, color: "var(--bg-3)" }}>
+        <span key={`e-${i}`} className="star">
           ★
         </span>
       ))}
-      <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-3)", marginLeft: 6 }}>{r.toFixed(1)}</span>
+      <span className="star-num">{r.toFixed(1)}</span>
     </div>
   );
 }
@@ -88,36 +60,15 @@ function PromptCard(props: { title: string; zh?: string | null; en?: string | nu
   return (
     <div
       onClick={() => setOpen((v) => !v)}
-      style={{
-        border: "1px solid var(--bg-3)",
-        borderRadius: "var(--r)",
-        overflow: "hidden",
-        cursor: "pointer",
-        background: "var(--bg)",
-        transition: "var(--transition)",
-      }}
+      className={`prompt-card ${open ? "open" : ""}`}
     >
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px" }}>
-        <span style={{ fontSize: 14, fontWeight: 500 }}>{props.title}</span>
-        <span style={{ fontSize: 10, color: "var(--ink-3)", transform: open ? "rotate(90deg)" : "rotate(0deg)", transition: "var(--spring)" }}>
+      <div className="prompt-card-head">
+        <span className="prompt-title">{props.title}</span>
+        <span className="prompt-arrow">
           ▶
         </span>
       </div>
-      {open ? (
-        <div
-          style={{
-            padding: "16px 18px",
-            fontFamily: "var(--mono)",
-            fontSize: 12,
-            color: "var(--ink-2)",
-            lineHeight: 1.9,
-            background: "var(--bg-2)",
-            whiteSpace: "pre-wrap",
-          }}
-        >
-          {body ?? "（该条 Prompt 未填写内容）"}
-        </div>
-      ) : null}
+      <div className="prompt-body">{body ?? "（该条 Prompt 未填写内容）"}</div>
     </div>
   );
 }
@@ -139,58 +90,40 @@ export function WorkflowTabs(props: { items: WorkflowItem[] }) {
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          gap: 2,
-          padding: "24px 48px 0",
-          maxWidth: 1200,
-          margin: "0 auto",
-          borderBottom: "1px solid var(--bg-3)",
-          overflowX: "auto",
-        }}
-      >
-        <button type="button" onClick={() => setTab("tools")} style={wfTab(tab === "tools")}>
+      <div className="workflow-tabs">
+        <button type="button" onClick={() => setTab("tools")} className={`wf-tab ${tab === "tools" ? "active" : ""}`}>
           效率工具
         </button>
-        <button type="button" onClick={() => setTab("websites")} style={wfTab(tab === "websites")}>
+        <button type="button" onClick={() => setTab("websites")} className={`wf-tab ${tab === "websites" ? "active" : ""}`}>
           网站推荐
         </button>
-        <button type="button" onClick={() => setTab("setup")} style={wfTab(tab === "setup")}>
+        <button type="button" onClick={() => setTab("setup")} className={`wf-tab ${tab === "setup" ? "active" : ""}`}>
           装备清单
         </button>
-        <button type="button" onClick={() => setTab("prompts")} style={wfTab(tab === "prompts")}>
+        <button type="button" onClick={() => setTab("prompts")} className={`wf-tab ${tab === "prompts" ? "active" : ""}`}>
           AI 提示词库
         </button>
       </div>
 
       {tab === "tools" ? (
-        <div style={{ padding: "40px 48px 80px", maxWidth: 1200, margin: "0 auto" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <div className="wf-panel active" id="wf-tools">
+          <div className="tool-list">
             {bySection.tools.map((t) => (
-              <div
-                key={t.id}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 20,
-                  padding: "20px 24px",
-                  border: "1px solid var(--bg-3)",
-                  borderRadius: "var(--r)",
-                  background: "var(--bg)",
-                }}
-              >
-                <div style={{ width: 44, height: 44, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", background: "var(--accent-pale)", fontSize: 22 }}>
-                  {t.emoji ?? "🧩"}
+              <div key={t.id} className="tool-item">
+                <div className="tool-icon" style={{ background: "var(--accent-pale)" }}>
+                  {t.iconUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={t.iconUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  ) : (
+                    <span>{t.emoji ?? "🧩"}</span>
+                  )}
                 </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 15, fontWeight: 500, marginBottom: 4 }}>{t.title}</div>
-                  {t.description ? <div style={{ fontSize: 13, color: "var(--ink-2)" }}>{t.description}</div> : null}
+                <div className="tool-info">
+                  <div className="tool-name">{t.title}</div>
+                  {t.description ? <div className="tool-desc">{t.description}</div> : null}
                 </div>
                 {t.badge ? (
-                  <span style={{ fontFamily: "var(--mono)", fontSize: 10, padding: "4px 10px", borderRadius: 20, border: "1px solid var(--bg-3)", color: "var(--ink-2)" }}>
-                    {t.badge}
-                  </span>
+                  <span className={`tool-badge ${t.badge.includes("核心") ? "rec" : ""}`}>{t.badge}</span>
                 ) : null}
               </div>
             ))}
@@ -199,42 +132,30 @@ export function WorkflowTabs(props: { items: WorkflowItem[] }) {
       ) : null}
 
       {tab === "websites" ? (
-        <div style={{ padding: "40px 48px 80px", maxWidth: 1200, margin: "0 auto" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 800 }}>
+        <div className="wf-panel active" id="wf-websites">
+          <div className="site-list">
             {bySection.websites.map((w) => (
-              <div
-                key={w.id}
-                style={{
-                  display: "flex",
-                  gap: 16,
-                  padding: "20px 24px",
-                  border: "1px solid var(--bg-3)",
-                  borderRadius: "var(--r)",
-                  background: "var(--bg)",
-                }}
-              >
-                <div style={{ width: 40, height: 40, borderRadius: 10, background: "var(--bg-2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>
-                  {w.emoji ?? "🔗"}
-                </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
-                    <span style={{ fontSize: 15, fontWeight: 500 }}>{w.title}</span>
+              <div key={w.id} className="site-item">
+                <div className="site-favicon">{w.emoji ?? "🔗"}</div>
+                <div className="site-info">
+                  <div className="site-top">
+                    <span className="site-name">{w.title}</span>
                     {w.siteUrl ? (
                       <a
                         href={w.siteUrl}
                         target="_blank"
                         rel="noreferrer"
-                        style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--accent)", textDecoration: "none", opacity: 0.7 }}
+                        className="site-url"
                       >
                         {w.siteUrl.replace(/^https?:\/\//, "")}
                       </a>
                     ) : null}
                   </div>
-                  {w.description ? <div style={{ fontSize: 13, color: "var(--ink-2)", lineHeight: 1.7, marginBottom: 12 }}>{w.description}</div> : null}
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+                  {w.description ? <div className="site-desc">{w.description}</div> : null}
+                  <div className="site-bottom">
+                    <div className="site-tags">
                       {w.tags.slice(0, 6).map((t) => (
-                        <span key={t} style={tagStyle()}>
+                        <span key={t} className="book-tag">
                           {t}
                         </span>
                       ))}
@@ -281,46 +202,30 @@ export function WorkflowTabs(props: { items: WorkflowItem[] }) {
       ) : null}
 
       {tab === "prompts" ? (
-        <div style={{ padding: "40px 48px 80px", maxWidth: 1200, margin: "0 auto" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 28 }}>
+        <div className="wf-panel active" id="wf-prompts">
+          <div className="prompt-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 28 }}>
             <p style={{ fontSize: 14, color: "var(--ink-2)", lineHeight: 1.8, maxWidth: 560 }}>
               按使用场景分类的 Prompt 集合，每条提供中英文双版本。点击卡片可展开完整提示词。
             </p>
-            <div style={{ display: "flex", border: "1px solid var(--bg-3)", borderRadius: 8, overflow: "hidden" }}>
+            <div className="lang-toggle">
               <button
                 type="button"
                 onClick={() => setLang("zh")}
-                style={{
-                  padding: "6px 14px",
-                  fontSize: 12,
-                  border: "none",
-                  background: lang === "zh" ? "var(--accent)" : "transparent",
-                  color: lang === "zh" ? "white" : "var(--ink-2)",
-                  cursor: "pointer",
-                  transition: "var(--transition)",
-                }}
+                className={`lang-btn ${lang === "zh" ? "active" : ""}`}
               >
                 中文
               </button>
               <button
                 type="button"
                 onClick={() => setLang("en")}
-                style={{
-                  padding: "6px 14px",
-                  fontSize: 12,
-                  border: "none",
-                  background: lang === "en" ? "var(--accent)" : "transparent",
-                  color: lang === "en" ? "white" : "var(--ink-2)",
-                  cursor: "pointer",
-                  transition: "var(--transition)",
-                }}
+                className={`lang-btn ${lang === "en" ? "active" : ""}`}
               >
                 English
               </button>
             </div>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 10, maxWidth: 900 }}>
+          <div className="prompt-grid" style={{ maxWidth: 900 }}>
             {bySection.prompts.map((p) => (
               <PromptCard key={p.id} title={p.title} zh={p.promptZh} en={p.promptEn} lang={lang} />
             ))}

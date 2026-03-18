@@ -1,13 +1,24 @@
-import Link from "next/link";
 import { queryDatabaseAll } from "@/lib/notion";
 import { env } from "@/lib/env";
-import { findPropertyKeyByType, getMultiSelect, getPageTitle, getRichText, getSelect } from "@/lib/notionHelpers";
+import { getPageTitle, getRichText, getSelect, getUrl } from "@/lib/notionHelpers";
 import { SetupNotice } from "@/components/SetupNotice";
+import Link from "next/link";
+
+function propsOf(p: { properties: unknown }): Record<string, unknown> {
+  return p.properties as Record<string, unknown>;
+}
+
+function typeOf(p: { properties: unknown }): string {
+  return (getSelect(propsOf(p), "Type") ?? "").toLowerCase();
+}
 
 export default async function LabPage() {
   const db = env.NOTION_LAB_DB_ID;
   if (!env.NOTION_TOKEN || !db) return <SetupNotice title="Lab 需要配置 NOTION_TOKEN / NOTION_LAB_DB_ID" />;
   const items = await queryDatabaseAll({ databaseId: db, pageSize: 50, maxPages: 6 });
+
+  const ai = items.filter((p) => typeOf(p).includes("ai"));
+  const vibe = items.filter((p) => typeOf(p).includes("vibe"));
 
   return (
     <>
@@ -19,58 +30,81 @@ export default async function LabPage() {
         <p className="section-desc">AI 实践记录与 Vibe Coding 成果。每个项目都是一次认知迭代。</p>
       </div>
 
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 48px 80px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 16 }}>
-          {items.map((p) => {
-            const props = p.properties;
-            const categoryKey = findPropertyKeyByType(props, "select");
-            const tagsKey = findPropertyKeyByType(props, "multi_select");
-            const excerptKey = findPropertyKeyByType(props, "rich_text");
+      <div className="workflow-tabs">
+        <button type="button" className="wf-tab active">
+          AI 实践
+        </button>
+        <button type="button" className="wf-tab">
+          Vibe Coding
+        </button>
+      </div>
 
-            const category = categoryKey ? getSelect(props, categoryKey) : null;
-            const tags = tagsKey ? getMultiSelect(props, tagsKey) : [];
-            const excerpt = excerptKey ? getRichText(props, excerptKey) : null;
-
+      <div className="wf-panel active" id="lab-ai">
+        <div className="lab-grid">
+          {ai.map((p) => {
+            const props = propsOf(p);
+            const badge = getRichText(props, "Badge");
+            const desc = getRichText(props, "Description");
+            const github = getUrl(props, "GitHubURL");
+            const demo = getUrl(props, "DemoURL");
             return (
-              <Link
-                key={p.id}
-                href={`/p/${p.id}`}
-                style={{
-                  border: "1px solid var(--bg-3)",
-                  borderRadius: "var(--r-lg)",
-                  padding: 20,
-                  textDecoration: "none",
-                  color: "inherit",
-                  background: "var(--bg)",
-                  transition: "var(--spring)",
-                }}
-              >
-                {category ? (
-                  <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--accent)", letterSpacing: "0.08em", marginBottom: 10 }}>
-                    {category}
+              <Link key={p.id} href={`/p/${p.id}`} className="lab-card">
+                <div className="lab-card-thumb blue">
+                  <div className="lab-badge">{badge ?? "Lab"}</div>
+                </div>
+                <div className="lab-body">
+                  <div className="lab-title">{getPageTitle(p)}</div>
+                  {desc ? <div className="lab-desc">{desc}</div> : null}
+                  <div className="lab-links">
+                    {github ? (
+                      <a className="lab-link github" href={github} target="_blank" rel="noreferrer">
+                        GitHub →
+                      </a>
+                    ) : null}
+                    {demo ? (
+                      <a className="lab-link demo" href={demo} target="_blank" rel="noreferrer">
+                        Demo
+                      </a>
+                    ) : (
+                      <span className="lab-link demo">查看笔记</span>
+                    )}
                   </div>
-                ) : null}
-                <div style={{ fontSize: 16, fontWeight: 500, marginBottom: 8 }}>{getPageTitle(p)}</div>
-                {excerpt ? <div style={{ fontSize: 13, color: "var(--ink-2)", lineHeight: 1.7 }}>{excerpt}</div> : null}
-                {tags.length ? (
-                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 12 }}>
-                    {tags.slice(0, 6).map((t) => (
-                      <span
-                        key={t}
-                        style={{
-                          fontFamily: "var(--mono)",
-                          fontSize: 10,
-                          padding: "2px 8px",
-                          borderRadius: 999,
-                          background: "var(--accent-pale)",
-                          color: "var(--accent)",
-                        }}
-                      >
-                        {t}
-                      </span>
-                    ))}
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="wf-panel" id="lab-vibe">
+        <div className="lab-grid">
+          {vibe.map((p) => {
+            const props = propsOf(p);
+            const badge = getRichText(props, "Badge");
+            const desc = getRichText(props, "Description");
+            const github = getUrl(props, "GitHubURL");
+            const demo = getUrl(props, "DemoURL");
+            return (
+              <Link key={p.id} href={`/p/${p.id}`} className="lab-card">
+                <div className="lab-card-thumb earth">
+                  <div className="lab-badge">{badge ?? "Vibe"}</div>
+                </div>
+                <div className="lab-body">
+                  <div className="lab-title">{getPageTitle(p)}</div>
+                  {desc ? <div className="lab-desc">{desc}</div> : null}
+                  <div className="lab-links">
+                    {github ? (
+                      <a className="lab-link github" href={github} target="_blank" rel="noreferrer">
+                        GitHub →
+                      </a>
+                    ) : null}
+                    {demo ? (
+                      <a className="lab-link demo" href={demo} target="_blank" rel="noreferrer">
+                        Demo
+                      </a>
+                    ) : null}
                   </div>
-                ) : null}
+                </div>
               </Link>
             );
           })}

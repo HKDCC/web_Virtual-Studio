@@ -8,6 +8,28 @@ function isObj(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null;
 }
 
+function firstFileUrl(filesProp: unknown): string | null {
+  if (!isObj(filesProp)) return null;
+  const files = filesProp["files"];
+  if (!Array.isArray(files) || files.length === 0) return null;
+  const f = files[0];
+  if (!isObj(f)) return null;
+  const type = f["type"];
+  if (type === "external") {
+    const external = f["external"];
+    if (!isObj(external)) return null;
+    const url = external["url"];
+    return typeof url === "string" ? url : null;
+  }
+  if (type === "file") {
+    const file = f["file"];
+    if (!isObj(file)) return null;
+    const url = file["url"];
+    return typeof url === "string" ? url : null;
+  }
+  return null;
+}
+
 function toSection(v: string | null): WorkflowItem["section"] | null {
   const s = (v ?? "").toLowerCase().trim();
   if (s === "tools" || s === "tool" || s.includes("工具")) return "tools";
@@ -37,6 +59,7 @@ export default async function WorkflowPage() {
     const ratingRaw = props["Rating"];
     const rating =
       isObj(ratingRaw) && ratingRaw["type"] === "number" && typeof ratingRaw["number"] === "number" ? ratingRaw["number"] : null;
+    const iconUrl = firstFileUrl(props["Icon"]);
 
     mapped.push({
       id: p.id,
@@ -44,6 +67,7 @@ export default async function WorkflowPage() {
       title: getPageTitle(p) || "Untitled",
       description,
       emoji,
+      iconUrl,
       badge,
       tags,
       siteUrl,

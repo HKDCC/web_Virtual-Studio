@@ -59,15 +59,15 @@ function PromptCard(props: { title: string; id: string; zh?: string | null; en?:
   const body = props.lang === "zh" ? props.zh : props.en;
 
   return (
-    <Link href={`/p/${props.id}`} className={`prompt-card ${open ? "open" : ""}`}>
-      <div className="prompt-card-head" onClick={(e) => { e.preventDefault(); setOpen((v) => !v); }}>
+    <div className={`prompt-card ${open ? "open" : ""}`}>
+      <div className="prompt-card-head" onClick={() => setOpen((v) => !v)}>
         <span className="prompt-title">{props.title}</span>
         <span className="prompt-arrow">
           ▶
         </span>
       </div>
       <div className="prompt-body">{body ?? "（该条 Prompt 未填写内容）"}</div>
-    </Link>
+    </div>
   );
 }
 
@@ -267,6 +267,7 @@ export function WorkflowTabs(props: { items: WorkflowItem[] }) {
                   target="_blank"
                   rel="noreferrer"
                   className="tool-item"
+                  style={{ textDecoration: "none", color: "inherit" }}
                 >
                   <div className="tool-icon" style={{ background: "var(--accent-pale)" }}>
                     {t.iconUrl ? (
@@ -280,9 +281,7 @@ export function WorkflowTabs(props: { items: WorkflowItem[] }) {
                     <div className="tool-name">{t.title}</div>
                     {t.description ? <div className="tool-desc">{t.description}</div> : null}
                   </div>
-                  {t.badge ? (
-                    <span className={`tool-badge ${t.badge.includes("核心") ? "rec" : ""}`}>{t.badge}</span>
-                  ) : null}
+                  <span className="tool-badge">前往</span>
                 </a>
               ) : (
                 <div key={t.id} className="tool-item">

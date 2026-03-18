@@ -36,7 +36,6 @@ export default async function PausePage() {
   const items = await queryDatabaseAll({ databaseId: db, pageSize: 60, maxPages: 8 });
 
   const bg = ["bg-warm", "bg-cool", "bg-forest", "bg-dusk", "bg-stone", "bg-ink"] as const;
-  const size = ["s", "m", "l"] as const;
 
   return (
     <>
@@ -57,16 +56,15 @@ export default async function PausePage() {
           const location = getRichText(props, "Location");
           const emoji = title?.trim()?.slice(0, 2) || "🌿";
           const b = bg[idx % bg.length];
-          const s = size[idx % size.length];
           return (
             <Link key={p.id} href={`/p/${p.id}`} className="pause-item">
-              <div className={`pause-block ${s} ${b}`}>
+              <div className={`pause-block ${b}`}>
                 {coverUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={coverUrl}
                     alt={title || "摄影作品"}
-                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    className="pause-img"
                   />
                 ) : (
                   <div className="pause-block-inner">{emoji}</div>

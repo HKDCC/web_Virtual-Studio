@@ -34,12 +34,24 @@ function LabCard(props: { item: LabItem }) {
         {item.description ? <div className="lab-desc">{item.description}</div> : null}
         <div className="lab-links">
           {item.github ? (
-            <a className="lab-link github" href={item.github} target="_blank" rel="noreferrer">
+            <a
+              className="lab-link github"
+              href={item.github}
+              target="_blank"
+              rel="noreferrer"
+              onClick={(e) => e.stopPropagation()}
+            >
               GitHub →
             </a>
           ) : null}
           {item.demo ? (
-            <a className="lab-link demo" href={item.demo} target="_blank" rel="noreferrer">
+            <a
+              className="lab-link demo"
+              href={item.demo}
+              target="_blank"
+              rel="noreferrer"
+              onClick={(e) => e.stopPropagation()}
+            >
               Demo
             </a>
           ) : (

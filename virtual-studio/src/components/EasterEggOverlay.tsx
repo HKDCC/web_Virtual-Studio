@@ -33,7 +33,7 @@ export function EasterEggOverlay(props: { open: boolean; onClose: () => void }) 
         <span style={{ fontSize: 80, display: "block", marginBottom: 16 }}>( ˶ˆ꒳ˆ˵ )</span>
         <p style={{ fontFamily: "var(--serif)", fontSize: 22, color: "var(--ink)", marginBottom: 8 }}>发现了隐藏的彩蛋</p>
         <p style={{ fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-2)", marginBottom: 24 }}>
-          {"// 工科逻辑 × 人文温度 × 二次元灵魂"}
+          {"// 单推爱莉希雅 × 宵宫 × 流萤"}
         </p>
         <button
           type="button"
@@ -56,4 +56,3 @@ export function EasterEggOverlay(props: { open: boolean; onClose: () => void }) 
     </div>
   );
 }
-

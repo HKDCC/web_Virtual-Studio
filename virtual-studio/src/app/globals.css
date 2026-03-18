@@ -925,8 +925,8 @@ nav.primary-nav a[data-active="true"] {
 /* ─── PAUSE (preview parity) ─── */
 .pause-masonry {
   columns: 3;
-  gap: 16px;
-  padding: 32px 48px 80px;
+  gap: 12px;
+  padding: 24px 32px 60px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -947,45 +947,39 @@ nav.primary-nav a[data-active="true"] {
 }
 .pause-block {
   width: 100%;
+  display: block;
+  position: relative;
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.pause-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.pause-block-inner {
+  aspect-ratio: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: clamp(40px, 8vw, 80px);
-  position: relative;
 }
-.pause-block.s {
-  padding-bottom: 60%;
-}
-.pause-block.m {
-  padding-bottom: 75%;
-}
-.pause-block.l {
-  padding-bottom: 100%;
-}
-.pause-block-inner {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 48px;
-}
-.bg-warm {
+.bg-warm .pause-block-inner {
   background: linear-gradient(135deg, #f0e8da, #e8d8c0);
 }
-.bg-cool {
+.bg-cool .pause-block-inner {
   background: linear-gradient(135deg, #d0ddf0, #b8c8e0);
 }
-.bg-forest {
+.bg-forest .pause-block-inner {
   background: linear-gradient(135deg, #c8dcc8, #a8c4a8);
 }
-.bg-dusk {
+.bg-dusk .pause-block-inner {
   background: linear-gradient(135deg, #e8c8d8, #d0a8c0);
 }
-.bg-stone {
+.bg-stone .pause-block-inner {
   background: linear-gradient(135deg, #d8d0c0, #c4b8a8);
 }
-.bg-ink {
+.bg-ink .pause-block-inner {
   background: linear-gradient(135deg, #c0c0c8, #a8a8b4);
 }
 .pause-overlay {

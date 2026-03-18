@@ -1,0 +1,12 @@
+# Cloudflare Pages Environment Variables
+# Copy this file to .dev.vars and fill in your actual values
+# .dev.vars is already gitignored
+
+NOTION_TOKEN=your-notion-token
+NOTION_NOTES_DB_ID=your-notes-db-id
+NOTION_BOOKS_DB_ID=your-books-db-id
+NOTION_WORKFLOW_DB_ID=your-workflow-db-id
+NOTION_LAB_DB_ID=your-lab-db-id
+NOTION_PAUSE_DB_ID=your-pause-db-id
+NOTION_CHANGELOG_DB_ID=your-changelog-db-id
+REVALIDATE_TOKEN=your-revalidate-token

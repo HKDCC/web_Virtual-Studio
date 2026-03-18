@@ -1,9 +1,6 @@
 name = "webvirtualstudio"
 compatibility_date = "2025-09-27"
 compatibility_flags = ["nodejs_compat"]
-
-# Minimal config for OpenNext + Workers.
-# IMPORTANT: Do not add service bindings here unless you actually need them.
 main = ".open-next/worker.js"
 
 [assets]
@@ -11,4 +8,14 @@ directory = ".open-next/assets"
 
 [observability]
 enabled = true
+
+[vars]
+NOTION_TOKEN = "placeholder"
+NOTION_NOTES_DB_ID = "placeholder"
+NOTION_BOOKS_DB_ID = "placeholder"
+NOTION_WORKFLOW_DB_ID = "placeholder"
+NOTION_LAB_DB_ID = "placeholder"
+NOTION_PAUSE_DB_ID = "placeholder"
+NOTION_CHANGELOG_DB_ID = "placeholder"
+REVALIDATE_TOKEN = "placeholder"
 

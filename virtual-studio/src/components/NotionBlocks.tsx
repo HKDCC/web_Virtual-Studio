@@ -172,7 +172,7 @@ async function RenderBlock({ block }: { block: NotionFullBlock }) {
       if (!dataRows.length) return null;
 
       const getCells = (row: NotionFullBlock) => {
-        const tr = row.table_row as unknown as { cells?: RichText[][] } | undefined;
+        const tr = (row as Record<string, unknown>)["table_row"] as { cells?: RichText[][] } | undefined;
         return tr?.cells ?? [];
       };
 

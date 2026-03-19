@@ -54,6 +54,21 @@ function urlVal(prop: unknown): string | null {
   return typeof u === "string" ? u : null;
 }
 
+function selectVal(prop: unknown): string | null {
+  if (!isObj(prop) || prop["type"] !== "select") return null;
+  const s = prop["select"];
+  if (!isObj(s)) return null;
+  const name = s["name"];
+  return typeof name === "string" ? name : null;
+}
+
+function multiSelectVals(prop: unknown): string[] {
+  if (!isObj(prop) || prop["type"] !== "multi_select") return [];
+  const ms = prop["multi_select"];
+  if (!Array.isArray(ms)) return [];
+  return ms.map((x) => (isObj(x) && typeof x["name"] === "string" ? x["name"] : "")).filter(Boolean);
+}
+
 export function BookOverviewHeader(props: {
   title: string;
   properties: Record<string, unknown>;
@@ -65,6 +80,10 @@ export function BookOverviewHeader(props: {
   const rating = numberVal(p["MyRating"]);
   const downloadUrl = urlVal(p["DownloadURL"]);
   const coverUrl = firstFileUrl(p["Cover"]);
+  const category = selectVal(p["分类"]);
+  const status = selectVal(p["状态"]);
+  const progress = numberVal(p["进度"]);
+  const tags = multiSelectVals(p["标签"]);
 
   const stars = (rating ?? 0) / 1;
   const full = Math.floor(stars);
@@ -72,118 +91,89 @@ export function BookOverviewHeader(props: {
   const empty = Math.max(0, 5 - full - half);
 
   return (
-    <div style={{ maxWidth: 900, margin: "0 auto", padding: "24px 48px 0" }}>
-      <div style={{ marginBottom: 18 }}>
+    <div className="book-overview">
+      <div className="book-overview-back">
         <Link href="/archive" style={{ textDecoration: "none", color: "var(--ink-2)", fontSize: 13 }}>
           ← 返回书架
         </Link>
       </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "180px 1fr",
-          gap: 40,
-          marginBottom: 36,
-          paddingBottom: 32,
-          borderBottom: "1px solid var(--bg-3)",
-        }}
-      >
-        <div
-          style={{
-            width: "100%",
-            aspectRatio: "2 / 3",
-            borderRadius: 10,
-            overflow: "hidden",
-            boxShadow: "0 12px 40px rgba(0,0,0,0.25)",
-            background: "var(--bg-2)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: 16,
-            color: "white",
-            fontFamily: "var(--serif)",
-            textAlign: "center",
-          }}
-        >
+      <div className="book-overview-grid">
+        <div className="book-overview-cover">
           {coverUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={coverUrl} alt={props.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           ) : (
-            <div style={{ width: "100%", height: "100%", background: "linear-gradient(145deg, #8B7355, #5a4a38)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div className="book-cover-placeholder">
               {props.title}
             </div>
           )}
         </div>
 
-        <div>
-          <h1 style={{ fontFamily: "var(--serif)", fontSize: 26, fontWeight: 300, lineHeight: 1.3, marginBottom: 14 }}>{props.title}</h1>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14, flexWrap: "wrap" }}>
+        <div className="book-overview-info">
+          <h1 className="book-overview-title">{props.title}</h1>
+          <div className="book-overview-meta">
             {author ? <span style={{ fontSize: 14, fontWeight: 500 }}>{author}</span> : null}
           </div>
           {rating !== null ? (
-            <div style={{ display: "flex", alignItems: "center", gap: 3, marginBottom: 16 }}>
+            <div className="book-overview-rating">
               {Array.from({ length: full }).map((_, i) => (
-                <span key={`f-${i}`} style={{ color: "#E8A020" }}>
-                  ★
-                </span>
+                <span key={`f-${i}`} style={{ color: "#E8A020" }}>★</span>
               ))}
-              {half ? (
-                <span style={{ color: "#E8A020", opacity: 0.5 }}>
-                  ★
-                </span>
-              ) : null}
+              {half ? <span style={{ color: "#E8A020", opacity: 0.5 }}>★</span> : null}
               {Array.from({ length: empty }).map((_, i) => (
-                <span key={`e-${i}`} style={{ color: "var(--bg-3)" }}>
-                  ★
-                </span>
+                <span key={`e-${i}`} style={{ color: "var(--bg-3)" }}>★</span>
               ))}
               <span style={{ fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-3)", marginLeft: 6 }}>
-                我的评分 {rating.toFixed(1)} / 5
+                {rating.toFixed(1)} / 5
               </span>
             </div>
           ) : null}
 
+          <div className="book-overview-meta-rows">
+            {category && (
+              <div className="meta-row">
+                <span className="meta-label">分类</span>
+                <span className="meta-value">{category}</span>
+              </div>
+            )}
+            {status && (
+              <div className="meta-row">
+                <span className="meta-label">状态</span>
+                <span className="meta-value">{status}</span>
+              </div>
+            )}
+            {progress !== null && (
+              <div className="meta-row">
+                <span className="meta-label">进度</span>
+                <span className="meta-value">{progress}%</span>
+              </div>
+            )}
+            {tags.length > 0 && (
+              <div className="meta-row meta-row-tags">
+                <span className="meta-label">标签</span>
+                <div className="meta-tags">
+                  {tags.map((t) => (
+                    <span key={t} className="book-tag">{t}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
           {tagline ? (
-            <p
-              style={{
-                fontFamily: "var(--serif)",
-                fontSize: 15,
-                fontStyle: "italic",
-                color: "var(--accent)",
-                lineHeight: 1.6,
-                marginBottom: 18,
-                paddingLeft: 14,
-                borderLeft: "3px solid var(--accent-soft)",
-              }}
-            >
-              {tagline}
-            </p>
+            <p className="book-overview-tagline">{tagline}</p>
           ) : null}
 
           {downloadUrl ? (
-            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-              <a
-                href={downloadUrl}
-                target="_blank"
-                rel="noreferrer"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "10px 20px",
-                  background: "var(--accent)",
-                  color: "white",
-                  borderRadius: 8,
-                  fontSize: 13,
-                  textDecoration: "none",
-                  fontWeight: 400,
-                }}
-              >
-                <span>📥</span> 书籍链接
-              </a>
-              <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-3)" }}>来自 Notion: DownloadURL</span>
-            </div>
+            <a
+              href={downloadUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="book-overview-download"
+            >
+              <span>📥</span> 书籍链接
+            </a>
           ) : null}
         </div>
       </div>

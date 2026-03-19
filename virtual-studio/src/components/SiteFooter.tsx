@@ -3,17 +3,17 @@ import Link from "next/link";
 export function SiteFooter() {
   return (
     <footer className="site-footer">
-      <span className="footer-brand">© 2025 Tech-Linguist Lab · Built with Astro + Notion</span>
+      <span className="footer-brand">© 2026 Tech-Linguist Lab · Built with Next.js + Notion</span>
       <div className="footer-links">
-        <Link href="/" prefetch={false}>
+        <a href="https://github.com/quaxstudio" target="_blank" rel="noopener noreferrer" prefetch={false}>
           GitHub
-        </Link>
-        <Link href="/" prefetch={false}>
+        </a>
+        <a href="/rss.xml" prefetch={false}>
           RSS
-        </Link>
-        <Link href="/" prefetch={false}>
+        </a>
+        <a href="/about" prefetch={false}>
           About
-        </Link>
+        </a>
       </div>
     </footer>
   );

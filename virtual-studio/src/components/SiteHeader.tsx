@@ -37,7 +37,7 @@ export function SiteHeader() {
             hoverTimer.current = window.setTimeout(() => {
               setAwakened(true);
               window.setTimeout(() => setOpen(true), 400);
-            }, 2000);
+            }, 7000);
           }}
           onMouseLeave={() => {
             if (hoverTimer.current) window.clearTimeout(hoverTimer.current);

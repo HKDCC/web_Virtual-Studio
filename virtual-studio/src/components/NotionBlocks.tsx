@@ -161,11 +161,75 @@ async function RenderBlock({ block }: { block: NotionFullBlock }) {
         </ol>
       );
     }
+    case "table": {
+      const tbl = b["table"] as unknown as { has_column_header?: boolean } | undefined;
+      const hasHeader = tbl?.has_column_header ?? false;
+      const rows = block.has_children
+        ? await listBlockChildrenAll({ blockId: block.id })
+        : [];
+      const dataRows = rows.filter((r) => r.type === "table_row") as NotionFullBlock[];
+
+      if (!dataRows.length) return null;
+
+      const getCells = (row: NotionFullBlock) => {
+        const tr = row.table_row as unknown as { cells?: RichText[][] } | undefined;
+        return tr?.cells ?? [];
+      };
+
+      const headerCells = hasHeader ? getCells(dataRows[0]) : [];
+      const bodyRows = hasHeader ? dataRows.slice(1) : dataRows;
+
+      return (
+        <div style={{ overflowX: "auto", margin: "16px 0" }}>
+          <table style={{ borderCollapse: "collapse", width: "100%", minWidth: 400 }}>
+            {hasHeader && (
+              <thead>
+                <tr>
+                  {headerCells.map((cell, ci) => (
+                    <th
+                      key={ci}
+                      style={{
+                        border: "1px solid var(--bg-3)",
+                        padding: "8px 12px",
+                        textAlign: "left",
+                        background: "var(--bg-2)",
+                        fontWeight: 600,
+                      }}
+                    >
+                      {renderRichText(cell)}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+            )}
+            <tbody>
+              {bodyRows.map((row, ri) => (
+                <tr key={ri}>
+                  {getCells(row).map((cell, ci) => (
+                    <td
+                      key={ci}
+                      style={{
+                        border: "1px solid var(--bg-3)",
+                        padding: "8px 12px",
+                      }}
+                    >
+                      {renderRichText(cell)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
+    case "table_row": {
+      // table_row is rendered inside table block, not as standalone
+      return null;
+    }
     default: {
       return null;
     }
-  }
-}
 
 export async function NotionBlocks({ blocks }: { blocks: NotionFullBlock[] }) {
   return (

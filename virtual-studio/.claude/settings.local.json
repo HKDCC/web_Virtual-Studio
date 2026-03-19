@@ -4,7 +4,10 @@
       "WebSearch",
       "WebFetch(domain:opennext.js.org)",
       "Bash(npm run:*)",
-      "Read(//c/Users/hkdcc/Downloads/**)"
+      "Read(//c/Users/hkdcc/Downloads/**)",
+      "WebFetch(domain:minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com)",
+      "Read(//c/Users/hkdcc/Desktop/web_Virtual Studio/reference/**)",
+      "Bash(npx tsc:*)"
     ]
   }
 }

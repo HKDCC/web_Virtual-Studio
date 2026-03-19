@@ -19,7 +19,7 @@ export function EasterEggOverlay(props: { open: boolean; onClose: () => void }) 
         style={{
           position: "absolute",
           inset: 0,
-          background: "rgba(253,252,248,0.96)",
+          background: "rgba(24,24,24,0.95)",
         }}
       />
       <div
@@ -31,8 +31,8 @@ export function EasterEggOverlay(props: { open: boolean; onClose: () => void }) 
         }}
       >
         <span style={{ fontSize: 80, display: "block", marginBottom: 16 }}>( ˶ˆ꒳ˆ˵ )</span>
-        <p style={{ fontFamily: "var(--serif)", fontSize: 22, color: "var(--ink)", marginBottom: 8 }}>发现了隐藏的彩蛋</p>
-        <p style={{ fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink-2)", marginBottom: 24 }}>
+        <p style={{ fontFamily: "var(--serif)", fontSize: 22, color: "#f5f5f7", marginBottom: 8 }}>发现了隐藏的彩蛋</p>
+        <p style={{ fontFamily: "var(--mono)", fontSize: 12, color: "#c4a882", marginBottom: 24 }}>
           {"// 单推爱莉希雅 × 宵宫 × 流萤"}
         </p>
         <button

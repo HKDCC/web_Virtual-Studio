@@ -64,17 +64,23 @@ async function RenderBlock({ block }: { block: NotionFullBlock }) {
     case "heading_1": {
       const h = b["heading_1"] as unknown as { rich_text?: RichText[] } | undefined;
       const rt = h?.rich_text ?? [];
-      return <h2>{renderRichText(rt)}</h2>;
+      const text = rt.map((r) => r.plain_text).join("");
+      const id = text.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
+      return <h2 id={id}>{renderRichText(rt)}</h2>;
     }
     case "heading_2": {
       const h = b["heading_2"] as unknown as { rich_text?: RichText[] } | undefined;
       const rt = h?.rich_text ?? [];
-      return <h2>{renderRichText(rt)}</h2>;
+      const text = rt.map((r) => r.plain_text).join("");
+      const id = text.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
+      return <h2 id={id}>{renderRichText(rt)}</h2>;
     }
     case "heading_3": {
       const h = b["heading_3"] as unknown as { rich_text?: RichText[] } | undefined;
       const rt = h?.rich_text ?? [];
-      return <h3>{renderRichText(rt)}</h3>;
+      const text = rt.map((r) => r.plain_text).join("");
+      const id = text.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
+      return <h3 id={id}>{renderRichText(rt)}</h3>;
     }
     case "paragraph": {
       const p = b["paragraph"] as unknown as { rich_text?: RichText[] } | undefined;
@@ -234,14 +240,58 @@ async function RenderBlock({ block }: { block: NotionFullBlock }) {
 }
 
 export async function NotionBlocks({ blocks }: { blocks: NotionFullBlock[] }) {
-  return (
-    <div className="prose">
-      {await Promise.all(
-        blocks.map(async (b) => (
-          <div key={b.id}>{await RenderBlock({ block: b })}</div>
-        )),
-      )}
-    </div>
-  );
+  const elements: React.ReactNode[] = [];
+  let i = 0;
+
+  while (i < blocks.length) {
+    const block = blocks[i];
+    const type = block.type as string;
+
+    // Group consecutive bulleted_list_items
+    if (type === "bulleted_list_item") {
+      const items: RichText[][] = [];
+      while (i < blocks.length && blocks[i].type === "bulleted_list_item") {
+        const b = blocks[i] as Record<string, unknown>;
+        const li = b["bulleted_list_item"] as unknown as { rich_text?: RichText[] } | undefined;
+        items.push(li?.rich_text ?? []);
+        i++;
+      }
+      elements.push(
+        <ul key={`ul-${i}`} style={{ paddingLeft: 22, margin: "10px 0" }}>
+          {items.map((rt, idx) => (
+            <li key={idx} style={{ margin: "6px 0" }}>{renderRichText(rt)}</li>
+          ))}
+        </ul>
+      );
+      continue;
+    }
+
+    // Group consecutive numbered_list_items
+    if (type === "numbered_list_item") {
+      const items: RichText[][] = [];
+      while (i < blocks.length && blocks[i].type === "numbered_list_item") {
+        const b = blocks[i] as Record<string, unknown>;
+        const li = b["numbered_list_item"] as unknown as { rich_text?: RichText[] } | undefined;
+        items.push(li?.rich_text ?? []);
+        i++;
+      }
+      elements.push(
+        <ol key={`ol-${i}`} style={{ paddingLeft: 22, margin: "10px 0" }}>
+          {items.map((rt, idx) => (
+            <li key={idx} style={{ margin: "6px 0" }}>{renderRichText(rt)}</li>
+          ))}
+        </ol>
+      );
+      continue;
+    }
+
+    // Render other blocks individually
+    elements.push(
+      <div key={block.id}>{await RenderBlock({ block })}</div>
+    );
+    i++;
+  }
+
+  return <div className="prose">{elements}</div>;
 }
 

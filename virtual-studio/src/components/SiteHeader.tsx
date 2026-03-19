@@ -11,21 +11,71 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(href + "/");
 }
 
+type SearchItem = {
+  id: string;
+  title: string;
+  type: "note" | "book";
+  url: string;
+};
+
 export function SiteHeader() {
   const pathname = usePathname();
   const [awakened, setAwakened] = useState(false);
   const [open, setOpen] = useState(false);
   const hoverTimer = useRef<number | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<SearchItem[]>([]);
+  const [searchLoading, setSearchLoading] = useState(false);
   const searchCloseTimer = useRef<number | null>(null);
+  const searchFetchTimer = useRef<number | null>(null);
   const { theme, toggleTheme } = useTheme();
+  const allItems = useRef<SearchItem[]>([]);
+
+  useEffect(() => {
+    // Fetch all search items on mount
+    async function fetchSearchItems() {
+      try {
+        const res = await fetch("/api/search");
+        const data = await res.json();
+        allItems.current = data.items || [];
+      } catch {
+        allItems.current = [];
+      }
+    }
+    fetchSearchItems();
+  }, []);
 
   useEffect(() => {
     return () => {
       if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
       if (searchCloseTimer.current) window.clearTimeout(searchCloseTimer.current);
+      if (searchFetchTimer.current) window.clearTimeout(searchFetchTimer.current);
     };
   }, []);
+
+  function handleSearchChange(value: string) {
+    setSearchQuery(value);
+
+    if (searchFetchTimer.current) window.clearTimeout(searchFetchTimer.current);
+
+    if (!value.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
+    setSearchLoading(true);
+    searchFetchTimer.current = window.setTimeout(() => {
+      const query = value.toLowerCase();
+      const results = allItems.current.filter(
+        (item) =>
+          item.title.toLowerCase().includes(query) ||
+          item.type.toLowerCase().includes(query)
+      );
+      setSearchResults(results.slice(0, 5));
+      setSearchLoading(false);
+    }, 150);
+  }
 
   return (
     <>
@@ -118,11 +168,63 @@ export function SiteHeader() {
             id="searchInput"
             className={`search-input ${searchOpen ? "open" : ""}`}
             placeholder="搜索笔记、标签..."
+            value={searchQuery}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            onFocus={() => setSearchOpen(true)}
             onBlur={() => {
-              // match preview's delayed close to allow clicking results later
               searchCloseTimer.current = window.setTimeout(() => setSearchOpen(false), 200);
             }}
           />
+          {searchOpen && (searchResults.length > 0 || searchLoading) && (
+            <div
+              className="search-results"
+              style={{
+                position: "absolute",
+                top: "100%",
+                right: 0,
+                marginTop: 8,
+                width: 280,
+                background: "var(--bg)",
+                border: "1px solid var(--bg-3)",
+                borderRadius: "var(--r)",
+                boxShadow: "var(--shadow-hover)",
+                overflow: "hidden",
+                zIndex: 200,
+              }}
+            >
+              {searchLoading ? (
+                <div style={{ padding: "12px 16px", color: "var(--ink-2)", fontSize: 13 }}>搜索中...</div>
+              ) : (
+                searchResults.map((item) => (
+                  <Link
+                    key={item.id}
+                    href={item.url}
+                    className="search-result-item"
+                    style={{
+                      display: "block",
+                      padding: "10px 16px",
+                      textDecoration: "none",
+                      color: "var(--ink)",
+                      fontSize: 13,
+                      borderBottom: "1px solid var(--bg-3)",
+                      transition: "var(--transition)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "var(--bg-2)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "transparent";
+                    }}
+                  >
+                    <div style={{ fontWeight: 500, marginBottom: 2 }}>{item.title}</div>
+                    <div style={{ fontSize: 11, color: "var(--ink-3)", fontFamily: "var(--mono)" }}>
+                      {item.type === "note" ? "笔记" : "书籍"}
+                    </div>
+                  </Link>
+                ))
+              )}
+            </div>
+          )}
         </div>
       </header>
 

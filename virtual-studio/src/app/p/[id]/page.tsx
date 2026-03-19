@@ -3,6 +3,29 @@ import { getPageTitle } from "@/lib/notionHelpers";
 import { listBlockChildrenAll, notion } from "@/lib/notion";
 import Link from "next/link";
 import { BookOverviewHeader } from "@/components/BookOverviewHeader";
+import { TableOfContentsWrapper } from "@/components/TableOfContentsWrapper";
+
+type RichText = {
+  plain_text: string;
+};
+
+function extractHeadings(blocks: { type: string; [key: string]: unknown }[]) {
+  const headings: { id: string; text: string; level: number }[] = [];
+
+  blocks.forEach((block) => {
+    const type = block.type as string;
+    if (type === "heading_1" || type === "heading_2" || type === "heading_3") {
+      const h = block[type] as { rich_text?: RichText[] } | undefined;
+      const rt = h?.rich_text ?? [];
+      const text = rt.map((r) => r.plain_text).join("");
+      const level = parseInt(type.replace("heading_", ""));
+      const id = text.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
+      headings.push({ id, text, level });
+    }
+  });
+
+  return headings;
+}
 
 export default async function NotionPageRoute(props: { params: Promise<{ id: string }> }) {
   const { id } = await props.params;
@@ -15,6 +38,7 @@ export default async function NotionPageRoute(props: { params: Promise<{ id: str
   const pageWithProps = page as unknown as { properties: Record<string, unknown> };
   const title = getPageTitle(pageWithProps);
   const blocks = await listBlockChildrenAll({ blockId: id });
+  const headings = extractHeadings(blocks);
 
   const propsRecord = pageWithProps.properties ?? {};
   const isBook = Object.prototype.hasOwnProperty.call(propsRecord, "Author") || Object.prototype.hasOwnProperty.call(propsRecord, "DownloadURL");
@@ -36,9 +60,11 @@ export default async function NotionPageRoute(props: { params: Promise<{ id: str
         </div>
       )}
 
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: "0 48px 80px" }}>
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: "0 48px 80px", position: "relative" }}>
         <NotionBlocks blocks={blocks} />
       </div>
+
+      <TableOfContentsWrapper headings={headings} />
     </>
   );
 }

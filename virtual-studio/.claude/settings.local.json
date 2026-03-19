@@ -3,7 +3,8 @@
     "allow": [
       "WebSearch",
       "WebFetch(domain:opennext.js.org)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Read(//c/Users/hkdcc/Downloads/**)"
     ]
   }
 }

@@ -230,6 +230,8 @@ async function RenderBlock({ block }: { block: NotionFullBlock }) {
     default: {
       return null;
     }
+  }
+}
 
 export async function NotionBlocks({ blocks }: { blocks: NotionFullBlock[] }) {
   return (

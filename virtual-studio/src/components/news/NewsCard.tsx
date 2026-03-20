@@ -92,28 +92,30 @@ export function NewsCard(props: { items: NewsItem[] }) {
                 <span className="news-date-label">{formatDate(date) ?? date}</span>
                 <span className="news-date-count">{items.length} 条</span>
               </div>
-              {items.map((item) => (
-                <Link
-                  key={item.id}
-                  href={`/p/${item.id}?from=news`}
-                  className="news-item-card"
-                >
-                  <div className="news-item-meta">
-                    <div className="news-item-tags">
-                      {item.categories.map((c) => (
-                        <CatBadge key={c} cat={c} />
-                      ))}
+              <div className="news-grid">
+                {items.map((item) => (
+                  <Link
+                    key={item.id}
+                    href={`/p/${item.id}?from=news`}
+                    className="news-item-card"
+                  >
+                    <div className="news-item-meta">
+                      <div className="news-item-tags">
+                        {item.categories.map((c) => (
+                          <CatBadge key={c} cat={c} />
+                        ))}
+                      </div>
+                      <div className="news-item-sources">
+                        {item.sources.map((s) => (
+                          <SourceBadge key={s} source={s} />
+                        ))}
+                      </div>
                     </div>
-                    <div className="news-item-sources">
-                      {item.sources.map((s) => (
-                        <SourceBadge key={s} source={s} />
-                      ))}
-                    </div>
-                  </div>
-                  <h3 className="news-item-title">{item.title}</h3>
-                  <span className="news-item-arrow">→</span>
-                </Link>
-              ))}
+                    <h3 className="news-item-title">{item.title}</h3>
+                    <span className="news-item-arrow">→</span>
+                  </Link>
+                ))}
+              </div>
             </div>
           ))
         )}
@@ -121,10 +123,12 @@ export function NewsCard(props: { items: NewsItem[] }) {
 
       <style>{`
         .news-container {
-          margin-top: 40px;
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 32px 48px 80px;
         }
         .news-list {
-          margin-top: 32px;
+          margin-top: 0;
         }
         .news-day {
           margin-bottom: 48px;
@@ -147,14 +151,18 @@ export function NewsCard(props: { items: NewsItem[] }) {
           font-size: 11px;
           color: var(--ink-4);
         }
+        .news-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+        }
         .news-item-card {
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 10px;
           padding: 20px 24px;
           border: 1px solid var(--bg-3);
           border-radius: var(--r);
-          margin-bottom: 12px;
           cursor: pointer;
           transition: var(--spring);
           background: var(--bg);
@@ -163,7 +171,7 @@ export function NewsCard(props: { items: NewsItem[] }) {
           position: relative;
         }
         .news-item-card:hover {
-          transform: translateY(-2px);
+          transform: translateY(-3px) scale(1.005);
           box-shadow: var(--shadow-hover);
           border-color: var(--accent-soft);
         }
@@ -227,6 +235,14 @@ export function NewsCard(props: { items: NewsItem[] }) {
           padding: 60px 0;
           color: var(--ink-4);
           font-size: 14px;
+        }
+        @media (max-width: 768px) {
+          .news-container {
+            padding: 20px;
+          }
+          .news-grid {
+            grid-template-columns: 1fr;
+          }
         }
       `}</style>
     </div>

@@ -14,7 +14,7 @@ export default async function ChangelogPage() {
       <div className="section-header">
         <div>
           <p className="section-eyebrow">Change Log · 足迹</p>
-          <h1 className="section-title">这个花园的生长记录</h1>
+          <h1 className="section-title">这个空间的……</h1>
         </div>
       </div>
 

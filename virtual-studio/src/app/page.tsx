@@ -56,7 +56,7 @@ export default async function HomePage() {
           <span className="mc-emoji">📡</span>
           <span className="mc-tag">Daily · 输入层</span>
           <h2 className="mc-title">AI 日报</h2>
-          <p className="mc-desc">每日采集 AI 行业新闻，自动同步到 Notion。</p>
+          <p className="mc-desc">每日AI行业动态，内容由Open Claw全自动化抓取生成。</p>
           <span className="mc-count">{newsCount ?? "—"}</span>
         </Link>
 

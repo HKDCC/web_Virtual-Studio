@@ -113,6 +113,9 @@ export function SiteHeader() {
         </Link>
 
         <nav className="primary-nav">
+          <Link href="/news" data-active={isActive(pathname, "/news")}>
+            AI 日报
+          </Link>
           <Link href="/archive" data-active={isActive(pathname, "/archive")}>
             库 Archive
           </Link>

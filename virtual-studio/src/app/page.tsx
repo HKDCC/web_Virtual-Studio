@@ -13,9 +13,20 @@ async function safeCount(databaseIdEnv: Parameters<typeof requireEnv>[0]) {
   }
 }
 
+async function safeCountNews() {
+  try {
+    if (!env.NOTION_AINEWS_DB_ID) return null;
+    const pages = await queryDatabaseAll({ databaseId: env.NOTION_AINEWS_DB_ID, pageSize: 50, maxPages: 2 });
+    return pages.length;
+  } catch {
+    return null;
+  }
+}
+
 export default async function HomePage() {
   const books = await safeCount("NOTION_BOOKS_DB_ID");
   const notes = await safeCount("NOTION_NOTES_DB_ID");
+  const newsCount = await safeCountNews();
 
   return (
     <>
@@ -39,6 +50,14 @@ export default async function HomePage() {
             电子书架与读书笔记。收藏是一种姿态，整理是一种思考。技术书与文学之间，存在比想象中更多的共通语法。
           </p>
           <span className="mc-count">{books ?? "—"}</span>
+        </Link>
+
+        <Link className="module-card" href="/news">
+          <span className="mc-emoji">📡</span>
+          <span className="mc-tag">Daily · 输入层</span>
+          <h2 className="mc-title">AI 日报</h2>
+          <p className="mc-desc">每日采集 AI 行业新闻，自动同步到 Notion。</p>
+          <span className="mc-count">{newsCount ?? "—"}</span>
         </Link>
 
         <Link className="module-card" href="/lab">

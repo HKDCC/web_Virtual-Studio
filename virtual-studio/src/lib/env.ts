@@ -16,6 +16,7 @@ const envSchema = z.object({
   NOTION_BOOKS_DB_ID: optionalNonEmptyString(),
   NOTION_LAB_DB_ID: optionalNonEmptyString(),
   NOTION_PAUSE_DB_ID: optionalNonEmptyString(),
+  NOTION_AINEWS_DB_ID: optionalNonEmptyString(),
   REVALIDATE_TOKEN: optionalNonEmptyString(),
 });
 
@@ -27,6 +28,7 @@ export const env = envSchema.parse({
   NOTION_BOOKS_DB_ID: process.env.NOTION_BOOKS_DB_ID,
   NOTION_LAB_DB_ID: process.env.NOTION_LAB_DB_ID,
   NOTION_PAUSE_DB_ID: process.env.NOTION_PAUSE_DB_ID,
+  NOTION_AINEWS_DB_ID: process.env.NOTION_AINEWS_DB_ID,
   REVALIDATE_TOKEN: process.env.REVALIDATE_TOKEN,
 });
 

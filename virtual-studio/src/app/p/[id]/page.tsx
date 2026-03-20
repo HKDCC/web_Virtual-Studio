@@ -27,8 +27,9 @@ function extractHeadings(blocks: { type: string; [key: string]: unknown }[]) {
   return headings;
 }
 
-export default async function NotionPageRoute(props: { params: Promise<{ id: string }> }) {
+export default async function NotionPageRoute(props: { params: Promise<{ id: string }>; searchParams: Promise<{ from?: string }> }) {
   const { id } = await props.params;
+  const { from } = await props.searchParams;
 
   const page = await notion().pages.retrieve({ page_id: id });
   if (page.object !== "page") {
@@ -42,6 +43,7 @@ export default async function NotionPageRoute(props: { params: Promise<{ id: str
 
   const propsRecord = pageWithProps.properties ?? {};
   const isBook = Object.prototype.hasOwnProperty.call(propsRecord, "Author") || Object.prototype.hasOwnProperty.call(propsRecord, "DownloadURL");
+  const backUrl = from === "news" ? "/news" : "/archive";
 
   return (
     <>
@@ -50,7 +52,7 @@ export default async function NotionPageRoute(props: { params: Promise<{ id: str
       ) : (
         <div style={{ maxWidth: 900, margin: "0 auto", padding: "40px 48px 0" }}>
           <div style={{ marginBottom: 20 }}>
-            <Link href="/archive" style={{ textDecoration: "none", color: "var(--ink-2)", fontSize: 13 }}>
+            <Link href={backUrl} style={{ textDecoration: "none", color: "var(--ink-2)", fontSize: 13 }}>
               ← 返回
             </Link>
           </div>

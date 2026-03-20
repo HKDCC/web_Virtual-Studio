@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { queryDatabaseAll } from "@/lib/notion";
-import { requireEnv } from "@/lib/env";
+import { env, requireEnv } from "@/lib/env";
 import { SiteFooter } from "@/components/SiteFooter";
 
 async function safeCount(databaseIdEnv: Parameters<typeof requireEnv>[0]) {

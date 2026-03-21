@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 编程产品扫盲对比</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f13;
+    --surface: #16161d;
+    --surface2: #1e1e28;
+    --border: #2a2a38;
+    --accent: #7c6af7;
+    --accent2: #4fd1c5;
+    --accent3: #f6ad55;
+    --text: #e8e8f0;
+    --text-muted: #8888aa;
+    --text-dim: #555570;
+    --green: #68d391;
+    --red: #fc8181;
+    --tag-bg: #1e1e35;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans SC', sans-serif;
+    font-weight: 300;
+    line-height: 1.85;
+    font-size: 15px;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: linear-gradient(135deg, #0f0f13 0%, #16122a 60%, #0f0f13 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 72px 0 56px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(124,106,247,.18) 0%, transparent 70%);
+  }
+  .hero-label {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    border: 1px solid rgba(124,106,247,.35);
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .hero h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: clamp(28px, 5vw, 46px);
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -.01em;
+    position: relative;
+    margin-bottom: 16px;
+  }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero-sub {
+    color: var(--text-muted);
+    font-size: 14px;
+    position: relative;
+  }
+
+  /* ── Layout ── */
+  .container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+  /* ── TOC ── */
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin: 48px 0 56px;
+  }
+  .toc-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .15em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .toc ol { padding-left: 20px; }
+  .toc li { margin: 6px 0; }
+  .toc a { color: var(--text-muted); text-decoration: none; font-size: 14px; transition: color .2s; }
+  .toc a:hover { color: var(--accent); }
+
+  /* ── Section ── */
+  .section { margin-bottom: 72px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(124,106,247,.1);
+    border: 1px solid rgba(124,106,247,.25);
+    border-radius: 6px;
+    padding: 3px 10px;
+    flex-shrink: 0;
+  }
+  h2 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -.01em;
+  }
+  h3 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 17px;
+    font-weight: 600;
+    margin: 32px 0 12px;
+    color: var(--text);
+  }
+  h3::before {
+    content: '▸ ';
+    color: var(--accent2);
+    font-size: 13px;
+  }
+  p { margin-bottom: 14px; color: var(--text); }
+
+  /* ── Callout ── */
+  .callout {
+    background: var(--surface);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+    margin: 20px 0 28px;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+  .callout strong { color: var(--text); }
+  .callout.tip { border-color: var(--accent2); }
+  .callout.warn { border-color: var(--accent3); }
+
+  /* ── Layer cards ── */
+  .layer-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 24px 0;
+  }
+  @media (max-width: 600px) { .layer-grid { grid-template-columns: 1fr; } }
+  .layer-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+  }
+  .layer-card .icon { font-size: 26px; margin-bottom: 10px; }
+  .layer-card .layer-name {
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+  .layer-card .layer-desc { font-size: 12px; color: var(--text-muted); }
+  .layer-card .layer-eg {
+    margin-top: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+  }
+
+  /* ── Product cards ── */
+  .product-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    transition: border-color .2s;
+  }
+  .product-card:hover { border-color: rgba(124,106,247,.4); }
+  .product-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .product-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .product-maker { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--tag-bg);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+  .tag.free { color: var(--green); border-color: rgba(104,211,145,.25); background: rgba(104,211,145,.05); }
+  .tag.new { color: var(--accent3); border-color: rgba(246,173,85,.25); background: rgba(246,173,85,.05); }
+  .tag.open { color: var(--accent2); border-color: rgba(79,209,197,.25); background: rgba(79,209,197,.05); }
+  .price-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .pros-cons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 14px;
+    font-size: 13px;
+  }
+  @media (max-width: 500px) { .pros-cons { grid-template-columns: 1fr; } }
+  .pros, .cons {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .pros-label { color: var(--green); font-size: 11px; font-weight: 500; margin-bottom: 6px; letter-spacing: .05em; }
+  .cons-label { color: var(--red); font-size: 11px; font-weight: 500; margin-bottom: 6px; letter-spacing: .05em; }
+  .pros li, .cons li { margin-left: 14px; margin-bottom: 4px; color: var(--text-muted); }
+
+  /* ── Model table ── */
+  .model-table-wrap { overflow-x: auto; margin: 20px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead tr { background: var(--surface2); }
+  th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-weight: 400;
+  }
+  td {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--text);
+  }
+  tr:last-child td { border-bottom: none; }
+  tbody tr { background: var(--surface); }
+  tbody tr:hover { background: var(--surface2); }
+  td:first-child { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); }
+  .dot-green::before { content: '●'; color: var(--green); margin-right: 5px; }
+  .dot-red::before { content: '●'; color: var(--red); margin-right: 5px; }
+  .dot-yellow::before { content: '●'; color: var(--accent3); margin-right: 5px; }
+
+  /* ── Scenario picker ── */
+  .scenario-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  @media (max-width: 560px) { .scenario-grid { grid-template-columns: 1fr; } }
+  .scenario-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .scenario-q { font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+  .scenario-a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--accent2);
+    font-weight: 600;
+  }
+
+  /* ── Trend cards ── */
+  .trend-list { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+  .trend-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .trend-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px;
+    font-weight: 600;
+    color: rgba(124,106,247,.25);
+    flex-shrink: 0;
+    line-height: 1;
+    padding-top: 2px;
+  }
+  .trend-body strong { color: var(--text); font-size: 14px; }
+  .trend-body p { font-size: 13px; color: var(--text-muted); margin: 4px 0 0; }
+
+  /* ── Divider ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 56px 0;
+  }
+
+  /* ── Footer ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0 48px;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 12px;
+  }
+  footer a { color: var(--text-muted); text-decoration: none; }
+
+  .highlight { color: var(--accent); font-weight: 500; }
+  .mono { font-family: 'JetBrains Mono', monospace; font-size: .9em; }
+
+  /* scroll anchor offset */
+  [id] { scroll-margin-top: 24px; }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-label">2026 · 扫盲对比笔记</div>
+  <h1>AI <em>编程产品</em><br>全景地图</h1>
+  <div class="hero-sub">模型 · Agent · IDE · 插件 · 平台 — 一次说清楚</div>
+</div>
+
+<div class="container">
+
+  <!-- TOC -->
+  <nav class="toc">
+    <div class="toc-title">目录</div>
+    <ol>
+      <li><a href="#framework">先建框架：别把发动机当汽车</a></li>
+      <li><a href="#models">底层模型扫盲</a></li>
+      <li><a href="#cli">终端 Agent（命令行派）</a></li>
+      <li><a href="#ide">AI-first IDE（图形化派）</a></li>
+      <li><a href="#plugin">IDE 插件 / 平台助手</a></li>
+      <li><a href="#playground">在线平台 / Playground</a></li>
+      <li><a href="#compare">横向对比总表</a></li>
+      <li><a href="#scenario">选型建议（按场景）</a></li>
+      <li><a href="#trend">趋势与总结</a></li>
+    </ol>
+  </nav>
+
+  <!-- ① 框架 -->
+  <section class="section" id="framework">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>先建框架：别把发动机当汽车</h2>
+    </div>
+
+    <p>网上讨论 AI 编程工具时，最常见的混乱是：把<strong>底层模型</strong>和<strong>上层工具</strong>放在一起比较，就像同时讨论"丰田的发动机"和"特斯拉这台车"谁更好开——两个维度，根本不是一个问题。</p>
+    <p>理解这个圈子，先记住三层架构：</p>
+
+    <div class="layer-grid">
+      <div class="layer-card">
+        <div class="icon">🧠</div>
+        <div class="layer-name">底层模型</div>
+        <div class="layer-desc">提供智能能力，不直接面向用户使用</div>
+        <div class="layer-eg">Claude Opus 4.6 / GPT-5.4 / Gemini 3.1 Pro</div>
+      </div>
+      <div class="layer-card">
+        <div class="icon">⚙️</div>
+        <div class="layer-name">编程 Agent / 工具</div>
+        <div class="layer-desc">调用模型执行工程任务，有工作流和上下文管理</div>
+        <div class="layer-eg">Claude Code / Codex / Gemini CLI</div>
+      </div>
+      <div class="layer-card">
+        <div class="icon">🖥️</div>
+        <div class="layer-name">IDE / 平台</div>
+        <div class="layer-desc">提供编写代码的完整环境，AI 嵌入其中</div>
+        <div class="layer-eg">Cursor / Antigravity / Copilot</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>换位思考：</strong>你买车不需要懂发动机原理，但你得知道这台车用的是什么发动机——它直接影响性能上限。同理，选 AI 编程工具时，背后调用什么模型，决定了这个工具的天花板。
+    </div>
+  </section>
+
+  <!-- ② 模型 -->
+  <section class="section" id="models">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>底层模型扫盲（引擎层）</h2>
+    </div>
+
+    <p>这些模型你大概率不会直接用，但它们是所有工具的能力来源。你选的工具背后调用哪个模型，直接影响代码质量、推理深度和上下文长度。</p>
+
+    <div class="model-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>模型</th>
+            <th>厂商</th>
+            <th>核心特点</th>
+            <th>编程能力</th>
+            <th>上下文</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Claude Opus 4.6</td>
+            <td>Anthropic</td>
+            <td>顶级推理，长任务最稳</td>
+            <td><span class="dot-green"></span>SWE-bench ~80.8%，业界第一</td>
+            <td>1M tokens</td>
+          </tr>
+          <tr>
+            <td>Claude Sonnet 4.6</td>
+            <td>Anthropic</td>
+            <td>速度与质量平衡，日常主力</td>
+            <td><span class="dot-green"></span>极强，大多数场景够用</td>
+            <td>200K tokens</td>
+          </tr>
+          <tr>
+            <td>GPT-5.4</td>
+            <td>OpenAI</td>
+            <td>多模态综合表现强，生态最大</td>
+            <td><span class="dot-green"></span>全面，多模态理解突出</td>
+            <td>128K tokens</td>
+          </tr>
+          <tr>
+            <td>codex-1 (o3架构)</td>
+            <td>OpenAI</td>
+            <td>专为编程优化的推理模型</td>
+            <td><span class="dot-green"></span>复杂工程任务推理深</td>
+            <td>200K tokens</td>
+          </tr>
+          <tr>
+            <td>Gemini 3.1 Pro</td>
+            <td>Google</td>
+            <td>超长上下文，多模态</td>
+            <td><span class="dot-yellow"></span>强，但略逊前三</td>
+            <td>1M tokens</td>
+          </tr>
+          <tr>
+            <td>DeepSeek V3 / R1</td>
+            <td>深度求索</td>
+            <td>开源，极致性价比</td>
+            <td><span class="dot-yellow"></span>相当不错，远超价格预期</td>
+            <td>128K tokens</td>
+          </tr>
+          <tr>
+            <td>Llama 4 Scout/Maverick</td>
+            <td>Meta</td>
+            <td>开源，可完全本地部署</td>
+            <td><span class="dot-yellow"></span>中等，本地跑有上限</td>
+            <td>128K tokens</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout tip">
+      <strong>SWE-bench 是什么？</strong> 一个标准化测试集，让模型在真实 GitHub Issue 上独立修复 Bug，满分100%。<strong>80% 以上</strong>意味着模型能独立解决大多数真实工程问题，这是目前最有参考价值的编程能力基准。
+    </div>
+
+    <div class="callout warn">
+      <strong>一个常见认知误区：</strong>模型强 ≠ 工具好用。一个顶级模型配上糟糕的上下文管理、差劲的工作流，使用体验照样很烂。工具层的工程质量同样关键。
+    </div>
+  </section>
+
+  <!-- ③ CLI -->
+  <section class="section" id="cli">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>终端 Agent（命令行派）</h2>
+    </div>
+
+    <p>这类工具跑在终端里，没有 GUI，直接操作你的代码库文件系统、运行命令、调用 Git。看起来硬核，但却是目前<strong>自动化能力最强</strong>的一类工具——因为它不需要模拟鼠标点击，可以直接做所有事情。</p>
+    <p>适合人群：能接受命令行的开发者；需要跑长任务、批量重构的场景。</p>
+
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-name">Claude Code</div>
+          <div class="product-maker">Anthropic · 2025年3月发布</div>
+          <div class="tags">
+            <span class="tag">CLI</span>
+            <span class="tag">Agent</span>
+          </div>
+        </div>
+        <div class="price-badge">Pro $17/月 · Max $100/月</div>
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);">
+        目前<span class="highlight">综合评价最强</span>的 CLI Agent。背靠 Opus 4.6，自发布8个月内跃升为使用率第一的 AI 编程工具（SuperClaude 社区数据）。核心能力：多文件并行编辑、自动运行测试、深度 Git 集成、支持 Multi-Agent 并行子任务。你给它一个需求，它会自己读代码库、写代码、跑测试、修 Bug，一条龙完成。
+      </p>
+      <div class="pros-cons">
+        <div class="pros">
+          <div class="pros-label">✦ 优势</div>
+          <ul>
+            <li>推理能力最强，复杂重构表现顶级</li>
+            <li>上下文管理最成熟</li>
+            <li>Multi-Agent 团队协作</li>
+            <li>与 Claude.ai 订阅共享额度</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <div class="cons-label">✦ 不足</div>
+          <ul>
+            <li>纯命令行，无可视化</li>
+            <li>Max 套餐 $100/月，重度使用成本高</li>
+            <li>网络要求稳定</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-name">OpenAI Codex（重构版）</div>
+          <div class="product-maker">OpenAI · 2026年3月重磅回归</div>
+          <div class="tags">
+            <span class="tag">CLI</span>
+            <span class="tag">桌面 App</span>
+            <span class="tag new">NEW</span>
+          </div>
+        </div>
+        <div class="price-badge">捆绑 ChatGPT Plus $20/月</div>
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);">
+        <strong style="color:var(--text)">重要提醒：</strong> 这不是2021年那个 Codex（那版已停用）。新版基于 <span class="mono">codex-1</span> 模型（o3 架构专门针对工程任务调优），有开源 CLI 和 macOS 桌面客户端两种形态。核心差异化：<span class="highlight">沙箱环境执行</span>，代码在隔离容器里跑，安全性更高。ChatGPT Plus/Pro 订阅用户可直接访问。
+      </p>
+      <div class="pros-cons">
+        <div class="pros">
+          <div class="pros-label">✦ 优势</div>
+          <ul>
+            <li>已订阅 ChatGPT 则无额外费用</li>
+            <li>沙箱执行，不污染本地环境</li>
+            <li>macOS 桌面版体验友好</li>
+            <li>开源 CLI 可自定义</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <div class="cons-label">✦ 不足</div>
+          <ul>
+            <li>与 Claude Code 相比推理深度略逊</li>
+            <li>Windows 支持尚不完善</li>
+            <li>重度任务额度消耗快</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-name">Gemini CLI</div>
+          <div class="product-maker">Google · 2025年下半年发布</div>
+          <div class="tags">
+            <span class="tag">CLI</span>
+            <span class="tag free">免费额度大</span>
+          </div>
+        </div>
+        <div class="price-badge">免费 1000次/天</div>
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);">
+        最具性价比的入门 CLI Agent。免费额度慷慨（每日1000次请求），调用 Gemini 3.1 Pro，支持 1M tokens 超长上下文，这意味着<span class="highlight">可以一次性读入整个大型代码库</span>。对预算敏感的开发者是很好的起点。
+        <br><br><strong style="color:var(--accent3)">注意：</strong>免费额度的多数请求实际走 Gemini Flash 轻量模型，复杂任务效果会下降；Pro 级别调用需要升级付费。
+      </p>
+      <div class="pros-cons">
+        <div class="pros">
+          <div class="pros-label">✦ 优势</div>
+          <ul>
+            <li>超高免费额度，0成本上手</li>
+            <li>1M 上下文，读大仓库得心应手</li>
+            <li>Google 生态深度集成</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <div class="cons-label">✦ 不足</div>
+          <ul>
+            <li>免费版实际走轻量模型</li>
+            <li>成熟度不如 Claude Code</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-name">OpenCode</div>
+          <div class="product-maker">开源社区</div>
+          <div class="tags">
+            <span class="tag open">开源</span>
+            <span class="tag">任意模型</span>
+          </div>
+        </div>
+        <div class="price-badge">免费（自付 API 费用）</div>
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);">
+        类似 Claude Code 的 CLI 体验，但完全开源，支持接入任意模型（Claude、GPT、DeepSeek、Gemini 等）。你自己带 API Key，按量计费，成本透明可控。适合：有技术能力、想省钱、或有隐私顾虑（自部署模型）的开发者。
+      </p>
+    </div>
+
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-name">Aider</div>
+          <div class="product-maker">开源 · 老牌稳定</div>
+          <div class="tags">
+            <span class="tag open">开源</span>
+            <span class="tag">Git 集成</span>
+          </div>
+        </div>
+        <div class="price-badge">免费（自付 API 费用）</div>
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);">
+        开源 CLI Agent 的先驱，与 Git 深度集成，每次修改自动提交，方便回滚。支持接入 Claude、GPT、DeepSeek 等主流模型。社区成熟，文档齐全，是学习 CLI Agent 工作原理的好选择。
+      </p>
+    </div>
+  </section>
+
+  <!-- ④ IDE -->
+  <section class="section" id="ide">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>AI-first IDE（图形化派）</h2>
+    </div>
+
+    <p>不喜欢命令行？这类工具有完整的图形编辑器，AI 深度嵌入编写流程，你在代码里写注释它就开始补全，你选中一段代码按快捷键它就开始重构。学习曲线低，日常用起来最顺手。</p>
+
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-name">Cursor</div>
+          <div class="product-maker">Anysphere · 目前最成熟的 AI IDE</div>
+          <div class="tags">
+            <span class="tag">AI IDE</span>
+            <span class="tag">VS Code 派系</span>
+          </div>
+        </div>
+        <div class="price-badge">免费有限 · Pro $20/月 · Business $40/月</div>
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);">
+        目前<span class="highlight">用户基数最大、生态最成熟</span>的 AI IDE。基于 VS Code 改造，你原来的插件、快捷键、配置全部能用。核心功能：<strong style="color:var(--text)">Composer</strong>（多文件联动编辑，描述需求自动修改多个文件）、<strong style="color:var(--text)">Tab</strong>（下一步预测式自动补全，远超传统补全体验）、<strong style="color:var(--text)">模型自由切换</strong>（Claude Sonnet / GPT-5.4 / Gemini 等）。
+        <br><br>可以理解为：把 Claude Code 的能力装进一个你熟悉的 VS Code 界面里。
+      </p>
+      <div class="pros-cons">
+        <div class="pros">
+          <div class="pros-label">✦ 优势</div>
+          <ul>
+            <li>VS Code 用户零迁移成本</li>
+            <li>多文件 Composer 体验业界最佳</li>
+            <li>模型可灵活切换</li>
+            <li>社区最大，教程资源丰富</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <div class="cons-label">✦ 不足</div>
+          <ul>
+            <li>重度使用额度消耗快</li>
+            <li>Pro 版 $20/月，重度用户需 Business</li>
+            <li>本身不含模型，质量依赖所选模型</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-name">Google Antigravity</div>
+          <div class="product-maker">Google · 2025年11月发布</div>
+          <div class="tags">
+            <span class="tag">AI IDE</span>
+            <span class="tag new">NEW · Beta</span>
+          </div>
+        </div>
+        <div class="price-badge">Beta 免费 · 正式定价 TBD</div>
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);">
+        Google 对 Cursor 的直接回应，定位<span class="highlight">原生 Multi-Agent IDE</span>。最大亮点：<strong style="color:var(--text)">Mission Control</strong> 模式——可以同时运行多个 AI Agent 并行处理不同任务（前端 Agent 写 UI、后端 Agent 写 API、测试 Agent 跑测试），最终合并结果。内置浏览器，可以直接在 IDE 里调试网页。
+        <br><br>支持模型：Gemini 3 Ultra / Claude Sonnet 4.5 / GPT 系列。目前仍在 Beta，稳定性不如 Cursor，但代表了 AI IDE 的下一阶段方向。
+      </p>
+      <div class="pros-cons">
+        <div class="pros">
+          <div class="pros-label">✦ 优势</div>
+          <ul>
+            <li>多 Agent 并行是独家特性</li>
+            <li>内置浏览器调试体验</li>
+            <li>Google 生态深度集成</li>
+            <li>Beta 阶段免费</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <div class="cons-label">✦ 不足</div>
+          <ul>
+            <li>Beta 阶段，稳定性尚待验证</li>
+            <li>正式定价未公布</li>
+            <li>学习曲线比 Cursor 陡</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-name">Windsurf</div>
+          <div class="product-maker">Codeium · 个人免费额度最高</div>
+          <div class="tags">
+            <span class="tag">AI IDE</span>
+            <span class="tag free">个人免费</span>
+          </div>
+        </div>
+        <div class="price-badge">免费（个人）· Pro $15/月</div>
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);">
+        Codeium 旗下产品，最大卖点是<span class="highlight">补全无限量</span>，个人用户永久免费。IDE 体验接近 Cursor，功能略简单，但对轻度使用者来说足够。适合：不想每月花钱、日常用 AI 辅助写代码但不依赖高强度 Agent 任务的开发者。
+      </p>
+    </div>
+
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-name">AWS Kiro</div>
+          <div class="product-maker">Amazon · 2026年初发布</div>
+          <div class="tags">
+            <span class="tag">AI IDE</span>
+            <span class="tag new">NEW</span>
+            <span class="tag">规范驱动</span>
+          </div>
+        </div>
+        <div class="price-badge">定价未公布</div>
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);">
+        这个工具的思路和其他所有 IDE 都不同。它推行<span class="highlight">规格驱动开发（Spec-Driven Development）</span>：你先描述需求，AI 生成需求文档（PRD）、设计文档（Technical Design）、再生成代码。全程留档，可追溯。
+        <br><br>适合的场景：金融、医疗等受监管行业；需要代码审计、合规审查的团队；多人协作项目需要统一文档规范。如果你只是自己做项目，这套流程会觉得繁琐。
+      </p>
+    </div>
+  </section>
+
+  <!-- ⑤ 插件 -->
+  <section class="section" id="plugin">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2>IDE 插件 / 平台助手（集成派）</h2>
+    </div>
+
+    <p>不想换编辑器？这类工具以插件形式嵌入你现有的 IDE，哪里都能用，是目前<strong>企业采用率最高</strong>的形态。</p>
+
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-name">GitHub Copilot</div>
+          <div class="product-maker">Microsoft / OpenAI · 最广泛使用</div>
+          <div class="tags">
+            <span class="tag">VS Code</span>
+            <span class="tag">JetBrains</span>
+            <span class="tag">Neovim</span>
+            <span class="tag free">免费额度</span>
+          </div>
+        </div>
+        <div class="price-badge">免费 · Pro $10/月 · Business $19/月</div>
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);">
+        装机量最大的 AI 编程工具，几乎支持所有主流编辑器。免费版已包含每月2000次补全+50次对话——<span class="highlight">入门性价比最高</span>。现在支持多模型（GPT-5.4、Claude Sonnet 4.6、Gemini 3.1 Pro），不再绑定单一模型。
+        <br><br>企业版有私有代码库过滤（不拿你的代码训练）、组织策略管理、审计日志等安全功能，这是很多大厂选择它的主要原因。
+      </p>
+      <div class="pros-cons">
+        <div class="pros">
+          <div class="pros-label">✦ 优势</div>
+          <ul>
+            <li>支持编辑器最多，哪都能用</li>
+            <li>免费版已相当实用</li>
+            <li>企业安全合规功能最成熟</li>
+            <li>多模型选择</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <div class="cons-label">✦ 不足</div>
+          <ul>
+            <li>补全质量略逊 Cursor Supermaven</li>
+            <li>Agent 任务能力弱于专用 Agent 工具</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-name">Amazon Q Developer</div>
+          <div class="product-maker">Amazon · AWS 生态首选</div>
+          <div class="tags">
+            <span class="tag">VS Code</span>
+            <span class="tag">JetBrains</span>
+            <span class="tag">AWS 集成</span>
+          </div>
+        </div>
+        <div class="price-badge">免费 · Pro $19/月</div>
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);">
+        如果你的工作大量涉及 AWS 服务（Lambda、DynamoDB、S3、CloudFormation 等），Q Developer 有独特优势：<span class="highlight">深度理解 AWS 架构</span>，生成的代码天然符合 AWS 最佳实践，能自动生成 CDK/SAM 模板，直接在 IDE 里完成 AWS 资源操作。对非 AWS 用户，它没有显著优势。
+      </p>
+    </div>
+
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-name">Continue.dev</div>
+          <div class="product-maker">开源 · 高度可定制</div>
+          <div class="tags">
+            <span class="tag open">开源</span>
+            <span class="tag">VS Code</span>
+            <span class="tag">JetBrains</span>
+            <span class="tag free">完全免费</span>
+          </div>
+        </div>
+        <div class="price-badge">免费（自付 API 费用）</div>
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);">
+        开源插件，支持接入任意模型（Claude、GPT、DeepSeek、本地 Ollama 等），自己带 API Key。完全免费，高度可定制——可以自定义 Prompt、接入私有知识库、配置本地模型。适合：有隐私要求（代码不出局域网）或想精细控制成本的团队。
+      </p>
+    </div>
+  </section>
+
+  <!-- ⑥ Playground -->
+  <section class="section" id="playground">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2>在线平台 / Playground</h2>
+    </div>
+
+    <p>不安装任何东西，浏览器里直接用。适合：快速试验一个 API、在线跑代码原型、学生 / 非专业开发者。</p>
+
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-name">Google AI Studio</div>
+          <div class="product-maker">Google · Gemini API 官方测试平台</div>
+          <div class="tags">
+            <span class="tag free">免费额度高</span>
+            <span class="tag">多模态</span>
+          </div>
+        </div>
+        <div class="price-badge">免费 · API 按量计费</div>
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);">
+        Gemini 系列模型的官方 Playground。免费额度在几大平台里最慷慨，支持图片/视频/音频/PDF 多模态输入，可直接在界面里调 Prompt、测试 API、导出代码。
+        <br><br>定位很明确：这是给<span class="highlight">想用 Gemini API 做开发的人</span>提供的调试工具，不是最终用户产品。如果你想在自己的应用里接入 AI，从这里开始实验效率最高。
+      </p>
+    </div>
+
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-name">Claude.ai / Anthropic Console</div>
+          <div class="product-maker">Anthropic</div>
+          <div class="tags">
+            <span class="tag free">免费版可用</span>
+          </div>
+        </div>
+        <div class="price-badge">免费 · Pro $20/月</div>
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);">
+        Claude 模型的官方入口。<strong style="color:var(--text)">Claude.ai</strong> 是面向普通用户的对话界面，可以做代码问答、Code Review、架构讨论。<strong style="color:var(--text)">Console</strong>（console.anthropic.com）是给开发者调试 API、做 Prompt 工程用的，可以精确控制参数、看 Token 用量。
+      </p>
+    </div>
+
+    <div class="product-card">
+      <div class="product-header">
+        <div>
+          <div class="product-name">Replit</div>
+          <div class="product-maker">Replit Inc. · 在线 IDE + AI</div>
+          <div class="tags">
+            <span class="tag">在线 IDE</span>
+            <span class="tag free">免费入门</span>
+          </div>
+        </div>
+        <div class="price-badge">免费 · Core $25/月</div>
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);">
+        浏览器内完整 IDE，可以运行代码、部署应用、协作开发，AI 嵌入编写流程。<span class="highlight">学生和教学场景最适合</span>——零环境配置，打开浏览器就能跑代码。职业开发者通常会觉得功能有限，更适合做原型验证或个人小项目。
+      </p>
+    </div>
+  </section>
+
+  <!-- ⑦ 对比表 -->
+  <section class="section" id="compare">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2>横向对比总表</h2>
+    </div>
+
+    <div class="model-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>产品</th>
+            <th>类型</th>
+            <th>核心模型</th>
+            <th>适合人群</th>
+            <th>免费可用</th>
+            <th>起步价</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Claude Code</td>
+            <td>CLI Agent</td>
+            <td>Opus 4.6</td>
+            <td>专业开发者</td>
+            <td><span class="dot-yellow"></span>有限</td>
+            <td>$17/月</td>
+          </tr>
+          <tr>
+            <td>OpenAI Codex</td>
+            <td>CLI + 桌面</td>
+            <td>codex-1 (o3)</td>
+            <td>专业开发者</td>
+            <td><span class="dot-yellow"></span>捆绑 ChatGPT</td>
+            <td>$20/月</td>
+          </tr>
+          <tr>
+            <td>Gemini CLI</td>
+            <td>CLI Agent</td>
+            <td>Gemini 3.1 Pro</td>
+            <td>预算敏感者</td>
+            <td><span class="dot-green"></span>1000次/天</td>
+            <td>免费</td>
+          </tr>
+          <tr>
+            <td>OpenCode</td>
+            <td>CLI Agent</td>
+            <td>任意模型</td>
+            <td>高级用户</td>
+            <td><span class="dot-green"></span>完全开源</td>
+            <td>仅 API 费</td>
+          </tr>
+          <tr>
+            <td>Aider</td>
+            <td>CLI Agent</td>
+            <td>任意模型</td>
+            <td>开发者</td>
+            <td><span class="dot-green"></span>完全开源</td>
+            <td>仅 API 费</td>
+          </tr>
+          <tr>
+            <td>Cursor</td>
+            <td>AI IDE</td>
+            <td>多模型可选</td>
+            <td>全类型开发者</td>
+            <td><span class="dot-yellow"></span>有限</td>
+            <td>$20/月</td>
+          </tr>
+          <tr>
+            <td>Antigravity</td>
+            <td>AI IDE</td>
+            <td>Gemini 3 Ultra</td>
+            <td>全栈 / Google 用户</td>
+            <td><span class="dot-green"></span>Beta 免费</td>
+            <td>$20/月（预计）</td>
+          </tr>
+          <tr>
+            <td>Windsurf</td>
+            <td>AI IDE</td>
+            <td>内置模型</td>
+            <td>轻度用户</td>
+            <td><span class="dot-green"></span>个人永久免费</td>
+            <td>$15/月</td>
+          </tr>
+          <tr>
+            <td>Kiro</td>
+            <td>AI IDE</td>
+            <td>AWS 模型</td>
+            <td>合规要求团队</td>
+            <td><span class="dot-red"></span>待公布</td>
+            <td>待公布</td>
+          </tr>
+          <tr>
+            <td>GitHub Copilot</td>
+            <td>IDE 插件</td>
+            <td>GPT-5 / Claude / Gemini</td>
+            <td>企业 / 初学者</td>
+            <td><span class="dot-green"></span>2000次补全/月</td>
+            <td>$10/月</td>
+          </tr>
+          <tr>
+            <td>Amazon Q Dev</td>
+            <td>IDE 插件</td>
+            <td>亚马逊模型</td>
+            <td>AWS 用户</td>
+            <td><span class="dot-yellow"></span>有限</td>
+            <td>$19/月</td>
+          </tr>
+          <tr>
+            <td>Continue.dev</td>
+            <td>IDE 插件</td>
+            <td>任意模型</td>
+            <td>技术型开发者</td>
+            <td><span class="dot-green"></span>完全开源</td>
+            <td>仅 API 费</td>
+          </tr>
+          <tr>
+            <td>Google AI Studio</td>
+            <td>在线平台</td>
+            <td>Gemini 3.1 Pro</td>
+            <td>API 开发者</td>
+            <td><span class="dot-green"></span>慷慨免费</td>
+            <td>按量计费</td>
+          </tr>
+          <tr>
+            <td>Claude.ai</td>
+            <td>在线平台</td>
+            <td>Claude 全系</td>
+            <td>所有人</td>
+            <td><span class="dot-yellow"></span>有限</td>
+            <td>$20/月</td>
+          </tr>
+          <tr>
+            <td>Replit</td>
+            <td>在线 IDE</td>
+            <td>多模型</td>
+            <td>学生 / 初学者</td>
+            <td><span class="dot-yellow"></span>有限</td>
+            <td>$25/月</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ⑧ 选型 -->
+  <section class="section" id="scenario">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2>选型建议（按场景）</h2>
+    </div>
+
+    <p>工具选型没有对错，只有适不适合当下的场景和预算。以下是最直接的建议：</p>
+
+    <div class="scenario-grid">
+      <div class="scenario-card">
+        <div class="scenario-q">🎓 刚入门，想低成本上手</div>
+        <div class="scenario-a">GitHub Copilot 免费版<br>+ Google AI Studio</div>
+      </div>
+      <div class="scenario-card">
+        <div class="scenario-q">💻 日常 IDE 编程，要好体验</div>
+        <div class="scenario-a">Cursor Pro<br>（首选方案，最成熟）</div>
+      </div>
+      <div class="scenario-card">
+        <div class="scenario-q">🏗️ 大型项目 / 复杂重构</div>
+        <div class="scenario-a">Claude Code Max<br>（能力天花板最高）</div>
+      </div>
+      <div class="scenario-card">
+        <div class="scenario-q">☁️ 大量 AWS 云服务开发</div>
+        <div class="scenario-a">Amazon Q Developer<br>（AWS 架构理解无可替代）</div>
+      </div>
+      <div class="scenario-card">
+        <div class="scenario-q">🤖 想尝鲜多 Agent 并行</div>
+        <div class="scenario-a">Google Antigravity Beta<br>（现在免费，趁早体验）</div>
+      </div>
+      <div class="scenario-card">
+        <div class="scenario-q">💰 想省钱又有技术能力</div>
+        <div class="scenario-a">OpenCode / Aider<br>+ DeepSeek V3 API</div>
+      </div>
+      <div class="scenario-card">
+        <div class="scenario-q">🏢 企业合规 / 需求可追溯</div>
+        <div class="scenario-a">AWS Kiro<br>（规格驱动，全程留档）</div>
+      </div>
+      <div class="scenario-card">
+        <div class="scenario-q">🔒 代码不能出局域网</div>
+        <div class="scenario-a">Continue.dev<br>+ 本地 Ollama 模型</div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:28px;">
+      <strong>一个实用的入门路径：</strong>从 <strong>GitHub Copilot 免费版</strong> 开始，感受 AI 辅助编程的基本体验（零成本）。如果觉得有价值，再升级到 <strong>Cursor Pro</strong>（$20/月），体验多文件 Agent 工作流。处理大型项目时，考虑叠加 <strong>Claude Code</strong>（可与 Claude.ai Pro 共用订阅）。
+    </div>
+  </section>
+
+  <!-- ⑨ 趋势 -->
+  <section class="section" id="trend">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <h2>趋势与总结</h2>
+    </div>
+
+    <p>这个领域迭代极快，每隔几个月格局就会变化。但有几个方向是确定的：</p>
+
+    <div class="trend-list">
+      <div class="trend-item">
+        <div class="trend-num">01</div>
+        <div class="trend-body">
+          <strong>从"补全"到"工程决策"</strong>
+          <p>2021年的 Copilot 只做代码补全。现在的顶级工具已经能独立理解需求、拆解任务、读懂整个代码库、做架构决策。AI 在工程流程里的参与深度还在持续加深。</p>
+        </div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-num">02</div>
+        <div class="trend-body">
+          <strong>Multi-Agent 并行成为下一个战场</strong>
+          <p>单个 AI Agent 线性处理任务，已经不能满足复杂工程需求。Antigravity 的 Mission Control、Claude Code 的 Agent Teams，都在探索多个 Agent 并行分工的范式。这是未来1-2年的主要演化方向。</p>
+        </div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-num">03</div>
+        <div class="trend-body">
+          <strong>模型成本持续下降，工具竞争加剧</strong>
+          <p>DeepSeek 的出现打破了"顶级能力必须高价"的假设。随着开源模型越来越强，工具层的差异化会越来越依赖工程质量和产品体验，而不是模型本身。</p>
+        </div>
+      </div>
+      <div class="trend-item">
+        <div class="trend-num">04</div>
+        <div class="trend-body">
+          <strong>上下文长度成为关键竞争点</strong>
+          <p>1M tokens 的上下文意味着 AI 可以一次性读入数十万行代码库，真正"理解"一个大型项目。这个能力正在从旗舰模型向普通模型普及，会根本性改变大型项目的 AI 辅助方式。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout tip" style="margin-top:32px;">
+      <strong>写在最后：</strong>这些工具的本质都是<strong>放大器</strong>——放大你已有的工程能力。一个对代码库、架构、业务逻辑有深刻理解的开发者，使用 AI 工具能做到事半功倍。如果基础不扎实，AI 可能只是把你引向错误方向的速度加快了而已。工具是杠杆，人才是支点。
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="container">
+    <p>AI 编程产品扫盲对比笔记 · 2026年3月整理</p>
+    <p style="margin-top:6px;">内容基于公开信息整理，价格和功能以各官方网站最新公告为准</p>
+  </div>
+</footer>
+
+</body>
+</html>

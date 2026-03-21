@@ -13,6 +13,11 @@ function getHtmlContent(props: Record<string, unknown>): string | null {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const htmlProp = props["HTMLContent"] as any;
   if (!htmlProp) return null;
+  // URL 类型属性
+  if (htmlProp.type === "url" && htmlProp.url) {
+    return htmlProp.url as string;
+  }
+  // rich_text 类型属性
   if (htmlProp.type === "rich_text" && Array.isArray(htmlProp.rich_text)) {
     return htmlProp.rich_text.map((t: RichText) => t.plain_text).join("");
   }
@@ -77,7 +82,7 @@ export default async function NotionPageRoute(props: { params: Promise<{ id: str
         {htmlContent ? (
           <iframe
             src={htmlContent}
-            style={{ width: "100%", height: "100vh", border: "none", minHeight: "80vh" }}
+            style={{ width: "100%", height: "100vh", border: "none", display: "block" }}
             sandbox="allow-same-origin"
             title={title}
           />

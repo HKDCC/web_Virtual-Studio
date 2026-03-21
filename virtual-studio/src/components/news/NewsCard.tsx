@@ -11,13 +11,18 @@ export type NewsItem = {
   categories: string[];
 };
 
-const ALL_CATS = ["🤖 新模型", "💰 商业", "🔓 开源", "⚠️ 安全", "⚡ 产品", "💵 价格", "🎯 Demo", "💬 社区", "📰 其他"];
-
 function formatDate(dateStr: string | null | undefined) {
   if (!dateStr) return null;
   const d = new Date(dateStr);
   if (isNaN(d.getTime())) return dateStr;
   return `${d.getMonth() + 1}月${d.getDate()}日`;
+}
+
+function formatYearMonth(dateStr: string | null | undefined) {
+  if (!dateStr) return null;
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return null;
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
 }
 
 function CatBadge(props: { cat: string }) {
@@ -32,12 +37,24 @@ function SourceBadge(props: { source: string }) {
 }
 
 export function NewsCard(props: { items: NewsItem[] }) {
-  const [cat, setCat] = useState<string>("全部");
+  const [yearMonth, setYearMonth] = useState<string>("all");
+
+  // Get available year-month options
+  const availableYearMonths = useMemo(() => {
+    const months = new Set<string>();
+    for (const item of props.items) {
+      if (item.date) {
+        const ym = formatYearMonth(item.date);
+        if (ym) months.add(ym);
+      }
+    }
+    return Array.from(months).sort((a, b) => b.localeCompare(a));
+  }, [props.items]);
 
   const filtered = useMemo(() => {
-    if (cat === "全部") return props.items;
-    return props.items.filter((i) => i.categories.includes(cat));
-  }, [props.items, cat]);
+    if (yearMonth === "all") return props.items;
+    return props.items.filter((i) => formatYearMonth(i.date) === yearMonth);
+  }, [props.items, yearMonth]);
 
   // Group by date
   const grouped = useMemo(() => {
@@ -50,35 +67,31 @@ export function NewsCard(props: { items: NewsItem[] }) {
     return Array.from(map.entries()).sort(([a], [b]) => b.localeCompare(a));
   }, [filtered]);
 
-  const availableCats = useMemo(() => {
-    const cats = new Set<string>();
-    for (const item of props.items) {
-      for (const c of item.categories) cats.add(c);
-    }
-    return cats;
-  }, [props.items]);
-
   return (
     <div className="news-container">
-      {/* Category filter tabs */}
+      {/* Year-month filter */}
       <div className="workflow-tabs">
         <button
           type="button"
-          onClick={() => setCat("全部")}
-          className={`wf-tab ${cat === "全部" ? "active" : ""}`}
+          onClick={() => setYearMonth("all")}
+          className={`wf-tab ${yearMonth === "all" ? "active" : ""}`}
         >
           全部
         </button>
-        {ALL_CATS.filter((c) => availableCats.has(c)).map((c) => (
-          <button
-            key={c}
-            type="button"
-            onClick={() => setCat(c)}
-            className={`wf-tab ${cat === c ? "active" : ""}`}
-          >
-            {c}
-          </button>
-        ))}
+        {availableYearMonths.map((ym) => {
+          const month = ym.split("-")[1];
+          const label = `${parseInt(month!)}月`;
+          return (
+            <button
+              key={ym}
+              type="button"
+              onClick={() => setYearMonth(ym)}
+              className={`wf-tab ${yearMonth === ym ? "active" : ""}`}
+            >
+              {label}
+            </button>
+          );
+        })}
       </div>
 
       {/* News list */}
@@ -137,8 +150,9 @@ export function NewsCard(props: { items: NewsItem[] }) {
           display: flex;
           align-items: baseline;
           gap: 12px;
-          margin-bottom: 16px;
-          padding-bottom: 8px;
+          margin-bottom: 20px;
+          padding-top: 28px;
+          padding-bottom: 10px;
           border-bottom: 1px solid var(--bg-3);
         }
         .news-date-label {

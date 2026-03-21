@@ -20,15 +20,21 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
   useEffect(() => {
     if (headings.length === 0) return;
 
+    // 使用 IntersectionObserver 监听每个标题是否在视口内
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
-        });
+        // 找到所有可见的条目，取第一个（离视口顶部最近的）
+        const visible = entries.filter((e) => e.isIntersecting);
+        if (visible.length > 0) {
+          // 按离视口顶部的距离排序
+          visible.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+          setActiveId(visible[0].target.id);
+        }
       },
-      { rootMargin: "-80px 0px -80% 0px" }
+      {
+        rootMargin: "-80px 0px -60% 0px",
+        threshold: 0,
+      }
     );
 
     headings.forEach((h) => {
@@ -40,6 +46,15 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
   }, [headings]);
 
   if (headings.length === 0) return null;
+
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+    const el = document.getElementById(id);
+    if (el) {
+      const top = el.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+  };
 
   return (
     <div
@@ -108,6 +123,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
           <a
             key={h.id}
             href={`#${h.id}`}
+            onClick={(e) => handleClick(e, h.id)}
             style={{
               display: "block",
               padding: `6px 12px ${h.level === 3 ? 2 : 6}px ${12 + (h.level - 2) * 12}px`,

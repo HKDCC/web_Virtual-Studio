@@ -7,14 +7,14 @@ import { SetupNotice } from "@/components/SetupNotice";
 export default async function ChangelogPage() {
   const db = env.NOTION_CHANGELOG_DB_ID;
   if (!env.NOTION_TOKEN || !db) return <SetupNotice title="Changelog 需要配置 NOTION_TOKEN / NOTION_CHANGELOG_DB_ID" />;
-  const items = await queryDatabaseAll({ databaseId: db, pageSize: 80, maxPages: 10 });
+  const items = await queryDatabaseAll({ databaseId: db, pageSize: 80, maxPages: 10, sorts: [{ property: "Date", direction: "descending" }] });
 
   return (
     <>
       <div className="section-header">
         <div>
           <p className="section-eyebrow">Change Log · 足迹</p>
-          <h1 className="section-title">这个空间的……</h1>
+          <h1 className="section-title">这个虚拟空间的迭代记录</h1>
         </div>
       </div>
 

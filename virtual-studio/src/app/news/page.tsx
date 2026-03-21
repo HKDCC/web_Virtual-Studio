@@ -36,7 +36,7 @@ export default async function NewsPage() {
           <h1 className="section-title">AI 日报</h1>
         </div>
         <p className="section-desc">
-          每日采集 AI 行业新闻，来源包括 smol.ai、TechCrunch 与 HackerNews，powered and translated by 芙宁娜（MiniMax-M2.7）
+          每日 AI 行业新闻，来源包括 smol.ai、TechCrunch 与 HackerNews，captured and translated by 芙宁娜（Open Claw Agent, MiniMax-M2.7）
         </p>
       </div>
 

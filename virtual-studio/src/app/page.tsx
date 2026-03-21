@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { queryDatabaseAll } from "@/lib/notion";
-import { env, requireEnv } from "@/lib/env";
+import { requireEnv } from "@/lib/env";
 import { SiteFooter } from "@/components/SiteFooter";
 
 async function safeCount(databaseIdEnv: Parameters<typeof requireEnv>[0]) {
@@ -13,20 +13,9 @@ async function safeCount(databaseIdEnv: Parameters<typeof requireEnv>[0]) {
   }
 }
 
-async function safeCountNews() {
-  try {
-    if (!env.NOTION_AINEWS_DB_ID) return null;
-    const pages = await queryDatabaseAll({ databaseId: env.NOTION_AINEWS_DB_ID, pageSize: 50, maxPages: 2 });
-    return pages.length;
-  } catch {
-    return null;
-  }
-}
-
 export default async function HomePage() {
   const books = await safeCount("NOTION_BOOKS_DB_ID");
   const notes = await safeCount("NOTION_NOTES_DB_ID");
-  const newsCount = await safeCountNews();
 
   return (
     <>
@@ -56,8 +45,7 @@ export default async function HomePage() {
           <span className="mc-emoji">📡</span>
           <span className="mc-tag">Daily · 输入层</span>
           <h2 className="mc-title">AI 日报</h2>
-          <p className="mc-desc">每日AI行业动态，内容由Open Claw全自动化抓取生成。</p>
-          <span className="mc-count">{newsCount ?? "—"}</span>
+          <p className="mc-desc">每日AI行业动态，由Agent全自动抓取产出</p>
         </Link>
 
         <Link className="module-card" href="/lab">

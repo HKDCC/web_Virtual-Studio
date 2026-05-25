@@ -59,7 +59,7 @@ export default async function NotionPageRoute(props: { params: Promise<{ id: str
   const propsRecord = pageWithProps.properties ?? {};
   const isBook = Object.prototype.hasOwnProperty.call(propsRecord, "Author") || Object.prototype.hasOwnProperty.call(propsRecord, "DownloadURL");
   const htmlContent = getHtmlContent(propsRecord);
-  const backUrl = from === "news" ? "/news" : "/archive";
+  const backUrl = from === "news" ? "/aievolutionlog" : "/archive";
 
   return (
     <>

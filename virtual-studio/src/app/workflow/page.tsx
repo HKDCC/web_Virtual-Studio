@@ -34,7 +34,6 @@ function toSection(v: string | null): WorkflowItem["section"] | null {
   const s = (v ?? "").toLowerCase().trim();
   if (s === "tools" || s === "tool" || s.includes("工具")) return "tools";
   if (s === "websites" || s === "website" || s.includes("网站")) return "websites";
-  if (s === "setup" || s.includes("装备")) return "setup";
   if (s === "prompts" || s === "prompt" || s.includes("提示")) return "prompts";
   return null;
 }
@@ -72,8 +71,6 @@ export default async function WorkflowPage() {
       tags,
       siteUrl,
       rating,
-      scene: getSelect(props, "Scene"),
-      params: getRichText(props, "Params"),
       promptZh: getRichText(props, "PromptZH"),
       promptEn: getRichText(props, "PromptEN"),
     });

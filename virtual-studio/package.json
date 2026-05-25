@@ -22,10 +22,10 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@types/node": "^24.1.0",
+    "@opennextjs/cloudflare": "^1.17.1",
+    "@types/node": "^24.12.2",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
-    "@opennextjs/cloudflare": "^1.17.1",
     "eslint": "^9.33.0",
     "eslint-config-next": "^15.5.2",
     "typescript": "^5.9.2",

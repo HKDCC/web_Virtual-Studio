@@ -74,3 +74,12 @@ export function getUrl(props: PageProps, key: string): string | null {
   return null;
 }
 
+
+type NumberProp = { type: "number"; number: number | null };
+
+export function getNumber(props: PageProps, key: string): number | null {
+  const p = props[key];
+  if (!p) return null;
+  if (!isObj(p) || p.type !== "number") return null;
+  return (p as unknown as NumberProp).number ?? null;
+}

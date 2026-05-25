@@ -41,11 +41,11 @@ export default async function HomePage() {
           <span className="mc-count">{books ?? "—"}</span>
         </Link>
 
-        <Link className="module-card" href="/news">
+        <Link className="module-card" href="/aievolutionlog">
           <span className="mc-emoji">📡</span>
-          <span className="mc-tag">Daily · 输入层</span>
-          <h2 className="mc-title">AI 日报</h2>
-          <p className="mc-desc">每日AI行业动态，由Agent全自动抓取产出</p>
+          <span className="mc-tag">Timeline · 输出层</span>
+          <h2 className="mc-title">模型更迭</h2>
+          <p className="mc-desc">主流大语言模型迭代时间轴，高光时刻精确记录。</p>
         </Link>
 
         <Link className="module-card" href="/lab">

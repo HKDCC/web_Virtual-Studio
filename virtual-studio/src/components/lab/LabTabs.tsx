@@ -17,7 +17,7 @@ export type LabItem = {
 function LabCard(props: { item: LabItem }) {
   const { item } = props;
   const thumbStyle = item.iconUrl
-    ? { backgroundImage: `url(${item.iconUrl})`, backgroundSize: "cover", backgroundPosition: "center" }
+    ? { backgroundImage: `url(${item.iconUrl})`, backgroundSize: "contain", backgroundPosition: "center", backgroundRepeat: "no-repeat" }
     : undefined;
 
   return (

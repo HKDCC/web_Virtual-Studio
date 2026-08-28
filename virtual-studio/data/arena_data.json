@@ -1,0 +1,270 @@
+{
+  "source": "LMSYS Official Data",
+  "last_updated": "Jul 21, 2026",
+  "data": {
+    "models": [
+      {
+        "name": "claude-fable-5",
+        "key": "claude-fable-5",
+        "scores": {
+          "overall": 1507,
+          "chat": 1507,
+          "coding": 1634,
+          "longContext": 1507,
+          "science": 1318,
+          "factuality": 1507,
+          "agent": 1507
+        }
+      },
+      {
+        "name": "claude-opus-4-6-thinking",
+        "key": "claude-opus-4-6-thinking",
+        "scores": {
+          "overall": 1505,
+          "chat": 1505,
+          "coding": 1542,
+          "longContext": 1505,
+          "science": 1299,
+          "factuality": 1505,
+          "agent": 1505
+        }
+      },
+      {
+        "name": "claude-opus-4-7-thinking",
+        "key": "claude-opus-4-7-thinking",
+        "scores": {
+          "overall": 1502,
+          "chat": 1502,
+          "coding": 1559,
+          "longContext": 1502,
+          "science": 1306,
+          "factuality": 1502,
+          "agent": 1502
+        }
+      },
+      {
+        "name": "claude-opus-4-6",
+        "key": "claude-opus-4-6",
+        "scores": {
+          "overall": 1498,
+          "chat": 1498,
+          "coding": 1536,
+          "longContext": 1498,
+          "science": 1295,
+          "factuality": 1498,
+          "agent": 1498
+        }
+      },
+      {
+        "name": "muse-spark-1.1",
+        "key": "muse-spark-1.1",
+        "scores": {
+          "overall": 1495,
+          "chat": 1495,
+          "coding": 1539,
+          "longContext": 1495,
+          "science": 1495,
+          "factuality": 1495,
+          "agent": 1495
+        }
+      },
+      {
+        "name": "claude-opus-4-7",
+        "key": "claude-opus-4-7",
+        "scores": {
+          "overall": 1494,
+          "chat": 1494,
+          "coding": 1556,
+          "longContext": 1494,
+          "science": 1298,
+          "factuality": 1494,
+          "agent": 1494
+        }
+      },
+      {
+        "name": "muse-spark",
+        "key": "muse-spark",
+        "scores": {
+          "overall": 1488,
+          "chat": 1488,
+          "coding": 1488,
+          "longContext": 1488,
+          "science": 1294,
+          "factuality": 1488,
+          "agent": 1488
+        }
+      },
+      {
+        "name": "gemini-3.1-pro-preview",
+        "key": "gemini-3.1-pro-preview",
+        "scores": {
+          "overall": 1486,
+          "chat": 1486,
+          "coding": 1486,
+          "longContext": 1486,
+          "science": 1277,
+          "factuality": 1486,
+          "agent": 1486
+        }
+      },
+      {
+        "name": "gemini-3-pro",
+        "key": "gemini-3-pro",
+        "scores": {
+          "overall": 1486,
+          "chat": 1486,
+          "coding": 1486,
+          "longContext": 1486,
+          "science": 1289,
+          "factuality": 1486,
+          "agent": 1486
+        }
+      },
+      {
+        "name": "kimi-k3",
+        "key": "kimi-k3",
+        "scores": {
+          "overall": 1486,
+          "chat": 1486,
+          "coding": 1678,
+          "longContext": 1486,
+          "science": 1486,
+          "factuality": 1486,
+          "agent": 1486
+        }
+      },
+      {
+        "name": "gpt-5.6-sol-xhigh",
+        "key": "gpt-5.6-sol-xhigh",
+        "scores": {
+          "overall": 1485,
+          "chat": 1485,
+          "coding": 1485,
+          "longContext": 1485,
+          "science": 1485,
+          "factuality": 1485,
+          "agent": 1485
+        }
+      },
+      {
+        "name": "gemini-3.6-flash",
+        "key": "gemini-3.6-flash",
+        "scores": {
+          "overall": 1485,
+          "chat": 1485,
+          "coding": 1537,
+          "longContext": 1485,
+          "science": 1485,
+          "factuality": 1485,
+          "agent": 1485
+        }
+      },
+      {
+        "name": "claude-opus-4-8-thinking",
+        "key": "claude-opus-4-8-thinking",
+        "scores": {
+          "overall": 1484,
+          "chat": 1484,
+          "coding": 1565,
+          "longContext": 1484,
+          "science": 1286,
+          "factuality": 1484,
+          "agent": 1484
+        }
+      },
+      {
+        "name": "gpt-5.5-high",
+        "key": "gpt-5.5-high",
+        "scores": {
+          "overall": 1482,
+          "chat": 1482,
+          "coding": 1482,
+          "longContext": 1482,
+          "science": 1286,
+          "factuality": 1482,
+          "agent": 1482
+        }
+      },
+      {
+        "name": "gpt-5.4-high",
+        "key": "gpt-5.4-high",
+        "scores": {
+          "overall": 1478,
+          "chat": 1478,
+          "coding": 1478,
+          "longContext": 1478,
+          "science": 1282,
+          "factuality": 1478,
+          "agent": 1478
+        }
+      },
+      {
+        "name": "gpt-5.5",
+        "key": "gpt-5.5",
+        "scores": {
+          "overall": 1476,
+          "chat": 1476,
+          "coding": 1476,
+          "longContext": 1476,
+          "science": 1286,
+          "factuality": 1476,
+          "agent": 1476
+        }
+      },
+      {
+        "name": "gemini-3.5-flash-high",
+        "key": "gemini-3.5-flash-high",
+        "scores": {
+          "overall": 1476,
+          "chat": 1476,
+          "coding": 1476,
+          "longContext": 1476,
+          "science": 1277,
+          "factuality": 1476,
+          "agent": 1476
+        }
+      },
+      {
+        "name": "gpt-5.2-chat-latest-20260210",
+        "key": "gpt-5.2-chat-latest-20260210",
+        "scores": {
+          "overall": 1476,
+          "chat": 1476,
+          "coding": 1476,
+          "longContext": 1476,
+          "science": 1278,
+          "factuality": 1476,
+          "agent": 1476
+        }
+      },
+      {
+        "name": "qwen3.7-max-preview",
+        "key": "qwen3.7-max-preview",
+        "scores": {
+          "overall": 1475,
+          "chat": 1475,
+          "coding": 1475,
+          "longContext": 1475,
+          "science": 1475,
+          "factuality": 1475,
+          "agent": 1475
+        }
+      },
+      {
+        "name": "grok-4.20-beta1",
+        "key": "grok-4.20-beta1",
+        "scores": {
+          "overall": 1474,
+          "chat": 1474,
+          "coding": 1474,
+          "longContext": 1474,
+          "science": 1474,
+          "factuality": 1474,
+          "agent": 1474
+        }
+      }
+    ],
+    "minElo": 1000,
+    "maxElo": 1507
+  }
+}

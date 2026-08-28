@@ -1,92 +1,251 @@
 import Link from "next/link";
-import { queryDatabaseAll } from "@/lib/notion";
-import { requireEnv } from "@/lib/env";
-import { SiteFooter } from "@/components/SiteFooter";
+import { fetchMagazineData } from "@/lib/magazineData";
+import { ArchiveSection } from "@/components/magazine/ArchiveSection";
+import { WorkflowSection } from "@/components/magazine/WorkflowSection";
 
-async function safeCount(databaseIdEnv: Parameters<typeof requireEnv>[0]) {
-  try {
-    const id = requireEnv(databaseIdEnv);
-    const pages = await queryDatabaseAll({ databaseId: id, pageSize: 50, maxPages: 2 });
-    return pages.length;
-  } catch {
-    return null;
-  }
-}
+export const revalidate = 60; // 60s ISR
 
 export default async function HomePage() {
-  const books = await safeCount("NOTION_BOOKS_DB_ID");
-  const notes = await safeCount("NOTION_NOTES_DB_ID");
+  const data = await fetchMagazineData();
+  const { cover, books, lab, flow, tools, sites, prompts, timeline, pause, notes, log } = data;
 
   return (
     <>
-      <div className="home-hero">
-        <p className="home-eyebrow">Virtual Studio · v0.1</p>
-        <h1 className="home-title">
+      {/* ═══════════ 卷首语 ═══════════ */}
+      <section className="statement wrap">
+        <p className="kicker">VOL.02 · 2026 — VIRTUAL STUDIO · PERSONAL MAGAZINE</p>
+        <h1 className="display">
           我们所有疯狂的行动，
           <br />
-          最终目的或许只是<em>体验更多的奇妙</em>
+          最终目的或许只是
+          <br />
+          <em>体验更多的奇妙</em>。
         </h1>
-        <p className="home-sub">
-          这里记录生产力探索、自我成长、AI 实践，以及那些值得收藏的生活细节。每一个模块都是一种思维方式的入口。
+        <p className="lede">
+          这里记录生产力探索、自我成长、AI 实践，以及那些值得收藏的生活细节。每一个模块，都是一种思维方式的入口。
         </p>
-      </div>
+      </section>
 
-      <div className="module-grid">
-        <Link className="module-card wide" href="/archive">
-          <span className="mc-tag">Archive · 输入层</span>
-          <h2 className="mc-title">库</h2>
-          <p className="mc-desc">
-            电子书架与读书笔记。收藏是一种姿态，整理是一种思考。技术书与文学之间，存在比想象中更多的共通语法。
+      {/* ═══════════ 本期特写 ═══════════ */}
+      <section id="cover" className="block wrap">
+        <div className="sec-head reveal">
+          <p className="kicker">
+            <b>本期特写</b> · COVER STORY
           </p>
-          <span className="mc-count">{books ?? "—"}</span>
-        </Link>
+          <a className="util" href={cover.links[0]?.[1] || "#"} title="最新内容">
+            最新发布 · {cover.date}
+          </a>
+        </div>
+        <div className="cover-grid reveal" id="coverGrid">
+          <div>
+            <h2 className="cover-title">{cover.t}</h2>
+            <p className="cover-meta">
+              <span>{cover.layer}</span>
+              <span>{cover.tag}</span>
+              <span>{cover.date}</span>
+            </p>
+            <p className="cover-desc">{cover.d}</p>
+            <div className="cover-links">
+              {cover.links.map((l, i) => (
+                <a
+                  key={i}
+                  className="link-u"
+                  href={l[1]}
+                  target={l[1].startsWith("http") ? "_blank" : undefined}
+                  rel={l[1].startsWith("http") ? "noopener noreferrer" : undefined}
+                >
+                  {l[0]} ↗
+                </a>
+              ))}
+            </div>
+          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="cover-img"
+            src={cover.img}
+            width={1200}
+            height={900}
+            alt={`${cover.t} 封面图`}
+          />
+        </div>
+      </section>
 
-        <Link className="module-card" href="/aievolutionlog">
-          <span className="mc-emoji">📡</span>
-          <span className="mc-tag">Timeline · 输出层</span>
-          <h2 className="mc-title">模型更迭</h2>
-          <p className="mc-desc">主流大语言模型迭代时间轴，高光时刻精确记录。</p>
-        </Link>
+      {/* ═══════════ 01 库 · Archive ═══════════ */}
+      <ArchiveSection books={books} />
 
-        <Link className="module-card" href="/lab">
-          <span className="mc-emoji">⚗️</span>
-          <span className="mc-tag">Lab · 输出层</span>
-          <h2 className="mc-title">实验室</h2>
-          <p className="mc-desc">AI 部署实践与 Vibe Coding 成果展示。</p>
-        </Link>
+      {/* ═══════════ 02 实验室 · Lab ═══════════ */}
+      <section id="lab" className="block wrap">
+        <div className="sec-head reveal">
+          <p className="kicker">
+            <b>02</b> / 输出层 · OUTPUT
+          </p>
+          <a className="util" href="/lab" title="全部实验室项目">
+            全部项目 ↗
+          </a>
+        </div>
+        <h2 className="sec-title reveal">实验室</h2>
+        <p className="sec-lede reveal">AI 实践记录与 Vibe Coding 成果。每个项目都是一次认知迭代。</p>
+        <div className="lab-grid sec-body reveal" id="labGrid">
+          {lab.map((p, i) => (
+            <article key={p.id || i} className={`p-card${i === 0 ? " p-featured" : ""}`}>
+              <p className="p-tag">{p.tag}</p>
+              <h3>{p.t}</h3>
+              <p className="p-desc">{p.d}</p>
+              <div className="p-links">
+                {p.links.map((l, li) => (
+                  <a
+                    key={li}
+                    href={l[1]}
+                    target={l[1].startsWith("http") ? "_blank" : undefined}
+                    rel={l[1].startsWith("http") ? "noopener noreferrer" : undefined}
+                  >
+                    {l[0]} ↗
+                  </a>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
 
-        <Link className="module-card" href="/workflow">
-          <span className="mc-emoji">⚙️</span>
-          <span className="mc-tag">Workflow · 效率层</span>
-          <h2 className="mc-title">工作流</h2>
-          <p className="mc-desc">效率工具推荐、网站收藏、装备清单与 AI 提示词库。</p>
-        </Link>
+      {/* ═══════════ 03 工作流 · Workflow ═══════════ */}
+      <WorkflowSection flow={flow} tools={tools} sites={sites} prompts={prompts} />
 
-        <Link className="module-card" href="/pause">
-          <span className="mc-emoji">🌿</span>
-          <span className="mc-tag">Pause · 生活层</span>
-          <h2 className="mc-title">隙</h2>
-          <p className="mc-desc">想要一个 Happy End。</p>
-        </Link>
+      {/* ═══════════ 04 时间线 · Timeline ═══════════ */}
+      <section id="timeline" className="block wrap">
+        <div className="sec-head reveal">
+          <p className="kicker">
+            <b>04</b> / 输出层 · 观测
+          </p>
+          <a className="util" href="/aievolutionlog" title="大模型迭代时间轴">
+            全部更迭 ↗
+          </a>
+        </div>
+        <h2 className="sec-title reveal">模型更迭</h2>
+        <p className="sec-lede reveal">主流大语言模型迭代时间轴，高光时刻精确记录。</p>
+        <div className="tl-list sec-body reveal" id="tlList">
+          {timeline.map((x, i) => (
+            <div key={i} className="tl-row">
+              <span className="tl-date">{x.d}</span>
+              <div className="tl-main">
+                <h3>{x.t}</h3>
+                <span className="tl-note">{x.note}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
-        <Link className="module-card" href="/changelog">
-          <span className="mc-emoji">📋</span>
-          <span className="mc-tag">Change Log</span>
-          <h2 className="mc-title">足迹</h2>
-          <p className="mc-desc">这个虚拟空间的迭代记录。</p>
-        </Link>
+      {/* ═══════════ 05 隙 · Pause ═══════════ */}
+      <section id="pause" className="block wrap">
+        <div className="sec-head reveal">
+          <p className="kicker">
+            <b>05</b> / 生活层 · LIFE
+          </p>
+          <a className="util" href="/pause" title="全部照片墙">
+            全部照片 ↗
+          </a>
+        </div>
+        <h2 className="sec-title reveal">隙</h2>
+        <p className="sec-lede reveal">想要一个 Happy End。</p>
+        <div className="sec-body reveal">
+          <div className="strip" id="strip">
+            {pause.map((p, i) => {
+              const card = (
+                <figure className="postcard">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={p.img} loading="lazy" width={640} height={480} alt={p.t} />
+                  <figcaption>
+                    <p className="pc-meta">
+                      <span>{p.d}</span>
+                      <span className="loc">{p.loc}</span>
+                    </p>
+                    <h3>{p.t}</h3>
+                  </figcaption>
+                </figure>
+              );
 
-        <Link className="module-card" href="/archive?tab=notes">
-          <span className="mc-emoji">🗒️</span>
-          <span className="mc-tag">Notes</span>
-          <h2 className="mc-title">笔记</h2>
-          <p className="mc-desc">来自 Notion 数据库的文章与片段。</p>
-          <span className="mc-count">{notes ?? "—"}</span>
-        </Link>
-      </div>
+              if (p.id) {
+                return (
+                  <Link key={p.id || i} href={`/p/${p.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+                    {card}
+                  </Link>
+                );
+              }
+              return <div key={i}>{card}</div>;
+            })}
+          </div>
+          <p className="strip-hint">← 横向滑动 →</p>
+        </div>
+      </section>
 
-      <SiteFooter />
+      {/* ═══════════ 06 笔记 · Notes ═══════════ */}
+      <section id="notes" className="block wrap">
+        <div className="sec-head reveal">
+          <p className="kicker">
+            <b>06</b> / 片段层 · FRAGMENTS
+          </p>
+          <a className="util" href="/archive?tab=notes" title="查看全部笔记">
+            全部笔记 ↗
+          </a>
+        </div>
+        <h2 className="sec-title reveal">笔记</h2>
+        <p className="sec-lede reveal">来自 Notion 数据库的文章与片段。</p>
+        <div className="sec-body reveal" id="notesList">
+          {notes.map((n, i) => {
+            const noteContent = (
+              <blockquote className="note">
+                <p className="note-text">{n.text}</p>
+                <footer className="note-meta">
+                  {n.d} — {n.src}
+                </footer>
+              </blockquote>
+            );
+
+            if (n.id) {
+              return (
+                <Link key={n.id || i} href={`/p/${n.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+                  {noteContent}
+                </Link>
+              );
+            }
+            return <div key={i}>{noteContent}</div>;
+          })}
+        </div>
+      </section>
+
+      {/* ═══════════ 07 足迹 · Change Log ═══════════ */}
+      <section id="changelog" className="block wrap">
+        <div className="sec-head reveal">
+          <p className="kicker">
+            <b>07</b> / 日志 · LOG
+          </p>
+          <a className="util" href="/changelog" title="全部足迹">
+            全部足迹 ↗
+          </a>
+        </div>
+        <h2 className="sec-title reveal">足迹</h2>
+        <p className="sec-lede reveal">这个虚拟空间的迭代记录。</p>
+        <div className="log sec-body reveal" id="logList">
+          {log.map((l, i) => {
+            const row = (
+              <div className="log-row">
+                <span className="log-date">{l.d}</span>
+                <p>{l.t}</p>
+              </div>
+            );
+
+            if (l.id) {
+              return (
+                <Link key={l.id || i} href={`/p/${l.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+                  {row}
+                </Link>
+              );
+            }
+            return <div key={i}>{row}</div>;
+          })}
+        </div>
+      </section>
     </>
   );
 }
-

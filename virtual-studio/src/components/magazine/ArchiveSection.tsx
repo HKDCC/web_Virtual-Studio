@@ -54,25 +54,71 @@ export function ArchiveSection({ books }: ArchiveSectionProps) {
         </div>
         <div className="booklist" id="bookList">
           {filteredBooks.map((b, i) => {
-            const rowContent = (
+            const cardInner = (
               <div className="bookrow" data-cat={b.c}>
                 <span className="idx">{String(i + 1).padStart(2, "0")}</span>
-                <div className="b-main">
-                  <h3>{b.t}</h3>
-                  <span className="author">{b.a}</span>
+                
+                {/* Book Cover Thumbnail */}
+                <div className="book-cover-cell">
+                  {b.coverUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={b.coverUrl}
+                      alt={b.t}
+                      className="book-thumb"
+                      loading="lazy"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLElement).style.display = "none";
+                      }}
+                    />
+                  ) : (
+                    <div className="book-thumb-placeholder">
+                      <span>{b.t.slice(0, 1)}</span>
+                    </div>
+                  )}
                 </div>
-                <span className="cat">{b.c}</span>
+
+                <div className="b-main">
+                  <div className="b-title-row">
+                    <h3>{b.t}</h3>
+                    {b.rating && (
+                      <span className="book-stars">
+                        {"★".repeat(Math.min(5, Math.floor(b.rating)))} <b style={{ color: "var(--accent)" }}>{b.rating}</b>
+                      </span>
+                    )}
+                  </div>
+                  <div className="b-sub-row">
+                    <span className="author">{b.a}</span>
+                    {b.tagline && <span className="tagline">“{b.tagline}”</span>}
+                  </div>
+                </div>
+
+                <div className="book-right-meta">
+                  <span className="cat">{b.c}</span>
+                  {b.downloadUrl && (
+                    <a
+                      href={b.downloadUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="download-link"
+                      onClick={(e) => e.stopPropagation()}
+                      title="下载电子书"
+                    >
+                      EPUB ↗
+                    </a>
+                  )}
+                </div>
               </div>
             );
 
             if (b.id) {
               return (
                 <Link key={b.id || i} href={`/p/${b.id}`} style={{ textDecoration: "none", color: "inherit" }}>
-                  {rowContent}
+                  {cardInner}
                 </Link>
               );
             }
-            return <div key={i}>{rowContent}</div>;
+            return <div key={i}>{cardInner}</div>;
           })}
         </div>
       </div>

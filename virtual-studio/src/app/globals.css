@@ -378,11 +378,12 @@ a.util:hover {
 .chip {
   font-family: var(--mono);
   font-size: 12px;
-  padding: 8px 14px;
+  padding: 6px 14px;
   border: 1px solid var(--line);
   border-radius: 999px;
   color: var(--ink-2);
   transition: all 0.2s;
+  background: var(--card);
 }
 
 .chip:hover {
@@ -397,55 +398,141 @@ a.util:hover {
 }
 
 .booklist {
-  margin-top: 22px;
+  margin-top: 24px;
   border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
 }
 
 .bookrow {
   display: grid;
-  grid-template-columns: 36px 1fr auto;
-  gap: 2px 14px;
-  padding: 15px 2px;
+  grid-template-columns: 28px 48px 1fr auto;
+  gap: 16px;
+  padding: 14px 8px;
   border-bottom: 1px solid var(--line);
-  align-items: baseline;
-  transition: color 0.2s;
+  align-items: center;
+  transition: background 0.2s, border-color 0.2s;
+  border-radius: 4px;
+}
+
+.bookrow:hover {
+  background: var(--card);
 }
 
 .bookrow .idx {
   font-family: var(--mono);
-  font-size: 11.5px;
+  font-size: 12px;
   color: var(--ink-3);
+}
+
+.book-cover-cell {
+  width: 48px;
+  height: 64px;
+  flex-shrink: 0;
+}
+
+.book-thumb {
+  width: 48px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid var(--line);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.book-thumb-placeholder {
+  width: 48px;
+  height: 64px;
+  background: var(--accent-soft);
+  border: 1px dashed var(--line);
+  border-radius: 3px;
+  display: grid;
+  place-items: center;
+  font-family: var(--serif);
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 1.1rem;
 }
 
 .b-main {
   display: flex;
-  flex-wrap: wrap;
-  column-gap: 12px;
-  align-items: baseline;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
 }
 
-.b-main h3 {
+.b-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.b-title-row h3 {
   font-family: var(--serif);
-  font-weight: 600;
-  font-size: 1.04rem;
-  line-height: 1.5;
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.4;
+  color: var(--ink);
   transition: color 0.2s;
 }
 
-.b-main .author {
+.bookrow:hover .b-title-row h3 {
+  color: var(--accent);
+}
+
+.book-stars {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #f59e0b;
+}
+
+.b-sub-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.b-sub-row .author {
   font-size: 0.85rem;
   color: var(--ink-2);
 }
 
-.bookrow .cat {
-  font-family: var(--mono);
-  font-size: 11px;
+.b-sub-row .tagline {
+  font-size: 0.82rem;
   color: var(--ink-3);
+  font-style: italic;
 }
 
-.bookrow:hover h3,
-.bookrow:hover .idx {
+.book-right-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.book-right-meta .cat {
+  font-family: var(--mono);
+  font-size: 11px;
   color: var(--accent);
+  border: 1px solid var(--line);
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--paper);
+}
+
+.book-right-meta .download-link {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-2);
+  border-bottom: 1px dotted var(--ink-3);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.book-right-meta .download-link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
 /* ═══════════════ 02 实验室 ═══════════════ */
@@ -799,63 +886,114 @@ details.prompt[open] summary::after {
 /* ═══════════════ 05 隙 · 明信片横滑 ═══════════════ */
 .strip {
   display: flex;
-  gap: 18px;
+  gap: 20px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  padding-block: 6px 18px;
-  margin-inline: calc(50% - 50vw);
-  padding-inline: calc(50vw - 50%);
-  scrollbar-width: none;
+  padding-block: 10px 20px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-3) var(--line);
+  -webkit-overflow-scrolling: touch;
 }
 
 .strip::-webkit-scrollbar {
-  display: none;
+  height: 6px;
+}
+
+.strip::-webkit-scrollbar-track {
+  background: var(--line);
+  border-radius: 3px;
+}
+
+.strip::-webkit-scrollbar-thumb {
+  background: var(--ink-3);
+  border-radius: 3px;
 }
 
 .postcard {
-  flex: 0 0 clamp(240px, 70vw, 320px);
+  flex: 0 0 280px;
+  width: 280px;
+  min-width: 280px;
   scroll-snap-align: start;
+  border: 1px solid var(--line);
+  background: var(--card);
+  padding: 12px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.postcard:hover {
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.postcard-img-wrap {
+  width: 100%;
+  height: 190px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--paper);
 }
 
 .postcard img {
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
   width: 100%;
-  border: 1px solid var(--line);
-  filter: grayscale(0.18) contrast(1.04);
-  transition: filter 0.3s;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(0.08) contrast(1.02);
+  transition: filter 0.3s, transform 0.4s;
 }
 
 .postcard:hover img {
   filter: none;
+  transform: scale(1.04);
 }
 
 .pc-meta {
   display: flex;
-  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   font-family: var(--mono);
   font-size: 11.5px;
   color: var(--ink-2);
-  margin-top: 12px;
+  margin-top: 10px;
+  white-space: nowrap;
+}
+
+.pc-meta .pc-date {
+  color: var(--ink-3);
+}
+
+.pc-meta .loc {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
 }
 
 .pc-meta .loc::before {
-  content: "◉ ";
+  content: "◉";
   color: var(--accent);
+  font-size: 10px;
 }
 
 .postcard h3 {
   font-family: var(--serif);
-  font-weight: 600;
-  font-size: 1.02rem;
-  margin-top: 4px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-top: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--ink);
 }
 
 .strip-hint {
   font-family: var(--mono);
   font-size: 11px;
   color: var(--ink-3);
-  margin-top: 4px;
+  margin-top: 8px;
 }
 
 /* ═══════════════ 06 笔记 ═══════════════ */

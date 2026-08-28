@@ -7,6 +7,7 @@ import {
   getMultiSelect,
   getDate,
   getUrl,
+  getNumber,
   findPropertyKeyByType,
 } from "./notionHelpers";
 import { getTimelineEntries } from "./changelog";
@@ -16,7 +17,11 @@ export interface BookItem {
   t: string;
   a: string;
   c: string;
+  tags?: string[];
   coverUrl?: string | null;
+  rating?: number | null;
+  tagline?: string | null;
+  downloadUrl?: string | null;
 }
 
 export interface LabItem {
@@ -25,6 +30,7 @@ export interface LabItem {
   t: string;
   d: string;
   links: [string, string][];
+  iconUrl?: string | null;
 }
 
 export interface FlowStep {
@@ -79,50 +85,26 @@ export interface LogItem {
   t: string;
 }
 
-export interface CoverItem {
-  t: string;
-  layer: string;
-  tag: string;
-  date: string;
-  d: string;
-  links: [string, string][];
-  img: string;
-}
-
 export const FALLBACK_SITE_DATA = {
-  cover: {
-    t: "Virtual Studio",
-    layer: "输出层",
-    tag: "VIBE CODING",
-    date: "2026·05",
-    d: "基于 Next.js + Notion 的极简主义个人网站——也就是你现在看到的这一本杂志。从数据层到版式，全部自己动手。",
-    links: [
-      ["GitHub", "https://github.com"],
-      ["Demo", "#"],
-      ["查看笔记", "#notes"],
-    ] as [string, string][],
-    img: "https://picsum.photos/seed/tlcover/1200/900",
-  },
-
   books: [
-    { t: "On Writing Well", a: "William K. Zinsser", c: "工具" },
-    { t: "游戏剧本怎么写：游戏编剧新手的入门指南", a: "佐佐木智广", c: "工具" },
-    { t: "世界观（Worldviews）", a: "Richard DeWitt", c: "科普" },
-    { t: "活出意义来（Man's Search for Meaning）", a: "Viktor E. Frankl", c: "文学" },
-    { t: "所有我们看不见的光（All the Light We Cannot See）", a: "Anthony Doerr", c: "小说" },
-    { t: "译道探微", a: "思果", c: "语言学" },
-    { t: "打造第二大脑（Building a Second Brain）", a: "Tiago Forte", c: "设计" },
-    { t: "制作进行：一本书让你彻底了解动画制作", a: "舛本和也", c: "工具" },
-    { t: "金钱心理学（The Psychology of Money）", a: "Morgan Housel", c: "工具" },
-    { t: "被讨厌的勇气", a: "岸见一郎 古贺史健", c: "成长" },
-    { t: "风格的要素（The Elements of Style）", a: "William Strunk", c: "语言学" },
-    { t: "克拉拉与太阳（Klara and the Sun）", a: "Kazuo Ishiguro", c: "小说" },
-    { t: "四千周（Four Thousand Weeks）", a: "Oliver Burkeman", c: "成长" },
-    { t: "中式英语之鉴", a: "平卡姆", c: "语言学" },
-    { t: "点子就要秀出来（Show Your Work!）", a: "Austin Kleon", c: "设计" },
-    { t: "原子习惯（Atomic Habits）", a: "James Clear", c: "成长" },
-    { t: "强势谈判（Never Split the Difference）", a: "Chris Voss", c: "工具" },
-    { t: "翻译研究方法概论", a: "穆雷", c: "语言学" },
+    { t: "On Writing Well", a: "William K. Zinsser", c: "工具", rating: 5 },
+    { t: "游戏剧本怎么写：游戏编剧新手的入门指南", a: "佐佐木智广", c: "工具", rating: 4.5 },
+    { t: "世界观（Worldviews）", a: "Richard DeWitt", c: "科普", rating: 5 },
+    { t: "活出意义来（Man's Search for Meaning）", a: "Viktor E. Frankl", c: "文学", rating: 5 },
+    { t: "所有我们看不见的光（All the Light We Cannot See）", a: "Anthony Doerr", c: "小说", rating: 4.8 },
+    { t: "译道探微", a: "思果", c: "语言学", rating: 4.5 },
+    { t: "打造第二大脑（Building a Second Brain）", a: "Tiago Forte", c: "设计", rating: 4.5 },
+    { t: "制作进行：一本书让你彻底了解动画制作", a: "舛本和也", c: "工具", rating: 4.5 },
+    { t: "金钱心理学（The Psychology of Money）", a: "Morgan Housel", c: "工具", rating: 4.8 },
+    { t: "被讨厌的勇气", a: "岸见一郎 古贺史健", c: "成长", rating: 5 },
+    { t: "风格的要素（The Elements of Style）", a: "William Strunk", c: "语言学", rating: 4.8 },
+    { t: "克拉拉与太阳（Klara and the Sun）", a: "Kazuo Ishiguro", c: "小说", rating: 4.7 },
+    { t: "四千周（Four Thousand Weeks）", a: "Oliver Burkeman", c: "成长", rating: 4.6 },
+    { t: "中式英语之鉴", a: "平卡姆", c: "语言学", rating: 4.7 },
+    { t: "点子就要秀出来（Show Your Work!）", a: "Austin Kleon", c: "设计", rating: 4.5 },
+    { t: "原子习惯（Atomic Habits）", a: "James Clear", c: "成长", rating: 5 },
+    { t: "强势谈判（Never Split the Difference）", a: "Chris Voss", c: "工具", rating: 4.8 },
+    { t: "翻译研究方法概论", a: "穆雷", c: "语言学", rating: 4.5 },
   ] as BookItem[],
 
   lab: [
@@ -130,43 +112,43 @@ export const FALLBACK_SITE_DATA = {
       tag: "AI 实践",
       t: "SwiftMemo",
       d: "一款 MUJI 无印良品风格的桌面便签应用，专为捕捉日常碎想法而设计。",
-      links: [["GitHub", "https://github.com"], ["Demo", "#"]] as [string, string][],
+      links: [["GitHub", "https://github.com/HKDCC/swift-memo"], ["Demo", "https://github.com/HKDCC/swift-memo/releases"]],
     },
     {
       tag: "AI 实践",
       t: "CassetteCutter",
       d: "专为解决大文件视频传输难题而设计的桌面工具。",
-      links: [["查看笔记", "#notes"]] as [string, string][],
+      links: [["查看详情", "#lab"]],
     },
     {
       tag: "Vibe Coding",
       t: "Retro Pixel Snake",
       d: "磁带未来主义 + 复古像素风贪吃蛇小游戏。Claude + Antigravity。",
-      links: [["GitHub", "https://github.com"], ["Demo", "#"]] as [string, string][],
+      links: [["GitHub", "https://github.com/HKDCC/snake-game"], ["Demo", "https://github.com/HKDCC/snake-game/releases"]],
     },
     {
       tag: "AI 实践",
       t: "ClaudeCode 新手安装教程",
       d: "还有更简单的方法：遇到困难，直接问 AI。",
-      links: [["查看笔记", "#notes"]] as [string, string][],
+      links: [["查看详情", "#notes"]],
     },
     {
       tag: "AI 实践",
       t: "OpenClaw 新手部署教程",
       d: "同样有更简单的方法：遇到困难，直接问 AI。",
-      links: [["查看笔记", "#notes"]] as [string, string][],
+      links: [["查看详情", "#notes"]],
     },
     {
       tag: "AI 实践",
       t: "MuseTodo Pink",
       d: "粉粉的 Todolist，给待办清单一点情绪价值。",
-      links: [["查看笔记", "#notes"]] as [string, string][],
+      links: [["查看详情", "#notes"]],
     },
     {
       tag: "Vibe Coding",
       t: "Virtual Studio",
       d: "基于 Next.js + Notion 的极简主义个人网站。",
-      links: [["GitHub", "https://github.com"], ["Demo", "#"], ["笔记", "#notes"]] as [string, string][],
+      links: [["GitHub", "https://github.com/HKDCC/web_Virtual-Studio"], ["Demo", "#"]],
     },
   ] as LabItem[],
 
@@ -204,12 +186,12 @@ export const FALLBACK_SITE_DATA = {
   ] as PromptItem[],
 
   timeline: [
-    { d: "2026·05", t: "Gemini 3.5 Flash", note: "辅助功能与多模态能力升级" },
-    { d: "2026·04", t: "MiniMax M2.7", note: "Agent 任务规划能力强化" },
-    { d: "2026·02", t: "GPT-5.2", note: "长上下文与代码能力迭代" },
-    { d: "2025·11", t: "Claude 4.5 Sonnet", note: "Agent 编程工作流成熟" },
-    { d: "2025·09", t: "Gemini 3.0 Pro", note: "原生多模态与 2M 上下文" },
-    { d: "2025·06", t: "DeepSeek V3.2", note: "开源权重的性价比路线" },
+    { d: "2026·07", t: "Gemini 3.6 Flash / 3.5 Flash-Lite", note: "降低推理成本，提高速度" },
+    { d: "2026·07", t: "Qwen3.8-Max", note: "面向前沿推理和Agent竞争" },
+    { d: "2026·07", t: "Kimi K3", note: "2.8T参数级开放权重模型，百万token上下文" },
+    { d: "2026·07", t: "GPT-5.6正式版", note: "OpenAI新旗舰代际更新" },
+    { d: "2026·07", t: "Grok 4.5", note: "强化代码、Agent、知识任务" },
+    { d: "2026·06", t: "Claude Sonnet 5", note: "Claude 5系列中端主力，成本/性能平衡" },
   ] as TimelineItem[],
 
   pause: [
@@ -241,25 +223,32 @@ function isObj(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null;
 }
 
-function firstFileUrl(filesProp: unknown): string | null {
-  if (!isObj(filesProp)) return null;
-  const files = (filesProp as Record<string, unknown>)["files"];
-  if (!Array.isArray(files) || files.length === 0) return null;
-  const f = files[0];
-  if (!isObj(f)) return null;
-  const type = f["type"];
-  if (type === "external") {
-    const external = f["external"];
-    if (!isObj(external)) return null;
-    const url = external["url"];
-    return typeof url === "string" ? url : null;
+function extractFileUrl(pageObj: { cover?: unknown; properties?: Record<string, unknown> }, propName = "Cover"): string | null {
+  // 1. Check properties[propName]
+  if (pageObj.properties && pageObj.properties[propName]) {
+    const p = pageObj.properties[propName] as Record<string, unknown>;
+    if (p.type === "files" && Array.isArray(p.files) && p.files.length > 0) {
+      const f = p.files[0] as Record<string, unknown>;
+      if (f.type === "file" && isObj(f.file) && typeof f.file.url === "string") {
+        return f.file.url;
+      }
+      if (f.type === "external" && isObj(f.external) && typeof f.external.url === "string") {
+        return f.external.url;
+      }
+    }
   }
-  if (type === "file") {
-    const file = f["file"];
-    if (!isObj(file)) return null;
-    const url = file["url"];
-    return typeof url === "string" ? url : null;
+
+  // 2. Check native page.cover
+  if (isObj(pageObj.cover)) {
+    const cov = pageObj.cover as Record<string, unknown>;
+    if (cov.type === "file" && isObj(cov.file) && typeof cov.file.url === "string") {
+      return cov.file.url;
+    }
+    if (cov.type === "external" && isObj(cov.external) && typeof cov.external.url === "string") {
+      return cov.external.url;
+    }
   }
+
   return null;
 }
 
@@ -274,7 +263,6 @@ export async function fetchMagazineData() {
   let pause = FALLBACK_SITE_DATA.pause;
   let notes = FALLBACK_SITE_DATA.notes;
   let log = FALLBACK_SITE_DATA.log;
-  let cover = FALLBACK_SITE_DATA.cover;
 
   // 1. Books
   try {
@@ -285,12 +273,21 @@ export async function fetchMagazineData() {
           const props = p.properties as Record<string, unknown>;
           const tags = getMultiSelect(props, "Tags");
           const category = getSelect(props, "Category") || (tags.length > 0 ? tags[0] : "工具");
+          const coverUrl = extractFileUrl(p, "Cover");
+          const rating = getNumber(props, "MyRating");
+          const tagline = getRichText(props, "Tagline");
+          const downloadUrl = getUrl(props, "DownloadURL");
+
           return {
             id: p.id,
             t: getPageTitle(p),
             a: getRichText(props, "Author") || "未知作者",
             c: category,
-            coverUrl: firstFileUrl(props["Cover"]),
+            tags,
+            coverUrl,
+            rating,
+            tagline,
+            downloadUrl,
           };
         });
       }
@@ -320,6 +317,7 @@ export async function fetchMagazineData() {
             t: getPageTitle(p),
             d: getRichText(props, "Description") || "",
             links,
+            iconUrl: extractFileUrl(p, "Icon"),
           };
         });
       }
@@ -391,7 +389,7 @@ export async function fetchMagazineData() {
       if (res.length > 0) {
         pause = res.map((p) => {
           const props = p.properties as Record<string, unknown>;
-          const coverUrl = firstFileUrl(props["Cover"]) || "https://picsum.photos/seed/" + p.id + "/640/480";
+          const coverUrl = extractFileUrl(p, "Cover") || "https://picsum.photos/seed/" + p.id + "/640/480";
           const rawDate = getDate(props, "Date") || "2026·05";
           return {
             id: p.id,
@@ -462,21 +460,7 @@ export async function fetchMagazineData() {
     console.warn("Using fallback log data:", e);
   }
 
-  // Dynamic Cover
-  if (lab.length > 0 && lab[0]) {
-    cover = {
-      t: lab[0].t,
-      layer: "输出层",
-      tag: lab[0].tag.toUpperCase(),
-      date: "最新发布",
-      d: lab[0].d || "极简主义个人网站与 AI 实践项目。",
-      links: lab[0].links,
-      img: "https://picsum.photos/seed/tlcover/1200/900",
-    };
-  }
-
   return {
-    cover,
     books,
     lab,
     flow,

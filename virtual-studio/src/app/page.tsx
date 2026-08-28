@@ -2,12 +2,13 @@ import Link from "next/link";
 import { fetchMagazineData } from "@/lib/magazineData";
 import { ArchiveSection } from "@/components/magazine/ArchiveSection";
 import { WorkflowSection } from "@/components/magazine/WorkflowSection";
+import { PauseSection } from "@/components/magazine/PauseSection";
 
-export const revalidate = 60; // 60s ISR
+export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const data = await fetchMagazineData();
-  const { cover, books, lab, flow, tools, sites, prompts, timeline, pause, notes, log } = data;
+  const { books, lab, flow, tools, sites, prompts, timeline, pause, notes, log } = data;
 
   return (
     <>
@@ -24,50 +25,6 @@ export default async function HomePage() {
         <p className="lede">
           这里记录生产力探索、自我成长、AI 实践，以及那些值得收藏的生活细节。每一个模块，都是一种思维方式的入口。
         </p>
-      </section>
-
-      {/* ═══════════ 本期特写 ═══════════ */}
-      <section id="cover" className="block wrap">
-        <div className="sec-head reveal">
-          <p className="kicker">
-            <b>本期特写</b> · COVER STORY
-          </p>
-          <a className="util" href={cover.links[0]?.[1] || "#"} title="最新内容">
-            最新发布 · {cover.date}
-          </a>
-        </div>
-        <div className="cover-grid reveal" id="coverGrid">
-          <div>
-            <h2 className="cover-title">{cover.t}</h2>
-            <p className="cover-meta">
-              <span>{cover.layer}</span>
-              <span>{cover.tag}</span>
-              <span>{cover.date}</span>
-            </p>
-            <p className="cover-desc">{cover.d}</p>
-            <div className="cover-links">
-              {cover.links.map((l, i) => (
-                <a
-                  key={i}
-                  className="link-u"
-                  href={l[1]}
-                  target={l[1].startsWith("http") ? "_blank" : undefined}
-                  rel={l[1].startsWith("http") ? "noopener noreferrer" : undefined}
-                >
-                  {l[0]} ↗
-                </a>
-              ))}
-            </div>
-          </div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            className="cover-img"
-            src={cover.img}
-            width={1200}
-            height={900}
-            alt={`${cover.t} 封面图`}
-          />
-        </div>
       </section>
 
       {/* ═══════════ 01 库 · Archive ═══════════ */}
@@ -137,47 +94,7 @@ export default async function HomePage() {
       </section>
 
       {/* ═══════════ 05 隙 · Pause ═══════════ */}
-      <section id="pause" className="block wrap">
-        <div className="sec-head reveal">
-          <p className="kicker">
-            <b>05</b> / 生活层 · LIFE
-          </p>
-          <a className="util" href="/pause" title="全部照片墙">
-            全部照片 ↗
-          </a>
-        </div>
-        <h2 className="sec-title reveal">隙</h2>
-        <p className="sec-lede reveal">想要一个 Happy End。</p>
-        <div className="sec-body reveal">
-          <div className="strip" id="strip">
-            {pause.map((p, i) => {
-              const card = (
-                <figure className="postcard">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={p.img} loading="lazy" width={640} height={480} alt={p.t} />
-                  <figcaption>
-                    <p className="pc-meta">
-                      <span>{p.d}</span>
-                      <span className="loc">{p.loc}</span>
-                    </p>
-                    <h3>{p.t}</h3>
-                  </figcaption>
-                </figure>
-              );
-
-              if (p.id) {
-                return (
-                  <Link key={p.id || i} href={`/p/${p.id}`} style={{ textDecoration: "none", color: "inherit" }}>
-                    {card}
-                  </Link>
-                );
-              }
-              return <div key={i}>{card}</div>;
-            })}
-          </div>
-          <p className="strip-hint">← 横向滑动 →</p>
-        </div>
-      </section>
+      <PauseSection pause={pause} />
 
       {/* ═══════════ 06 笔记 · Notes ═══════════ */}
       <section id="notes" className="block wrap">

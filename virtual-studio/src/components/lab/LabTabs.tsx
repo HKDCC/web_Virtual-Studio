@@ -23,7 +23,7 @@ function LabCard(props: { item: LabItem }) {
     item.title.includes("Cassette") ? "/lab/cassettecutter.jpg" :
     item.title.includes("SwiftMemo") ? "/lab/swiftmemo.jpg" : null;
 
-  const imgSrc = item.iconUrl || localFallback;
+  const imgSrc = localFallback || item.iconUrl;
 
   return (
     <div className="lab-card">

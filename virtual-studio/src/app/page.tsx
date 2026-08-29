@@ -59,7 +59,7 @@ export default async function HomePage() {
               title.includes("MuseTodo") ? "/lab/musetodo_pink.gif" :
               title.includes("Cassette") ? "/lab/cassettecutter.jpg" :
               title.includes("SwiftMemo") ? "/lab/swiftmemo.jpg" : null;
-            const imgSrc = p?.iconUrl || localFallback;
+            const imgSrc = localFallback || p?.iconUrl;
 
             return (
               <article key={p?.id || i} className={`p-card${i === 0 ? " p-featured" : ""}`}>

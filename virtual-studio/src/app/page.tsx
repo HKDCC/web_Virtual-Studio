@@ -1,14 +1,13 @@
 import Link from "next/link";
 import { fetchMagazineData } from "@/lib/magazineData";
 import { ArchiveSection } from "@/components/magazine/ArchiveSection";
-import { WorkflowSection } from "@/components/magazine/WorkflowSection";
 import { PauseSection } from "@/components/magazine/PauseSection";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const data = await fetchMagazineData();
-  const { books, lab, flow, tools, sites, prompts, timeline, pause, notes, log } = data;
+  const { books, lab, timeline, pause, notes, log } = data;
 
   return (
     <>
@@ -65,14 +64,11 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════ 03 工作流 · Workflow ═══════════ */}
-      <WorkflowSection flow={flow} tools={tools} sites={sites} prompts={prompts} />
-
-      {/* ═══════════ 04 时间线 · Timeline ═══════════ */}
+      {/* ═══════════ 03 时间线 · Timeline ═══════════ */}
       <section id="timeline" className="block wrap">
         <div className="sec-head reveal">
           <p className="kicker">
-            <b>04</b> / 输出层 · 观测
+            <b>03</b> / 输出层 · 观测
           </p>
           <a className="util" href="/aievolutionlog" title="大模型迭代时间轴">
             全部更迭 ↗
@@ -93,14 +89,16 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════ 05 隙 · Pause ═══════════ */}
-      <PauseSection pause={pause} />
+      {/* ═══════════ 04 隙 · Pause ═══════════ */}
+      <section id="pause-wrap">
+        <PauseSection pause={pause} />
+      </section>
 
-      {/* ═══════════ 06 笔记 · Notes ═══════════ */}
+      {/* ═══════════ 05 笔记 · Notes ═══════════ */}
       <section id="notes" className="block wrap">
         <div className="sec-head reveal">
           <p className="kicker">
-            <b>06</b> / 片段层 · FRAGMENTS
+            <b>05</b> / 片段层 · FRAGMENTS
           </p>
           <a className="util" href="/archive?tab=notes" title="查看全部笔记">
             全部笔记 ↗
@@ -152,11 +150,11 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════ 07 足迹 · Change Log ═══════════ */}
+      {/* ═══════════ 06 足迹 · Change Log ═══════════ */}
       <section id="changelog" className="block wrap">
         <div className="sec-head reveal">
           <p className="kicker">
-            <b>07</b> / 日志 · LOG
+            <b>06</b> / 日志 · LOG
           </p>
           <a className="util" href="/changelog" title="全部足迹">
             全部足迹 ↗

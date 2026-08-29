@@ -98,6 +98,33 @@ async function RenderBlock({ block }: { block: NotionFullBlock }) {
         </pre>
       );
     }
+    case "image": {
+      const imgObj = b["image"] as unknown as {
+        type?: string;
+        file?: { url: string };
+        external?: { url: string };
+        caption?: RichText[];
+      } | undefined;
+      const url = imgObj?.file?.url || imgObj?.external?.url;
+      if (!url) return null;
+      const caption = imgObj?.caption?.map((c) => c.plain_text).join("") || "";
+      return (
+        <figure style={{ margin: "24px 0" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={url}
+            alt={caption || "Notion Image"}
+            referrerPolicy="no-referrer"
+            style={{ width: "100%", maxHeight: "640px", objectFit: "contain", borderRadius: 4 }}
+          />
+          {caption && (
+            <figcaption style={{ fontSize: "12px", color: "var(--ink-3)", textAlign: "center", marginTop: "6px" }}>
+              {caption}
+            </figcaption>
+          )}
+        </figure>
+      );
+    }
     case "divider": {
       return <hr style={{ border: "none", borderTop: "1px solid var(--bg-3)", margin: "28px 0" }} />;
     }

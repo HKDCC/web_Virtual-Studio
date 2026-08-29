@@ -31,8 +31,12 @@ export function PauseSection({ pause }: PauseSectionProps) {
                     src={p.img}
                     loading="lazy"
                     alt={p.t}
+                    referrerPolicy="no-referrer"
                     onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = `https://picsum.photos/seed/tl-${i + 1}/640/480`;
+                      const target = e.currentTarget as HTMLImageElement;
+                      if (!target.src.includes("picsum.photos")) {
+                        target.src = `https://picsum.photos/seed/tl-${i + 1}/640/480`;
+                      }
                     }}
                   />
                 </div>

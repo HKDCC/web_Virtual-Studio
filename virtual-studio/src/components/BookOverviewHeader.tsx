@@ -102,7 +102,7 @@ export function BookOverviewHeader(props: {
         <div className="book-overview-cover">
           {coverUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={coverUrl} alt={props.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            <img src={coverUrl} alt={props.title} referrerPolicy="no-referrer" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           ) : (
             <div className="book-cover-placeholder">
               {props.title}

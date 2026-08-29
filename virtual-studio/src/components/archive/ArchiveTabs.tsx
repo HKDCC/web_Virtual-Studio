@@ -40,7 +40,7 @@ function BookCover(props: { title: string; coverUrl?: string | null; tone: numbe
     return (
       <div className="book-cover">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={props.coverUrl} alt={props.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        <img src={props.coverUrl} alt={props.title} referrerPolicy="no-referrer" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
       </div>
     );
   }

@@ -10,14 +10,10 @@ directory = ".open-next/assets"
 enabled = true
 
 [vars]
-# NOTE: For production, use `npx wrangler pages project secret set` to set sensitive values.
-# These placeholder values are for local development only.
-NOTION_TOKEN = "placeholder"
-NOTION_NOTES_DB_ID = "placeholder"
-NOTION_BOOKS_DB_ID = "placeholder"
-NOTION_WORKFLOW_DB_ID = "placeholder"
-NOTION_LAB_DB_ID = "placeholder"
-NOTION_PAUSE_DB_ID = "placeholder"
-NOTION_CHANGELOG_DB_ID = "placeholder"
-REVALIDATE_TOKEN = "placeholder"
-
+NOTION_CHANGELOG_DB_ID = "3254b57fe15a80fab70fcfd3f3d1f12d"
+NOTION_NOTES_DB_ID = "3254b57fe15a809990affde8cced6794"
+NOTION_WORKFLOW_DB_ID = "3254b57fe15a803cac61d97a5b1cfc4d"
+NOTION_BOOKS_DB_ID = "3254b57fe15a8064901aea5bc026b087"
+NOTION_LAB_DB_ID = "3254b57fe15a801abbe4fb32bcf7fdc5"
+NOTION_PAUSE_DB_ID = "3264b57fe15a80879dccf1f3bfed78f1"
+NOTION_AINEWS_DB_ID = "3294b57fe15a80828ae4fa4138ee6bcb"

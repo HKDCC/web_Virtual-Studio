@@ -67,6 +67,7 @@ export function ArchiveSection({ books }: ArchiveSectionProps) {
                       alt={b.t}
                       className="book-thumb"
                       loading="lazy"
+                      referrerPolicy="no-referrer"
                       onError={(e) => {
                         (e.currentTarget as HTMLElement).style.display = "none";
                       }}

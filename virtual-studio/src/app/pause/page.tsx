@@ -65,6 +65,7 @@ export default async function PausePage() {
                     src={coverUrl}
                     alt={title || "摄影作品"}
                     className="pause-img"
+                    referrerPolicy="no-referrer"
                   />
                 ) : (
                   <div className="pause-block-inner">{emoji}</div>

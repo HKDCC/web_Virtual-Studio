@@ -29,18 +29,23 @@ function LabCard(props: { item: LabItem }) {
     <div className="lab-card">
       <Link href={`/p/${item.id}`} className="lab-card-thumb" style={{ overflow: "hidden", position: "relative" }}>
         {imgSrc ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={imgSrc}
-            alt={item.title}
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            onError={(e) => {
-              const target = e.currentTarget as HTMLImageElement;
-              if (localFallback && target.src !== localFallback) {
-                target.src = localFallback;
-              }
-            }}
-          />
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={imgSrc}
+              alt=""
+              aria-hidden="true"
+              className="p-card-media-backdrop"
+              loading="lazy"
+            />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={imgSrc}
+              alt={item.title}
+              className="lab-thumb-img"
+              loading="lazy"
+            />
+          </>
         ) : (
           <div className={`lab-badge ${item.type === "vibe" ? "earth" : "blue"}`}>
             {item.badge ?? (item.type === "vibe" ? "Vibe" : "Lab")}

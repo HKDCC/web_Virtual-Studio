@@ -68,6 +68,14 @@ export default async function HomePage() {
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={imgSrc}
+                      alt=""
+                      aria-hidden="true"
+                      className="p-card-media-backdrop"
+                      loading="lazy"
+                    />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={imgSrc}
                       alt={title}
                       className="p-card-media-img"
                       loading="lazy"

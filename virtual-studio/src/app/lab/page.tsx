@@ -46,26 +46,26 @@ export default async function LabPage() {
 
   const labItems: LabItem[] = items.map((p) => {
     const props = propsOf(p);
-    const title = getPageTitle(p) || "Untitled";
     const pObj = p as Record<string, unknown>;
+    const title = getPageTitle(p) || "Untitled";
+    const t = title.toLowerCase();
     let appIcon: { type: "emoji" | "image"; value: string } | null = null;
-    const appIconFile = firstFileUrl(props["AppIcon"]);
-    if (appIconFile) {
-      appIcon = { type: "image", value: appIconFile };
-    } else if (isObj(pObj.icon)) {
-      const ic = pObj.icon as Record<string, unknown>;
-      if (ic.type === "emoji" && typeof ic.emoji === "string") appIcon = { type: "emoji", value: ic.emoji };
-      else if (ic.type === "file" && isObj(ic.file) && typeof ic.file.url === "string") appIcon = { type: "image", value: ic.file.url };
-      else if (ic.type === "external" && isObj(ic.external) && typeof ic.external.url === "string") appIcon = { type: "image", value: ic.external.url };
-    }
-    if (!appIcon) {
-      const t = title.toLowerCase();
-      if (t.includes("whisper")) appIcon = { type: "image", value: "/lab/icons/whisperx.png" };
-      else if (t.includes("reader") || t.includes("minireader")) appIcon = { type: "image", value: "/lab/icons/minireader.png" };
-      else if (t.includes("cassette") || t.includes("magiccutter") || t.includes("cutter")) appIcon = { type: "image", value: "/lab/icons/magiccutter.png" };
-      else if (t.includes("memo") || t.includes("swiftmemo")) appIcon = { type: "image", value: "/lab/icons/swiftmemo.png" };
-      else if (t.includes("snake") || t.includes("retro")) appIcon = { type: "image", value: "/lab/icons/snake.png" };
-      else if (t.includes("muse")) appIcon = { type: "emoji", value: "🌸" };
+    if (t.includes("whisper")) appIcon = { type: "image", value: "/lab/icons/whisperx.png" };
+    else if (t.includes("reader") || t.includes("minireader")) appIcon = { type: "image", value: "/lab/icons/minireader.png" };
+    else if (t.includes("cassette") || t.includes("magiccutter") || t.includes("cutter")) appIcon = { type: "image", value: "/lab/icons/magiccutter.png" };
+    else if (t.includes("memo") || t.includes("swiftmemo")) appIcon = { type: "image", value: "/lab/icons/swiftmemo.png" };
+    else if (t.includes("snake") || t.includes("retro")) appIcon = { type: "image", value: "/lab/icons/snake.png" };
+    else {
+      const appIconFile = firstFileUrl(props["AppIcon"]);
+      if (appIconFile) {
+        appIcon = { type: "image", value: appIconFile };
+      } else if (isObj(pObj.icon)) {
+        const ic = pObj.icon as Record<string, unknown>;
+        if (ic.type === "file" && isObj(ic.file) && typeof ic.file.url === "string") appIcon = { type: "image", value: ic.file.url };
+        else if (ic.type === "external" && isObj(ic.external) && typeof ic.external.url === "string") appIcon = { type: "image", value: ic.external.url };
+        else if (ic.type === "emoji" && typeof ic.emoji === "string") appIcon = { type: "emoji", value: ic.emoji };
+      }
+      if (!appIcon && t.includes("muse")) appIcon = { type: "emoji", value: "🌸" };
     }
 
     return {

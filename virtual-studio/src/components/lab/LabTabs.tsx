@@ -70,21 +70,37 @@ function LabCard(props: { item: LabItem; index?: number }) {
       <div className="lab-body">
         <Link href={`/p/${item.id}`} style={{ textDecoration: "none", color: "inherit" }}>
           <div className="lab-title">
-            {item.appIcon?.type === "emoji" && (
-              <span className="p-app-icon emoji" aria-hidden="true">
-                {item.appIcon.value}
-              </span>
-            )}
-            {item.appIcon?.type === "image" && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={item.appIcon.value}
-                alt=""
-                className="p-app-icon img"
-                aria-hidden="true"
-                loading="lazy"
-              />
-            )}
+            {(() => {
+              const localAppIcon =
+                item.title.includes("WhisperX") || item.title.includes("Whisper") ? { type: "image" as const, value: "/lab/icons/whisperx.png" } :
+                item.title.includes("MiniReader") || item.title.includes("Reader") ? { type: "image" as const, value: "/lab/icons/minireader.png" } :
+                item.title.includes("Cassette") || item.title.includes("MagicCutter") || item.title.includes("Cutter") ? { type: "image" as const, value: "/lab/icons/magiccutter.png" } :
+                item.title.includes("SwiftMemo") ? { type: "image" as const, value: "/lab/icons/swiftmemo.png" } :
+                item.title.includes("Retro") || item.title.includes("Snake") ? { type: "image" as const, value: "/lab/icons/snake.png" } :
+                item.title.includes("MuseTodo") ? { type: "emoji" as const, value: "🌸" } : null;
+              const resolvedIcon = localAppIcon || item.appIcon;
+
+              if (resolvedIcon?.type === "emoji") {
+                return (
+                  <span className="p-app-icon emoji" aria-hidden="true">
+                    {resolvedIcon.value}
+                  </span>
+                );
+              }
+              if (resolvedIcon?.type === "image") {
+                return (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={resolvedIcon.value}
+                    alt=""
+                    className="p-app-icon img"
+                    aria-hidden="true"
+                    loading="lazy"
+                  />
+                );
+              }
+              return null;
+            })()}
             {item.title}
           </div>
           {item.description ? <div className="lab-desc">{item.description}</div> : null}

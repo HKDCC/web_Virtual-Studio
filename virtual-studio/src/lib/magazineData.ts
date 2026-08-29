@@ -1214,21 +1214,37 @@ function extractPageIcon(
   pageObj: { icon?: unknown; properties?: Record<string, unknown> },
   fallbackTitle = ""
 ): AppIconInfo | null {
-  // 1. Check native page.icon (Emoji or File/External image)
+  const t = fallbackTitle.toLowerCase();
+  // 1. Fast local static icons for known project assets
+  if (t.includes("whisper")) return { type: "image", value: "/lab/icons/whisperx.png" };
+  if (t.includes("reader") || t.includes("minireader")) return { type: "image", value: "/lab/icons/minireader.png" };
+  if (t.includes("cassette") || t.includes("magiccutter") || t.includes("cutter")) return { type: "image", value: "/lab/icons/magiccutter.png" };
+  if (t.includes("memo") || t.includes("swiftmemo")) return { type: "image", value: "/lab/icons/swiftmemo.png" };
+  if (t.includes("snake") || t.includes("retro")) return { type: "image", value: "/lab/icons/snake.png" };
+
+  // 2. Check property AppIcon
+  if (pageObj.properties) {
+    const appIconUrl = extractFileUrl(pageObj, "AppIcon") || getUrl(pageObj.properties, "AppIconURL");
+    if (appIconUrl) {
+      return { type: "image", value: appIconUrl };
+    }
+  }
+
+  // 3. Check native page.icon (File, External or Emoji)
   if (isObj(pageObj.icon)) {
     const ic = pageObj.icon as Record<string, unknown>;
-    if (ic.type === "emoji" && typeof ic.emoji === "string" && ic.emoji) {
-      return { type: "emoji", value: ic.emoji };
-    }
     if (ic.type === "file" && isObj(ic.file) && typeof ic.file.url === "string" && ic.file.url) {
       return { type: "image", value: ic.file.url };
     }
     if (ic.type === "external" && isObj(ic.external) && typeof ic.external.url === "string" && ic.external.url) {
       return { type: "image", value: ic.external.url };
     }
+    if (ic.type === "emoji" && typeof ic.emoji === "string" && ic.emoji) {
+      return { type: "emoji", value: ic.emoji };
+    }
   }
 
-  // 2. Check property AppEmoji or Emoji or AppIcon
+  // 4. Check property AppEmoji or Emoji
   if (pageObj.properties) {
     const emojiVal =
       getRichText(pageObj.properties, "AppEmoji") ||
@@ -1238,20 +1254,7 @@ function extractPageIcon(
     if (emojiVal) {
       return { type: "emoji", value: emojiVal };
     }
-
-    const appIconUrl = extractFileUrl(pageObj, "AppIcon") || getUrl(pageObj.properties, "AppIconURL");
-    if (appIconUrl) {
-      return { type: "image", value: appIconUrl };
-    }
   }
-
-  // 3. Fallback to native application image icons based on title
-  const t = fallbackTitle.toLowerCase();
-  if (t.includes("whisper")) return { type: "image", value: "/lab/icons/whisperx.png" };
-  if (t.includes("reader") || t.includes("minireader")) return { type: "image", value: "/lab/icons/minireader.png" };
-  if (t.includes("cassette") || t.includes("magiccutter") || t.includes("cutter")) return { type: "image", value: "/lab/icons/magiccutter.png" };
-  if (t.includes("memo") || t.includes("swiftmemo")) return { type: "image", value: "/lab/icons/swiftmemo.png" };
-  if (t.includes("snake") || t.includes("retro")) return { type: "image", value: "/lab/icons/snake.png" };
   if (t.includes("muse") || t.includes("todo")) return { type: "emoji", value: "🌸" };
 
   return null;

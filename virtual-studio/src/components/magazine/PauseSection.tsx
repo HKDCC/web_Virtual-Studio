@@ -4,7 +4,7 @@ import Link from "next/link";
 import { PauseItem } from "@/lib/magazineData";
 
 interface PauseSectionProps {
-  pause: PauseItem[];
+  pause?: PauseItem[];
 }
 
 export function PauseSection({ pause = [] }: PauseSectionProps) {
@@ -25,14 +25,20 @@ export function PauseSection({ pause = [] }: PauseSectionProps) {
       <div className="sec-body reveal">
         <div className="strip" id="strip">
           {safePause.map((p, i) => {
+            const title = typeof p?.t === "string" ? p.t : "照片";
+            const img = typeof p?.img === "string" && p.img ? p.img : `/photos/photo_${(i % 10) + 1}_.jpeg`;
+            const date = typeof p?.d === "string" ? p.d : "";
+            const loc = typeof p?.loc === "string" ? p.loc : "";
+            const pageId = p?.id;
+
             const card = (
               <figure className="postcard">
                 <div className="postcard-img-wrap">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={p.img}
+                    src={img}
                     loading="lazy"
-                    alt={p.t}
+                    alt={title}
                     referrerPolicy="no-referrer"
                     onError={(e) => {
                       const target = e.currentTarget as HTMLImageElement;
@@ -44,17 +50,17 @@ export function PauseSection({ pause = [] }: PauseSectionProps) {
                 </div>
                 <figcaption>
                   <div className="pc-meta">
-                    <span className="pc-date">{p.d}</span>
-                    <span className="loc">{p.loc}</span>
+                    {date && <span className="pc-date">{date}</span>}
+                    {loc && <span className="loc">{loc}</span>}
                   </div>
-                  <h3>{p.t}</h3>
+                  <h3>{title}</h3>
                 </figcaption>
               </figure>
             );
 
-            if (p.id) {
+            if (pageId) {
               return (
-                <Link key={p.id || i} href={`/p/${p.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+                <Link key={pageId || i} href={`/p/${pageId}`} style={{ textDecoration: "none", color: "inherit" }}>
                   {card}
                 </Link>
               );

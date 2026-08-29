@@ -60,12 +60,12 @@ export default async function LabPage() {
     }
     if (!appIcon) {
       const t = title.toLowerCase();
-      if (t.includes("whisper")) appIcon = { type: "emoji", value: "🎙️" };
-      else if (t.includes("reader")) appIcon = { type: "emoji", value: "📖" };
-      else if (t.includes("cassette")) appIcon = { type: "emoji", value: "📼" };
-      else if (t.includes("memo")) appIcon = { type: "emoji", value: "📝" };
+      if (t.includes("whisper")) appIcon = { type: "image", value: "/lab/icons/whisperx.png" };
+      else if (t.includes("reader") || t.includes("minireader")) appIcon = { type: "image", value: "/lab/icons/minireader.png" };
+      else if (t.includes("cassette") || t.includes("magiccutter") || t.includes("cutter")) appIcon = { type: "image", value: "/lab/icons/magiccutter.png" };
+      else if (t.includes("memo") || t.includes("swiftmemo")) appIcon = { type: "image", value: "/lab/icons/swiftmemo.png" };
+      else if (t.includes("snake") || t.includes("retro")) appIcon = { type: "image", value: "/lab/icons/snake.png" };
       else if (t.includes("muse")) appIcon = { type: "emoji", value: "🌸" };
-      else if (t.includes("snake")) appIcon = { type: "emoji", value: "🐍" };
     }
 
     return {

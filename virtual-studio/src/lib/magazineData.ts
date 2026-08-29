@@ -344,7 +344,7 @@ export const FALLBACK_SITE_DATA = {
       d: "高精度、本地优先的 WhisperX 语音识别与智能字幕桌面客户端，支持角色分离、词级时间戳对齐与多格式导出。",
       links: [["GitHub", "https://github.com/HKDCC/WhisperX-GUI"], ["Demo", "https://github.com/HKDCC/WhisperX-GUI/releases"]],
       iconUrl: "/lab/whisperx_gui.mp4",
-      appIcon: { type: "emoji", value: "🎙️" },
+      appIcon: { type: "image", value: "/lab/icons/whisperx.png" },
     },
     {
       tag: "Vibe Coding",
@@ -352,7 +352,7 @@ export const FALLBACK_SITE_DATA = {
       d: "极简、无干扰的本地优先桌面阅读器，支持 TXT / EPUB / PDF，基于 IndexedDB 离线存储。",
       links: [["GitHub", "https://github.com/HKDCC/MiniReader"], ["Demo", "https://github.com/HKDCC/MiniReader/releases"]],
       iconUrl: "/lab/minireader.gif",
-      appIcon: { type: "emoji", value: "📖" },
+      appIcon: { type: "image", value: "/lab/icons/minireader.png" },
     },
     {
       tag: "AI 实践",
@@ -360,7 +360,7 @@ export const FALLBACK_SITE_DATA = {
       d: "一款 MUJI 无印良品风格的桌面便签应用，专为捕捉日常碎想法而设计。",
       links: [["GitHub", "https://github.com/HKDCC/swift-memo"], ["Demo", "https://github.com/HKDCC/swift-memo/releases"]],
       iconUrl: "/lab/swiftmemo.jpg",
-      appIcon: { type: "emoji", value: "📝" },
+      appIcon: { type: "image", value: "/lab/icons/swiftmemo.png" },
     },
     {
       tag: "AI 实践",
@@ -368,7 +368,7 @@ export const FALLBACK_SITE_DATA = {
       d: "专为解决大文件视频传输难题而设计的桌面工具。",
       links: [["查看详情", "#lab"]],
       iconUrl: "/lab/cassettecutter.jpg",
-      appIcon: { type: "emoji", value: "📼" },
+      appIcon: { type: "image", value: "/lab/icons/magiccutter.png" },
     },
     {
       tag: "Vibe Coding",
@@ -376,7 +376,7 @@ export const FALLBACK_SITE_DATA = {
       d: "磁带未来主义 + 复古像素风贪吃蛇小游戏。Claude + Antigravity。",
       links: [["GitHub", "https://github.com/HKDCC/snake-game"], ["Demo", "https://github.com/HKDCC/snake-game/releases"]],
       iconUrl: "/lab/retro_pixel_snake.gif",
-      appIcon: { type: "emoji", value: "🐍" },
+      appIcon: { type: "image", value: "/lab/icons/snake.png" },
     },
     {
       tag: "AI 实践",
@@ -1245,13 +1245,14 @@ function extractPageIcon(
     }
   }
 
-  // 3. Fallback emoji based on title
+  // 3. Fallback to native application image icons based on title
   const t = fallbackTitle.toLowerCase();
-  if (t.includes("reader") || t.includes("minireader")) return { type: "emoji", value: "📖" };
-  if (t.includes("cassette")) return { type: "emoji", value: "📼" };
-  if (t.includes("memo") || t.includes("swiftmemo")) return { type: "emoji", value: "📝" };
+  if (t.includes("whisper")) return { type: "image", value: "/lab/icons/whisperx.png" };
+  if (t.includes("reader") || t.includes("minireader")) return { type: "image", value: "/lab/icons/minireader.png" };
+  if (t.includes("cassette") || t.includes("magiccutter") || t.includes("cutter")) return { type: "image", value: "/lab/icons/magiccutter.png" };
+  if (t.includes("memo") || t.includes("swiftmemo")) return { type: "image", value: "/lab/icons/swiftmemo.png" };
+  if (t.includes("snake") || t.includes("retro")) return { type: "image", value: "/lab/icons/snake.png" };
   if (t.includes("muse") || t.includes("todo")) return { type: "emoji", value: "🌸" };
-  if (t.includes("snake") || t.includes("retro")) return { type: "emoji", value: "🐍" };
 
   return null;
 }

@@ -64,12 +64,12 @@ export default async function HomePage() {
             const imgSrc = localFallback || p?.iconUrl;
 
             const appIcon = p?.appIcon || (
-              title.includes("WhisperX") || title.includes("Whisper") ? { type: "emoji" as const, value: "🎙️" } :
-              title.includes("MiniReader") || title.includes("Reader") ? { type: "emoji" as const, value: "📖" } :
-              title.includes("Cassette") ? { type: "emoji" as const, value: "📼" } :
-              title.includes("SwiftMemo") ? { type: "emoji" as const, value: "📝" } :
-              title.includes("MuseTodo") ? { type: "emoji" as const, value: "🌸" } :
-              title.includes("Retro") || title.includes("Snake") ? { type: "emoji" as const, value: "🐍" } : null
+              title.includes("WhisperX") || title.includes("Whisper") ? { type: "image" as const, value: "/lab/icons/whisperx.png" } :
+              title.includes("MiniReader") || title.includes("Reader") ? { type: "image" as const, value: "/lab/icons/minireader.png" } :
+              title.includes("Cassette") || title.includes("MagicCutter") || title.includes("Cutter") ? { type: "image" as const, value: "/lab/icons/magiccutter.png" } :
+              title.includes("SwiftMemo") ? { type: "image" as const, value: "/lab/icons/swiftmemo.png" } :
+              title.includes("Retro") || title.includes("Snake") ? { type: "image" as const, value: "/lab/icons/snake.png" } :
+              title.includes("MuseTodo") ? { type: "emoji" as const, value: "🌸" } : null
             );
 
             return (

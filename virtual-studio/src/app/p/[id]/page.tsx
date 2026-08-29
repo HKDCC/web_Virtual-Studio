@@ -46,9 +46,27 @@ export default async function NotionPageRoute(props: { params: Promise<{ id: str
   const { id } = await props.params;
   const { from, embed } = await props.searchParams;
 
-  const page = await notion().pages.retrieve({ page_id: id });
-  if (page.object !== "page") {
-    return <div style={{ padding: "40px 48px" }}>Not a page.</div>;
+  let page: Record<string, unknown> | null = null;
+  try {
+    const client = notion();
+    const res = await client.pages.retrieve({ page_id: id });
+    if ("properties" in res) {
+      page = res as unknown as Record<string, unknown>;
+    }
+  } catch (e) {
+    console.warn("Could not retrieve Notion page:", id, e);
+  }
+
+  if (!page) {
+    return (
+      <div className="wrap" style={{ padding: "80px 24px", textAlign: "center" }}>
+        <h2 style={{ fontFamily: "var(--serif)", fontSize: "1.5rem", marginBottom: "16px" }}>内容未找到或已归档</h2>
+        <p style={{ color: "var(--ink-2)", marginBottom: "24px" }}>该条目可能已被移除或暂未发布。</p>
+        <Link href="/" className="version-pill" style={{ display: "inline-block", padding: "8px 18px" }}>
+          ← 返回首页
+        </Link>
+      </div>
+    );
   }
 
   const pageWithProps = page as unknown as { properties: Record<string, unknown> };

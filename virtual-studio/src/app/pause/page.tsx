@@ -6,15 +6,15 @@ export const revalidate = 0;
 
 export default async function PausePage() {
   const data = await fetchMagazineData();
-  const items = data.pause;
+  const items = Array.isArray(data?.pause) ? data.pause : [];
 
   const bg = ["bg-warm", "bg-cool", "bg-forest", "bg-dusk", "bg-stone", "bg-ink"] as const;
 
   return (
-    <>
+    <div className="magazine-layout wrap" style={{ paddingTop: "32px", paddingBottom: "80px" }}>
       <div className="section-header">
         <div>
-          <p className="section-eyebrow">Pause · 生活层</p>
+          <p className="section-eyebrow">PAUSE · 05 隙</p>
           <h1 className="section-title">隙</h1>
         </div>
         <p className="section-desc">想要一个 Happy End。</p>
@@ -22,14 +22,16 @@ export default async function PausePage() {
 
       <div className="pause-masonry">
         {items.map((p, idx) => {
-          const title = p.t;
-          const coverUrl = p.img;
-          const date = p.d;
-          const location = p.loc;
+          const title = p?.t || "";
+          const coverUrl = p?.img || `/photos/photo_${(idx % 10) + 1}_.jpeg`;
+          const date = p?.d || "";
+          const location = p?.loc || "";
           const emoji = title?.trim()?.slice(0, 2) || "🌿";
           const b = bg[idx % bg.length];
+          const pageId = p?.id;
+
           return (
-            <Link key={p.id || idx} href={p.id ? `/p/${p.id}` : "#pause"} className="pause-item">
+            <Link key={pageId || idx} href={pageId ? `/p/${pageId}` : "#pause"} className="pause-item">
               <div className={`pause-block ${b}`}>
                 {coverUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -75,6 +77,6 @@ export default async function PausePage() {
           );
         })}
       </div>
-    </>
+    </div>
   );
 }

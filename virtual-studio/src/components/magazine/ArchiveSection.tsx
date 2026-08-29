@@ -29,7 +29,7 @@ export function ArchiveSection({ books }: ArchiveSectionProps) {
     <section id="archive" className="block wrap">
       <div className="sec-head reveal">
         <p className="kicker">
-          <b>04</b> / 输入层 · INPUT
+          <b>03</b> / 输入层 · INPUT
         </p>
         <span className="util" id="archCount">
           {filteredBooks.length} 本
@@ -42,10 +42,8 @@ export function ArchiveSection({ books }: ArchiveSectionProps) {
           {categories.map((cat) => (
             <button
               key={cat}
-              className="chip"
+              className={`chip ${selectedCategory === cat ? "active" : ""}`}
               type="button"
-              data-v={cat}
-              aria-pressed={selectedCategory === cat}
               onClick={() => setSelectedCategory(cat)}
             >
               {cat}
@@ -103,9 +101,9 @@ export function ArchiveSection({ books }: ArchiveSectionProps) {
                       rel="noopener noreferrer"
                       className="download-link"
                       onClick={(e) => e.stopPropagation()}
-                      title="下载电子书"
+                      title={`下载《${b.t}》电子书`}
                     >
-                      EPUB ↗
+                      下载 EPUB ↗
                     </a>
                   )}
                 </div>

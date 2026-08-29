@@ -1,6 +1,8 @@
 "use client";
 
 import { Suspense, useMemo, useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export type ArchiveBook = {
   id: string;
@@ -40,7 +42,12 @@ function BookCover(props: { title: string; coverUrl?: string | null; tone: numbe
     return (
       <div className="book-cover">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={props.coverUrl} alt={props.title} referrerPolicy="no-referrer" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        <img
+          src={props.coverUrl}
+          alt={props.title}
+          referrerPolicy="no-referrer"
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+        />
       </div>
     );
   }
@@ -70,16 +77,13 @@ function getRelatedNotes(book: ArchiveBook, allNotes: ArchiveNote[], localFiles:
     const bt = bookTitle.toLowerCase();
     const ba = (bookAuthor || "").toLowerCase();
     const tn = targetName.toLowerCase();
-    
-    // Explicit key manual mapping for demo / precision
+
     if (bt.includes("经济学原理") && (tn.includes("mankiw") || tn.includes("经济学"))) return true;
     if (bt.includes("纳瓦尔") && (tn.includes("naval") || tn.includes("纳瓦尔"))) return true;
-    
-    // Check if entire book title or author is contained in targetName
+
     if (tn.includes(bt)) return true;
     if (ba && tn.includes(ba)) return true;
-    
-    // Fallback: search for overlap of at least 3 chars
+
     if (bt.length >= 3) {
       for (let i = 0; i <= bt.length - 3; i++) {
         const sub = bt.substring(i, i + 3);
@@ -91,12 +95,12 @@ function getRelatedNotes(book: ArchiveBook, allNotes: ArchiveNote[], localFiles:
 
   // 1. Notion Notes
   allNotes.forEach((n) => {
-    if (isMatch(book.title, book.author || "", n.title) || n.tags.some(t => isMatch(book.title, book.author || "", t))) {
+    if (isMatch(book.title, book.author || "", n.title) || n.tags.some((t) => isMatch(book.title, book.author || "", t))) {
       related.push({
         id: n.id,
         title: n.title,
-        type: "notion",
-        url: `/p/${n.id}`,
+        type: n.htmlContent ? "html" : "notion",
+        url: n.htmlContent || `/p/${n.id}`,
         date: n.date,
         excerpt: n.excerpt,
         category: n.category,
@@ -126,77 +130,43 @@ function getRelatedNotes(book: ArchiveBook, allNotes: ArchiveNote[], localFiles:
 function parseMarkdown(md: string): string {
   if (!md) return "";
 
-  // Escape HTML tags to prevent XSS
   let html = md
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 
-  // Headers
   html = html.replace(/^# (.*?)$/gm, "<h1>$1</h1>");
   html = html.replace(/^## (.*?)$/gm, "<h2>$1</h2>");
   html = html.replace(/^### (.*?)$/gm, "<h3>$1</h3>");
   html = html.replace(/^#### (.*?)$/gm, "<h4>$1</h4>");
-
-  // Bold
   html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-
-  // Italic
   html = html.replace(/\*(.*?)\*/g, "<em>$1</em>");
-
-  // Blockquotes
   html = html.replace(/^> (.*?)$/gm, "<blockquote>$1</blockquote>");
-
-  // Code blocks
   html = html.replace(/```([\s\S]*?)```/g, "<pre><code>$1</code></pre>");
-
-  // Inline code
   html = html.replace(/`(.*?)`/g, "<code>$1</code>");
 
-  // Lists
   const lines = html.split("\n");
   let inList = false;
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
     if (line.startsWith("- ") || line.startsWith("* ")) {
-      const content = line.substring(2);
       if (!inList) {
-        lines[i] = "<ul><li>" + content + "</li>";
+        lines[i] = "<ul><li>" + line.substring(2) + "</li>";
         inList = true;
       } else {
-        lines[i] = "<li>" + content + "</li>";
+        lines[i] = "<li>" + line.substring(2) + "</li>";
       }
-    } else {
-      if (inList) {
-        lines[i] = "</ul>" + lines[i];
-        inList = false;
-      }
+    } else if (inList) {
+      lines[i - 1] += "</ul>";
+      inList = false;
     }
   }
   if (inList) {
-    lines.push("</ul>");
+    lines[lines.length - 1] += "</ul>";
   }
   html = lines.join("\n");
 
-  // Paragraphs
-  html = html
-    .split(/\n{2,}/)
-    .map((p) => {
-      p = p.trim();
-      if (!p) return "";
-      if (
-        p.startsWith("<h") ||
-        p.startsWith("<ul") ||
-        p.startsWith("<li") ||
-        p.startsWith("<pre") ||
-        p.startsWith("<blockquote")
-      ) {
-        return p;
-      }
-      return `<p>${p.replace(/\n/g, "<br/>")}</p>`;
-    })
-    .join("\n");
-
+  html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
   return html;
 }
 
@@ -214,11 +184,20 @@ function renderStars(rating: number) {
 }
 
 function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[]; localNotes: string[] }) {
+  const searchParams = useSearchParams();
+  const initialTab = searchParams?.get("tab") === "notes" ? "notes" : "books";
+  const [activeTab, setActiveTab] = useState<"books" | "notes">(initialTab);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedBook, setSelectedBook] = useState<ArchiveBook | null>(null);
   const [activeNote, setActiveNote] = useState<MappedNote | null>(null);
   const [markdownContent, setMarkdownContent] = useState("");
   const [isLoadingMd, setIsLoadingMd] = useState(false);
+
+  useEffect(() => {
+    if (searchParams?.get("tab") === "notes") {
+      setActiveTab("notes");
+    }
+  }, [searchParams]);
 
   const closeDrawer = () => {
     setSelectedBook(null);
@@ -231,7 +210,6 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
     setMarkdownContent("");
   };
 
-  // Fetch MD content when note changes to MD
   useEffect(() => {
     if (activeNote && activeNote.type === "md") {
       setIsLoadingMd(true);
@@ -264,6 +242,18 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
     );
   }, [props.books, searchQuery]);
 
+  const filteredNotes = useMemo(() => {
+    if (!searchQuery.trim()) return props.notes;
+    const q = searchQuery.toLowerCase();
+    return props.notes.filter(
+      (n) =>
+        n.title.toLowerCase().includes(q) ||
+        (n.category || "").toLowerCase().includes(q) ||
+        (n.excerpt || "").toLowerCase().includes(q) ||
+        n.tags.some((t) => t.toLowerCase().includes(q))
+    );
+  }, [props.notes, searchQuery]);
+
   const relatedNotes = useMemo(() => {
     if (!selectedBook) return [];
     return getRelatedNotes(selectedBook, props.notes, props.localNotes);
@@ -282,10 +272,49 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
     <>
       <div className="section-header">
         <div>
-          <p className="section-eyebrow">Archive · 输入层</p>
-          <h1 className="section-title">库</h1>
+          <p className="section-eyebrow">Archive · 档案库</p>
+          <h1 className="section-title">
+            {activeTab === "books" ? "书库" : "全部笔记"}
+          </h1>
         </div>
-        <p className="section-desc">收藏与阅读是认知的基础设施。这里存放所有值得二次翻阅的内容。</p>
+        <p className="section-desc">
+          收藏、深度阅读与知识沉淀。这里存放所有经过思考并值得反复研读的智识资产。
+        </p>
+      </div>
+
+      {/* Tab Switcher */}
+      <div
+        className="archive-tab-bar"
+        style={{
+          display: "flex",
+          gap: "12px",
+          margin: "0 auto 28px",
+          maxWidth: "1200px",
+          padding: "0 24px",
+        }}
+      >
+        <button
+          className={`chip ${activeTab === "books" ? "active" : ""}`}
+          onClick={() => {
+            setActiveTab("books");
+            closeDrawer();
+          }}
+          type="button"
+          style={{ fontSize: "13px", padding: "6px 16px" }}
+        >
+          📚 书库 · Books ({props.books.length})
+        </button>
+        <button
+          className={`chip ${activeTab === "notes" ? "active" : ""}`}
+          onClick={() => {
+            setActiveTab("notes");
+            closeDrawer();
+          }}
+          type="button"
+          style={{ fontSize: "13px", padding: "6px 16px" }}
+        >
+          📝 全部笔记 · Notes ({props.notes.length})
+        </button>
       </div>
 
       <div className={`archive-container ${selectedBook ? "drawer-open" : ""}`}>
@@ -295,7 +324,7 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
               <span className="search-icon">🔍</span>
               <input
                 type="text"
-                placeholder="搜索书籍、作者、标签..."
+                placeholder={activeTab === "books" ? "搜索书籍、作者、标签..." : "搜索笔记、关键词、分类..."}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="archive-search-input"
@@ -303,40 +332,85 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
             </div>
           </div>
 
-          <div className="shelf-grid">
-            {filteredBooks.map((b, idx) => (
-              <div
-                key={b.id}
-                className={`book-card ${selectedBook?.id === b.id ? "active" : ""}`}
-                onClick={() => {
-                  setSelectedBook(b);
-                  if (selectedBook?.id !== b.id) {
-                    setActiveNote(null);
-                    setMarkdownContent("");
-                  }
-                }}
-                style={{ outline: "none" }}
-              >
-                <BookCover title={b.title} coverUrl={b.coverUrl} tone={idx} />
-                <div className="book-meta">
-                  <div className="book-name">{b.title || "Untitled"}</div>
-                  {b.author ? <div className="book-author">{b.author}</div> : null}
-                  {b.tags.length ? (
-                    <div className="book-tags">
-                      {b.tags.slice(0, 4).map((t) => (
-                        <span key={t} className="book-tag">
-                          {t}
+          {activeTab === "books" ? (
+            <div className="shelf-grid">
+              {filteredBooks.map((b, idx) => (
+                <div
+                  key={b.id}
+                  className={`book-card ${selectedBook?.id === b.id ? "active" : ""}`}
+                  onClick={() => {
+                    setSelectedBook(b);
+                    if (selectedBook?.id !== b.id) {
+                      setActiveNote(null);
+                      setMarkdownContent("");
+                    }
+                  }}
+                  style={{ outline: "none" }}
+                >
+                  <BookCover title={b.title} coverUrl={b.coverUrl} tone={idx} />
+                  <div className="book-meta">
+                    <div className="book-name">{b.title || "Untitled"}</div>
+                    {b.author ? <div className="book-author">{b.author}</div> : null}
+                    {b.tags.length ? (
+                      <div className="book-tags">
+                        {b.tags.slice(0, 4).map((t) => (
+                          <span key={t} className="book-tag">
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+              ))}
+              {filteredBooks.length === 0 && (
+                <div className="shelf-empty">无匹配的书籍。</div>
+              )}
+            </div>
+          ) : (
+            <div className="notes-archive-grid" style={{ display: "grid", gap: "20px" }}>
+              {filteredNotes.map((n) => {
+                const targetUrl = n.htmlContent || `/p/${n.id}`;
+                return (
+                  <article key={n.id} className="note-card">
+                    <div className="note-card-meta">
+                      {n.date && <span className="note-date">{n.date}</span>}
+                      {n.category && <span className="note-cat">{n.category}</span>}
+                      {n.tags?.map((t) => (
+                        <span key={t} className="note-tags">
+                          #{t}
                         </span>
                       ))}
                     </div>
-                  ) : null}
-                </div>
-              </div>
-            ))}
-            {filteredBooks.length === 0 && (
-              <div className="shelf-empty">无匹配的书籍。</div>
-            )}
-          </div>
+                    <h3 className="note-title">
+                      <Link href={targetUrl} target={n.htmlContent ? "_blank" : undefined}>
+                        {n.title}
+                      </Link>
+                    </h3>
+                    {n.excerpt && <p className="note-excerpt">{n.excerpt}</p>}
+                    <div className="note-links">
+                      <Link href={`/p/${n.id}`} className="note-link-btn">
+                        阅读笔记 ↗
+                      </Link>
+                      {n.htmlContent && (
+                        <a
+                          href={n.htmlContent}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="note-link-btn note-link-html"
+                        >
+                          独立排版版 ↗
+                        </a>
+                      )}
+                    </div>
+                  </article>
+                );
+              })}
+              {filteredNotes.length === 0 && (
+                <div className="shelf-empty">无匹配的笔记。</div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Drawer Overlay */}
@@ -439,7 +513,7 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
                             rel="noopener noreferrer"
                             className="drawer-book-download-btn"
                           >
-                            链接 ↗
+                            下载 EPUB ↗
                           </a>
                         )}
                         {selectedBook.tags.length > 0 && (
@@ -455,7 +529,7 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
                     </div>
 
                     <div className="drawer-notes-section">
-                      <h3 className="drawer-section-title">相关笔记 ({relatedNotes.length})</h3>
+                      <h3 className="drawer-section-title">关联笔记 · 知识图谱</h3>
                       {relatedNotes.length > 0 ? (
                         <div className="drawer-notes-list">
                           {relatedNotes.map((n) => (

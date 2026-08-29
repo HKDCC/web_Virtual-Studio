@@ -525,14 +525,26 @@ a.util:hover {
 .book-right-meta .download-link {
   font-family: var(--mono);
   font-size: 11px;
-  color: var(--ink-2);
-  border-bottom: 1px dotted var(--ink-3);
-  transition: color 0.2s, border-color 0.2s;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: 3px 9px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .book-right-meta .download-link:hover {
-  color: var(--accent);
+  color: #fff;
+  background: var(--accent);
   border-color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 30%, transparent);
 }
 
 /* ═══════════════ 02 实验室 ═══════════════ */

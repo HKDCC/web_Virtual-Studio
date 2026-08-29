@@ -149,23 +149,20 @@ export function MagazineHeader({
           <Link href={`${navPrefix}#lab`}>
             <b>01</b>实验室
           </Link>
-          <Link href={`${navPrefix}#workflow`}>
-            <b>02</b>工作流
-          </Link>
           <Link href={`${navPrefix}#notes`}>
-            <b>03</b>笔记
+            <b>02</b>笔记
           </Link>
           <Link href={`${navPrefix}#archive`}>
-            <b>04</b>库
+            <b>03</b>库
           </Link>
           <Link href={`${navPrefix}#timeline`}>
-            <b>05</b>时间线
+            <b>04</b>时间线
           </Link>
           <Link href={`${navPrefix}#pause`}>
-            <b>06</b>隙
+            <b>05</b>隙
           </Link>
           <Link href={`${navPrefix}#changelog`}>
-            <b>07</b>足迹
+            <b>06</b>足迹
           </Link>
         </nav>
       </header>

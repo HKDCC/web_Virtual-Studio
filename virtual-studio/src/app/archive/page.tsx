@@ -1,98 +1,60 @@
-import { queryDatabaseAll } from "@/lib/notion";
-import { env } from "@/lib/env";
-import { getDate, getMultiSelect, getPageTitle, getRichText, getUrl, getNumber } from "@/lib/notionHelpers";
-import { SetupNotice } from "@/components/SetupNotice";
-import { ArchiveTabs } from "@/components/archive/ArchiveTabs";
+import { fetchMagazineData } from "@/lib/magazineData";
+import { ArchiveTabs, ArchiveBook, ArchiveNote } from "@/components/archive/ArchiveTabs";
 import fs from "fs";
 import path from "path";
 
-function isObj(v: unknown): v is Record<string, unknown> {
-  return typeof v === "object" && v !== null;
-}
-
-function firstFileUrl(filesProp: unknown): string | null {
-  if (!isObj(filesProp)) return null;
-  const files = (filesProp as Record<string, unknown>)["files"];
-  if (!Array.isArray(files) || files.length === 0) return null;
-  const f = files[0];
-  if (!isObj(f)) return null;
-  const type = f["type"];
-  if (type === "external") {
-    const external = f["external"];
-    if (!isObj(external)) return null;
-    const url = external["url"];
-    return typeof url === "string" ? url : null;
-  }
-  if (type === "file") {
-    const file = f["file"];
-    if (!isObj(file)) return null;
-    const url = file["url"];
-    return typeof url === "string" ? url : null;
-  }
-  return null;
-}
+export const dynamic = "force-dynamic";
 
 export default async function ArchivePage() {
-  const booksDb = env.NOTION_BOOKS_DB_ID;
-  const notesDb = env.NOTION_NOTES_DB_ID;
+  const data = await fetchMagazineData();
 
-  if (!env.NOTION_TOKEN || !booksDb || !notesDb) {
-    return <SetupNotice title="Archive 需要配置 NOTION_TOKEN / NOTION_BOOKS_DB_ID / NOTION_NOTES_DB_ID" />;
-  }
-
-  const [books, notes] = await Promise.all([
-    queryDatabaseAll({ databaseId: booksDb, pageSize: 50, maxPages: 4 }),
-    queryDatabaseAll({ databaseId: notesDb, pageSize: 50, maxPages: 6 }),
-  ]);
-
-  let localNotes: string[] = [];
+  const localNotes: string[] = [];
   try {
-    const notesDir = path.join(process.cwd(), "public", "notes");
-    if (fs.existsSync(notesDir)) {
-      localNotes = fs.readdirSync(notesDir).filter(
+    const articlesDir = path.join(process.cwd(), "public", "articles");
+    if (fs.existsSync(articlesDir)) {
+      const artFiles = fs.readdirSync(articlesDir).filter(
         (f) => f.endsWith(".html") || f.endsWith(".md")
       );
+      localNotes.push(...artFiles);
+    }
+    const notesDir = path.join(process.cwd(), "public", "notes");
+    if (fs.existsSync(notesDir)) {
+      const nFiles = fs.readdirSync(notesDir).filter(
+        (f) => f.endsWith(".html") || f.endsWith(".md")
+      );
+      localNotes.push(...nFiles);
     }
   } catch (err) {
     console.error("Failed to read local notes directory:", err);
   }
 
+  const books: ArchiveBook[] = data.books.map((b) => ({
+    id: b.id || b.t,
+    title: b.t,
+    author: b.a,
+    tags: b.tags || [b.c],
+    coverUrl: b.coverUrl,
+    tagline: b.tagline,
+    rating: b.rating,
+    downloadUrl: b.downloadUrl,
+  }));
+
+  const notes: ArchiveNote[] = data.notes.map((n) => ({
+    id: n.id || n.title,
+    title: n.title,
+    category: n.cat,
+    date: n.d,
+    excerpt: n.text,
+    tags: n.tags || [n.cat],
+    coverUrl: null,
+    htmlContent: n.htmlContent,
+  }));
+
   return (
     <ArchiveTabs
-      books={books.map((p) => {
-        const props = p.properties as unknown as Record<string, unknown>;
-        return {
-          id: p.id,
-          title: getPageTitle(p),
-          author: getRichText(props, "Author"),
-          tags: getMultiSelect(props, "Tags"),
-          coverUrl: firstFileUrl(props["Cover"]),
-          tagline: getRichText(props, "Tagline"),
-          rating: getNumber(props, "MyRating"),
-          downloadUrl: getUrl(props, "DownloadURL"),
-        };
-      })}
-      notes={notes.map((p) => {
-        const props = p.properties as unknown as Record<string, unknown>;
-        const categoryProp = props["Category"];
-        let category: string | null = null;
-        if (isObj(categoryProp) && categoryProp["type"] === "select") {
-          const select = categoryProp["select"];
-          if (isObj(select) && typeof select["name"] === "string") category = select["name"];
-        }
-        return {
-          id: p.id,
-          title: getPageTitle(p),
-          category,
-          date: getDate(props, "Date"),
-          excerpt: getRichText(props, "Excerpt"),
-          tags: getMultiSelect(props, "Tags"),
-          coverUrl: firstFileUrl(props["Cover"]),
-          htmlContent: getUrl(props, "HTMLContent"),
-        };
-      })}
-      localNotes={localNotes}
+      books={books}
+      notes={notes}
+      localNotes={Array.from(new Set(localNotes))}
     />
   );
 }
-

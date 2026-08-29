@@ -44,6 +44,7 @@ export default async function HomePage() {
         <div className="lab-grid sec-body reveal" id="labGrid">
           {lab.map((p, i) => {
             const localFallback =
+              p.t.includes("MiniReader") || p.t.includes("Reader") ? "/lab/minireader.gif" :
               p.t.includes("Retro") || p.t.includes("Snake") ? "/lab/retro_pixel_snake.gif" :
               p.t.includes("MuseTodo") ? "/lab/musetodo_pink.gif" :
               p.t.includes("Cassette") ? "/lab/cassettecutter.jpg" :

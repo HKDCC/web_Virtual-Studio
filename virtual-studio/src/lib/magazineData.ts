@@ -332,6 +332,13 @@ export const FALLBACK_SITE_DATA = {
 
   lab: [
     {
+      tag: "Vibe Coding",
+      t: "MiniReader",
+      d: "极简、无干扰的本地优先桌面阅读器，支持 TXT / EPUB / PDF，基于 IndexedDB 离线存储。",
+      links: [["GitHub", "https://github.com/HKDCC/MiniReader"], ["Demo", "https://github.com/HKDCC/MiniReader/releases"]],
+      iconUrl: "/lab/minireader.gif",
+    },
+    {
       tag: "AI 实践",
       t: "SwiftMemo",
       d: "一款 MUJI 无印良品风格的桌面便签应用，专为捕捉日常碎想法而设计。",

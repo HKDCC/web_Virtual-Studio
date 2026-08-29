@@ -76,7 +76,24 @@ export default async function HomePage() {
                 )}
                 <div className="p-card-body">
                   <p className="p-tag">{tag}</p>
-                  <h3>{title}</h3>
+                  <h3>
+                    {p?.appIcon?.type === "emoji" && (
+                      <span className="p-app-icon emoji" aria-hidden="true">
+                        {p.appIcon.value}
+                      </span>
+                    )}
+                    {p?.appIcon?.type === "image" && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={p.appIcon.value}
+                        alt=""
+                        className="p-app-icon img"
+                        aria-hidden="true"
+                        loading="lazy"
+                      />
+                    )}
+                    {title}
+                  </h3>
                   <p className="p-desc">{desc}</p>
                   <div className="p-links">
                     {links.map((l, li) => {

@@ -23,6 +23,11 @@ export interface BookItem {
   downloadUrl?: string | null;
 }
 
+export interface AppIconInfo {
+  type: "emoji" | "image";
+  value: string;
+}
+
 export interface LabItem {
   id?: string;
   tag: string;
@@ -30,6 +35,7 @@ export interface LabItem {
   d: string;
   links: [string, string][];
   iconUrl?: string | null;
+  appIcon?: AppIconInfo | null;
 }
 
 export interface FlowStep {
@@ -1133,6 +1139,52 @@ function extractFileUrl(pageObj: { cover?: unknown; properties?: Record<string, 
   return null;
 }
 
+function extractPageIcon(
+  pageObj: { icon?: unknown; properties?: Record<string, unknown> },
+  fallbackTitle = ""
+): AppIconInfo | null {
+  // 1. Check native page.icon (Emoji or File/External image)
+  if (isObj(pageObj.icon)) {
+    const ic = pageObj.icon as Record<string, unknown>;
+    if (ic.type === "emoji" && typeof ic.emoji === "string" && ic.emoji) {
+      return { type: "emoji", value: ic.emoji };
+    }
+    if (ic.type === "file" && isObj(ic.file) && typeof ic.file.url === "string" && ic.file.url) {
+      return { type: "image", value: ic.file.url };
+    }
+    if (ic.type === "external" && isObj(ic.external) && typeof ic.external.url === "string" && ic.external.url) {
+      return { type: "image", value: ic.external.url };
+    }
+  }
+
+  // 2. Check property AppEmoji or Emoji or AppIcon
+  if (pageObj.properties) {
+    const emojiVal =
+      getRichText(pageObj.properties, "AppEmoji") ||
+      getSelect(pageObj.properties, "AppEmoji") ||
+      getRichText(pageObj.properties, "Emoji") ||
+      getSelect(pageObj.properties, "Emoji");
+    if (emojiVal) {
+      return { type: "emoji", value: emojiVal };
+    }
+
+    const appIconUrl = extractFileUrl(pageObj, "AppIcon") || getUrl(pageObj.properties, "AppIconURL");
+    if (appIconUrl) {
+      return { type: "image", value: appIconUrl };
+    }
+  }
+
+  // 3. Fallback emoji based on title
+  const t = fallbackTitle.toLowerCase();
+  if (t.includes("reader") || t.includes("minireader")) return { type: "emoji", value: "📖" };
+  if (t.includes("cassette")) return { type: "emoji", value: "📼" };
+  if (t.includes("memo") || t.includes("swiftmemo")) return { type: "emoji", value: "📝" };
+  if (t.includes("muse") || t.includes("todo")) return { type: "emoji", value: "🌸" };
+  if (t.includes("snake") || t.includes("retro")) return { type: "emoji", value: "🐍" };
+
+  return null;
+}
+
 interface MagazineDataPayload {
   books: BookItem[];
   lab: LabItem[];
@@ -1252,14 +1304,15 @@ export async function fetchMagazineData(): Promise<MagazineDataPayload> {
         const links: [string, string][] = [];
         if (gh) links.push(["GitHub", gh]);
         if (dm) links.push(["Demo", dm]);
-        links.push(["查看详情", `/p/${p.id}`]);
+        const title = getPageTitle(p);
         return {
           id: p.id,
           tag: getRichText(props, "Badge") || tag,
-          t: getPageTitle(p),
+          t: title,
           d: getRichText(props, "Description") || "",
           links,
           iconUrl: extractFileUrl(p, "Icon"),
+          appIcon: extractPageIcon(p, title),
         };
       });
     } catch (e) {

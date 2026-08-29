@@ -46,15 +46,34 @@ export default async function LabPage() {
 
   const labItems: LabItem[] = items.map((p) => {
     const props = propsOf(p);
+    const title = getPageTitle(p) || "Untitled";
+    const pObj = p as Record<string, unknown>;
+    let appIcon: { type: "emoji" | "image"; value: string } | null = null;
+    if (isObj(pObj.icon)) {
+      const ic = pObj.icon as Record<string, unknown>;
+      if (ic.type === "emoji" && typeof ic.emoji === "string") appIcon = { type: "emoji", value: ic.emoji };
+      else if (ic.type === "file" && isObj(ic.file) && typeof ic.file.url === "string") appIcon = { type: "image", value: ic.file.url };
+      else if (ic.type === "external" && isObj(ic.external) && typeof ic.external.url === "string") appIcon = { type: "image", value: ic.external.url };
+    }
+    if (!appIcon) {
+      const t = title.toLowerCase();
+      if (t.includes("reader")) appIcon = { type: "emoji", value: "📖" };
+      else if (t.includes("cassette")) appIcon = { type: "emoji", value: "📼" };
+      else if (t.includes("memo")) appIcon = { type: "emoji", value: "📝" };
+      else if (t.includes("muse")) appIcon = { type: "emoji", value: "🌸" };
+      else if (t.includes("snake")) appIcon = { type: "emoji", value: "🐍" };
+    }
+
     return {
       id: p.id,
-      title: getPageTitle(p) || "Untitled",
+      title,
       type: typeOf(p),
       badge: getRichText(props, "Badge"),
       description: getRichText(props, "Description"),
       github: getUrl(props, "GitHubURL"),
       demo: getUrl(props, "DemoURL"),
       iconUrl: firstFileUrl(props["Icon"]),
+      appIcon,
     };
   });
 

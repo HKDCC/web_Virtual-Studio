@@ -12,6 +12,7 @@ export type LabItem = {
   github?: string | null;
   demo?: string | null;
   iconUrl?: string | null;
+  appIcon?: { type: "emoji" | "image"; value: string } | null;
 };
 
 function LabCard(props: { item: LabItem }) {
@@ -54,7 +55,24 @@ function LabCard(props: { item: LabItem }) {
       </Link>
       <div className="lab-body">
         <Link href={`/p/${item.id}`} style={{ textDecoration: "none", color: "inherit" }}>
-          <div className="lab-title">{item.title}</div>
+          <div className="lab-title">
+            {item.appIcon?.type === "emoji" && (
+              <span className="p-app-icon emoji" aria-hidden="true">
+                {item.appIcon.value}
+              </span>
+            )}
+            {item.appIcon?.type === "image" && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={item.appIcon.value}
+                alt=""
+                className="p-app-icon img"
+                aria-hidden="true"
+                loading="lazy"
+              />
+            )}
+            {item.title}
+          </div>
           {item.description ? <div className="lab-desc">{item.description}</div> : null}
         </Link>
         <div className="lab-links">

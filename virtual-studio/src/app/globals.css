@@ -2051,6 +2051,29 @@ footer {
   transform: scale(1.02);
 }
 
+/* 标题前缀 App Icon (Emoji 或自定义小图标) */
+.p-app-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: -0.08em;
+  margin-right: 7px;
+  flex-shrink: 0;
+}
+
+.p-app-icon.emoji {
+  font-size: 1.05em;
+  line-height: 1;
+}
+
+.p-app-icon.img {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  object-fit: cover;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
 /* Lab 专页卡片媒体适配 */
 .lab-card-thumb {
   width: 100%;

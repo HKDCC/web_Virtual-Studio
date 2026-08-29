@@ -49,7 +49,10 @@ export default async function LabPage() {
     const title = getPageTitle(p) || "Untitled";
     const pObj = p as Record<string, unknown>;
     let appIcon: { type: "emoji" | "image"; value: string } | null = null;
-    if (isObj(pObj.icon)) {
+    const appIconFile = firstFileUrl(props["AppIcon"]);
+    if (appIconFile) {
+      appIcon = { type: "image", value: appIconFile };
+    } else if (isObj(pObj.icon)) {
       const ic = pObj.icon as Record<string, unknown>;
       if (ic.type === "emoji" && typeof ic.emoji === "string") appIcon = { type: "emoji", value: ic.emoji };
       else if (ic.type === "file" && isObj(ic.file) && typeof ic.file.url === "string") appIcon = { type: "image", value: ic.file.url };
@@ -73,7 +76,7 @@ export default async function LabPage() {
       description: getRichText(props, "Description"),
       github: getUrl(props, "GitHubURL"),
       demo: getUrl(props, "DemoURL"),
-      iconUrl: firstFileUrl(props["Icon"]),
+      iconUrl: firstFileUrl(props["Media"]) || firstFileUrl(props["DemoMedia"]) || firstFileUrl(props["Icon"]),
       appIcon,
     };
   });

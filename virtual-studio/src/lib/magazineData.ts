@@ -1382,7 +1382,7 @@ export async function fetchMagazineData(): Promise<MagazineDataPayload> {
           t: title,
           d: getRichText(props, "Description") || "",
           links,
-          iconUrl: extractFileUrl(p, "Icon"),
+          iconUrl: extractFileUrl(p, "Media") || extractFileUrl(p, "DemoMedia") || extractFileUrl(p, "Icon"),
           appIcon: extractPageIcon(p, title),
         };
       });

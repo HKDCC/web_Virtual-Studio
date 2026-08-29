@@ -8,21 +8,23 @@ interface ArchiveSectionProps {
   books: BookItem[];
 }
 
-export function ArchiveSection({ books }: ArchiveSectionProps) {
+export function ArchiveSection({ books = [] }: ArchiveSectionProps) {
   const [selectedCategory, setSelectedCategory] = useState("全部");
 
   const categories = useMemo(() => {
+    const list = Array.isArray(books) ? books : [];
     const cats = new Set<string>();
     cats.add("全部");
-    books.forEach((b) => {
-      if (b.c) cats.add(b.c);
+    list.forEach((b) => {
+      if (b && b.c) cats.add(b.c);
     });
     return Array.from(cats);
   }, [books]);
 
   const filteredBooks = useMemo(() => {
-    if (selectedCategory === "全部") return books;
-    return books.filter((b) => b.c === selectedCategory);
+    const list = Array.isArray(books) ? books : [];
+    if (selectedCategory === "全部") return list;
+    return list.filter((b) => b && b.c === selectedCategory);
   }, [books, selectedCategory]);
 
   return (

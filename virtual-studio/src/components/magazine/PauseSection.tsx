@@ -7,7 +7,9 @@ interface PauseSectionProps {
   pause: PauseItem[];
 }
 
-export function PauseSection({ pause }: PauseSectionProps) {
+export function PauseSection({ pause = [] }: PauseSectionProps) {
+  const safePause = Array.isArray(pause) ? pause : [];
+
   return (
     <section id="pause" className="block wrap">
       <div className="sec-head reveal">
@@ -22,7 +24,7 @@ export function PauseSection({ pause }: PauseSectionProps) {
       <p className="sec-lede reveal">想要一个 Happy End。</p>
       <div className="sec-body reveal">
         <div className="strip" id="strip">
-          {pause.map((p, i) => {
+          {safePause.map((p, i) => {
             const card = (
               <figure className="postcard">
                 <div className="postcard-img-wrap">

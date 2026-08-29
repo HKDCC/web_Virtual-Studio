@@ -27,14 +27,14 @@ const SECTIONS = [
 ];
 
 export function MagazineHeader({
-  books,
-  lab,
-  tools,
-  sites,
-  pause,
-  timeline,
-  notes,
-  log,
+  books = [],
+  lab = [],
+  tools = [],
+  sites = [],
+  pause = [],
+  timeline = [],
+  notes = [],
+  log = [],
 }: MagazineHeaderProps) {
   const pathname = usePathname();
   const [searchOpen, setSearchOpen] = useState(false);

@@ -8,7 +8,12 @@ export const revalidate = 0;
 
 export default async function HomePage() {
   const data = await fetchMagazineData();
-  const { books, lab, timeline, pause, notes, log } = data;
+  const { books = [], lab = [], timeline = [], pause = [], notes = [], log = [] } = data || {};
+
+  const safeLab = Array.isArray(lab) ? lab : [];
+  const safeNotes = Array.isArray(notes) ? notes : [];
+  const safeTimeline = Array.isArray(timeline) ? timeline : [];
+  const safeLog = Array.isArray(log) ? log : [];
 
   return (
     <>
@@ -42,23 +47,28 @@ export default async function HomePage() {
         <h2 className="sec-title reveal">实验室</h2>
         <p className="sec-lede reveal">AI 实践记录与 Vibe Coding 成果。每个项目都是一次认知迭代。</p>
         <div className="lab-grid sec-body reveal" id="labGrid">
-          {lab.map((p, i) => {
+          {safeLab.map((p, i) => {
+            const title = p?.t || "";
+            const desc = p?.d || "";
+            const tag = p?.tag || "AI 实践";
+            const links = Array.isArray(p?.links) ? p.links : [];
+
             const localFallback =
-              p.t.includes("MiniReader") || p.t.includes("Reader") ? "/lab/minireader.gif" :
-              p.t.includes("Retro") || p.t.includes("Snake") ? "/lab/retro_pixel_snake.gif" :
-              p.t.includes("MuseTodo") ? "/lab/musetodo_pink.gif" :
-              p.t.includes("Cassette") ? "/lab/cassettecutter.jpg" :
-              p.t.includes("SwiftMemo") ? "/lab/swiftmemo.jpg" : null;
-            const imgSrc = p.iconUrl || localFallback;
+              title.includes("MiniReader") || title.includes("Reader") ? "/lab/minireader.gif" :
+              title.includes("Retro") || title.includes("Snake") ? "/lab/retro_pixel_snake.gif" :
+              title.includes("MuseTodo") ? "/lab/musetodo_pink.gif" :
+              title.includes("Cassette") ? "/lab/cassettecutter.jpg" :
+              title.includes("SwiftMemo") ? "/lab/swiftmemo.jpg" : null;
+            const imgSrc = p?.iconUrl || localFallback;
 
             return (
-              <article key={p.id || i} className={`p-card${i === 0 ? " p-featured" : ""}`}>
+              <article key={p?.id || i} className={`p-card${i === 0 ? " p-featured" : ""}`}>
                 {imgSrc && (
                   <div className="p-card-media-wrapper">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={imgSrc}
-                      alt={p.t}
+                      alt={title}
                       className="p-card-media-img"
                       onError={(e) => {
                         const target = e.currentTarget as HTMLImageElement;
@@ -69,20 +79,24 @@ export default async function HomePage() {
                     />
                   </div>
                 )}
-                <p className="p-tag">{p.tag}</p>
-                <h3>{p.t}</h3>
-                <p className="p-desc">{p.d}</p>
+                <p className="p-tag">{tag}</p>
+                <h3>{title}</h3>
+                <p className="p-desc">{desc}</p>
                 <div className="p-links">
-                  {p.links.map((l, li) => (
-                    <a
-                      key={li}
-                      href={l[1]}
-                      target={l[1].startsWith("http") ? "_blank" : undefined}
-                      rel={l[1].startsWith("http") ? "noopener noreferrer" : undefined}
-                    >
-                      {l[0]} ↗
-                    </a>
-                  ))}
+                  {links.map((l, li) => {
+                    const linkText = l?.[0] || "链接";
+                    const linkUrl = l?.[1] || "#";
+                    return (
+                      <a
+                        key={li}
+                        href={linkUrl}
+                        target={linkUrl.startsWith("http") ? "_blank" : undefined}
+                        rel={linkUrl.startsWith("http") ? "noopener noreferrer" : undefined}
+                      >
+                        {linkText} ↗
+                      </a>
+                    );
+                  })}
                 </div>
               </article>
             );
@@ -103,33 +117,39 @@ export default async function HomePage() {
         <h2 className="sec-title reveal">笔记</h2>
         <p className="sec-lede reveal">来自 Notion 数据库的文章与深度长文。</p>
         <div className="notes-grid sec-body reveal" id="notesList">
-          {notes.map((n, i) => {
-            const targetUrl = n.htmlContent || (n.id ? `/p/${n.id}` : "#notes");
+          {safeNotes.map((n, i) => {
+            const targetUrl = n?.htmlContent || (n?.id ? `/p/${n.id}` : "#notes");
+            const noteTitle = n?.title || "无标题笔记";
+            const noteDate = n?.d || "";
+            const noteCat = n?.cat || "思考";
+            const noteTags = Array.isArray(n?.tags) ? n.tags : [];
+            const noteText = n?.text || "";
+
             return (
-              <article key={n.id || i} className="note-card">
+              <article key={n?.id || i} className="note-card">
                 <div className="note-card-meta">
-                  <span className="note-date">{n.d}</span>
-                  <span className="note-cat">{n.cat}</span>
-                  {n.tags && n.tags.length > 0 && (
+                  <span className="note-date">{noteDate}</span>
+                  <span className="note-cat">{noteCat}</span>
+                  {noteTags.length > 0 && (
                     <span className="note-tags">
-                      {n.tags.map((t) => `#${t}`).join(" ")}
+                      {noteTags.map((t) => `#${t}`).join(" ")}
                     </span>
                   )}
-                  {n.readTime && <span className="note-readtime">{n.readTime} 分钟阅读</span>}
+                  {n?.readTime ? <span className="note-readtime">{n.readTime} 分钟阅读</span> : null}
                 </div>
                 <h3 className="note-title">
-                  <Link href={targetUrl} target={n.htmlContent ? "_blank" : undefined}>
-                    {n.title}
+                  <Link href={targetUrl} target={n?.htmlContent ? "_blank" : undefined}>
+                    {noteTitle}
                   </Link>
                 </h3>
-                <p className="note-excerpt">{n.text}</p>
+                <p className="note-excerpt">{noteText}</p>
                 <div className="note-links">
-                  {n.id && (
+                  {n?.id && (
                     <Link href={`/p/${n.id}`} className="note-link-btn">
                       阅读笔记 ↗
                     </Link>
                   )}
-                  {n.htmlContent && (
+                  {n?.htmlContent && (
                     <a
                       href={n.htmlContent}
                       target="_blank"
@@ -164,12 +184,12 @@ export default async function HomePage() {
         <h2 className="sec-title reveal">模型更迭</h2>
         <p className="sec-lede reveal">主流大语言模型迭代时间轴，高光时刻精确记录。</p>
         <div className="tl-list sec-body reveal" id="tlList">
-          {timeline.map((x, i) => (
+          {safeTimeline.map((x, i) => (
             <div key={i} className="tl-row">
-              <span className="tl-date">{x.d}</span>
+              <span className="tl-date">{x?.d || ""}</span>
               <div className="tl-main">
-                <h3>{x.t}</h3>
-                <span className="tl-note">{x.note}</span>
+                <h3>{x?.t || ""}</h3>
+                <span className="tl-note">{x?.note || ""}</span>
               </div>
             </div>
           ))}
@@ -192,23 +212,27 @@ export default async function HomePage() {
         <h2 className="sec-title reveal">足迹</h2>
         <p className="sec-lede reveal">这个虚拟空间的迭代记录。</p>
         <div className="log sec-body reveal" id="logList">
-          {log.map((l, i) => {
+          {safeLog.map((l, i) => {
+            const date = l?.d || "";
+            const title = l?.t || "";
+            const desc = l?.desc || "";
+            const type = l?.type || "Feature";
             const row = (
               <div className="log-row">
-                <span className="log-date">{l.d}</span>
+                <span className="log-date">{date}</span>
                 <div className="log-main">
                   <div className="log-title-row">
-                    <h3 className="log-title">{l.t}</h3>
-                    {l.type && (
-                      <span className={`log-tag log-tag-${(l.type || "").toLowerCase()}`}>{l.type}</span>
+                    <h3 className="log-title">{title}</h3>
+                    {type && (
+                      <span className={`log-tag log-tag-${type.toLowerCase()}`}>{type}</span>
                     )}
                   </div>
-                  {l.desc && <p className="log-desc">{l.desc}</p>}
+                  {desc && <p className="log-desc">{desc}</p>}
                 </div>
               </div>
             );
 
-            if (l.id) {
+            if (l?.id) {
               return (
                 <Link key={l.id || i} href={`/p/${l.id}`} style={{ textDecoration: "none", color: "inherit" }}>
                   {row}

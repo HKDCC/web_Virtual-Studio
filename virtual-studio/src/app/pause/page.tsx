@@ -1,39 +1,11 @@
 import Link from "next/link";
-import { queryDatabaseAll } from "@/lib/notion";
-import { env } from "@/lib/env";
-import { getPageTitle, getDate, getRichText } from "@/lib/notionHelpers";
-import { SetupNotice } from "@/components/SetupNotice";
+import { fetchMagazineData } from "@/lib/magazineData";
 
-function isObj(v: unknown): v is Record<string, unknown> {
-  return typeof v === "object" && v !== null;
-}
-
-function firstFileUrl(filesProp: unknown): string | null {
-  if (!isObj(filesProp)) return null;
-  const files = (filesProp as Record<string, unknown>)["files"];
-  if (!Array.isArray(files) || files.length === 0) return null;
-  const f = files[0];
-  if (!isObj(f)) return null;
-  const type = f["type"];
-  if (type === "external") {
-    const external = f["external"];
-    if (!isObj(external)) return null;
-    const url = external["url"];
-    return typeof url === "string" ? url : null;
-  }
-  if (type === "file") {
-    const file = f["file"];
-    if (!isObj(file)) return null;
-    const url = file["url"];
-    return typeof url === "string" ? url : null;
-  }
-  return null;
-}
+export const dynamic = "force-dynamic";
 
 export default async function PausePage() {
-  const db = env.NOTION_PAUSE_DB_ID;
-  if (!env.NOTION_TOKEN || !db) return <SetupNotice title="Pause 需要配置 NOTION_TOKEN / NOTION_PAUSE_DB_ID" />;
-  const items = await queryDatabaseAll({ databaseId: db, pageSize: 60, maxPages: 8 });
+  const data = await fetchMagazineData();
+  const items = data.pause;
 
   const bg = ["bg-warm", "bg-cool", "bg-forest", "bg-dusk", "bg-stone", "bg-ink"] as const;
 
@@ -49,15 +21,14 @@ export default async function PausePage() {
 
       <div className="pause-masonry">
         {items.map((p, idx) => {
-          const props = p.properties as unknown as Record<string, unknown>;
-          const title = getPageTitle(p);
-          const coverUrl = firstFileUrl(props["Cover"]);
-          const date = getDate(props, "Date");
-          const location = getRichText(props, "Location");
+          const title = p.t;
+          const coverUrl = p.img;
+          const date = p.d;
+          const location = p.loc;
           const emoji = title?.trim()?.slice(0, 2) || "🌿";
           const b = bg[idx % bg.length];
           return (
-            <Link key={p.id} href={`/p/${p.id}`} className="pause-item">
+            <Link key={p.id || idx} href={p.id ? `/p/${p.id}` : "#pause"} className="pause-item">
               <div className={`pause-block ${b}`}>
                 {coverUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -66,6 +37,12 @@ export default async function PausePage() {
                     alt={title || "摄影作品"}
                     className="pause-img"
                     referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      const target = e.currentTarget as HTMLImageElement;
+                      if (!target.src.includes("/photos/")) {
+                        target.src = `/photos/photo_${(idx % 10) + 1}_.jpeg`;
+                      }
+                    }}
                   />
                 ) : (
                   <div className="pause-block-inner">{emoji}</div>

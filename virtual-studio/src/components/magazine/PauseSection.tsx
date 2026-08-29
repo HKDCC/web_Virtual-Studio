@@ -34,8 +34,8 @@ export function PauseSection({ pause }: PauseSectionProps) {
                     referrerPolicy="no-referrer"
                     onError={(e) => {
                       const target = e.currentTarget as HTMLImageElement;
-                      if (!target.src.includes("picsum.photos")) {
-                        target.src = `https://picsum.photos/seed/tl-${i + 1}/640/480`;
+                      if (!target.src.includes("/photos/")) {
+                        target.src = `/photos/photo_${(i % 10) + 1}_.jpeg`;
                       }
                     }}
                   />

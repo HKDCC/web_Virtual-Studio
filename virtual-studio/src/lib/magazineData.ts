@@ -418,15 +418,77 @@ export const FALLBACK_SITE_DATA = {
   ] as TimelineItem[],
 
   pause: [
-    { d: "2024·08·17", loc: "上海", t: "原神 fes 2024", img: "https://picsum.photos/seed/tl-1/640/480" },
-    { d: "2023·12·29", loc: "杭州", t: "闲逛", img: "https://picsum.photos/seed/tl-2/640/480" },
-    { d: "2024·03·29", loc: "上海", t: "徐汇滨江", img: "https://picsum.photos/seed/tl-3/640/480" },
-    { d: "2022·07·12", loc: "萍乡", t: "武功山", img: "https://picsum.photos/seed/tl-4/640/480" },
-    { d: "2023·08·11", loc: "上海", t: "原神 Fes 2023", img: "https://picsum.photos/seed/tl-5/640/480" },
-    { d: "2022·02·26", loc: "上海", t: "田子坊闲逛", img: "https://picsum.photos/seed/tl-6/640/480" },
-    { d: "2021·10·30", loc: "上海", t: "上理大草坪", img: "https://picsum.photos/seed/tl-7/640/480" },
-    { d: "2023·04·11", loc: "上海", t: "迪士尼 TB", img: "https://picsum.photos/seed/tl-8/640/480" },
-  ] as PauseItem[],
+    {
+        "id": "3284b57f-e15a-804d-b6a3-f09b552c66df",
+        "d": "2024·11·10",
+        "loc": "上海",
+        "t": "闲逛",
+        "img": "/photos/photo_1_.jpeg"
+    },
+    {
+        "id": "3284b57f-e15a-8014-9fa7-f82ee91b9201",
+        "d": "2024·08·17",
+        "loc": "上海",
+        "t": "原神fes 2024",
+        "img": "/photos/photo_2_.jpeg"
+    },
+    {
+        "id": "3284b57f-e15a-80a5-8c76-d922f306d860",
+        "d": "2024·03·29",
+        "loc": "上海",
+        "t": "徐汇滨江",
+        "img": "/photos/photo_3_.jpeg"
+    },
+    {
+        "id": "3284b57f-e15a-80a2-97b7-d1cb37456715",
+        "d": "2024·03·24",
+        "loc": "上海",
+        "t": "闲逛",
+        "img": "/photos/photo_4_.jpeg"
+    },
+    {
+        "id": "3284b57f-e15a-8004-be00-e7f017406a6c",
+        "d": "2023·12·30",
+        "loc": "上海",
+        "t": "田子坊闲逛",
+        "img": "/photos/photo_5_.jpeg"
+    },
+    {
+        "id": "3284b57f-e15a-8000-84cf-c55f190eec26",
+        "d": "2023·08·11",
+        "loc": "上海",
+        "t": "原神Fes 2023",
+        "img": "/photos/photo_6_.jpeg"
+    },
+    {
+        "id": "3284b57f-e15a-80a3-a00e-cf771ea00cb2",
+        "d": "2022·07·12",
+        "loc": "萍乡",
+        "t": "武功山",
+        "img": "/photos/photo_7_.jpeg"
+    },
+    {
+        "id": "3284b57f-e15a-8025-b461-cbb612f0e4b8",
+        "d": "2021·10·30",
+        "loc": "上海",
+        "t": "上理大草坪",
+        "img": "/photos/photo_8_.jpeg"
+    },
+    {
+        "id": "3284b57f-e15a-803a-bec4-db4ace549f45",
+        "d": "2023·12·29",
+        "loc": "杭州",
+        "t": "闲逛",
+        "img": "/photos/photo_9_.jpg"
+    },
+    {
+        "id": "3274b57f-e15a-805e-b2ae-c5a06302f164",
+        "d": "2023·04·11",
+        "loc": "上海",
+        "t": "迪士尼TB",
+        "img": "/photos/photo_10_.jpg"
+    }
+] as PauseItem[],
 
   notes: [
     {

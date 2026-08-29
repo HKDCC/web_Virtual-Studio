@@ -409,12 +409,15 @@ export const FALLBACK_SITE_DATA = {
   ] as PromptItem[],
 
   timeline: [
-    { d: "2026·07", t: "Gemini 3.6 Flash / 3.5 Flash-Lite", note: "降低推理成本，提高速度" },
-    { d: "2026·07", t: "Qwen3.8-Max", note: "面向前沿推理和Agent竞争" },
-    { d: "2026·07", t: "Kimi K3", note: "2.8T参数级开放权重模型，百万token上下文" },
-    { d: "2026·07", t: "GPT-5.6正式版", note: "OpenAI新旗舰代际更新" },
-    { d: "2026·07", t: "Grok 4.5", note: "强化代码、Agent、知识任务" },
-    { d: "2026·06", t: "Claude Sonnet 5", note: "Claude 5系列中端主力，成本/性能平衡" },
+    { d: "2026·08", t: "GLM-5.3-Flash", note: "320B 混合稀疏注意力 MoE 架构，支持 100 万 Context，MIT 协议开源" },
+    { d: "2026·08", t: "Qwen3.8-Flash-Next", note: "Qwen4 架构先行版，125B 参数融合 QSA 微块稀疏注意力" },
+    { d: "2026·08", t: "GLM-5.3", note: "后训练 Scaling 旗舰，Terminal Bench 与多智能体协同突破" },
+    { d: "2026·08", t: "Gemini 3.7 Flash", note: "Google 3.7 系列高效旗舰，专为编程 Agent 与深度推理优化" },
+    { d: "2026·08", t: "DeepSeek-V4-Pro (build 0813)", note: "1.6T MoE GA 正式版，大幅提升长程工程与数学推理" },
+    { d: "2026·08", t: "Grok 4.6", note: "新增 xhigh 极限思考档位，优化百万上下文 Agent 任务" },
+    { d: "2026·08", t: "GPT-5.6-Cyber", note: "OpenAI 首款专精网络安全与漏洞挖掘的特化模型" },
+    { d: "2026·08", t: "Qwen3.8-Max & 27B", note: "2.4T 参数 MoE 旗舰，强化长程 Agentic 复杂任务" },
+    { d: "2026·07", t: "Claude Opus 5", note: "Claude 5 系列旗舰基座，支持 100 万 Context 与工具热插拔" },
   ] as TimelineItem[],
 
   pause: [

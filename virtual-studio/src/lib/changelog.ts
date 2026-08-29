@@ -1,234 +1,10 @@
 /**
- * AI Model Changelog reader — reads from Notion
+ * AI Model Changelog & Timeline reader — reads from Notion
  */
 
-import type { IncomingMessage } from "node:http";
-import type { RequestOptions } from "node:https";
-import https from "node:https";
 import { queryDatabaseAll } from "@/lib/notion";
 import { env } from "@/lib/env";
 import { getPageTitle, getSelect, getDate, getRichText, getNumber } from "@/lib/notionHelpers";
-
-
-const NOTION_API_KEY = env.NOTION_TOKEN || "";
-const DATABASE_ID = env.NOTION_CHANGELOG_DB_ID || "";
-
-export interface ChangelogEntry {
-  id: string;
-  date: string;
-  model: string;
-  version?: string;
-  change: string;
-  detail?: string;
-  pricing?: string;
-  url?: string;
-}
-
-export interface ChangelogMonth {
-  year: number;
-  month: number;
-  key: string;
-  title: string;
-  entries: ChangelogEntry[];
-}
-
-function notionReq(
-  method: string,
-  endpoint: string,
-  body?: object
-): Promise<Record<string, unknown>> {
-  return new Promise((resolve, reject) => {
-    const data = body ? JSON.stringify(body) : "";
-    const opts: RequestOptions = {
-      hostname: "api.notion.com",
-      port: 443,
-      path: endpoint,
-      method,
-      headers: {
-        Authorization: `Bearer ${NOTION_API_KEY}`,
-        "Notion-Version": "2022-06-28",
-        "Content-Type": "application/json",
-        ...(data ? { "Content-Length": Buffer.byteLength(data) } : {}),
-      },
-    };
-    const req = https.request(opts, (res: IncomingMessage) => {
-      let raw = "";
-      res.on("data", (c: Buffer) => (raw += c.toString()));
-      res.on("end", () => {
-        try {
-          resolve(JSON.parse(raw));
-        } catch {
-          reject(new Error(raw.slice(0, 200)));
-        }
-      });
-    });
-    req.on("error", reject);
-    req.setTimeout(30000, () => {
-      req.destroy();
-      reject(new Error("timeout"));
-    });
-    if (data) req.write(data);
-    req.end();
-  });
-}
-
-function extractTextFromRichText(
-  richText: Array<{ plain_text: string; href?: string | null }>
-): { text: string; href?: string } {
-  const text = richText.map((t) => t.plain_text).join("");
-  const href = richText.find((t) => t.href)?.href || undefined;
-  return { text, href };
-}
-
-async function getChangelogMonths(): Promise<ChangelogMonth[]> {
-  const res = (await notionReq("POST", `/v1/databases/${DATABASE_ID}/query`, {
-    filter: {
-      or: [{ property: "Source", multi_select: { contains: "AI模型更迭" } }],
-    },
-    sorts: [{ property: "Date", direction: "descending" }],
-    page_size: 100,
-  })) as {
-    results?: Array<{
-      id: string;
-      properties: Record<string, unknown>;
-    }>;
-  };
-
-  const pages = res.results || [];
-  const monthMap = new Map<string, ChangelogMonth>();
-
-  for (const page of pages) {
-    const props = page.properties as Record<string, unknown>;
-
-    let dateStr = "";
-    const dateProp = props.Date as { date?: { start?: string } } | undefined;
-    if (dateProp?.date?.start) {
-      dateStr = dateProp.date.start;
-    }
-
-    if (!dateStr) continue;
-
-    const datePart = dateStr.split("T")[0];
-    const [yearStr, monthStr] = datePart.split("-");
-    const year = parseInt(yearStr);
-    const month = parseInt(monthStr);
-    const key = `${year}-${String(month).padStart(2, "0")}`;
-
-    if (!monthMap.has(key)) {
-      monthMap.set(key, {
-        year,
-        month,
-        key,
-        title: `${year}年${month}月`,
-        entries: [],
-      });
-    }
-
-    const monthData = monthMap.get(key)!;
-
-    // Fetch page blocks
-    const blockRes = (await notionReq(
-      "GET",
-      `/v1/blocks/${page.id}/children?page_size=100`
-    )) as {
-      results?: Array<{
-        type: string;
-        [key: string]: unknown;
-      }>;
-    };
-
-    const blocks = blockRes.results || [];
-    let currentModel = "Other";
-    let currentDate = datePart;
-    let currentVersion = "";
-    let currentChange = "";
-    let currentDetail: string[] = [];
-    let currentPricing = "";
-
-    const flushEntry = () => {
-      if (currentChange) {
-        monthData.entries.push({
-          id: `${currentDate}-${currentModel}-${monthData.entries.length}`.replace(
-            /\s/g,
-            "-"
-          ),
-          date: currentDate,
-          model: currentModel,
-          version: currentVersion || undefined,
-          change: currentChange.trim(),
-          detail:
-            currentDetail.length > 0 ? currentDetail.join(" ").trim() : undefined,
-          pricing: currentPricing || undefined,
-        });
-      }
-      currentChange = "";
-      currentDetail = [];
-      currentPricing = "";
-      currentVersion = "";
-    };
-
-    for (const block of blocks) {
-      const type = block.type as string;
-      const data = block[type] as {
-        rich_text?: Array<{ plain_text: string; href?: string | null }>;
-      };
-      const richText = data?.rich_text || [];
-      const { text } = extractTextFromRichText(richText);
-      const trimmed = text.trim();
-
-      if (type === "heading_2") {
-        flushEntry();
-        currentModel = trimmed;
-      } else if (type === "heading_3") {
-        flushEntry();
-        const dateMatch = trimmed.match(/(\d{4}-\d{2}-\d{2})/);
-        if (dateMatch) currentDate = dateMatch[1];
-        const versionMatch = trimmed.match(/·\s*([^\n·]+)/);
-        if (versionMatch) currentVersion = versionMatch[1].trim();
-        const beforeDash = trimmed
-          .replace(/·.+$/, "")
-          .replace(/^\d{4}-\d{2}-\d{2}\s*/, "")
-          .trim();
-        if (beforeDash) currentChange = beforeDash;
-      } else if (type === "bulleted_list_item") {
-        if (
-          /^\$[¥$]/.test(trimmed) ||
-          trimmed.toLowerCase().includes("usd") ||
-          trimmed.toLowerCase().includes("per m")
-        ) {
-          currentPricing = trimmed;
-        } else if (currentChange) {
-          currentDetail.push(trimmed);
-        } else {
-          currentChange = trimmed;
-        }
-      } else if (type === "paragraph" && trimmed) {
-        if (currentChange) {
-          currentDetail.push(trimmed);
-        }
-      }
-    }
-
-    flushEntry();
-  }
-
-  return Array.from(monthMap.values()).sort((a, b) => {
-    if (a.year !== b.year) return b.year - a.year;
-    return b.month - a.month;
-  });
-}
-
-export { getChangelogMonths };
-
-export interface BenchmarkData {
-  mmlu?: number;
-  humaneval?: number;
-  math?: number;
-  mtbench?: number;
-  gpqa?: number;
-  /** Notion 字段中注明的来源文字，如论文链接或 "Official Blog" */
-  source?: string;
-}
 
 export interface TimelineEntry {
   id: string;
@@ -237,273 +13,88 @@ export interface TimelineEntry {
   date: string;
   version?: string;
   highlights?: string;
-  /** 该模型版本的真实跑分，从 Notion 读取；未填写时为 undefined */
-  benchmarks?: BenchmarkData;
+  aaIntelligence?: number;
 }
 
 export const MOCK_TIMELINE: TimelineEntry[] = [
   {
-    id: "timeline-2026-07-21",
-    name: "Gemini 3.6 Flash / 3.5 Flash-Lite",
-    model: "Gemini",
-    date: "2026-07-21",
-    version: "3.6 Flash / 3.5 Flash-Lite",
-    highlights: "降低推理成本，提高速度",
-    benchmarks: { mmlu: 94.8, humaneval: 91.0, math: 81.5, mtbench: 9.6, gpqa: 63.5, source: "Google Announcement" }
+    id: "timeline-2026-08-26-glm",
+    name: "GLM-5.3-Flash",
+    model: "GLM",
+    date: "2026-08-26",
+    version: "GLM-5.3-Flash (ox-alpha)",
+    highlights: "匿名测试代号 \"ox-alpha\" 揭晓：320B 参数混合稀疏注意力 MoE 架构，支持 100 万 Context，MIT 协议开源商用。",
+    aaIntelligence: 57
   },
   {
-    id: "timeline-2026-07-20",
-    name: "Qwen3.8-Max",
+    name: "Qwen3.8-Flash-Next",
     model: "Qwen",
-    date: "2026-07-20",
-    version: "Qwen3.8-Max",
-    highlights: "面向前沿推理和Agent竞争",
-    benchmarks: { mmlu: 94.5, humaneval: 91.5, math: 82.0, mtbench: 9.5, gpqa: 61.0, source: "Qwen Team Release" }
+    date: "2026-08-26",
+    id: "timeline-2026-08-26-qwen",
+    version: "Qwen3.8-Flash-Next",
+    highlights: "Qwen4 架构先行版：125B 参数（6B 激活）融合 QSA 微块稀疏注意力，原生 262k 扩展至 100 万 Context。"
   },
   {
-    id: "timeline-2026-07-16",
-    name: "Kimi K3",
-    model: "Kimi",
-    date: "2026-07-16",
-    version: "K3",
-    highlights: "2.8T参数级开放权重模型，百万token上下文",
-    benchmarks: { mmlu: 94.2, humaneval: 90.5, math: 81.5, mtbench: 9.5, gpqa: 62.0, source: "Moonshot AI Release" }
-  },
-  {
-    id: "timeline-2026-07-09",
-    name: "GPT-5.6正式版",
-    model: "GPT",
-    date: "2026-07-09",
-    version: "GPT-5.6 GA",
-    highlights: "OpenAI新旗舰代际更新",
-    benchmarks: { mmlu: 97.5, humaneval: 95.0, math: 86.0, mtbench: 9.9, gpqa: 71.5, source: "OpenAI Official GA" }
-  },
-  {
-    id: "timeline-2026-07-08",
-    name: "Grok 4.5",
-    model: "Grok",
-    date: "2026-07-08",
-    version: "Grok 4.5",
-    highlights: "强化代码、Agent、知识任务",
-    benchmarks: { mmlu: 96.8, humaneval: 93.0, math: 83.5, mtbench: 9.7, gpqa: 68.0, source: "xAI Release" }
-  },
-  {
-    id: "timeline-2026-06-30",
-    name: "Claude Sonnet 5",
-    model: "Claude",
-    date: "2026-06-30",
-    version: "Claude Sonnet 5",
-    highlights: "Claude 5系列中端主力，成本/性能平衡",
-    benchmarks: { mmlu: 96.5, humaneval: 93.8, math: 85.0, mtbench: 9.8, gpqa: 69.5, source: "Anthropic Release Notes" }
-  },
-  {
-    id: "timeline-2026-06-26",
-    name: "GPT-5.6 Sol / Terra / Luna (Preview)",
-    model: "GPT",
-    date: "2026-06-26",
-    version: "GPT-5.6 Preview",
-    highlights: "新旗舰体系：推理、代码、Agent全面提升",
-    benchmarks: { mmlu: 97.5, humaneval: 95.0, math: 86.0, mtbench: 9.9, gpqa: 71.5, source: "OpenAI Preview System Card" }
-  },
-  {
-    id: "timeline-2026-06-23",
-    name: "Doubao-Seed 2.1 Pro",
-    model: "Doubao",
-    date: "2026-06-23",
-    version: "Doubao-Seed 2.1 Pro",
-    highlights: "字节Seed体系升级，企业应用优化",
-    benchmarks: { mmlu: 89.5, humaneval: 84.0, math: 76.0, mtbench: 9.3, gpqa: 49.0, source: "Volcengine Announcement" }
-  },
-  {
-    id: "timeline-2026-06-18",
-    name: "Kimi K2.7 Code",
-    model: "Kimi",
-    date: "2026-06-18",
-    version: "K2.7 Code",
-    highlights: "超大规模代码模型，针对Agent编程优化",
-    benchmarks: { mmlu: 93.8, humaneval: 89.5, math: 80.0, mtbench: 9.4, gpqa: 60.5, source: "Moonshot AI Release" }
-  },
-  {
-    id: "timeline-2026-06-17",
-    name: "GLM-5.2（公开权重生态扩展）",
+    id: "timeline-2026-08-14-glm",
+    name: "GLM-5.3",
     model: "GLM",
-    date: "2026-06-17",
-    version: "GLM-5.2 Open Weights",
-    highlights: "开源生态增强",
-    benchmarks: { mmlu: 93.5, humaneval: 88.5, math: 79.5, mtbench: 9.4, gpqa: 57.0, source: "Zhipu AI Release" }
+    date: "2026-08-14",
+    version: "GLM-5.3",
+    highlights: "智谱 AI 全新后训练 Scaling 旗舰：在 Terminal Bench 3.0 与复杂多智能体协同场景中实现关键突破。",
+    aaIntelligence: 60
   },
   {
-    id: "timeline-2026-06-09",
-    name: "Claude Fable 5 / Mythos 5",
-    model: "Claude",
-    date: "2026-06-09",
-    version: "Fable 5 / Mythos 5",
-    highlights: "Claude 5架构探索版本，推理能力大幅提升",
-    benchmarks: { mmlu: 97.2, humaneval: 94.5, math: 86.2, mtbench: 9.9, gpqa: 71.0, source: "Anthropic Announcement" }
+    id: "timeline-2026-08-13-gemini",
+    name: "Gemini 3.7 Flash",
+    model: "Gemini",
+    date: "2026-08-13",
+    version: "3.7 Flash",
+    highlights: "Google 推出 Gemini 3.7 Flash：大幅提升编程 Agent 吞吐与长代码调试精度，实现生产级低时延深度推理。",
+    aaIntelligence: 56
   },
   {
-    id: "timeline-2026-06-01",
-    name: "GLM-5.2",
-    model: "GLM",
-    date: "2026-06-01",
-    version: "GLM-5.2",
-    highlights: "新一代通用模型，强化Agent、代码、多模态方向",
-    benchmarks: { mmlu: 93.5, humaneval: 88.5, math: 79.5, mtbench: 9.4, gpqa: 57.0, source: "Zhipu AI Release" }
-  },
-  {
-    id: "timeline-2026-05-28",
-    name: "Claude Opus 4.8",
-    model: "Claude",
-    date: "2026-05-28",
-    version: "Claude Opus 4.8",
-    highlights: "Opus系列升级，强化科研、代码、长任务能力",
-    benchmarks: { mmlu: 97.5, humaneval: 95.0, math: 87.0, mtbench: 9.9, gpqa: 72.5, source: "Anthropic Announcement" }
-  },
-  {
-    id: "timeline-2026-05-22",
-    name: "DeepSeek V4 Pro（价格调整/大规模推广）",
+    id: "timeline-2026-08-13-deepseek",
+    name: "DeepSeek-V4-Pro (build 0813)",
     model: "DeepSeek",
-    date: "2026-05-22",
-    version: "V4 Pro",
-    highlights: "降价推动高性能模型普及，继续强化开源生态",
-    benchmarks: { mmlu: 95.5, humaneval: 92.5, math: 84.0, mtbench: 9.6, gpqa: 66.5, source: "DeepSeek Official" }
+    date: "2026-08-13",
+    version: "V4-Pro (0813)",
+    highlights: "1.6T MoE 架构 GA 正式版：大幅跃升长程软件工程与高阶数学推理能力，同步引入峰谷动态阶梯计费。",
+    aaIntelligence: 53
   },
   {
-    id: "timeline-2026-05-20",
-    name: "Qwen3.7-Max Preview",
+    id: "timeline-2026-08-12-grok",
+    name: "Grok 4.6",
+    model: "Grok",
+    date: "2026-08-12",
+    version: "Grok 4.6",
+    highlights: "xAI 发布 Grok 4.6：新增 \"xhigh\" 极限思考档位，针对百万级上下文跨步 Agent 任务深度优化。",
+    aaIntelligence: 61
+  },
+  {
+    id: "timeline-2026-08-10-gpt",
+    name: "GPT-5.6-Cyber",
+    model: "GPT",
+    date: "2026-08-10",
+    version: "GPT-5.6-Cyber (Daybreak Red)",
+    highlights: "OpenAI 首款专精网络安全防御与漏洞挖掘的特化模型：基于 Sol 架构，面向 Daybreak Red 计划受限开放。"
+  },
+  {
+    id: "timeline-2026-08-03-qwen",
+    name: "Qwen3.8-Max & Qwen3.8-27B",
     model: "Qwen",
-    date: "2026-05-20",
-    version: "Qwen3.7-Max Preview",
-    highlights: "Qwen3系列增强版，强化复杂推理、代码、Agent能力",
-    benchmarks: { mmlu: 93.8, humaneval: 89.0, math: 80.0, mtbench: 9.4, gpqa: 58.0, source: "Qwen Team Release" }
+    date: "2026-08-03",
+    version: "Qwen3.8-Max / 27B",
+    highlights: "阿里通义千问 3.8 旗舰：2.4T 参数 MoE 架构，27B 单卡可部署权重，强化长程 Agentic 复杂任务求解。",
+    aaIntelligence: 58
   },
   {
-    id: "timeline-1",
-    name: "Mimo Code-v1.2 Release",
-    model: "Mimo",
-    date: "2025-03-05",
-    version: "Code-v1.2",
-    highlights: "Optimized for on-device mobile programming assistance with 50% faster completion speed and lower memory usage."
-  },
-  {
-    id: "timeline-2",
-    name: "Claude 3.7 Sonnet Launch",
+    id: "timeline-2026-07-24-claude",
+    name: "Claude Opus 5",
     model: "Claude",
-    date: "2025-02-24",
-    version: "3.7 Sonnet",
-    highlights: "First model to support hybrid reasoning, allowing users to toggle thinking mode on or off. Major improvements in coding, instruction following, and agentic workflows."
-  },
-  {
-    id: "timeline-3",
-    name: "Grok 3 Released",
-    model: "Grok",
-    date: "2025-02-17",
-    version: "3.0",
-    highlights: "Released with state-of-the-art reasoning capabilities, deep live search integration, and live access to X (Twitter) platform data."
-  },
-  {
-    id: "timeline-4",
-    name: "OpenAI o3-mini Launch",
-    model: "GPT",
-    date: "2025-01-31",
-    version: "o3-mini",
-    highlights: "A fast reasoning model designed for coding, math, and science. Supports function calling, structured outputs, and developer-adjustable reasoning effort."
-  },
-  {
-    id: "timeline-5",
-    name: "DeepSeek-R1 Reasoning Model",
-    model: "DeepSeek",
-    date: "2025-01-20",
-    version: "R1",
-    highlights: "Open-source reasoning model utilizing Reinforcement Learning (RL) with performance comparable to OpenAI's o1. Includes distilled models from Qwen and Llama."
-  },
-  {
-    id: "timeline-6",
-    name: "MiniMax abab7 Released",
-    model: "MiniMax",
-    date: "2025-01-15",
-    version: "abab7-chat",
-    highlights: "MiniMax's next-generation LLM featuring native multimodal reasoning, enhanced Chinese/English conversational logic, and long-context capabilities."
-  },
-  {
-    id: "timeline-7",
-    name: "DeepSeek-V3 Open-Source LLM",
-    model: "DeepSeek",
-    date: "2024-12-26",
-    version: "V3",
-    highlights: "Mixture-of-Experts (MoE) model with 671B parameters. State-of-the-art open-source performance at highly efficient training and inference cost."
-  },
-  {
-    id: "timeline-8",
-    name: "Gemini 2.0 Flash Announcement",
-    model: "Gemini",
-    date: "2024-12-11",
-    version: "2.0 Flash",
-    highlights: "Designed for agentic era with ultra-low latency, real-time audio/video streaming processing, and enhanced tool-use integrations."
-  },
-  {
-    id: "timeline-9",
-    name: "Mimo Chat-v1.0 Release",
-    model: "Mimo",
-    date: "2024-11-05",
-    version: "Chat-v1.0",
-    highlights: "A lightweight 3B parameter conversational model optimized for client-side web embedding, enabling offline-capable interactive chat UI."
-  },
-  {
-    id: "timeline-10",
-    name: "Kimi Explorer Launch",
-    model: "Kimi",
-    date: "2024-10-11",
-    version: "Explorer-v1",
-    highlights: "A search-oriented autonomous research assistant that can query hundreds of webpages to answer complex open-ended questions."
-  },
-  {
-    id: "timeline-11",
-    name: "Zhipu GLM-4-Plus Announcement",
-    model: "GLM",
-    date: "2024-08-20",
-    version: "GLM-4-Plus",
-    highlights: "Zhipu's flagship model update featuring significant boost in math, reasoning, code generation, and complex multi-turn alignment."
-  },
-  {
-    id: "timeline-12",
-    name: "Claude 3.5 Sonnet Release",
-    model: "Claude",
-    date: "2024-06-20",
-    version: "3.5 Sonnet (v1)",
-    highlights: "Sets industry benchmarks for graduate-level reasoning, undergraduate-level knowledge, and coding proficiency. Introduces Artifacts workspace feature."
-  },
-  {
-    id: "timeline-13",
-    name: "Gemini 1.5 Pro Release",
-    model: "Gemini",
-    date: "2024-05-14",
-    version: "1.5 Pro",
-    highlights: "Features a revolutionary native 2-million token context window, allowing users to upload hours of video, audio, or millions of lines of code."
-  },
-  {
-    id: "timeline-14",
-    name: "OpenAI GPT-4o Launch",
-    model: "GPT",
-    date: "2024-05-13",
-    version: "GPT-4o",
-    highlights: "OpenAI's flagship omni model, natively accepting and generating any combination of text, audio, and image, with twice the speed and half the cost of GPT-4 Turbo."
-  },
-  {
-    id: "timeline-15",
-    name: "Kimi Chat Upgraded to 2M Context",
-    model: "Kimi",
-    date: "2024-03-18",
-    version: "Chat-v2M",
-    highlights: "Moonshot AI upgrades Kimi Chat's context window to 2 million Chinese characters, enabling massive document uploads and long history retention."
-  },
-  {
-    id: "timeline-16",
-    name: "Zhipu GLM-4 Launch",
-    model: "GLM",
-    date: "2024-01-16",
-    version: "GLM-4",
-    highlights: "All-round performance boost close to GPT-4. Supports custom GLMs (Agents) and high-concurrency enterprise API integrations."
+    date: "2026-07-24",
+    version: "Claude Opus 5",
+    highlights: "Claude 5 旗舰推理基座：支持 100 万 Context 与 128k 输出，引入会话中动态工具热插拔能力。",
+    aaIntelligence: 63
   }
 ];
 
@@ -549,19 +140,7 @@ export async function getTimelineEntries(): Promise<TimelineEntry[]> {
       }
       const version = getRichText(props, "Version") || undefined;
       const highlights = getRichText(props, "Highlights") || undefined;
-
-      // 读取 Notion 中的真实跑分字段（Number 类型）
-      const mmlu      = getNumber(props, "Score_MMLU")      ?? undefined;
-      const humaneval = getNumber(props, "Score_HumanEval") ?? undefined;
-      const math      = getNumber(props, "Score_MATH")      ?? undefined;
-      const mtbench   = getNumber(props, "Score_MTBench")   ?? undefined;
-      const gpqa      = getNumber(props, "Score_GPQA")      ?? undefined;
-      const source    = getRichText(props, "Benchmark_Source") ?? undefined;
-
-      // 只有至少一个字段有值才挂载 benchmarks 对象
-      const hasBenchmarks = [mmlu, humaneval, math, mtbench, gpqa].some(
-        (v) => v !== undefined
-      );
+      const aaIntelligence = getNumber(props, "AA_Intelligence") ?? undefined;
 
       entries.push({
         id: page.id,
@@ -570,14 +149,37 @@ export async function getTimelineEntries(): Promise<TimelineEntry[]> {
         date,
         version,
         highlights,
-        benchmarks: hasBenchmarks ? { mmlu, humaneval, math, mtbench, gpqa, source } : undefined,
+        aaIntelligence,
       });
     }
 
-    return entries;
+    return entries.length > 0 ? entries : MOCK_TIMELINE;
   } catch (error) {
     console.error("Error fetching timeline entries from Notion:", error);
     return MOCK_TIMELINE;
   }
+}
+
+export interface ChangelogEntry {
+  id: string;
+  date: string;
+  model: string;
+  version?: string;
+  change: string;
+  detail?: string;
+  pricing?: string;
+  url?: string;
+}
+
+export interface ChangelogMonth {
+  year: number;
+  month: number;
+  key: string;
+  title: string;
+  entries: ChangelogEntry[];
+}
+
+export async function getChangelogMonths(): Promise<ChangelogMonth[]> {
+  return [];
 }
 

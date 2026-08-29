@@ -1130,6 +1130,12 @@ export const FALLBACK_SITE_DATA = {
 
   log: [
     {
+      d: "08·29",
+      t: "杂志版二级详情页深度重构，艺术级语义标签系统与动效路由修复上线~",
+      desc: "由 Antigravity 携手 Gemini 3.7 Flash 深度驱动重构：上线四大杂志级二级详情页（3D精装书架/产品看板/胶片暗房/长文阅读器），研发全新多色语义标签系统（TagPills），并攻克 SPA 路由回退空白难题。",
+      type: "Feature",
+    },
+    {
       d: "05·25",
       t: "AI日报功能下线，全球知名模型型号更迭记录、工作流节点展示上线~",
       desc: "MiniMax M2.7即将下岗，Gemini 3.5 Flash辅助功能和前端重构！",
@@ -1478,20 +1484,23 @@ export async function fetchMagazineData(): Promise<MagazineDataPayload> {
 
   if (logRes.status === "fulfilled" && logRes.value && logRes.value.length > 0) {
     try {
-      log = logRes.value.map((p) => {
-        const props = p.properties as Record<string, unknown>;
-        const rawDate = getDate(props, "Date") || "";
-        const title = getPageTitle(p) || "";
-        const desc = getRichText(props, "Description") || "";
-        const type = getSelect(props, "Type") || "Feature";
-        return {
-          id: p.id,
-          d: rawDate ? rawDate.replace(/.*-(\d\d)-(\d\d).*/, "$1·$2") : "05·25",
-          t: title,
-          desc: desc,
-          type: type,
-        };
-      });
+      log = logRes.value
+        .map((p) => {
+          const props = p.properties as Record<string, unknown>;
+          const rawDate = getDate(props, "Date") || "";
+          const title = getPageTitle(p) || "";
+          const desc = getRichText(props, "Description") || "";
+          const type = getSelect(props, "Type") || "Feature";
+          return {
+            id: p.id,
+            d: rawDate ? rawDate.replace(/.*-(\d\d)-(\d\d).*/, "$1·$2") : "08·29",
+            rawDate: rawDate,
+            t: title,
+            desc: desc,
+            type: type,
+          };
+        })
+        .sort((a, b) => (b.rawDate || "").localeCompare(a.rawDate || ""));
     } catch (e) {
       console.warn("Error parsing log:", e);
     }

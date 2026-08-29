@@ -69,26 +69,19 @@ function LabCard(props: { item: LabItem; index?: number }) {
       </Link>
       <div className="lab-body">
         <Link href={`/p/${item.id}`} style={{ textDecoration: "none", color: "inherit" }}>
-          <div className="lab-title">
-            {(() => {
-              const localAppIcon =
-                item.title.includes("WhisperX") || item.title.includes("Whisper") ? { type: "image" as const, value: "/lab/icons/whisperx.png" } :
-                item.title.includes("MiniReader") || item.title.includes("Reader") ? { type: "image" as const, value: "/lab/icons/minireader.png" } :
-                item.title.includes("Cassette") || item.title.includes("MagicCutter") || item.title.includes("Cutter") ? { type: "image" as const, value: "/lab/icons/magiccutter.png" } :
-                item.title.includes("SwiftMemo") ? { type: "image" as const, value: "/lab/icons/swiftmemo.png" } :
-                item.title.includes("Retro") || item.title.includes("Snake") ? { type: "image" as const, value: "/lab/icons/snake.png" } :
-                item.title.includes("MuseTodo") ? { type: "emoji" as const, value: "🌸" } : null;
-              const resolvedIcon = localAppIcon || item.appIcon;
+          {(() => {
+            const localAppIcon =
+              item.title.includes("WhisperX") || item.title.includes("Whisper") ? { type: "image" as const, value: "/lab/icons/whisperx.png" } :
+              item.title.includes("MiniReader") || item.title.includes("Reader") ? { type: "image" as const, value: "/lab/icons/minireader.png" } :
+              item.title.includes("Cassette") || item.title.includes("MagicCutter") || item.title.includes("Cutter") ? { type: "image" as const, value: "/lab/icons/magiccutter.png" } :
+              item.title.includes("SwiftMemo") ? { type: "image" as const, value: "/lab/icons/swiftmemo.png" } :
+              item.title.includes("Retro") || item.title.includes("Snake") ? { type: "image" as const, value: "/lab/icons/snake.png" } :
+              item.title.includes("MuseTodo") ? { type: "emoji" as const, value: "🌸" } : null;
+            const resolvedIcon = localAppIcon || item.appIcon;
 
-              if (resolvedIcon?.type === "emoji") {
-                return (
-                  <span className="p-app-icon emoji" aria-hidden="true">
-                    {resolvedIcon.value}
-                  </span>
-                );
-              }
-              if (resolvedIcon?.type === "image") {
-                return (
+            return (
+              <div className="lab-card-header">
+                {resolvedIcon?.type === "image" && (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={resolvedIcon.value}
@@ -97,12 +90,19 @@ function LabCard(props: { item: LabItem; index?: number }) {
                     aria-hidden="true"
                     loading="lazy"
                   />
-                );
-              }
-              return null;
-            })()}
-            {item.title}
-          </div>
+                )}
+                {resolvedIcon?.type === "emoji" && (
+                  <span className="p-app-icon emoji" aria-hidden="true">
+                    {resolvedIcon.value}
+                  </span>
+                )}
+                <div className="lab-header-text">
+                  <div className="p-tag">{item.badge ?? (item.type === "vibe" ? "Vibe Coding" : "AI 实践")}</div>
+                  <div className="lab-title">{item.title}</div>
+                </div>
+              </div>
+            );
+          })()}
           {item.description ? <div className="lab-desc">{item.description}</div> : null}
         </Link>
         <div className="lab-links">

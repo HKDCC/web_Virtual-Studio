@@ -639,14 +639,26 @@ a.util:hover {
   transform: scale(1.02);
 }
 
-/* 信息内容区域 */
+/* 信息内容区域与放大 App Icon */
 .p-card-body,
 .lab-body {
   flex: 1 1 52%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 12px;
+  gap: 14px;
+}
+
+.lab-card-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.lab-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .p-tag,
@@ -663,12 +675,9 @@ a.util:hover {
 .p-card-body h3 {
   font-family: var(--serif);
   font-weight: 700;
-  font-size: 1.35rem;
-  line-height: 1.4;
+  font-size: 1.45rem;
+  line-height: 1.35;
   margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
   color: var(--ink);
 }
 
@@ -680,18 +689,50 @@ a.util:hover {
 }
 
 .p-app-icon.img {
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
+  width: 76px;
+  height: 76px;
+  min-width: 76px;
+  min-height: 76px;
+  border-radius: 16px;
   object-fit: contain;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-  background: #ffffff;
-  padding: 2px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+  background: var(--paper-2, #ffffff);
+  border: 1px solid var(--line);
+  padding: 6px;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+
+[data-theme="dark"] .p-app-icon.img {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.lab-row-card:hover .p-app-icon.img,
+.lab-card:hover .p-app-icon.img {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
 }
 
 .p-app-icon.emoji {
-  font-size: 1.25rem;
+  width: 76px;
+  height: 76px;
+  min-width: 76px;
+  min-height: 76px;
+  font-size: 2.8rem;
   line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: var(--paper-2, #ffffff);
+  border: 1px solid var(--line);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] .p-app-icon.emoji {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 .p-desc,

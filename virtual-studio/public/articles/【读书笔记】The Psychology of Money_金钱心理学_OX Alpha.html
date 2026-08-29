@@ -1,0 +1,1401 @@
+
+<!-- ======== _tmp_shell_head.html ======== -->
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>(function(){try{var t=localStorage.getItem('pom-theme');if(!t)t=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)}catch(e){}})();</script>
+<title>《金钱心理学》读书笔记 · The Psychology of Money</title>
+<style>
+/* ================= 设计令牌：墨绿 × 鎏金 编辑杂志风 ================= */
+:root{
+  --serif:"Noto Serif SC","Source Han Serif SC","Songti SC","STSong",Georgia,"SimSun",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+}
+html[data-theme="light"]{
+  --bg:#f6f2ea; --bg-soft:#efe9dc; --surface:#fffdf7; --surface-2:#faf6ec;
+  --ink:#20291f; --ink-soft:#576456; --ink-faint:#6f7a6d;
+  --line:#ddd4c2; --line-strong:#c8bca0;
+  --gold:#8a6410; --gold-bright:#b8860b; --gold-soft:rgba(184,134,11,.12);
+  --green:#1e6b52; --green-soft:rgba(30,107,82,.10);
+  --shadow:0 18px 50px -22px rgba(60,50,20,.25);
+  color-scheme: light;
+}
+html[data-theme="dark"]{
+  --bg:#0e1512; --bg-soft:#121a17; --surface:#17221e; --surface-2:#1b2723;
+  --ink:#ece7d9; --ink-soft:#b3bdae; --ink-faint:#8f9c90;
+  --line:#2a3833;
+  --gold:#d3a94a; --gold-bright:#e6c065; --gold-soft:rgba(211,169,74,.13);
+  --green:#46a884; --green-soft:rgba(70,168,132,.12);
+  --shadow:0 18px 50px -20px rgba(0,0,0,.6);
+  color-scheme: dark;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;transition:background .35s ease,color .35s ease}
+::selection{background:var(--gold-soft)}
+
+/* ================= 阅读进度条 & 顶栏 ================= */
+#progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--green),var(--gold-bright));z-index:99;transition:width .08s linear}
+header.topbar{position:fixed;top:0;left:0;right:0;z-index:90;display:flex;align-items:center;justify-content:space-between;padding:.65rem 1.4rem;background:var(--surface);background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.brand{font-family:var(--serif);font-weight:700;font-size:1.02rem;letter-spacing:.06em;color:var(--ink)}
+.brand em{font-style:normal;color:var(--gold)}
+.topnav{display:flex;gap:.15rem;overflow-x:auto;max-width:62vw;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 14px,#000 calc(100% - 14px),transparent);mask-image:linear-gradient(90deg,transparent,#000 14px,#000 calc(100% - 14px),transparent)}
+.topnav::-webkit-scrollbar{display:none}
+.topnav a{white-space:nowrap;font-size:.82rem;color:var(--ink-soft);text-decoration:none;padding:.32rem .62rem;border-radius:999px;border:1px solid transparent;transition:.2s}
+.topnav a:hover{color:var(--gold);}
+.topnav a.active{color:var(--gold);border-color:var(--line);background:var(--gold-soft)}
+.controls{display:flex;gap:.5rem;align-items:center}
+.tbtn{cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:1.05rem;transition:.25s}
+.tbtn:hover{border-color:var(--gold);transform:translateY(-1px)}
+
+/* ================= 英雄区（16:9 满屏） ================= */
+.hero{min-height:100svh;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);align-items:center;gap:2rem;width:94%;margin:0 auto;padding:7rem 0 4rem;position:relative}
+.hero::before{content:"";position:absolute;inset:0;background:
+ radial-gradient(ellipse 55% 45% at 82% 18%,var(--gold-soft),transparent 70%),
+ radial-gradient(ellipse 50% 40% at 12% 85%,var(--green-soft),transparent 70%);pointer-events:none}
+.kicker{display:inline-flex;align-items:center;gap:.6rem;font-size:.82rem;letter-spacing:.34em;color:var(--gold);text-transform:uppercase;font-family:var(--sans)}
+.kicker::before{content:"";width:42px;height:1px;background:var(--gold)}
+.hero h1{font-family:var(--serif);font-size:clamp(2.6rem,5.4vw,4.6rem);line-height:1.16;font-weight:900;margin:1.1rem 0 .6rem;letter-spacing:.02em}
+.hero h1 .g{color:var(--gold)}
+.hero .en-title{font-family:Georgia,serif;font-style:italic;color:var(--ink-soft);font-size:clamp(.95rem,1.4vw,1.15rem);letter-spacing:.04em}
+.hero p.lede{margin-top:1.4rem;color:var(--ink-soft);max-width:36em;font-size:1.04rem}
+.meta-row{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.8rem}
+.chip{font-size:.8rem;padding:.35rem .95rem;border:1px solid var(--line);border-radius:999px;color:var(--ink-soft);background:var(--surface)}
+.chip b{color:var(--gold);font-weight:600}
+.hero-art{position:relative}
+.hero-art svg{width:100%;height:auto;display:block;filter:drop-shadow(var(--shadow))}
+.scroll-hint{position:absolute;bottom:1.6rem;left:50%;transform:translateX(-50%);color:var(--ink-faint);font-size:.75rem;letter-spacing:.3em;animation:bob 2.2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+
+/* ================= 章节正文 ================= */
+main{width:94%;margin:0 auto}
+section.chapter{padding:4.2rem 0 2.4rem;scroll-margin-top:76px}
+section.chapter + section.chapter{border-top:1px dashed var(--line)}
+.ch-kicker{font-size:.8rem;letter-spacing:.3em;color:var(--green);text-transform:uppercase;margin-bottom:.7rem}
+h2.ch-title{font-family:var(--serif);font-size:clamp(1.7rem,3vw,2.5rem);font-weight:900;line-height:1.3;position:relative;padding-bottom:.9rem;margin-bottom:1.2rem}
+h2.ch-title::after{content:"";position:absolute;left:0;bottom:0;width:64px;height:3px;background:linear-gradient(90deg,var(--gold),transparent)}
+p.ch-sub{color:var(--ink-soft);font-family:var(--serif);font-style:normal;font-size:1.05rem;margin-bottom:1.6rem}
+blockquote.epigraph{border-left:3px solid var(--gold);background:var(--gold-soft);padding:1rem 1.4rem;border-radius:0 14px 14px 0;margin:0 0 2rem;font-family:var(--serif)}
+blockquote.epigraph p{font-size:1.06rem;line-height:1.9}
+blockquote.epigraph cite{display:block;text-align:right;font-size:.85rem;color:var(--ink-faint);margin-top:.5rem;font-style:normal}
+p.lead{font-size:1.14rem;color:var(--ink);font-weight:500;margin-bottom:1.2rem}
+section.chapter p{margin-bottom:1.05rem;color:var(--ink);opacity:.94}
+h3.kp{font-family:var(--serif);font-size:1.32rem;font-weight:700;margin:2.4rem 0 1rem;display:flex;align-items:baseline;gap:.7rem}
+h3.kp .kp-n{font-family:Georgia,serif;font-size:.95rem;color:var(--gold);letter-spacing:.1em;border:1px solid var(--line);border-radius:8px;padding:.1rem .5rem;background:var(--surface)}
+section.chapter ul,section.chapter ol{margin:0 0 1.1rem 1.4em}
+section.chapter li{margin-bottom:.45rem}
+.callout{border:1px solid var(--line);border-radius:16px;padding:1.15rem 1.4rem;margin:1.4rem 0;background:var(--surface-2);box-shadow:var(--shadow);position:relative}
+.callout.insight{border-left:4px solid var(--green)}
+.callout.warn{border-left:4px solid var(--gold)}
+.callout strong.tag{display:inline-block;font-size:.78rem;letter-spacing:.18em;color:var(--green);margin-right:.5em}
+.callout.warn strong.tag{color:var(--gold)}
+.callout>strong:first-child{display:inline-block;font-size:.82rem;letter-spacing:.16em;color:var(--green);margin-right:.35em}
+.callout.warn>strong:first-child{color:var(--gold)}
+.case-card{border:1px solid var(--line);border-radius:18px;margin:1.6rem 0;overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
+.case-head{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;padding:.85rem 1.4rem;background:linear-gradient(90deg,var(--green-soft),transparent);border-bottom:1px solid var(--line)}
+.case-name{font-family:var(--serif);font-weight:800;font-size:1.08rem}
+.case-name::before{content:"◆ ";color:var(--gold);font-size:.8em}
+.case-meta{font-size:.78rem;color:var(--ink-faint);letter-spacing:.08em}
+.case-card p{padding:0 1.4rem;margin-top:.9rem}
+.case-card p:last-of-type{padding-bottom:1.2rem;margin-bottom:.2rem}
+figure.quote{margin:2rem auto 2.4rem;padding:2.9rem 1.8rem 1.5rem;max-width:min(56em,100%);position:relative;background:var(--surface-2);border:1px solid var(--line);border-radius:18px}
+figure.quote::before{content:"“";position:absolute;top:-.2rem;left:1rem;font-family:Georgia,serif;font-size:4.4rem;color:var(--gold);opacity:.5;line-height:1}
+figure.quote blockquote{font-family:var(--serif);font-size:1.14rem;line-height:2;color:var(--ink)}
+figure.quote figcaption{text-align:right;margin-top:.7rem;font-size:.84rem;color:var(--ink-faint)}
+.frame-list{list-style:none;counter-reset:frame;margin:1.2rem 0 1.6rem}
+.frame-list li{counter-increment:frame;position:relative;padding:.85rem 1rem .85rem 3.2rem;margin-bottom:.6rem;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.frame-list li::before{content:counter(frame,decimal-leading-zero);position:absolute;left:1rem;top:50%;transform:translateY(-50%);font-family:Georgia,serif;color:var(--gold);font-size:1.05rem;font-weight:700}
+.tbl-wrap{border:1px solid var(--line);border-radius:14px;overflow-x:auto;box-shadow:var(--shadow);margin:1.4rem 0;background:var(--surface)}
+table.tbl{width:100%;border-collapse:collapse;margin:0;font-size:.93rem}
+table.tbl th{background:var(--green-soft);color:var(--ink);font-weight:700;padding:.7rem 1rem;text-align:left;border-bottom:2px solid var(--line);font-family:var(--serif)}
+table.tbl td{padding:.65rem 1rem;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink-soft)}
+table.tbl td:first-child{color:var(--ink);font-weight:600}
+table.tbl tr:last-child td{border-bottom:none}
+.fn{font-size:.8rem;color:var(--ink-faint);margin-top:.4rem}
+
+/* ================= 杂志式分栏 ================= */
+.ch-head{margin-bottom:2.2rem}
+blockquote.epigraph{transition:background .35s ease}
+@media (min-width:1000px){
+  .ch-head{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);gap:0 3.5rem;align-items:end}
+  .ch-head blockquote.epigraph{margin:0;padding:.9rem 1.3rem}
+}
+.quote-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:1.15rem;align-items:stretch;margin:1.8rem 0}
+.quote-grid figure.quote{margin:0;max-width:none;display:flex;flex-direction:column}
+.quote-grid figure.quote figcaption{margin-top:auto}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.15rem;align-items:stretch;margin:1.5rem 0}
+.card-grid>.callout{margin:0;height:100%}
+.case-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(370px,1fr));gap:1.3rem;align-items:start;margin:1.6rem 0}
+.case-grid>.case-card{margin:0;height:100%}
+.frame-list.two-col{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:.65rem 1.1rem;padding:0}
+.frame-list.two-col li{margin-bottom:0;display:flex;align-items:center;min-height:3.2rem}
+.fig-cap{font-size:.86rem;color:var(--ink-faint);text-align:center;letter-spacing:.06em;margin:1.6rem 0 .6rem}
+.svg-wrap{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:1.2rem 1rem;box-shadow:var(--shadow);margin-bottom:1.8rem}
+.svg-wrap svg text{font-family:var(--sans)}
+
+/* ================= 交互仿真区 ================= */
+section.sim{scroll-margin-top:76px;border:1px solid var(--line);border-radius:26px;background:
+ linear-gradient(160deg,var(--green-soft),transparent 45%),var(--surface);
+ box-shadow:var(--shadow);padding:2.6rem 2.2rem;margin:3.5rem 0}
+.sim h2{font-family:var(--serif);font-size:clamp(1.5rem,2.6vw,2.1rem);font-weight:900}
+.sim .sim-sub{color:var(--ink-soft);margin:.6rem 0 1.8rem}
+.sim-grid{display:grid;grid-template-columns:minmax(240px,.9fr) minmax(0,1.6fr);gap:2rem;align-items:start}
+.ctrl label{display:flex;justify-content:space-between;font-size:.88rem;color:var(--ink-soft);margin:1.1rem 0 .3rem}
+.ctrl label output{font-family:Georgia,serif;color:var(--gold);font-weight:700;font-size:1rem}
+input[type=range]{width:100%;appearance:none;height:6px;border-radius:999px;background:linear-gradient(90deg,var(--green) var(--fill,50%),var(--line) var(--fill,50%));outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:20px;height:20px;border-radius:50%;background:var(--surface);border:3px solid var(--gold);box-shadow:0 2px 8px rgba(0,0,0,.25);cursor:grab}
+.stat-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1.4rem}
+.stat{border:1px solid var(--line);border-radius:14px;padding:.8rem .9rem;background:var(--surface-2)}
+.stat .num{font-family:Georgia,serif;font-size:clamp(.95rem,1.5vw,1.28rem);font-weight:800;color:var(--gold);font-variant-numeric:tabular-nums}
+.stat .lbl{font-size:.74rem;color:var(--ink-faint);letter-spacing:.1em;margin-top:.15rem}
+.sim-note{font-size:.82rem;color:var(--ink-faint);margin-top:1rem}
+
+/* ================= 尾注 ================= */
+footer{border-top:1px solid var(--line);margin-top:4rem;padding:2.4rem 1.5rem 3.2rem;text-align:center;color:var(--ink-faint);font-size:.85rem}
+footer .fin{font-family:var(--serif);font-size:1.5rem;color:var(--gold);letter-spacing:.5em;margin-bottom:.8rem}
+#backtop{position:fixed;right:1.4rem;bottom:1.6rem;z-index:89;opacity:0;pointer-events:none;transition:.3s;background:var(--surface);box-shadow:var(--shadow)}
+#backtop.show{opacity:1;pointer-events:auto}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr;padding-top:6rem;text-align:left}
+  .hero-art{max-width:420px;margin:0 auto}
+  .sim-grid{grid-template-columns:1fr}
+  .stat-cards{grid-template-columns:repeat(3,1fr)}
+  table.tbl{font-size:.82rem}
+  .topnav{max-width:48vw}
+}
+/* 可访问性：键盘焦点 & 减弱动效 */
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
+input[type=range]:focus-visible{outline-offset:6px}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .scroll-hint{animation:none}
+  body,.tbtn,.topnav a{transition:none}
+}
+/* 打印样式 */
+@media print{
+  header.topbar,#progress,#backtop,.scroll-hint{display:none!important}
+  section.chapter>*,section.sim,section.sim *{opacity:1!important;transform:none!important}
+  body{background:#fff;color:#111;font-size:12pt}
+  .svg-wrap,.callout,.case-card,figure.quote,.tbl-wrap,section.sim{box-shadow:none;break-inside:avoid}
+  section.chapter{padding:1.5rem 0}
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<header class="topbar">
+  <div class="brand">金钱<em>心理学</em> · 读书笔记</div>
+  <nav class="topnav" id="topnav"></nav>
+  <div class="controls">
+    <button class="tbtn" id="themeBtn" title="切换亮/暗主题">🌙</button>
+  </div>
+</header>
+
+<!-- ============ 英雄区 ============ -->
+<section class="hero" id="top">
+  <div>
+    <span class="kicker">Reading Notes · 财富与人性</span>
+    <h1>金钱<span class="g">心理学</span></h1>
+    <div class="en-title">The Psychology of Money — Timeless Lessons on Wealth, Greed, and Happiness</div>
+    <p class="lede">理财的成败与智商关系不大，却与行为习惯息息相关。摩根·豪泽尔用十九堂课告诉我们：<strong>财富不是冰冷的数字游戏，而是一场关于人性、耐心与自知之明的心理修行。</strong></p>
+    <div class="meta-row">
+      <span class="chip">作者 <b>摩根·豪泽尔</b></span>
+      <span class="chip">译者 <b>李青宗</b></span>
+      <span class="chip"><b>19</b> 堂财富心理课</span>
+      <span class="chip"><b>SVG</b> 核心模型重绘</span>
+      <span class="chip"><b>交互</b> 复利仿真器</span>
+    </div>
+  </div>
+  <div class="hero-art" aria-hidden="true">
+    <svg viewBox="0 0 520 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="hg1" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0" stop-color="var(--green)" stop-opacity=".9"/>
+          <stop offset="1" stop-color="var(--gold)" stop-opacity=".9"/>
+        </linearGradient>
+        <linearGradient id="hg2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="var(--gold)" stop-opacity=".28"/>
+          <stop offset="1" stop-color="var(--gold)" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <g stroke="var(--line)" stroke-width="1">
+        <line x1="30" y1="340" x2="500" y2="340"/>
+        <line x1="30" y1="260" x2="500" y2="260" stroke-dasharray="3 6"/>
+        <line x1="30" y1="180" x2="500" y2="180" stroke-dasharray="3 6"/>
+        <line x1="30" y1="100" x2="500" y2="100" stroke-dasharray="3 6"/>
+      </g>
+      <path d="M30,338 C120,336 220,330 300,300 C370,272 430,190 500,52 L500,340 L30,340 Z" fill="url(#hg2)"/>
+      <path d="M30,338 C120,336 220,330 300,300 C370,272 430,190 500,52" fill="none" stroke="url(#hg1)" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="30" cy="338" r="6" fill="var(--green)"/>
+      <circle cx="300" cy="300" r="6" fill="var(--green)"/>
+      <circle cx="500" cy="52" r="8" fill="var(--gold)"/>
+      <text x="36" y="322" font-size="13" fill="var(--ink-soft)">缓慢的开端</text>
+      <text x="392" y="80" font-size="14" fill="var(--ink)">复利的雪崩</text>
+      <text x="36" y="372" font-size="12" fill="var(--ink-faint)" letter-spacing="2">TIME → 时间是复利唯一的燃料</text>
+    </svg>
+  </div>
+  <div class="scroll-hint">向下阅读 ▾</div>
+</section>
+
+<main>
+
+
+<!-- ======== _tmp_frag_a.html ======== -->
+<section class="chapter" id="ch-0">
+  <div class="ch-kicker">序言 · PROLOGUE</div>
+  <h2 class="ch-title">地球上最伟大的表演</h2>
+  <p class="ch-sub">理财的成功与智商关系不大，与行为习惯息息相关——而行为，恰恰最难教授。</p>
+  <blockquote class="epigraph"><p>理财的成功与否和你的智商关系不大，但和你的行为习惯紧密相关。</p><cite>—— 摩根·豪泽尔</cite></blockquote>
+
+  <p class="lead">上大学时，作者在洛杉矶一家高级酒店做泊车员。有位常客是技术主管：二十多岁就设计出无线路由器的核心元件并申请专利，创立又卖掉了几家公司。但他与金钱的关系，是一种糅合了不安全感和幼稚的复杂关系——随身携带约十厘米厚的百元美钞四处炫耀，曾花几千美元买来一千块面值的金币，只为和朋友在码头上像打水漂一样扔进太平洋取乐。几年后，这位天才破产了。而在另一个极端，一个乡下来的门卫，去世时留下了八百多万美元的遗产。金钱的世界里，这样的反差每天都在上演——人类涉及金钱的行为，堪称地球上最伟大的表演之一。</p>
+
+  <h3 class="kp"><span class="kp-n">01</span>门卫与哈佛MBA：一场只在理财领域可能的逆转</h3>
+  <table class="tbl">
+    <thead>
+      <tr><th>维度</th><th>罗纳德·里德（Ronald Read）</th><th>理查德·福斯肯（Richard Fuscone）</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>背景</td><td>佛蒙特州乡下出身，家族中第一个读高中的，每天靠搭便车上学</td><td>哈佛大学毕业，拥有工商管理硕士学位（MBA），曾被评为"40岁以下成功商业人士40强"之一</td></tr>
+      <tr><td>职业</td><td>在加油站做了25年汽车修理工，又在杰西潘尼商场拖了17年地板</td><td>美林集团管理层，40多岁退休，成为慈善家</td></tr>
+      <tr><td>生活方式</td><td>38岁花1.2万美元买下一套两居室并在此度过余生；丧偶后未再婚；最大的爱好是劈柴</td><td>2005年前后大量举债，扩建康涅狄格州格林威治占地近1,700平方米的豪宅：11个卫生间、2部电梯、2个游泳池、7个车库，每月维护费高达9万美元</td></tr>
+      <tr><td>结局</td><td>2014年去世，享年92岁。当年全美281万余名逝者中，净金融资产超800万美元者不足4,000人，他是其中之一：遗嘱将200万美元留给继子女，其余600多万捐给当地医院和图书馆</td><td>2008年金融危机中高额债务叠加金融资产化为尘埃而破产；棕榈滩房产先被取消抵押赎回权，格林威治豪宅也于2014年被止赎拍卖——成交价低于保险公司估价的75%</td></tr>
+    </tbody>
+  </table>
+  <p>里德没有任何秘密：他把能攒的每一分钱积攒起来买入蓝筹股，然后耐心等待几十年，微小的积蓄经由复利滚雪球般变成800多万。福斯肯则拥有里德没有的一切学历、人脉与专业经验，却在贪婪中失去了全部。抹平两人之间悬殊差距的根本原因，是耐性与贪婪之别。</p>
+
+  <div class="callout insight"><strong>核心观点</strong>　财务方面的成功并不是一门硬科学，而是一种软技能——你怎么做，比你掌握多少知识更重要。在其他任何领域，一个没上过大学、没有背景与社会关系的门卫，都不可能压倒性地战胜受过最好训练的专业人士；唯独在投资理财领域，这样的事发生了。</div>
+  <p class="fn">注：医疗保健产业因科学进步让几乎每个人都变得更健康；而过去二十年金融业吸引了全球最聪明的人，却难有证据表明人们因此成了更优秀的投资者。原因在于，我们学习理财的方式更像学习物理（法则与定律），而不是学习心理（情感及其微妙变化）。</p>
+
+  <figure class="quote"><blockquote>历史从来不会重复，人类却总会重蹈覆辙。</blockquote><figcaption>—— 序言（引自伏尔泰）</figcaption></figure>
+  <figure class="quote"><blockquote>想要理解为什么人们会债务缠身，你不必研究银行利率，而应该研究关于人类的贪婪、不安全感和乐观主义的历史。</blockquote><figcaption>—— 序言</figcaption></figure>
+</section>
+
+<section class="chapter" id="ch-1">
+  <div class="ch-kicker">第一章 · CHAPTER 01</div>
+  <h2 class="ch-title">没有人真的对钱失去理智</h2>
+  <p class="ch-sub">看似疯狂的财务决策，都是当事人在自身经验框架内做出的合理选择。</p>
+  <blockquote class="epigraph"><p>你对金钱的个人经验可能只有0.00000001%符合实际，但它构成了你对世界运作方式的主观判断的80%。</p><cite>—— 摩根·豪泽尔</cite></blockquote>
+
+  <p class="lead">人们在消费和理财时总会做一些看似疯狂的事，但实际上没有人真的失去理智。不同人的出生年代、成长经历、家庭经济状况、社会环境、国家经济形势、激励手段乃至运气各不相同，因此关于金钱的认知和态度就完全不同。在你看来不可思议的事，对另一个人来说可能合乎情理。</p>
+
+  <h3 class="kp"><span class="kp-n">01</span>亲身经历比任何知识都更有说服力</h3>
+  <p>大萧条25年后，约翰·F.肯尼迪竞选总统时坦言自己对大萧条"没有什么亲身经历"——他的家族在大萧条后住更大的房子、雇更多仆人，他在哈佛读书时才第一次真正认识到大萧条。经济学家乌尔里克·马尔门迪尔与斯蒂芬·纳格尔研究了50年间的《美国消费者财务状况调查》，发现个体投资者承担风险的意愿取决于个人早期的经历——尤其是成年后的早期经历：在高通胀环境中长大的人日后投入债券的钱更少，在股市繁荣期长大的人日后投入股票的钱更多。起决定作用的不是智力，不是教育或阅历，而是出生的时间和地点——纯粹靠运气的因素。"债券之王"比尔·格罗斯承认，如果他早生或晚生10年，可能就不会有如今的成功：他的生涯刚好赶上了利率大跌、债券价格飙升的年代，而对其父辈那代在高通胀中艰难长大的人来说，债券是财富的粉碎机。</p>
+
+  <h3 class="kp"><span class="kp-n">02</span>同一市场，截然不同的剧本</h3>
+  <p>生于20世纪70年代的美国人，在十几二十岁时目睹标普500指数增长近10倍；生于50年代的人在同一人生阶段看到的却是原地踏步的股市。生于60年代的人在价值观形成期经历物价上涨3倍多的通胀，生于90年代的人则可能从未想到过这个问题。2009年11月，美国全国失业率约10%，而16～19岁、没有高中文凭的非裔男性失业率高达49%，45岁以上、有大学文凭的白人女性仅为4%。《纽约时报》关于富士康恶劣工作环境的报道下，一名工人的侄子写道：姑妈宁愿被"血汗工厂"剥削赚取微薄工资，也不愿回到从前出卖身体的生活——个体的不同经历，足以让人们对看似没有争议的话题产生完全相反的看法。</p>
+
+  <div class="case-card">
+    <div class="case-head"><span class="case-name">买彩票的穷人</span><span class="case-meta">美国 · 当代</span></div>
+    <p>美国人花在彩票上的钱超过电影、电子游戏、音乐、体育比赛和书籍的总和，购买者绝大多数是穷人：收入最低的家庭平均每年花412美元买彩票，是高收入家庭的4倍；而有40%的美国人急需用钱时连400美元都拿不出来。</p>
+    <p>换位想象他们的独白：存钱不可能，假期、新车、医保、安全的社区都与我们无缘，买彩票是人生中唯一能实现梦想的途径。"我们买的是梦想，而你们之所以不理解，是因为你们一开始就生活在对我们来说的梦想中。"你无需赞同，但多少可以理解这个市场为何经久不衰。</p>
+  </div>
+
+  <h3 class="kp"><span class="kp-n">03</span>我们不是不理智，只是经验尚浅</h3>
+  <p>现代理财的地基——储蓄和投资——建立在不远的概念之上。"工作到一定年限后退休"在美国最多不过两代人的历史：二战前美国人一直工作到死为止；1940年第一个领取社保的美国人艾达·梅·富勒拿到的支票只有22.54美元；直到20世纪80年代，"人人都有权利并应当光荣退休"才成为现实。401(k)计划1978年才出现，罗斯个人退休金账户1998年才诞生——如果把后者看成一个人，他刚刚达到能饮酒的年龄。指数基金的历史不到50年，对冲基金兴起仅25年，消费债务的普及也是二战后才开始的。人类驯化狗已有1万年，狗身上仍保留着远古祖先的习性；而我们应对现代金融体系只有20～50年的经验，却希望能完美地适应它。</p>
+
+  <div class="callout insight"><strong>核心观点</strong>　每个关于金钱的决定，对当时的决策者来说都是合理的。少一些评判，多一些理解——"你的行为看似疯狂，但我或多或少能理解你为什么那样做"，这句话揭示了我们许多财务决策背后的深层原因。</div>
+
+  <figure class="quote"><blockquote>有些事只有真正经历过才会懂。</blockquote><figcaption>—— 第1章（投资人迈克尔·巴特尼克语）</figcaption></figure>
+  <figure class="quote"><blockquote>我们并不是对钱不理智，只不过是经验尚浅罢了。</blockquote><figcaption>—— 第1章</figcaption></figure>
+</section>
+
+<section class="chapter" id="ch-2">
+  <div class="ch-kicker">第二章 · CHAPTER 02</div>
+  <h2 class="ch-title">运气与风险</h2>
+  <p class="ch-sub">生活中的每一个结果，都受到个人努力之外的其他作用的影响。</p>
+  <blockquote class="epigraph"><p>任何事都没有表面看来那样美好或糟糕。</p><cite>—— 斯科特·加洛韦</cite></blockquote>
+
+  <p class="lead">运气和风险就像孪生兄弟。它们共同证明：无论评判自己还是他人，任何事都没有表面看来那样美好或糟糕。</p>
+
+  <h3 class="kp"><span class="kp-n">01</span>百万分之一的运气，与百万分之一的风险</h3>
+  <p>1968年，全世界约有3.03亿高中生，其中1,800万是美国人，27万住在华盛顿州，而就读于西雅图郊区湖滨学校的只有大约300人——那是当时世界上极少数拥有计算机的学校：海军飞行员出身的教师比尔·道格尔说服家长俱乐部，用年度旧货义卖赚到的约3,000美元租借了一台分时共享的电传打字30型计算机。13岁的比尔·盖茨恰好是这300人中的一员。放眼全球，100万名学生中只有1人能进入这样一所学校。"如果没有湖滨学校，就不会有微软了。"盖茨后来如是说。</p>
+  <div class="case-card">
+    <div class="case-head"><span class="case-name">肯特·埃文斯</span><span class="case-meta">湖滨学校 · 1960年代末</span></div>
+    <p>盖茨的天才小团体其实还有第三个成员。肯特·埃文斯是全班成绩最优异的学生，与盖茨同样精通计算机、同样具备商业头脑和远大抱负——两人曾一起为学校编写排课程序，常常计划着未来五六年要做什么、能否成为首席执行官。</p>
+    <p>本可以与盖茨、艾伦一起创立微软的肯特，在高中毕业前夕死于一次登山事故。美国平均每年约30人死于登山事故，高中生登山遇难的概率约为百万分之一。盖茨因百万分之一的运气进入湖滨学校，肯特却因百万分之一的风险殒命——同样的力量，同样的大小，作用的方向截然相反。</p>
+  </div>
+  <p>每一个比尔·盖茨都对应着一个肯特·埃文斯。二者难以衡量，也令人难以接受，所以常被忽略：评价别人时，归功于运气显得嫉妒刻薄；评价自己时，承认运气令人气馁。</p>
+
+  <h3 class="kp"><span class="kp-n">02</span>大胆与鲁莽之间，只有一毫米</h3>
+  <p>范德比尔特扩张铁路帝国时公然藐视法律——"你不会以为我们真能在纽约州的法律框架内经营铁路吧？"——这被后世奉为企业家精神；洛克菲勒钻法律空子被一位法官评价为"不比一个惯偷好到哪儿去"，却被历史学家归类为狡诈的商业智慧。"价值投资之父"格雷厄姆大获成功的主要原因是他重仓政府雇员保险公司股票，亲口承认这违背了自己鼓吹的几乎每一条分散投资原则，并坦言"这到底是因为运气好还是决策高明，要怎么分清？"扎克伯格2006年拒绝雅虎10亿美元收购被视为天才之举，雅虎以同样心态拒绝微软收购却被讥为傻瓜。成功的大胆之举和愚蠢的鲁莽行为之间的界线，往往只有事后才能看清。</p>
+
+  <h3 class="kp"><span class="kp-n">03</span>两条应对之道</h3>
+  <ul class="frame-list">
+    <li><strong>警惕极端案例：</strong>不把某件事的结果100%归于个人的努力和决策。"不是所有成功都源自努力工作；同样，不是所有贫困都是因为游手好闲。"</li>
+    <li><strong>寻找普适模式：</strong>个案的结果越极端，受运气或风险影响的程度越大，其经验越难复制。而"能掌控时间的人在生活中更幸福"这类普遍真理，才是真正能付诸行动的东西。</li>
+    <li><strong>为失败留出宽容：</strong>失败也可能只是无法规避的风险所致。预防失败的诀窍是做好财务规划，使其不至于因一次糟糕的投资而全盘崩溃，保证自己能持续前进，等到好运降临的那一刻。</li>
+  </ul>
+
+  <figure class="quote"><blockquote>成功是一个特别糟糕的老师，因为它会让聪明人觉得自己不会失败。</blockquote><figcaption>—— 第2章（比尔·盖茨语）</figcaption></figure>
+  <figure class="quote"><blockquote>诺贝尔经济学奖得主罗伯特·席勒最想知道的不可能知道的答案是：在成功的投资中，运气到底占了多大成分。</blockquote><figcaption>—— 第2章</figcaption></figure>
+</section>
+
+<section class="chapter" id="ch-3">
+  <div class="ch-kicker">第三章 · CHAPTER 03</div>
+  <h2 class="ch-title">永不知足</h2>
+  <p class="ch-sub">以自己拥有且需要的东西为赌注，去换取自己没有也不需要的东西——这种行为毫无道理。</p>
+  <blockquote class="epigraph"><p>是的，但是我拥有一样他永远不会有的东西——知足。</p><cite>—— 约瑟夫·海勒</cite></blockquote>
+
+  <p class="lead">在一次派对上，库尔特·冯内古特告诉约瑟夫·海勒：他们的东道主——一位对冲基金经理——一天赚到的钱比《第二十二条军规》的全部版税还多。海勒的回答成了本章的题眼。"知足"是社会中的重要因素，但无数人，包括许多家财万贯、有权有势者，从来都不知道它的含义。两个例子足以说明不知足有多危险。</p>
+
+  <div class="case-card">
+    <div class="case-head"><span class="case-name">顾磊杰：亿万富翁的嫉妒</span><span class="case-meta">麦肯锡前CEO · 2008年案发</span></div>
+    <p>出生于加尔各答，十多岁就成了孤儿，起点低到"连棒球馆都看不见"；四十多岁成为麦肯锡首席执行官，退休后在联合国和世界经济论坛任职，与比尔·盖茨合作慈善，身兼5家上市公司董事。截至2008年，他的身家达1亿美元——哪怕以5%的年回报率计算，这些钱每小时都能产生接近600美元的收益。</p>
+    <p>但他想做的不只是一个百万富翁，而是朝思暮想地跻身亿万富翁的圈子。2008年金融危机危急时刻，作为高盛董事会成员，他在巴菲特投资50亿美元拯救高盛的消息公布前获悉内情，并在获悉消息16秒后致电对冲基金经理拉杰·拉贾拉特南——后者立即买入17.5万股高盛股票，消息公布、股价暴涨的瞬间赚到100万美元。美国证券交易委员会称，其内幕消息共为公司获利1,700万美元。二人双双入狱，职业生涯和名誉彻底被毁。</p>
+  </div>
+
+  <div class="case-card">
+    <div class="case-head"><span class="case-name">伯尼·麦道夫：合法巨富为何还要行骗</span><span class="case-meta">庞氏骗局制造者 · 欺骗投资者20年</span></div>
+    <p>讽刺的是，骗局败露就在顾磊杰内幕交易的几周之后。鲜为人知的是，麦道夫的做市生意完全合法且极为成功：其公司场外电子交易日均成交量达7.4亿，相当于纽约证券交易所每天9%的交易量；执行交易速度之快、成本之低，使其能以每股1美分的价格买入其他经纪公司的客户订单，从买卖差价中获利。据其前职员称，仅做市部门每年利润就达2,500万～5,000万美元。</p>
+    <p>这门合法的生意已让他非常富有。然而，他依然冒险进行了长达20年的欺诈。为什么坐拥上亿财富后，仍要冒着搭上全部身家的风险去获取更多？因为他们不懂得知足。</p>
+  </div>
+
+  <div class="callout warn"><strong>警示案例</strong>　长期资本管理公司的每名员工的个人金融资产高达数千万至数亿美元，却把大部分资产投入自己负责的基金，冒着巨大风险追求更多——结果在1998年失去了一切，当时正值历史上最大的牛市。沃伦·巴菲特事后写道：<em>"为了赚他们并未拥有也不需要的钱，他们拿自己已经拥有并确实需要的东西去冒险了。这是愚蠢至极的做法。"</em>这正是本章的核心论点：以结束自己的事业、名誉和自由为代价，去追求本不需要的东西，是世界上最糟糕的交易。</div>
+
+  <h3 class="kp"><span class="kp-n">01</span>四条知足的守则</h3>
+  <ul class="frame-list">
+    <li><strong>让逐利适可而止：</strong>这是最难的理财技能。当想拥有更多的欲望比满足感增长得更快时，你向前一步，目标就会向前两步——追赶的唯一办法就是冒更大的险。幸福是你拥有的减去你期待的。</li>
+    <li><strong>退出攀比的战争：</strong>棒球新手年薪约50万美元已属可观，但队友迈克·特劳特签的是12年共4.3亿美元的合同；跻身2018年收入前十的对冲基金经理需年赚至少3.4亿美元，前五名至少7.7亿美元；巴菲特2018年的个人收入是35亿美元，而贝索斯的净收入是240亿美元。攀比的天花板没有人能触摸到，取胜的唯一办法是根本不要加入这场战争——正如拉斯维加斯发牌员所说："唯一能赌赢的方法就是在刚进来的那一刻转身离开。"</li>
+    <li><strong>知足之下已获够多：</strong>知足不是保守主义。要知道自己的饭量有多大，唯一的方法是吃到吐为止——但呕吐的痛苦是任何美食都无法弥补的。很多人却要到破产时才会停下逐利的脚步。</li>
+    <li><strong>分清什么不可冒险：</strong>刑满释放的顾磊杰声称"不要太看重名誉"——这是他能得到的最糟糕的教训。事实上，名誉是无价的，自由和独立是无价的，家人朋友是无价的，幸福是无价的。留住它们的最好方法，就是懂得什么时候该停止冒险。</li>
+  </ul>
+
+  <figure class="quote"><blockquote>现代资本擅长创造两种东西：财富和嫉妒。</blockquote><figcaption>—— 第3章</figcaption></figure>
+  <figure class="quote"><blockquote>冒着失去重要东西的风险去争取并不重要的东西的行为毫无道理可言。</blockquote><figcaption>—— 第3章（巴菲特评长期资本管理公司）</figcaption></figure>
+</section>
+
+<section class="chapter" id="ch-4">
+  <div class="ch-kicker">第四章 · CHAPTER 04</div>
+  <h2 class="ch-title">复利之谜</h2>
+  <p class="ch-sub">巨大的结果并不需要巨大的力量——它只需要微小的增长被不断重复和累积。</p>
+  <blockquote class="epigraph"><p>地球冰川形成的关键并不一定是大量的降雪，而是雪能累积下来，无论量有多少。</p><cite>—— 冰川学家 格温·舒尔茨</cite></blockquote>
+
+  <p class="lead">冰期的成因并非极寒的冬季，而是凉爽的夏季：夏天没能融尽前冬的残雪，残雪让下一个冬季积雪更易累积，反射更多阳光、进一步降温，循环往复，一片不被注意的薄冰最终把整个地球变成茫茫冰川。理财也是如此——如果一个事物不断重复和累积，哪怕只有一点儿微小的增长，起点虽低，最终却可能产生超乎想象的结果。</p>
+
+  <h3 class="kp"><span class="kp-n">01</span>845亿美元的秘密：时间是唯一的秘诀</h3>
+  <p>市面上有两千多部阐述巴菲特投资理念的图书，却很少有人关注一个最简单的事实：他拥有如此巨额的财富，不只是因为他是优秀的投资家，更是因为他的投资生涯从孩子时就开始了。在他写下这些文字的时候，巴菲特的金融净资产为845亿美元，其中842亿是在50岁之后赚到的，815亿是在65岁之后赚到的——他从可以去领退休金的年龄开始，赚到了其中的绝大部分。巴菲特从10岁起便把投资当成一项事业，到30岁已拥有100万美元身家（考虑通货膨胀约合现在的930万美元）。做一个思考实验：假如他也像多数人那样在二三十岁探索世界、寻找热情，30岁时的身家也许只有2.5万美元；即使这笔钱此后同样以出色的约22%的年回报率增长，但到60岁便结束投资生涯含饴弄孙——那么今天他的财富只有约1,190万美元，比真实的845亿少了99.9%。他有高超的投资技巧，但秘诀在于时间。</p>
+  <p>换个角度：巴菲特是有史以来最富有的投资者，却不是回报率最高的。文艺复兴科技公司的吉姆·西蒙斯自1988年起以每年66%的复利速度增长身家——是巴菲特约22%年复利率的三倍——但其金融净资产为210亿美元，仅为巴菲特的25%。原因是西蒙斯直到50岁才找准投资道路，投资时长不足巴菲特的一半；若他也投资70年之久，以66%的年复利率计算，其财富将是63,900,781,780,748,160,000美元——一串无法想象的天文数字。</p>
+
+  <div class="fig-cap">图 4-1 ｜ 巴菲特的财富积累曲线：845亿中的842亿来自50岁以后</div>
+  <div class="svg-wrap">
+    <svg viewBox="0 0 900 520" width="100%" role="img" aria-label="巴菲特财富积累曲线图">
+      <!-- 绘图区网格 -->
+      <g stroke="var(--line)" stroke-width="1">
+        <line x1="90" y1="430" x2="860" y2="430"/>
+        <line x1="90" y1="375.7" x2="860" y2="375.7"/>
+        <line x1="90" y1="321.4" x2="860" y2="321.4"/>
+        <line x1="90" y1="267.1" x2="860" y2="267.1"/>
+        <line x1="90" y1="212.9" x2="860" y2="212.9"/>
+        <line x1="90" y1="158.6" x2="860" y2="158.6"/>
+        <line x1="90" y1="104.3" x2="860" y2="104.3"/>
+        <line x1="90" y1="50" x2="860" y2="50"/>
+        <!-- 50岁 / 65岁 参考竖线 -->
+        <line x1="475" y1="232" x2="475" y2="430" stroke-dasharray="4 4"/>
+        <line x1="619.4" y1="165" x2="619.4" y2="430" stroke-dasharray="4 4"/>
+      </g>
+      <!-- 坐标轴刻度文字 -->
+      <g fill="var(--ink-soft)" font-size="14">
+        <text x="82" y="434" text-anchor="end">1万</text>
+        <text x="82" y="379.7" text-anchor="end">10万</text>
+        <text x="82" y="325.4" text-anchor="end">100万</text>
+        <text x="82" y="271.1" text-anchor="end">1000万</text>
+        <text x="82" y="216.9" text-anchor="end">1亿</text>
+        <text x="82" y="162.6" text-anchor="end">10亿</text>
+        <text x="82" y="108.3" text-anchor="end">100亿</text>
+        <text x="82" y="54" text-anchor="end">1000亿</text>
+        <text x="90" y="452" text-anchor="middle">1940</text>
+        <text x="186" y="452" text-anchor="middle">1950</text>
+        <text x="282.5" y="452" text-anchor="middle">1960</text>
+        <text x="379" y="452" text-anchor="middle">1970</text>
+        <text x="475" y="452" text-anchor="middle">1980</text>
+        <text x="571" y="452" text-anchor="middle">1990</text>
+        <text x="667.5" y="452" text-anchor="middle">2000</text>
+        <text x="763.8" y="452" text-anchor="middle">2010</text>
+        <text x="860" y="452" text-anchor="middle">2020</text>
+        <text x="475" y="478" text-anchor="middle">年份（横轴）· 纵轴为对数刻度（美元）</text>
+      </g>
+      <!-- 反事实曲线：30岁才开始、60岁退休 -->
+      <path d="M282.5,408 C313,391 344,375 379,360 C410,344 441,327 475,311 C506,296 537,282 571.3,267" fill="none" stroke="var(--green)" stroke-width="3"/>
+      <line x1="571.3" y1="267" x2="860" y2="267" stroke="var(--green)" stroke-width="2" stroke-dasharray="6 5"/>
+      <circle cx="282.5" cy="408" r="5" fill="var(--green)"/>
+      <circle cx="571.3" cy="267" r="5" fill="var(--green)"/>
+      <!-- 巴菲特实际曲线 -->
+      <path d="M282.5,321.4 C313,306 344,291 378.8,276.8 C410,264 441,246 475,232.3 C506,219 537,203 571.3,187.7 C587,180 602,172 619.4,165.5 C636,159 650,150 667.5,143.1 C700,131 731,113 763.8,98.5 C795,84 828,68 860,53.9" fill="none" stroke="var(--gold)" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="282.5" cy="321.4" r="6" fill="var(--gold)"/>
+      <circle cx="475" cy="232.3" r="6" fill="var(--gold)"/>
+      <circle cx="619.4" cy="165.5" r="6" fill="var(--gold)"/>
+      <circle cx="860" cy="53.9" r="6" fill="var(--gold)"/>
+      <!-- 起点：10岁开始 -->
+      <circle cx="103" cy="418" r="5" fill="var(--gold)"/>
+      <g fill="var(--ink)" font-size="14">
+        <text x="112" y="412">10 岁 · 开始投资（约1940年）</text>
+        <text x="292" y="308">30 岁 · 身家 100 万美元</text>
+        <text x="292" y="424" fill="var(--ink-soft)">假设：30 岁才开始（本金约 2.5 万美元）</text>
+        <text x="581" y="256">60 岁退休 · 此后不再增长</text>
+        <text x="485" y="222">50 岁后赚到 842 亿</text>
+        <text x="629" y="155">65 岁后赚到 815 亿（占 96%）</text>
+        <text x="852" y="44" text-anchor="end">如今 · 约 845 亿美元</text>
+        <text x="852" y="290" text-anchor="end">终局仅约 1,190 万美元（少 99.9%）</text>
+      </g>
+      <!-- 图例 -->
+      <g font-size="14">
+        <rect x="110" y="62" width="300" height="64" fill="var(--ink)" opacity="0.05"/>
+        <line x1="122" y1="82" x2="158" y2="82" stroke="var(--gold)" stroke-width="4"/>
+        <text x="166" y="87" fill="var(--ink)">巴菲特实际财富（10 岁起持续投资）</text>
+        <line x1="122" y1="108" x2="158" y2="108" stroke="var(--green)" stroke-width="3" stroke-dasharray="6 5"/>
+        <text x="166" y="113" fill="var(--ink)">假设 30 岁才开始、60 岁退休（同样约 22% 年化）</text>
+      </g>
+    </svg>
+  </div>
+  <p class="fn">说明：纵轴为对数刻度。关键节点数值均取自原书（845亿／842亿／815亿／100万美元／1,190万美元／约22%年化收益）；中间年份走势为按该收益率绘制的示意插值，用于呈现量级差异。</p>
+
+  <h3 class="kp"><span class="kp-n">02</span>线性直觉，遮蔽了指数现实</h3>
+  <p>线性思考远比指数思考符合直觉：心算9个8相加得72轻而易举，心算9个8相乘（结果是134,217,728）却让人脑袋爆炸。计算机硬盘的历史即是明证——1950年到1990年，容量只增加了296M；而从1990年到今天，容量增加了100,000,000M。连比尔·盖茨都在2004年批评新版Gmail"没人需要1G那么大的容量"。复利的反直觉特性让我们忽视其潜在价值，把注意力转向别处。市场上有很多关于经济周期和交易策略的书，但最有力量的一本应该叫《静下心来，耐心等待》——它只需一页，印着经济长期增长的表格。</p>
+
+  <div class="callout insight"><strong>核心观点</strong>　好的投资并不一定意味着长期回报最高——高回报往往是一次性的，很难重复。好的投资是可以持续获得不错的收益并能长期重复的投资，这正是复利开始大显身手的地方。不能指责人们把全部精力投入预期回报最高的领域，但真正的答案朴素得不合直觉：耐心等待。</div>
+
+  <figure class="quote"><blockquote>他的确有高超的投资技巧，但是秘诀在于时间。</blockquote><figcaption>—— 第4章</figcaption></figure>
+  <figure class="quote"><blockquote>巨大的结果并不一定需要巨大的力量。</blockquote><figcaption>—— 第4章</figcaption></figure>
+</section>
+
+<section class="chapter" id="ch-5">
+  <div class="ch-kicker">第五章 · CHAPTER 05</div>
+  <h2 class="ch-title">致富 vs. 守富</h2>
+  <p class="ch-sub">致富的方式有千万种，守富的方式只有一种：节俭，外加谨小慎微。</p>
+  <blockquote class="epigraph"><p>成功的投资并不需要你一直做出成功的决定。你只要做到一直不把事情搞砸就够了。</p><cite>—— 摩根·豪泽尔</cite></blockquote>
+
+  <p class="lead">如果要用一个词概括财务上的成功，那就是"生存"。致富需要冒险精神、乐观心态和放手一搏的勇气；守富恰恰相反——它需要谦逊和敬畏之心，需要清楚财富来得有多快、去得就有多容易，需要承认财富中有一部分源自运气，因而不要指望无限复制过去的成功。</p>
+
+  <div class="case-card">
+    <div class="case-head"><span class="case-name">杰西·利弗莫尔与亚伯拉罕·日耳曼斯基</span><span class="case-meta">纽约 · 1929—1930年代</span></div>
+    <p>利弗莫尔是他那个时代美国最伟大的股票交易员，30岁前的金融资产已达相当于现在1亿美元的水平。1929年10月股市崩盘那一周，市值蒸发超过三分之一——而他一直在做空市场，仅一个交易日就赚到相当于如今30多亿美元的财富，成了世界上最富有的人之一。同一时刻，房地产开发商日耳曼斯基因把一切押注在持续上涨的股市中而绝望失踪：目击者看到他在交易所附近一边走向百老汇，一边把自动收报机的纸条撕成碎片撒在人行道上——那是人们所知他生前的最后一幕。</p>
+    <p>四年后命运再度交汇：大成功后的利弗莫尔愈发自信，赌注越下越大，最终债台高筑、倾家荡产，1933年曾离奇失踪两天，最终选择结束自己的生命。两人有一个共同的性格特征：有多擅长致富，就有多不擅长守富。</p>
+  </div>
+
+  <h3 class="kp"><span class="kp-n">01</span>巴菲特做对了什么？先看他没做什么</h3>
+  <ul class="frame-list">
+    <li><strong>没有让自己债务缠身。</strong></li>
+    <li><strong>没有惊慌抛售：</strong>在他经历的14次经济衰退中，始终没有恐慌性地卖出金融资产。</li>
+    <li><strong>没有损害商业声誉。</strong></li>
+    <li><strong>不依赖单一策略：</strong>不依赖单一的世界观或某种已经过时的风潮。</li>
+    <li><strong>不依赖别人的资金：</strong>通过上市公司管理投资意味着投资者不能撤资。</li>
+    <li><strong>没有拼到精疲力竭：</strong>从未放弃或退休。</li>
+  </ul>
+  <p>他生存了下来，而生存赋予了他的投资持久性——从10岁开始不间断地投资到89岁以后，这是复利能创造奇迹的根本原因。红杉资本总裁迈克尔·莫里茨把公司40年的成功归于同一件事："我们一直都害怕被行业淘汰……不能躺在昨天的光环之上。"曾经上市并获得成功的公司中有40%随时间失去了全部价值；《福布斯》400富豪榜平均每10年约有20%的人消失，且与死亡或财产转移无关。</p>
+
+  <div class="case-card">
+    <div class="case-head"><span class="case-name">里克·盖林：太心急的第三人</span><span class="case-meta">伯克希尔·哈撒韦 · 1973—1974</span></div>
+    <p>在巴菲特与芒格的组合之外，40年前还有第三名成员里克·盖林——同样聪明，一起投资、一起面试业务经理。但在1973—1974年的经济衰退中，他用保证金贷款撬动投资；两年间股市下跌将近70%，他被追缴保证金，不得不把自己持有的伯克希尔股票以每股不到40美元的价格卖给巴菲特。巴菲特的评价是："查理和我一直都知道，我们会变得非常富有，但我们并不急着变富。里克和我们一样聪明，但他太心急了。"三人同样擅长致富，但只有两人拥有守富的技能。</p>
+  </div>
+
+  <h3 class="kp"><span class="kp-n">02</span>生存至上的三条推论</h3>
+  <ul class="frame-list">
+    <li><strong>财富安全高于巨大回报：</strong>只要财富安全，坚持足够长的时间，复利就会创造奇迹。牛市中持有现金固然煎熬，但它帮你逃过在错误时刻走投无路抛售股票的一劫——这一劫的价值可能超过多次巨额回报的总和。</li>
+    <li><strong>为意外做好预案：</strong>几乎没有规划能在第一次进入现实世界时就获得成功。好的规划会充分接纳意外并为错误留出空间——安全边际不代表保守，它是通过提高生存的概率来增加成功的可能；安全边际越大，你为满意结果所需付出的努力越小。</li>
+    <li><strong>乐观与警觉并存：</strong>过去170年，美国经历了9次主要战争（130万人死亡）、33次经济衰退（累计48年，无一被成功预测）、至少102次逾10%的股市跌幅和12次市值蒸发三分之一——同期生活水平却提高了20倍。你需要用短期的警觉让自己活下来，才能看到长期的乐观结果。</li>
+  </ul>
+
+  <figure class="quote"><blockquote>拥有优势和生存下来完全是两回事，前者需要后者。你需要不惜一切代价避免破产。</blockquote><figcaption>—— 第5章（纳西姆·塔勒布语）</figcaption></figure>
+  <figure class="quote"><blockquote>许多聪明人的失败归根到底都是太过自负造成的。</blockquote><figcaption>—— 第5章（杰西·利弗莫尔的反思）</figcaption></figure>
+</section>
+
+<section class="chapter" id="ch-6">
+  <div class="ch-kicker">第六章 · CHAPTER 06</div>
+  <h2 class="ch-title">尾部的胜利</h2>
+  <p class="ch-sub">你即使有一半的时间都在犯错，到最后依然能赢。</p>
+  <blockquote class="epigraph"><p>我拍了30年电影，从中发现了一个简单的道理：有些作品会成功，有些不会。没必要去深究哪些会，继续拍下去就行。</p><cite>—— 布拉德·皮特</cite></blockquote>
+
+  <p class="lead">在商业和投资领域，尾事件——低发生率、高影响力的少数事件——决定一切。即便一半的时间都在看走眼，你依然可能致富；这也意味着我们大大低估了失败的频率，以至于失败发生时总是反应过度。</p>
+
+  <div class="case-card">
+    <div class="case-head"><span class="case-name">海因茨·贝格鲁恩：像指数基金一样收藏</span><span class="case-meta">艺术品交易商 · 2000年</span></div>
+    <p>1936年逃离纳粹德国的贝格鲁恩，到20世纪90年代已成为史上最成功的艺术品交易商之一。2000年，他将收藏的部分毕加索、布拉克、克利和马蒂斯作品以1亿多欧元卖给德国政府——由于过于划算，这笔交易实际上被视作捐赠，藏品的私人市场价超过10亿美元。秘密在于：他像运作指数基金一样大量买入艺术品，然后静静等待其中的优质标的脱颖而出。或许其收藏中99%的作品从未升值，但剩下的1%是毕加索，其他一切都无关紧要。</p>
+  </div>
+
+  <h3 class="kp"><span class="kp-n">01</span>尾部驱动一切：从迪士尼到罗素3000</h3>
+  <p>华特·迪士尼的第一个工作室以破产告终，到20世纪30年代中期已创作400多部动画，受欢迎者众、赚钱者寡。改变一切的是83分钟的《白雪公主和七个小矮人》：仅1938年前6个月就为其赚到800万美元，远超以往任何盈利，公司从此脱胎换骨。风险投资的数据同样残酷：2004—2014年超过2.1万起创业融资中，65%亏损，仅0.5%（约100家）获得超过50倍的回报——正是这极小的部分构成了行业收入的主要来源。大型上市公司亦然：罗素3000指数成分股中40%跌去至少70%的价值且再未恢复（如曾出品《终结者2》《本能》的卡洛克电影公司，1996年破产、市值归零），而该指数的全部回报来自表现超出平均值至少2个标准差的7%的企业——自1980年以来指数整体增长了73倍。2018年，亚马逊与苹果分别为标普500指数贡献了6%和7%的回报。</p>
+
+  <h3 class="kp"><span class="kp-n">02</span>你只需在对的那几天做对</h3>
+  <table class="tbl">
+    <thead><tr><th>投资者（1900—2019年，每月1美元）</th><th>策略</th><th>期末金额</th></tr></thead>
+    <tbody>
+      <tr><td>苏</td><td>无论牛熊，每月照常投入股市</td><td>435,551美元</td></tr>
+      <tr><td>吉姆</td><td>经济衰退时清仓持币，衰退结束后再回市场</td><td>257,386美元</td></tr>
+      <tr><td>汤姆</td><td>衰退开始6个月后卖出，结束后6个月才回来</td><td>234,476美元</td></tr>
+    </tbody>
+  </table>
+  <p>1,428个月中只有300多个衰退月；在那22%的时间里保持冷静的苏，比另外两人多赚了近四分之三。拿破仑对军事天才的定义同样适用于投资：当身边所有人都进入非理性状态时还能继续正常行事的人。巴菲特一生持有过400～500只股票，收益中的大部分来自其中的10只；芒格补充道，去掉几笔顶级投资，伯克希尔的长期业绩其实相当普通。投资高手犯的错误并不会比普通人少——区别在于他们对的时候能抓住多少。</p>
+
+  <div class="callout insight"><strong>核心观点</strong>　重要的不是你对还是错，而是你对的时候能赚到多少、错的时候会损失多少（索罗斯）。既然是尾事件驱动一切，那么很多事出错、瓦解、失败就是再正常不过的事——亚马逊的Fire Phone失败了，贝索斯却说"我们现在正着手准备更大的失败"。</div>
+
+  <figure class="quote"><blockquote>如果你在这个行业表现非常出色，那么你的想法在10次里也不过只有6次是对的。</blockquote><figcaption>—— 第6章（彼得·林奇语）</figcaption></figure>
+  <figure class="quote"><blockquote>你即使有一半的时间都在犯错，到最后依然能赢。</blockquote><figcaption>—— 第6章</figcaption></figure>
+</section>
+
+<section class="chapter" id="ch-7">
+  <div class="ch-kicker">第七章 · CHAPTER 07</div>
+  <h2 class="ch-title">自由</h2>
+  <p class="ch-sub">时间自由是财富能带给你的最大红利。</p>
+  <blockquote class="epigraph"><p>富有的最高级形式是，每天早上起床后你都可以说："今天我能做我想做的任何事。"</p><cite>—— 摩根·豪泽尔</cite></blockquote>
+
+  <p class="lead">如果幸福的分数有一个公分母——一种普遍的快乐源泉——那就是对生活的全面掌控：在自己喜欢的任何时候、和自己喜欢的对象、做想做的事，而且想做多久就做多久。这就是金钱能带给我们的最大红利。</p>
+
+  <h3 class="kp"><span class="kp-n">01</span>掌控感，是预测幸福最可靠的指标</h3>
+  <p>心理学家安格斯·坎贝尔（Angus Campbell，1910年生）研究的不是心理障碍，而是什么带给人幸福。他在1981年出版的《美国人的幸福感》中指出：不能按收入、地区或受教育程度判断谁更快乐，每个类别中都有很多人长期不快乐；而幸福最强大的公分母很简单——"与我们考虑过的任何客观生活条件相比，对自己的生活拥有强烈的掌控感是预测幸福这种积极感受的一项更可靠的指标。"不是工资多少，不是房子大小，也不是工作好坏，而是对自己想做什么、什么时候做、和谁一起做拥有掌控能力。金钱最大的内在价值，正在于它能赋予你掌控自己时间的能力：一小笔财富意味着生病时请几天假不至于入不敷出；更多财富意味着失业后可以从容等待更好的机会，面对老板时不至于如履薄冰；6个月的应急存款、一份时间灵活的工作、自主选择的退休时间——财富提供的时间和选项，没有任何奢侈品比得上。</p>
+
+  <div class="case-card">
+    <div class="case-head"><span class="case-name">德雷克·西弗斯：1.2万美元买来的自由</span><span class="case-meta">曼哈顿 · 22岁</span></div>
+    <p>西弗斯年轻时年收入约2万美元，每月生活开支1,000美元，两年存下1.2万美元。有了这笔钱，他辞掉工作成为全职音乐家——每月接一些演出邀约即可支付生活费。"这样一来，我就自由了。"后来他卖掉公司，却说那只意味着银行存款增加；对他的人生产生真正影响的，是22岁那年的1.2万美元。</p>
+  </div>
+  <p>反面同样成立：作者大学时梦寐以求进入投资银行，大三终于在洛杉矶获得暑期实习——上班第一天他就明白了银行为何付那么多钱：工作时长和辛苦程度超过人类承受的极限，"如果你周六不来上班，周日就不用来了"。这份他喜欢且努力想做好、却无法掌控时间的工作，成了他人生中最悲惨的经历之一，为期4个月的实习只坚持了1个月。心理学称之为"抗拒"（reactance）：当人们觉得没有话语权、选择被他人代做时，即使本来乐意做的事也会拒绝。</p>
+
+  <h3 class="kp"><span class="kp-n">02</span>更富有了，为什么没有更快乐</h3>
+  <p>美国是世界历史上最富有的国家，却几乎没什么证据表明美国人比20世纪50年代更幸福。盖洛普2019年对140个国家15万人的调查显示：约45%的美国人表示前一天有过"非常忧虑"的情绪（全球平均39%），55%表示"压力巨大"（世界其他地区仅35%）。部分原因在于：美国人把钱花在更大更好的商品上，同时放弃了对时间的控制——前者的好处会被后者的害处抵消。家庭收入中位数从1955年的2.9万美元涨到2019年的6.2万美元，住宅面积中位数从1950年的91平方米涨到2018年的226平方米，但今天38%的工作是"经理""高级职员""专业人士"式的决策类工作，另有41%是需要动脑的服务类工作——工具变成了永不离开你的大脑，下班后工作仍在通勤路上、晚餐桌旁和凌晨3点的失眠中继续。现代工厂不再是场所，而是一天的时间本身。控制时间既是幸福感的关键，我们便无须惊讶：更富有了，却没有更快乐。</p>
+
+  <h3 class="kp"><span class="kp-n">03</span>一千位老人的答案</h3>
+  <p>老年学家卡尔·皮尔默在《有关生活的30条经验》中采访了1,000名美国老年人：没有一个人表示想变得快乐就该拼命工作赚钱买东西；没有一个人表示必须比周围的人更富有才算成功；没有一个人表示应根据期望收入来选择工作。他们看重的是真诚的友谊、参与比个体更伟大的事业、与子女相处的大量闲暇——"比起你的钱（或者你的钱能买到的东西），你的孩子们更想要的是和你在一起的体验。"历经世事沧桑者的忠告，与本章的结论殊途同归。</p>
+
+  <figure class="quote"><blockquote>做自己喜欢却无法掌控时间的事，和自己讨厌的事没什么区别。</blockquote><figcaption>—— 第7章</figcaption></figure>
+  <figure class="quote"><blockquote>时间自由是财富能带给你的最大红利。</blockquote><figcaption>—— 第7章</figcaption></figure>
+</section>
+
+
+<!-- ======== _tmp_frag_b.html ======== -->
+<section class="chapter" id="ch-8">
+  <div class="ch-kicker">第八章 · CHAPTER 08</div>
+  <h2 class="ch-title">豪车悖论</h2>
+  <p class="ch-sub">其实别人不会像你那样在意你有多少财产。</p>
+  <blockquote class="epigraph"><p>我们都想通过财富来告诉其他人，自己应该受到他们的爱慕与敬仰。但事实上，其他人常常会跳过敬仰你这一步。</p><cite>—— 摩根·豪泽尔</cite></blockquote>
+
+  <p class="lead">豪泽尔年轻时在洛杉矶做泊车员，驾驶过法拉利、兰博基尼与劳斯莱斯。正是这段与顶级豪车朝夕相处的经历，让他看清了一个被无数消费者忽略的心理盲区。</p>
+
+  <h3 class="kp"><span class="kp-n">01</span>你羡慕的从来不是车主本人</h3>
+  <p>当看见一辆漂亮的车驶过时，人们很少想"开那辆车的家伙真酷"，而是想"如果那辆车是我的，别人一定会觉得我很酷"。换言之，旁观者把你的财富当作标尺，去表达<em>他自己</em>渴望被爱慕与敬仰的愿望——注意力的落点是车，而不是坐在驾驶座上的人。豪车如此，豪宅、昂贵珠宝、华丽服饰同样如此。</p>
+  <p>这不是要人放弃追求财富与好车的梦想，而是提醒：用金钱购买来的尊重和羡慕，可能远比你想象中少。如果获得尊重是目标，那么比起豪车，谦虚、善良和同情心等人格特质才能帮你获得更多。</p>
+
+  <div class="callout insight"><strong>核心观点</strong>　你真想得到的不是昂贵的物品本身，而是他人的尊重与羡慕；但你希望打动的那批人，恰恰只会盯着你的东西畅想自己拥有它的样子。花钱买不来敬意，这笔交易从一开始就注定亏损。</div>
+
+  <div class="case-card">
+    <div class="case-head"><span class="case-name">写给儿子的一封信</span><span class="case-meta">《金钱心理学》第8章</span></div>
+    <p>儿子出生后，豪泽尔写道：你或许觉得你需要昂贵的车子、豪华的手表和很大的房子，但你并非真想得到这些东西本身。你真想得到的是来自他人的尊重和羡慕——可惜，别人不会给你，尤其是那些你最希望得到其尊重和羡慕的人。这段话是"豪车悖论"最凝练的家庭版本。</p>
+  </div>
+
+  <figure class="quote"><blockquote>当你看见有人开着一辆漂亮的车子时，你很少会想"哇，开那辆车的家伙真酷"，相反，你只会想"哇，如果那辆车是我的，别人一定会觉得我很酷"。</blockquote><figcaption>—— 第8章</figcaption></figure>
+  <figure class="quote"><blockquote>比起豪车，谦虚、善良和同情心等人格特质才能帮你获得更多尊重。</blockquote><figcaption>—— 第8章</figcaption></figure>
+</section>
+
+<section class="chapter" id="ch-9">
+  <div class="ch-kicker">第九章 · CHAPTER 09</div>
+  <h2 class="ch-title">财富是你看不见的那些</h2>
+  <p class="ch-sub">炫富是让财富流失的最快途径。</p>
+  <blockquote class="epigraph"><p>财富是由你没有去购买的豪车、钻石、手表、服装和没有升级到的头等舱座位体现的。财富是由未被转化为实物的金融资产体现的。</p><cite>—— 摩根·豪泽尔</cite></blockquote>
+
+  <p class="lead">我们只能看见别人摆在外面的东西——车子、房子、社交网络上的照片——却看不见银行账户与经纪账户结单。于是判断贫富的标准天然向"看得见的消费"倾斜，而这恰恰是错的。</p>
+
+  <h3 class="kp"><span class="kp-n">01</span>"有钱"与"富有"是两回事</h3>
+  <p>这个区别绝不只在字面上，无数人正因不懂它而在金钱上做出错误决定。"有钱"与你当前的收入水平挂钩：开十万美元豪车的人哪怕靠贷款买车，也需要一定收入才能负担月供，因此发现有钱人并不难。但富有是看不见的——只有没被花掉的收入才会成为财富。财富存在于你尚未做出购物决定的时候，它的价值在于提供的选择、灵活度和成长空间。</p>
+  <table class="tbl">
+    <thead><tr><th>维度</th><th>有钱（rich）</th><th>富有（wealthy）</th></tr></thead>
+    <tbody>
+      <tr><td>本质</td><td>当前的收入水平</td><td>尚未花掉的收入</td></tr>
+      <tr><td>可见性</td><td>外显：豪车、豪宅、社交照片</td><td>隐蔽：储蓄额、退休金、投资组合</td></tr>
+      <tr><td>时间属性</td><td>只描述此刻的消费能力</td><td>指向未来的购买力与自由度</td></tr>
+      <tr><td>真正价值</td><td>展示给别人看</td><td>选择权、灵活度和成长空间</td></tr>
+    </tbody>
+  </table>
+
+  <div class="case-card">
+    <div class="case-head"><span class="case-name">罗杰与他的保时捷</span><span class="case-meta">洛杉矶 · 泊车员岁月</span></div>
+    <p>开保时捷的罗杰让所有人心生猜想，直到某天他换成一辆老旧本田——因为还不起车贷，保时捷被收回了。他谈起此事毫无难为情，如同神色自若谈论下一场比赛的运动员。关于他事业成功的全部猜想都错了，而洛杉矶有无数个罗杰。看到一辆十万美元的豪车，唯一能确定的数据只是：买下它之后，车主的财富少了十万美元——或者负债多了十万美元。</p>
+  </div>
+
+  <div class="case-card">
+    <div class="case-head"><span class="case-name">蕾哈娜起诉财务顾问</span><span class="case-meta">News24 · 2014</span></div>
+    <p>歌手蕾哈娜因大手大脚几近破产，起诉了自己的财务顾问。顾问回应："如果你花钱买了东西，那么你最终只会拥有这些东西，当然不会有钱了。这道理还需要我告诉她吗？"这个反向句令人发笑，答案却是肯定的：人们确实需要被提醒。说想成为百万富翁时，多数人的真实意思是"我希望有一百万可以随便花"——这与富有的定义刚好相反。</p>
+  </div>
+
+  <h3 class="kp"><span class="kp-n">02</span>锻炼与饮食的类比</h3>
+  <p>《人体简史》引用的一项美国研究发现：人们对一次锻炼燃烧能量的估值比实际高出四倍，随后平均摄入的能量又大约是消耗量的两倍——运动的效果被大餐抵消了。变富的道理一模一样："我运动过了，要用一顿大餐犒劳自己"的心态，就是"我刚拿到年终奖，该升级一下座驾"的心态。<strong>富有意味着拒绝这顿大餐</strong>——单纯消耗掉能量而不额外补充。这很难，需要强大的自制力，而时间会让不同选择之间的差异变成巨大的鸿沟。</p>
+
+  <div class="callout warn"><strong>常见误区</strong>　财富看不见的特性让它难以被模仿和学习。罗纳德·里德生前做不了任何人的理财榜样——他财富中的每一分钱都是隐蔽的。就像不读伟大作家的作品就很难学会写作，你很难通过自己看不见的事物学习。世界上有很多低调却真正富有的人，也有很多看上去很有钱却生活在破产边缘的人。</div>
+
+  <div class="callout insight"><strong>核心观点</strong>　投资家比尔·曼写道："让自己感到富有的最佳方式莫过于把大笔钱花在那些真正美好的东西上。但想真变得富有，你需要做的是花自己已经有的钱，而不是透支还不属于自己的钱。"更透彻一步：想变得富有，唯一的途径就是别去消耗你拥有的财富——这既是积累财富的唯一方式，也是富有的真正定义。富有的前提是克制。</div>
+
+  <figure class="quote"><blockquote>财富是由你没有去购买的豪车、钻石、手表、服装和没有升级到的头等舱座位体现的。</blockquote><figcaption>—— 第9章</figcaption></figure>
+  <figure class="quote"><blockquote>想真变得富有，唯一的途径就是别去消耗你拥有的财富。这不仅仅是积累财富的唯一方式，也是富有的真正定义。</blockquote><figcaption>—— 第9章</figcaption></figure>
+</section>
+
+<section class="chapter" id="ch-10">
+  <div class="ch-kicker">第十章 · CHAPTER 10</div>
+  <h2 class="ch-title">存钱</h2>
+  <p class="ch-sub">你能控制的唯一因素恰恰决定了最重要的一点。这是多么奇妙啊。</p>
+  <blockquote class="epigraph"><p>财富积累与你的收入或投资回报率关系不大，而与你的储蓄率关系很大。</p><cite>—— 摩根·豪泽尔</cite></blockquote>
+
+  <p class="lead">存钱本不该需要劝说，但现实中很多人不会主动存钱：他们或者认为自己存不下钱，或者认为自己不需要存钱。本章给出的回答极其朴素——财富积累与你的收入或投资回报率关系不大，而与你的储蓄率关系很大。</p>
+
+  <h3 class="kp"><span class="kp-n">01</span>能源危机的启示：效率比勘探更可靠</h3>
+  <p>二十世纪七十年代，世界似乎即将石油耗尽。但危机并未到来，主要原因既不是发现了更多油田，也不是开采技术的跃升，而是利用效率的提高：今天美国国内生产总值中每一美元消耗的能源比1950年减少了60%；如今全部机动车辆每加仑汽油的平均行驶里程已是1975年的两倍——1989年的福特金牛是18英里，2019年一台超大型SUV雪佛兰郊区也能跑18.1英里。自1975年以来，美国油气产量增加了65%，而效率提升让同样能源的产出翻了不止一倍。</p>
+  <p>关键在于：勘探更多能源依赖地质、地缘政治等因素，充满不确定性；而更高效地利用能源，是你百分百能控制的事。金钱同理——投资回报始终笼罩在未知数中，个人的节俭和储蓄却是金融等式中控制力最强的部分，且百分百行得通。专业投资者每周花八十个小时研究，只为回报率多零点一个百分点；而他们的经济生活中有两三个百分点的浮动空间，只需略微调整生活方式就能充分利用。哪一端更重要，一目了然。</p>
+
+  <div class="fig-cap">图 4 ｜ 储蓄率决定论：两条收入路径的长期结果（示意）</div>
+  <div class="svg-wrap">
+    <svg viewBox="0 0 900 430" width="100%" role="img" aria-label="储蓄率决定论示意图：高收入低储蓄与普通收入高储蓄两条路径对比">
+      <!-- 网格 -->
+      <line x1="80" y1="90" x2="850" y2="90" stroke="var(--line)" stroke-width="1"/>
+      <line x1="80" y1="150" x2="850" y2="150" stroke="var(--line)" stroke-width="1"/>
+      <line x1="80" y1="210" x2="850" y2="210" stroke="var(--line)" stroke-width="1"/>
+      <line x1="80" y1="270" x2="850" y2="270" stroke="var(--line)" stroke-width="1"/>
+      <line x1="80" y1="330" x2="850" y2="330" stroke="var(--line)" stroke-width="1"/>
+      <!-- 坐标轴 -->
+      <line x1="80" y1="55" x2="80" y2="330" stroke="var(--ink-soft)" stroke-width="1.5"/>
+      <line x1="80" y1="330" x2="850" y2="330" stroke="var(--ink-soft)" stroke-width="1.5"/>
+      <!-- 轴刻度 -->
+      <line x1="75" y1="90" x2="80" y2="90" stroke="var(--ink-soft)" stroke-width="1"/>
+      <line x1="75" y1="150" x2="80" y2="150" stroke="var(--ink-soft)" stroke-width="1"/>
+      <line x1="75" y1="210" x2="80" y2="210" stroke="var(--ink-soft)" stroke-width="1"/>
+      <line x1="75" y1="270" x2="80" y2="270" stroke="var(--ink-soft)" stroke-width="1"/>
+      <line x1="238" y1="330" x2="238" y2="335" stroke="var(--ink-soft)" stroke-width="1"/>
+      <line x1="397" y1="330" x2="397" y2="335" stroke="var(--ink-soft)" stroke-width="1"/>
+      <line x1="556" y1="330" x2="556" y2="335" stroke="var(--ink-soft)" stroke-width="1"/>
+      <line x1="714" y1="330" x2="714" y2="335" stroke="var(--ink-soft)" stroke-width="1"/>
+      <text x="72" y="94" font-size="13" fill="var(--ink-soft)" text-anchor="end">高</text>
+      <text x="72" y="334" font-size="13" fill="var(--ink-soft)" text-anchor="end">0</text>
+      <text x="238" y="352" font-size="13" fill="var(--ink-soft)" text-anchor="middle">7.5</text>
+      <text x="397" y="352" font-size="13" fill="var(--ink-soft)" text-anchor="middle">15</text>
+      <text x="556" y="352" font-size="13" fill="var(--ink-soft)" text-anchor="middle">22.5</text>
+      <text x="714" y="352" font-size="13" fill="var(--ink-soft)" text-anchor="middle">30</text>
+      <text x="465" y="380" font-size="15" fill="var(--ink-soft)" text-anchor="middle">时间（年）</text>
+      <text x="30" y="200" font-size="15" fill="var(--ink-soft)" text-anchor="middle" transform="rotate(-90 30 200)">累计财富（示意）</text>
+      <!-- 公式条 -->
+      <rect x="110" y="62" width="360" height="34" rx="6" fill="none" stroke="var(--line)" stroke-width="1"/>
+      <text x="290" y="84" font-size="15" fill="var(--ink)" text-anchor="middle">财富积累 ＝ 收入 − 自我膨胀后的开销</text>
+      <!-- 路径A：高收入低储蓄（金） -->
+      <path d="M 85 322 C 300 312, 590 262, 845 178" fill="none" stroke="var(--gold)" stroke-width="3" stroke-linecap="round"/>
+      <!-- 路径B：普通收入高储蓄（绿） -->
+      <path d="M 85 326 C 300 306, 545 196, 845 88" fill="none" stroke="var(--green)" stroke-width="3" stroke-linecap="round"/>
+      <!-- 交叉点 -->
+      <line x1="412" y1="278" x2="412" y2="330" stroke="var(--ink-soft)" stroke-width="1" stroke-dasharray="4 4"/>
+      <circle cx="412" cy="278" r="6" fill="var(--gold)"/>
+      <circle cx="412" cy="278" r="3" fill="var(--green)"/>
+      <text x="424" y="262" font-size="14" fill="var(--ink)">选择权反超点（约第12年 · 示意）</text>
+      <!-- 端点标注 -->
+      <circle cx="845" cy="178" r="5" fill="var(--gold)"/>
+      <circle cx="845" cy="88" r="5" fill="var(--green)"/>
+      <text x="838" y="205" font-size="14" fill="var(--ink)" text-anchor="end">被动等待更高回报</text>
+      <text x="838" y="76" font-size="14" fill="var(--ink)" text-anchor="end">主动掌控储蓄率</text>
+      <!-- 图例 -->
+      <rect x="520" y="108" width="316" height="66" rx="6" fill="none" stroke="var(--line)" stroke-width="1"/>
+      <line x1="536" y1="128" x2="572" y2="128" stroke="var(--gold)" stroke-width="3"/>
+      <text x="582" y="133" font-size="14" fill="var(--ink)">年收入10万 · 存10%（年存1万）</text>
+      <line x1="536" y1="156" x2="572" y2="156" stroke="var(--green)" stroke-width="3"/>
+      <text x="582" y="161" font-size="14" fill="var(--ink)">年收入6万 · 存40%（年存2.4万）</text>
+      <!-- 底注 -->
+      <text x="850" y="412" font-size="13" fill="var(--ink-soft)" text-anchor="end">＊曲线为原理示意，非精确数据；核心变量是储蓄率——你唯一能完全掌控的一端。</text>
+    </svg>
+  </div>
+
+  <h3 class="kp"><span class="kp-n">02</span>欲望，才是开销的真正源头</h3>
+  <p>财富的价值与个人需求有关。假设两人净资产相同：一人年回报12%，另一人只有8%，但后者只需一半的开支就能感到快乐，前者却随财富增长不断抬升生活要求——回报率低的那个反而过得更好。基本物质需求满足之后，消费大体上便成了虚荣自我的反映，一种通过花钱展示自己有钱的方式。因此，增加财富最有效的方式不是提高收入，而是培养谦逊之心。把存款定义为"虚荣的自我与收入之差"，就明白为什么很多高收入者存不下钱：他们每天都在与炫耀和攀比的本能抗争。长期成功经营个人财富的人的共同点是：<strong>完全不在乎别人如何看待自己</strong>。财富积累更多时候与心理过程而非金融规律有关。</p>
+
+  <ul class="frame-list">
+    <li><strong>降低开支：</strong>开支减少，储蓄率自然提高——这是公式里你握有百分之百控制权的一端。</li>
+    <li><strong>减少欲望：</strong>当你的欲望减少，开支自然就会减少；学会用更少的钱获得同样的幸福感，欲望与所得之间就产生积极的落差。</li>
+    <li><strong>放下他人目光：</strong>当你不再关心别人怎么看你，欲望自然会减少——谦逊是储蓄率的杠杆。</li>
+  </ul>
+
+  <h3 class="kp"><span class="kp-n">03</span>存钱不需要特定的理由</h3>
+  <p>有人为还房贷存钱，有人为买车，有人为退休未雨绸缪——这些都很好，但存钱并不一定要为了日后买什么。<strong>你完全可以为存钱而存钱，事实上你就应该这样做，每个人都应该这样做。</strong>如果我们生活在一个一切符合预测的世界里，只为特定目标储蓄才是合理的；但现实世界并非如此。为无法预料的事存钱，即使出现最坏的情况，你也不会惊慌失措。</p>
+  <p>不为特定目标储蓄还有一个好处：你会拥有更多的选择和自由。你有底气一直持币等待，也可以随时把钱投入使用；存款给你充足的考虑时间，让你可以根据具体情况随时改变方向。这种回报大到无法赋予数字，也因其难以量化而被普遍忽视——但它比任何有形收益都更有价值。</p>
+
+  <div class="callout insight"><strong>隐形富豪的逻辑</strong>　对时间的灵活掌控是无形财富。有存款，你可以选择一份工资较低但更有价值的工作，也可以等待缺乏灵活度的人被迫抛售资产——那对你反而是更好的投资机会。就算存款利率为零，这种回报依然超乎寻常。在一个竞争全球化的时代，智力已不再是可靠的优势——每年SAT都有近六百人满分、七千人接近满分——而灵活度却是。时间和选择方面的更大控制权，已经成为当今世界最有价值的通行货币之一。</div>
+
+  <figure class="quote"><blockquote>即使你收入不高，你依然可以积累财富，但如果你的储蓄率不高，你绝不可能积累财富。</blockquote><figcaption>—— 第10章</figcaption></figure>
+  <figure class="quote"><blockquote>你每存一笔钱，就好像是从未来本可能属于他人的财富中拿来一部分，加入你自己的财富中。</blockquote><figcaption>—— 第10章</figcaption></figure>
+</section>
+
+<section class="chapter" id="ch-11">
+  <div class="ch-kicker">第十一章 · CHAPTER 11</div>
+  <h2 class="ch-title">合乎情理胜过绝对理性</h2>
+  <p class="ch-sub">你不是一份电子表格，而是一个有着七情六欲、经常头脑发昏的人。</p>
+  <blockquote class="epigraph"><p>在做投资决策时，不要试图保持绝对理性，而要做出对你而言合乎情理、也就是更好接受的选择。后者在现实中更容易做到，能让你长期坚持，而坚持对理财来说才是至关重要的一点。</p><cite>—— 摩根·豪泽尔</cite></blockquote>
+
+  <p class="lead">金融学理论从数学角度寻找最佳方案，但真实世界中的最佳投资方案，一定是能让我们晚上睡得安稳的方案。理论正确却在实际操作中违背人性的策略，注定无法执行到底。</p>
+
+  <div class="case-card">
+    <div class="case-head"><span class="case-name">瓦格纳-尧雷格的发热疗法</span><span class="case-meta">诺贝尔生理学或医学奖 · 1927</span></div>
+    <p>精神病学家朱利叶斯·瓦格纳-尧雷格注意到：梅毒病人若得了无关的持续发热的小病，症状反而渐渐好转——发热可以帮助身体对抗传染病。二十世纪初，他开始将疟原虫注入病人体内，以可控的高烧杀灭梅毒螺旋体（选用致病性较弱、可用奎宁治愈的疟疾）。经过"疟热疗法"，60%的病人康复，对照组仅约30%。他因此获得1927年诺贝尔奖。科学研究证实：体温每上升1℃，病毒复制速度减缓至原来的二百分之一。</p>
+    <p>然而发热至今仍被视为必须立刻清除的症状——原因很简单：发热带来痛苦，而人们不喜欢痛苦。希望自己发热是绝对理性的，但并不合乎情理。医生的职责不是简单治好病，而是用病人能接受的人性化手段治好病。</p>
+  </div>
+
+  <h3 class="kp"><span class="kp-n">01</span>马科维茨的五十对五十</h3>
+  <p>凭风险—回报数学均衡研究摘得诺贝尔经济学奖的马科维茨，被人问及如何投资时坦言：他想象到股市上行自己踏空、或股市下跌自己满仓时的糟糕心情，"我的投资原则就是把未来的后悔降到最低，所以我用一半钱买债券，一半钱买股票"。"把后悔降到最低"难以在理论上论证，却极易在现实中被验证。财经作家茨威格的评价一针见血：人既不是绝对理性的，也不是非理性的，我们只不过是凡人而已。马科维茨不过是一位现实的投资者，做出了对他而言合乎情理的决策。</p>
+
+  <div class="callout warn"><strong>绝对理性的陷阱：2:1杠杆退休方案</strong>　2008年耶鲁大学的研究建议年轻人以退休金余额两倍的保证金投入股市，随年龄增长再降杠杆。理论上，即使账户一度清零，只要坚持执行，退休后的财富比生命周期基金方案高90%。但这几乎不可能落实——没有哪个正常人能眼睁睁看着退休金清零而内心毫无波澜，继续按计划操作。他们会放弃策略，甚至起诉理财顾问。理论上是绝对理性，现实中是100%不切实际。</div>
+
+  <h3 class="kp"><span class="kp-n">02</span>坚持本身就是最大的参数</h3>
+  <p>在美国股市，投资者在一天中有所收益的历史概率约为50%，一年周期68%，十年周期88%，二十年周期则达到100%。影响收益表现相关性最大的因素，正是在经济不景气的年份对策略的长期坚持——任何能让你留在游戏中的因素都会增强你的优势。对自己投资的标的怀有感情并非弱点：如果你对持仓毫无感情，情况变糟时你很可能弃之而去；而对使命、产品、团队都合乎心意的公司，你至少会在低谷期觉得所做的事有意义，从而不轻言放弃。看似不够理性的选择背后，往往藏着可以被理性分析的原因。</p>
+  <p>本土偏好不理性，但若熟悉感能提供"把钱交给陌生人"所需的信任感，它就是合乎情理的；日内交易亏多赚少，但只要占比很小、不动摇多元化主体，也是合乎情理——乔西·布朗持有个股的理由是"我热爱股票……这是我的钱"。就连杰克·博格尔——低成本指数基金的旗手——也把自己的一部分钱投进儿子管理的高收费基金："我们会出于家庭原因做某些事……人生中本来就会有不一致的时候。"事实上，人生中很少有理论与现实一致的时候。</p>
+
+  <figure class="quote"><blockquote>现实中的最佳投资方案一定是能让我们晚上睡得安稳的方案。</blockquote><figcaption>—— 第11章</figcaption></figure>
+  <figure class="quote"><blockquote>人既不是绝对理性的，也不是非理性的。我们只不过是凡人而已。—— 杰森·茨威格</blockquote><figcaption>—— 第11章</figcaption></figure>
+</section>
+
+<section class="chapter" id="ch-12">
+  <div class="ch-kicker">第十二章 · CHAPTER 12</div>
+  <h2 class="ch-title">意外！</h2>
+  <p class="ch-sub">历史是对变化的研究，但具有讽刺性的是，人们却将历史当作预测未来的工具。</p>
+  <blockquote class="epigraph"><p>世界上总在发生过去从来没有发生过的事。—— 斯科特·萨根</p><cite>—— 摩根·豪泽尔引</cite></blockquote>
+
+  <p class="lead">深入研究经济史与投资史可取，因为历史能修正预期、提示前人常犯的错误；但历史无论如何都不是一张能够预测未来的路线图。把历史学家当预言家，是投资者最容易掉入的陷阱。</p>
+
+  <h3 class="kp"><span class="kp-n">01</span>尾事件塑造世界</h3>
+  <p>投资不是硬科学：它是规模巨大的一群人根据有限的信息、对关乎切身幸福的事情做出不完美决策的行为——正如费曼所言，"想象一下，如果电子有情感，物理学研究会变得多么困难"。历史上最重要的事件往往是史无前例的意外：大萧条、第二次世界大战、互联网泡沫、"9·11"事件、2005年前后的楼市崩盘。十九、二十两个世纪共出生150亿人，但希特勒、斯大林、普林西普、爱迪生、盖茨、马丁·路德·金寥寥数人便决定了世界的主要方向——0.00000000004%的人改写了全球格局。</p>
+  <p>尾事件的连锁反应远超直觉："9·11"之后美联储降息，催生房地产泡沫，进而引发金融危机；就业市场萎缩使成千上万的人涌入大学，造就1.6万亿美元助学贷款，其中10.8%违约。谁能凭直觉把19个劫机者和巨额助学贷款联系起来？意外的根源不在模型出错，而在因果链本身不可测——希特勒出生前九个月的某个晚上，其父母把时间花在吵架和备孕上的可能性原本是均等的。</p>
+
+  <div class="callout warn"><strong>为什么不能依赖基于历史的精确预测</strong>　用历史上最坏的事件作未来最坏情形的标尺，本身就违背历史规律——那些最坏事件发生之前同样没有先例。塔勒布在《随机漫步的傻瓜》中指出，埃及书吏以尼罗河最高水位记录为最坏情形参考，日本修建福岛核反应堆时如出一辙，2011年海啸袭来时灾难还是发生了。卡尼曼说得透彻：如果你犯错是因为没能预测到意外，得到的教训应该是"世界很难预测，每天都在发生意料外的事"——而不是"下次记住这个具体教训"。关于未来最重要的方向性经济事件，必然没有先例；无先例决定了无法预测，而这恰是其影响巨大的原因之一。唯一可以预言的是：意外事件决定历史走向。</div>
+
+  <h3 class="kp"><span class="kp-n">02</span>结构性变化让旧经验失灵</h3>
+  <p>历史误导未来的第二个原因是：它无法把今天世界非常重要的结构性变化纳入考虑。401K计划只有42年历史，罗斯个人退休金账户诞生于九十年代；风险投资不过25年，单只基金的规模已超过上辈人时期整个产业；标普500指数直到1976年才接纳金融类股票（今天占比16%），科技类股票五十年前几乎不存在（今天超过五分之一）。美国两次经济衰退的平均间隔，从十九世纪晚期的2年变为二十世纪早期的5年，再到近半个世纪的8年——本书写作时距上次衰退已12年，为南北战争以来最长。</p>
+  <p>格雷厄姆是最好的例证。《聪明的投资者》充满智慧，但书中公式真正有效的寥寥无几：低于净营运资本买入的股票几乎绝迹；"不超过账面价值1.5倍"的准则在过去十年只能让你买到保险股和银行股。这绝非格雷厄姆不善实践——他是超级成功的投资者，而且极讲求实际：1934年到1972年间他把公式修改了五次，每版都宣称上一版"不再适用"。去世前夕他亲口承认，不再提倡通过精确的证券分析寻找价值投资机会——形势已经天翻地覆。投资史的一条规律是：追溯的时期越久远，得出的结论越缺乏针对性。人性中的贪婪与恐惧相对恒定，值得研究；而具体趋势、行业因果关系和管理财富的具体方法，处于持续演化之中。邓普顿说"在投资中最危险的想法就是'这次不一样了'"，巴特尼克则补上了后半句：认为"这次不一样了"永远不成立的念头，本身才最危险。历史学家不是预言家。</p>
+
+  <figure class="quote"><blockquote>经历带给人的往往是过度自信，而不是对未来的预测能力。</blockquote><figcaption>—— 第12章</figcaption></figure>
+  <figure class="quote"><blockquote>在这里，失败的原因不在于分析的错误，而在于想象的贫瘠。</blockquote><figcaption>—— 第12章</figcaption></figure>
+</section>
+
+<section class="chapter" id="ch-13">
+  <div class="ch-kicker">第十三章 · CHAPTER 13</div>
+  <h2 class="ch-title">容错空间</h2>
+  <p class="ch-sub">每个计划中最重要的部分，就是为计划赶不上变化的情况做好预案。</p>
+  <blockquote class="epigraph"><p>安全边际的目的在于让预测变得不再必要。—— 本杰明·格雷厄姆</p><cite>—— 摩根·豪泽尔引</cite></blockquote>
+
+  <p class="lead">聪明的理财行为，最佳范例之一竟在拉斯维加斯的赌场——21点算牌玩家的身上。他们玩的是概率游戏，深知自己不知道也不可能准确知道接下来会发生什么，因此永远给自己留出犯错的余地。</p>
+
+  <div class="case-card">
+    <div class="case-head"><span class="case-name">算牌者的百份筹码法则</span><span class="case-meta">《打败庄家》· 凯文·刘易斯</span></div>
+    <p>算牌能让概率优势从庄家略微向玩家倾斜——假设赢面只比赌场高2%，赌场仍有49%的机会获胜。凯文·刘易斯的经验法则是：至少把筹码分为100份。手握一万美元，每次就拿一百美元从容下注，保证运气最差时仍有足够的钱继续游戏。一旦重注猜错，损失就可能让你无法留在牌桌上——而留在游戏中是一切的前提。纵观历史，很多高明的见解都因超过了度而变得和糟糕的主意没什么区别。</p>
+  </div>
+
+  <h3 class="kp"><span class="kp-n">01</span>安全边际：让预测变得不再必要</h3>
+  <p>格雷厄姆的"安全边际"——也可称为容错空间或冗余空间——在一个由概率而非确定性决定的世界里，是唯一能保证安全的方式。它承认不确定性、随机性和概率的存在，主张不在"可预测"与"全凭运气"之间做黑白二分，而是在可以接受各种结果的灰色区域展开追求。然而人们普遍低估了它：分析师给的是目标价格而非区间，专家给出精确数字时追随者云集，坦承"无法确定准确值"时买账者寥寥。心理学家巴泽曼发现，评估别人的房屋翻修计划时多数人会预留25%～50%的超支，面对自己的计划却认定它会按时按预算完成。人们不愿留余地，一是因为承认未来不可知让人不舒服，二是怕错过精确行动的时机。</p>
+  <p>容错空间绝非保守者的防御手段，而是进攻性的优势：它让你承受一系列可能的结果，从而等得足够久，提高低概率的巨额回报发生在你身上的概率。比尔·盖茨创立微软不久就坚持在银行存足现金——即使没有任何收益，也付得起员工一年工资。巴菲特在2008年股东大会上的承诺如出一辙："伯克希尔永远要有充足的现金……就算到了必须要选择的境地，我也绝不会拿一晚上的安稳觉来换赚取更多收益的机会。"</p>
+
+  <div class="callout insight"><strong>两种必须预留的空间</strong>　其一关于波动性：资产缩水30%，数据上你可能挺得过去，心理上呢？深夜归家、给孩子掖好被子时纠结"我是不是错了"的那种煎熬，报表无法体现——理论承受力与情感承受力之间的差距是最常被忽略的容错空间。其二关于退休储蓄：1870年代以来美股扣除通胀后年均回报6.8%，以此规划固然合乎情理，但如果目标退休日期恰好撞上熊市、或中途被迫离场兑付呢？豪泽尔的做法是把预估值压到历史均值之下三分之一——"三分之一的缓冲空间已经能让我在晚上安然入睡"。芒格说得精准："获得幸福的最佳方式是把目标定得低一些。"</div>
+
+  <h3 class="kp"><span class="kp-n">02</span>杠杆、田鼠与单点故障</h3>
+  <p>"俄罗斯轮盘赌在统计学上是可行的"综合征，指的就是当不利结果无论如何都无法接受时，人们一厢情愿地高估有利结果的概率。一件事95%的概率成功，剩下的5%意味着人生某个时刻你必然遭遇失败——如果那次失败意味着输得精光，再诱人也值得一票否决。罪魁祸首是杠杆：它把常规风险扩大到毁灭的程度，而大多数时候的理性乐观主义让人无视极端少数情形。过去十年美国房价跌过30%，公司债务时有违约，这是资本主义常态；但高杠杆者面对的灾难是双重的——不仅倾家荡产，还失去了东山再起的资本。2009年被洗劫的购房者赶不上2010年的低利率，雷曼兄弟再也无缘2009年的廉价债务：他们的游戏结束了。塔勒布的告诫是："你可以热爱冒险，但要对输得精光深恶痛绝。"豪泽尔自己的解法是把钱规划成"哑铃状"——一部分冒险，一部分保守持有：必须先生存下来，才有可能获得成功。</p>
+  <p>容错空间还须防备那些想不到的风险。1942年末斯大林格勒城外，德军一个坦克团104辆坦克竟只有不到20辆能动——休整待命的几周里，田鼠钻进坦克，把电力系统的绝缘层啃得一干二净。世界上最先进的设备，败给了没人提防过的田鼠。初创公司亦然：水管泡毁办公室、连遭三次盗窃、首席执行官在募集中途收到欺诈邮件、联合创始人精神崩溃——没有一件能被事先预料。既然无法为想象不到的事做预案，唯一办法就是避免"单点故障"，像飞机的多重备份电力系统与悬索桥的冗余缆绳那样设计财务生活。金钱方面隐患最大的单点故障，便是短期开支全部依赖工资，而在已知与未知的开支之间没有任何存款缓冲。事先对自己的存款做好分配的前提，是你能准确掌握将来的消费——这样的理想环境并不存在。每个计划中最重要的部分，就是为计划赶不上变化的情况做好预案。</p>
+
+  <figure class="quote"><blockquote>你必须先生存下来，才有可能获得成功。</blockquote><figcaption>—— 第13章</figcaption></figure>
+  <figure class="quote"><blockquote>安全边际的目的在于让预测变得不再必要。—— 本杰明·格雷厄姆</blockquote><figcaption>—— 第13章</figcaption></figure>
+  <figure class="quote"><blockquote>获得幸福的最佳方式是把目标定得低一些。—— 查理·芒格</blockquote><figcaption>—— 第13章</figcaption></figure>
+</section>
+
+
+<!-- ======== _tmp_frag_c.html ======== -->
+<section class="chapter" id="ch-14">
+  <div class="ch-kicker">第十四章 · CHAPTER 14</div>
+  <h2 class="ch-title">人是会变的</h2>
+  <p class="ch-sub">坚持长期计划比你想象中难得多，因为我们的目标和想法总在改变。</p>
+  <blockquote class="epigraph"><p>"人类的心理存在一种基本规律：我们很难预料到自己未来的想法。"</p><cite>—— 摩根·豪泽尔</cite></blockquote>
+
+  <p class="lead">复利的第一条原则，正如查理·芒格所说：除非万不得已，永远不要打断这个过程。可这条原则撞上一件事就会失灵——制定计划的那个人，和未来执行计划的那个你，很可能根本不是同一个人。</p>
+
+  <div class="case-card">
+    <div class="case-head"><span class="case-name">一位医生的十五年</span><span class="case-meta">作者亲历 · 当代美国</span></div>
+    <p>作者有位发小，出身平凡、资质平平，却是他见过最努力的人：年少时的全部梦想就是当医生，为此付出极大努力，比同班同学年长 10 岁才终于如愿，谋得社会上最受尊敬的职业之一。几年后再见面，这场谈话只剩一句话在循环："这工作太闹心了。"压力与超长工时让他心力交瘁——15 年前他对这个梦想有多渴望，如今的他对这份职业就有多失望。</p>
+    <p>想象自己达成目标是轻松的；想象自己在竞争与现实压力中达成这个目标，则完全是另一回事。</p>
+  </div>
+
+  <h3 class="kp"><span class="kp-n">01</span>"历史终结错觉"：你以为自己不会再变了</h3>
+  <p>人们能敏锐地察觉自己相比过去的变化，却严重低估未来还会变。哈佛心理学家丹尼尔·吉尔伯特称之为"历史终结错觉"（The End of History Illusion）：从 18 岁到 68 岁，人人都以为自己刚刚成为命中注定的那个人，余生不再改变。于是青少年花大价钱文身，长大后又花大价钱洗掉；有人年轻时急着结婚，年老后却盼着同一场离婚。数据同样诚实：据美联储统计，大学毕业生中只有 27% 从事与专业相关的工作，全职家长中 29% 拥有本科学历。</p>
+
+  <h3 class="kp"><span class="kp-n">02</span>长期规划的第一原则：避免极端</h3>
+  <p>罗纳德·里德和巴菲特式的成功，部分源于几十年如一日地做同一件事，让复利雪球越滚越大。但绝大多数人的想法一生都在变——与其假装能坚持铁板一块的 80 年，不如承认它可能是四个相互独立的 20 年。极端计划的好处会随适应而消失（一无所有的简单、拥有一切的满足皆是），坏处却会成为永远的遗憾：退休无着落，或回首时发现一生都在格子间里追逐金钱。</p>
+  <ul class="frame-list">
+    <li><strong>储蓄适中：</strong>每年做好适中的储蓄，不为任何单一目标押上全部现金流。</li>
+    <li><strong>自由适度：</strong>给自己适度的自由时间，通勤不超过适当的时长。</li>
+    <li><strong>家庭适量：</strong>至少花适量的时间陪伴家人——每个节点力求均衡，本身就是延长"坚持"的策略。</li>
+  </ul>
+
+  <h3 class="kp"><span class="kp-n">03</span>接受改变：像卡尼曼一样说"我没有沉没成本"</h3>
+  <p>《华尔街日报》专栏作家杰森·茨威格协助卡尼曼写《思考，快与慢》时最惊讶的事，是丹尼会彻底推翻刚写完的一章——开头结尾全然不同，轶事证据推倒重来。问他为何能当作前一版不存在，他的回答令人难忘："我没有沉没成本。"在一个不断改变的世界上，沉没成本是拦路虎：它让未来的你沦为过去那个你的囚犯，相当于让一个陌生人为你做出人生重大决定。当你变成了不同的自己，就应当机立断放弃过时的财务目标——只有尽快做出必要的改变，才能尽快让复利继续滚起来。</p>
+
+  <div class="callout insight"><strong>核心观点</strong>　长期主义的敌人不是变化本身，而是拒绝为变化留出余地。给目标留出改变的弹性、给计划避开两个极端、给过去的自己一个"它可以错"的许可，复利才有机会跑完全程。</div>
+
+  <figure class="quote"><blockquote>"我们所有人，都带着一种幻觉在生活。这种幻觉让我们以为，历史——我们个人的历史——刚刚尘埃落定，且余生中再也不会改变了。"</blockquote><figcaption>—— 丹尼尔·吉尔伯特 · 第十四章</figcaption></figure>
+  <figure class="quote"><blockquote>"我没有沉没成本。"</blockquote><figcaption>—— 丹尼尔·卡尼曼 · 第十四章</figcaption></figure>
+</section>
+
+<section class="chapter" id="ch-15">
+  <div class="ch-kicker">第十五章 · CHAPTER 15</div>
+  <h2 class="ch-title">世上没有免费的午餐</h2>
+  <p class="ch-sub">万物皆有定价，只不过有些不会写在标签上。</p>
+  <blockquote class="epigraph"><p>"投资的成功需要投资者付出相应的代价，但衡量这种代价的不是金钱，而是波动、恐惧、怀疑、不确定感和悔恨。"</p><cite>—— 摩根·豪泽尔</cite></blockquote>
+
+  <p class="lead">标普 500 指数在截至 2018 年的 50 年里上涨了 119 倍，看起来你要做的只是坐下来等待。但这份回报有一张账单——只是它不像商品价格那样印在标签上，而是以波动与恐惧的形式，在你最难受的时刻递到你面前。</p>
+
+  <h3 class="kp"><span class="kp-n">01</span>回报的价格：94%、95% 的"低于前高"</h3>
+  <p>算上股息，道琼斯工业平均指数 1950 到 2019 年的平均回报率约为 11%——代价则高得可怕：那些比此前历史高点低至少 5% 的时段，几乎贯穿了整个区间。网飞股价 2002 至 2018 年翻了 350 多倍，但其中 94% 的时间交易价格低于此前高点；魔爪能量饮料 1995 至 2018 年回报 319 倍，同期 95% 的时间低于前高。就像买车一样，你有三个选择：付全款接受市场的剧烈起伏；买一辆便宜点的"二手车"，选择确定但回报平庸的标的；或者——一边想要回报，一边幻想逃掉波动。</p>
+
+  <div class="case-card">
+    <div class="case-head"><span class="case-name">杰克·韦尔奇：把账单藏起来的代价</span><span class="case-meta">通用电气 · 2001–2018</span></div>
+    <p>2004 年，通用电气还是全球市值第一的公司（超过 3,300 亿美元）；此后金融部门在 2008 年陷入混乱被低价卖出，石油与能源押注再亏数十亿，股价从 2007 年的 40 美元一路跌至 2018 年的 7 美元。前任 CEO 杰克·韦尔奇是让季度每股收益总能超出华尔街预期的顶级大师：分析师预期 0.25 美元，他就交出 0.26 美元——办法是把未来季度的收益挪到当前季度，《福布斯》曾报道通用电气连续两年把机车"出售"给不具名的金融伙伴而非终端用户，把所有权风险留在公司体内。</p>
+    <p>结果是韦尔奇时代的股东不必面对任何意外波动——收益稳定得像钟表。但账单的期限终归到了：股东们在长达 10 年间持续大量亏损，只是此前一直被会计操作掩盖。房利美与房地美则走向另一个方向——少报数十亿美元当期收益、把利润匀到未来，制造稳定可预测的错觉。一个抹掉下跌，一个匀平上涨，本质相同：相信不必付出代价就能获得回报。</p>
+  </div>
+
+  <h3 class="kp"><span class="kp-n">02</span>逃避波动的人，付出了双倍代价</h3>
+  <p>晨星公司研究过 112 只战术性资产配置基金——它们试图在股票债券间切换，以便"低风险地拿到市场回报"。2010 中期至 2011 年晚期恰逢标普 500 跌超 20%，正是它们大显身手之时：结果只有 9 只的风险调整回报跑赢简单的"60 股票/40 债券"组合。晨星的评语近乎刻薄："比指数基金收益更少，波动更大，下行风险一样大。"个人投资者同样如此：因频繁买卖，股票型基金投资者的实际年收益比所投基金低 0.5 个百分点。试图规避代价的人，最终付出了双倍的代价。</p>
+
+  <div class="callout insight"><strong>核心观点</strong>　把波动看作罚款还是费用，决定了你能持有多久。迪士尼乐园门票 100 美元，2020 年有超过 1,800 万人觉得物有所值，没人觉得那是惩罚——因为你知道自己在为什么付费。市场的波动与不确定感，就是你为获得高于储蓄与债券的回报所买的入场券。付过入场费不保证收到回报，正如去迪士尼也可能赶上下雨天；但如果把它看作罚款，你就永远感受不到它的神奇之处。</div>
+
+  <figure class="quote"><blockquote>"世间万物皆有定价。关键在于明确它们需要你付出什么，然后判断自己是否愿意为之买单。"</blockquote><figcaption>—— 第十五章</figcaption></figure>
+  <figure class="quote"><blockquote>"几乎所有波动都是一种费用，而非一笔罚款。"</blockquote><figcaption>—— 第十五章</figcaption></figure>
+</section>
+
+<section class="chapter" id="ch-16">
+  <div class="ch-kicker">第十六章 · CHAPTER 16</div>
+  <h2 class="ch-title">每个人的情况不同</h2>
+  <p class="ch-sub">不要贸然从那些和你情况不同的人身上学习理财经验。</p>
+  <blockquote class="epigraph"><p>"长线投资者和短线投资者玩的是两种截然不同的游戏。当长线投资者开始向短线投资者取经时，泡沫的危害就出现了。"</p><cite>—— 摩根·豪泽尔</cite></blockquote>
+
+  <p class="lead">互联网泡沫破裂让美国家庭财富缩水 6.2 万亿美元，房地产泡沫又蒸发逾 8 万亿。归咎于贪婪很容易，却会错过真正重要的一课：泡沫中的大多数参与者，站在他们各自的角度看，其实是理性的——只是他们玩的根本不是同一个游戏。</p>
+
+  <h3 class="kp"><span class="kp-n">01</span>同一只股票，没有统一的"合理价格"</h3>
+  <p>你今天该为谷歌的股票付多少钱？答案取决于"你"是谁。打算持有 30 年的人要做的是未来 30 年现金流的折现分析；10 年内套现的人关心行业潜力与管理层执行力；日内交易者压根不在乎价格高低——他只想在上桌到午休之间赚点小钱。当投资者的目标和时间跨度不同，一个人眼中的疯狂估值，在另一个人眼里完全可以接受，因为他们各自关注的因素根本不同。</p>
+
+  <h3 class="kp"><span class="kp-n">02</span>1999 年：泡沫是短线玩家的理性游戏</h3>
+  <p>看着雅虎 1999 年的股价，人人都会说"太疯狂了"。但当时买入它的很多是短线投资者：无论 5 美元还是 500 美元一股，只要当天走势向上，他们的目标就达成了——而且一连持续了数年。思科同年上涨 300% 至每股 60 美元，估值 6,000 亿美元；经济学家伯顿·马尔基尔指出，这一估值隐含的增长率意味着思科市值将在 20 年内超过美国经济总量。很少有人真觉得它值这个价——短线玩家只是在通过炒高股价获利。金钱追逐回报最大化：只要动量在他们需要的时间段内持续，这种入场就没有什么不妥。1999 年，共同基金的年换手率达 120%，意味着定价者们最多考虑接下来 8 个月。</p>
+  <p>房地产泡沫同理：斥 70 万美元在佛州买一套批量建造的两居室自住十年很难说是理性选择，但若计划几个月后转手获利，决定就很合理。安腾公司的数据显示，12 个月内被转手超过一次的房屋从 2000 年第一季度的 2 万套涨到 2004 年第一季度的 10 万多套，翻了四倍多。炒房客不在乎房价租金比——唯一重要的是下个月房价比这个月高。泡沫并非源于人们非理性地做长期投资，而是源于人们堪称理性地涌向短线交易、追逐滚雪球般的动量。</p>
+
+  <h3 class="kp"><span class="kp-n">03</span>相撞的两个游戏</h3>
+  <p>危险发生在两种玩家迎面相撞的时刻。如果你是 1999 年的长线投资者，环顾四周发现所有人都在 60 美元买思科，你或许会想"也许他们知道些我不知道的内幕"，然后从众。你没有意识到：决定边际价格的交易者在当天收盘前就会卖出——那 60 美元对他们合理，对你是灾难。这两种投资者甚至不知道对方的存在，却在同一处朝着彼此跑去。CNBC 评论员劝你"买这只股票"时，他并不知道你是拿炒股当游戏的青少年、预算有限又失去老伴的老人，还是想在季末拉抬业绩的对冲基金经理。</p>
+
+  <div class="callout warn"><strong>常见误区</strong>　消费同样如此。你能看见别人在汽车、住房、度假上花了多少钱，却看不见他们的目标、担忧与抱负。年轻律师为了成为律所合伙人需要打理形象，作家穿运动裤就够了——若作家效仿律师的花销，钱花了也换不来对方的职业回报。你们不是风格有别，而是站在两个不同的游戏场上。</div>
+
+  <div class="callout insight"><strong>核心观点</strong>　理财中最重要的事，是明确自己的投资目标并不受他人行为的影响。作者的自我宣言值得抄录："我是一名被动的投资者，但对这个世界创造货真价实经济增长的能力持乐观态度，相信未来 30 年的增长会让我的财富不断增加。"写下宣言的那一刻，今年的市场走势、明年会不会衰退，统统不再是"你的游戏"的一部分。</div>
+
+  <figure class="quote"><blockquote>"在理财方面，很少有什么事比明确自己的投资目标且不受他人活动和行为的影响更重要。尽可能努力明确自己玩的是什么游戏。"</blockquote><figcaption>—— 第十六章</figcaption></figure>
+</section>
+
+<section class="chapter" id="ch-17">
+  <div class="ch-kicker">第十七章 · CHAPTER 17</div>
+  <h2 class="ch-title">悲观主义的诱惑</h2>
+  <p class="ch-sub">乐观主义就像花言巧语的推销员，而悲观主义仿佛提供帮助的好心人。</p>
+  <blockquote class="epigraph"><p>"人们总喜欢听别人说这个世界要完蛋了。"</p><cite>—— 经济史学家 戴尔德丽·麦克洛斯基</cite></blockquote>
+
+  <p class="lead">真正的乐观主义不是相信一切都会很好，而是相信纵有坎坷，好结果出现的概率终归大于坏结果——汉斯·罗斯林说得更好："我不是一个乐观主义者，我只是一个非常严肃的可能主义者。"可悲观情绪在人心中占据特殊位置：它不仅更普遍，听上去还更明智。</p>
+
+  <div class="case-card">
+    <div class="case-head"><span class="case-name">头版末日论 vs 被嘲笑的奇迹预言</span><span class="case-meta">2008 华尔街日报 · 1946 日本</span></div>
+    <p>2008 年 12 月 29 日，史上最糟糕的一年即将收尾，《华尔街日报》头版郑重刊出俄罗斯教授伊戈尔·帕纳林的预测：约 2010 年年中，美国将分裂为六块——阿拉斯加重归俄罗斯，得克萨斯并入墨西哥势力范围，加州自成"共和国"，夏威夷成为日本保护国。这不是博客胡言，而是全球最负盛名的财经报纸的头版文章。反过来想象 1946 年的日本：战败重创加严冬饥荒，每人每天热量不足 800 大卡。若此时报纸刊登学者预言——经济体量将增长近 14 倍、人均寿命近翻一番、失业率四十余年不超 6%、电子产业领导世界、在美国坐拥最贵地产、美国还将成为最紧密盟友——作者会被送去检查脑子。而后一段，恰恰是真实发生的历史。悲观论调显得智慧，乐观预言显得荒诞——这就是不对称。</p>
+  </div>
+
+  <h3 class="kp"><span class="kp-n">01</span>悲观更有说服力的三个原因</h3>
+  <ul class="frame-list">
+    <li><strong>金钱无处不在：</strong>飓风只伤及部分人，衰退却可能波及每一个人。1929 年大崩盘前夕只有 2.5% 的美国人持股，但律师、农民、汽车修理工都在惊愕围观并据此收缩行动——熊彼特写道："人们感到脚下的地面正在崩塌。"上涨 1% 只配晚间新闻一句带过，下跌 1% 则是红色加粗大标题。</li>
+    <li><strong>悲观者不算"适应"这笔账：</strong>2008 年莱斯特·布朗预言中国到 2030 年日需 9,800 万桶石油，而世界产量永远不会超过 8,500 万桶。油价确实从 2001 年的 20 美元飙到 2008 年的 138 美元——但这恰恰让水力压裂与水平钻井变得有利可图：美国石油日产量从 2008 年的约 500 万桶升至 2019 年的 1,300 万桶，如今全球日产超 1 亿桶，高出所谓上限 20%。需求是一切发明之母，眼前的问题有多糟糕，解决问题的动力就有多强。</li>
+    <li><strong>进步太慢，挫折太快：</strong>《底特律自由新闻报》1889 年论证飞行不可能实现；半年后奥维尔·莱特退学回家与哥哥造出了印刷机。莱特兄弟 1903 年试飞成功后几乎无人问津——直到 1908 年陆军中尉塞尔福里奇在一次飞行表演中丧生，全世界才开始大规模谈论飞机。心脏病年龄别死亡率自 1965 年以来下降逾 70%，每年挽救约 50 万条生命，却不及一次空难引人注目；股市 6 个月跌 40% 会触发国会调查，6 年涨 140% 几乎无人提及。</li>
+  </ul>
+
+  <div class="fig-cap">图 3 ｜ 进步是缓慢的，倒退是瞬间的</div>
+  <div class="svg-wrap">
+    <svg viewBox="0 0 900 430" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="经济增长是复利式的缓慢上行，衰退是突然的垂直下坠示意图">
+      <!-- 网格 -->
+      <g stroke="var(--line)" stroke-width="1">
+        <line x1="70" y1="60" x2="860" y2="60"/>
+        <line x1="70" y1="120" x2="860" y2="120"/>
+        <line x1="70" y1="180" x2="860" y2="180"/>
+        <line x1="70" y1="240" x2="860" y2="240"/>
+        <line x1="70" y1="300" x2="860" y2="300"/>
+      </g>
+      <!-- 坐标轴 -->
+      <line x1="70" y1="45" x2="70" y2="365" stroke="var(--ink-soft)" stroke-width="1.5"/>
+      <line x1="70" y1="365" x2="865" y2="365" stroke="var(--ink-soft)" stroke-width="1.5"/>
+      <!-- 轴刻度标签 -->
+      <g fill="var(--ink-soft)" font-size="14">
+        <text x="96" y="386">1930</text>
+        <text x="272" y="386">1950</text>
+        <text x="448" y="386">1970</text>
+        <text x="623" y="386">1990</text>
+        <text x="794" y="386">2010</text>
+        <text x="30" y="125">市场</text>
+        <text x="30" y="145">财富</text>
+        <text x="22" y="165">(示意)</text>
+      </g>
+      <!-- 复利上行主曲线 -->
+      <path d="M70,332 C160,320 230,306 310,288 C390,270 465,246 545,217 C625,188 705,157 782,131 C812,121 842,111 862,103"
+            fill="none" stroke="var(--green)" stroke-width="3.5" stroke-linecap="round"/>
+      <!-- 急跌尖峰（金色高不透明度表示下跌） -->
+      <path d="M101,326 L114,362 L137,314" fill="none" stroke="var(--gold)" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M724,153 L738,240 L763,147" fill="none" stroke="var(--gold)" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M794,129 L807,248 L831,123" fill="none" stroke="var(--gold)" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+      <!-- 关键点圆点 -->
+      <circle cx="101" cy="326" r="5" fill="var(--gold)"/>
+      <circle cx="724" cy="153" r="5" fill="var(--gold)"/>
+      <circle cx="794" cy="129" r="5" fill="var(--gold)"/>
+      <circle cx="862" cy="103" r="5" fill="var(--green)"/>
+      <!-- 尖峰标注 -->
+      <g fill="var(--ink)" font-size="15">
+        <text x="88" y="349">1929</text>
+        <text x="88" y="368" font-size="14" fill="var(--ink-soft)">大崩盘</text>
+        <text x="600" y="228">2000</text>
+        <text x="600" y="247" font-size="14" fill="var(--ink-soft)">互联网泡沫破裂</text>
+        <text x="820" y="235" font-size="15">2008</text>
+        <text x="820" y="254" font-size="14" fill="var(--ink-soft)">金融危机</text>
+      </g>
+      <!-- 上行标注 -->
+      <g fill="var(--ink)" font-size="15">
+        <text x="330" y="255">复利式上行：缓慢，需数年才被察觉</text>
+        <text x="330" y="275" font-size="14" fill="var(--ink-soft)">"股市 6 年上涨 140%，几乎无人注意"</text>
+      </g>
+      <!-- 下行标注 -->
+      <g fill="var(--ink)" font-size="15">
+        <text x="120" y="80">急跌尖峰：瞬间发生</text>
+        <text x="120" y="100" font-size="14" fill="var(--ink-soft)">"毁灭可由独立致命因素导致，信心可在瞬间崩塌"</text>
+        <line x1="300" y1="92" x2="712" y2="185" stroke="var(--line)" stroke-width="1.5"/>
+      </g>
+      <!-- 右下格言 -->
+      <text x="862" y="418" text-anchor="end" font-size="15" fill="var(--ink)">悲观主义听起来像想救人，乐观主义听起来像推销——所以前者总被当真。</text>
+      <!-- 图例 -->
+      <g font-size="14">
+        <rect x="88" y="52" width="26" height="0" />
+        <line x1="88" y1="58" x2="118" y2="58" stroke="var(--green)" stroke-width="3.5" stroke-linecap="round"/>
+        <text x="126" y="63" fill="var(--ink)">复利式缓慢上行</text>
+        <line x1="248" y1="58" x2="278" y2="58" stroke="var(--gold)" stroke-width="4" stroke-linecap="round"/>
+        <text x="286" y="63" fill="var(--ink)">急跌尖峰（倒退是瞬间的）</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="callout insight"><strong>核心观点</strong>　增长由复利驱动，需要时间；毁灭却可以由独立的致命因素在极短时间内导致，也可以由失去信心引发——而信心可以在一瞬间崩塌。表达悲观的稿件好写：只需盯着最近的事件；乐观的叙述则要回顾漫长的进程，把分散的事实费力地连起来。霍金把对生活的期望在 21 岁时归零，"此后的一切都是意外收获"——降低期待，正是悲观主义作为自我安慰的那一点讽刺性的乐观。</div>
+
+  <figure class="quote"><blockquote>"生活中有很多在一夜之间发生的悲剧，但很少有在一夜之间诞生的奇迹。"</blockquote><figcaption>—— 第十七章</figcaption></figure>
+  <figure class="quote"><blockquote>"增长是由复利驱动的，而复利通常需要时间。毁灭却可能由独立的致命因素导致，可以在很短的时间内发生；它也可能由失去信心引发，而信心可以在一瞬间崩塌。"</blockquote><figcaption>—— 第十七章</figcaption></figure>
+</section>
+
+<section class="chapter" id="ch-18">
+  <div class="ch-kicker">第十八章 · CHAPTER 18</div>
+  <h2 class="ch-title">当你相信一切的时候</h2>
+  <p class="ch-sub">故事为何吸引人，以及它们的力量为何比数据强大。</p>
+  <blockquote class="epigraph"><p>"故事是现存的对经济影响最大的潜在力量之一。"</p><cite>—— 摩根·豪泽尔</cite></blockquote>
+
+  <p class="lead">设想一个外星人盘旋在纽约上空评估经济：2007 与 2009 年的新年夜，时代广场同样灯火通明、人群狂欢；同样的写字楼、工厂、大学与专利，甚至更多智能手机与更快的计算机。他断定两年间经济大致持平，甚至更好。随后他看到数据：美国家庭财富缩水 16 万亿美元，超过 1,000 万人失业，股市市值只剩一半。唯一改变的，是美国人对自己讲述的关于经济的故事——而这个无形之变，造成了 80 年来最沉重的打击。</p>
+
+  <h3 class="kp"><span class="kp-n">01</span>你越希望某事成真，就越容易相信它</h3>
+  <p>纪录片问一位百岁老人一生中最快乐的一天，她答："停战日。因为我们知道，从此以后再也不会有战争了。"21 年后，二战爆发，7,500 万人丧生。也门人阿里·哈贾吉的儿子病重，村中长老用燃烧的棍子刺穿孩子的胸膛"排出顽疾"，他的解释赤裸而诚实："如果你是个穷光蛋，你的孩子又生病了，你什么都会信的。"1722 年笛福笔下的伦敦大瘟疫也是如此——18 个月内夺走四分之一伦敦人的性命，"防疫仙丹，万无一失"的传单贴满街头巷尾。风险越高、控制力越低，故事的力量就越强大。</p>
+
+  <div class="case-card">
+    <div class="case-head"><span class="case-name">麦道夫与美联储：吸引人的故事的两种面目</span><span class="case-meta">庞氏骗局 · 2007 年 FOMC 预测</span></div>
+    <p>事后看，伯尼·麦道夫的庞氏骗局一目了然：回报率从不波动、审计方不知名、拒绝透露策略细节——但他仍从全球最有经验的投资者手中募走数十亿美元，因为他讲了一个吸引人的故事。主动型共同基金截至 2018 年有 85% 近十年跑输基准，却依然管理着近 5 万亿美元。权威机构同样难逃：美联储在 2007 年会议上预测 2008–2009 年增速为 1.6%–2.8%，实际 GDP 却萎缩超过 2%——最低估计错了近三倍。政策制定者不愿预言衰退，于是"缓慢增长"成了他们愿意相信的故事。</p>
+  </div>
+
+  <h3 class="kp"><span class="kp-n">02</span>每个人都在用有限的知识编完整的故事</h3>
+  <p>一岁的女儿不懂工资、账单与美联储，但她的世界并不混乱：爸爸上班了，"爸爸不陪我玩了，我不高兴"——她在极有限的知识体系内，为自己讲了一个逻辑自洽的故事。我们全都如此。卡尼曼指出，后见之明给了我们"世界可以被理解"的错觉，哪怕实际上一团混乱；创业者们坚信自身作为决定公司命运的八成以上，却低估了竞争对手与市场变化同等的影响力。泰洛克一语道破需求侧："我们需要相信自己生活在一个可预测、可控制的世界里，因此我们会求助于听上去很有权威的人。"NASA 的"新视野号"飞 48 亿千米去冥王星，用时比预计少约 1 分钟——精确率 99.99998%。但天体物理是精确领域，商业与投资由变幻莫测的人心驱动；我们之所以忍不住编故事，正是因为贪恋那种掌控一切的舒适。</p>
+
+  <div class="callout warn"><strong>常见误区</strong>　混淆精确领域与不确定领域，会让你把"预测"误当"掌控"。卡尔·理查兹的定义值得贴在屏幕边："风险就是在你觉得自己已经考虑周全时被你遗漏的东西。"你越希望获得某个结果，与"可接受的结果"之间的落差越大，就越容易轻信吸引人的投资故事——容错空间因此成为金融领域最重要的力量：风险越高，容错空间就该越大。</div>
+
+  <figure class="quote"><blockquote>"你越希望某事是真的，你就越容易相信一个高估其成真可能性的故事。"</blockquote><figcaption>—— 第十八章</figcaption></figure>
+  <figure class="quote"><blockquote>"我们都像那个外星人：根据所见的一切自信地认为自己判断正确，实际上却因为不知道别人在想什么而大错特错。"</blockquote><figcaption>—— 第十八章</figcaption></figure>
+</section>
+
+
+<!-- ======== _tmp_frag_sim.html ======== -->
+<!-- ============ 交互仿真：复利时间机器 ============ -->
+<section class="sim" id="sim">
+  <span class="kicker">Interactive Lab · 可交互仿真</span>
+  <h2>复利时间机器：亲手转动雪球</h2>
+  <p class="sim-sub">第4章「复利之谜」与第10章「存钱」的共同结论是：<strong>你无法控制市场的收益率，但你能完全控制储蓄额、投入的时间，以及是否中途下车。</strong>拖动滑杆，观察本金与复利收益如何此消彼长——注意曲线的形状：财富的"雪崩"几乎全部发生在后半程。</p>
+  <div class="sim-grid">
+    <div class="ctrl">
+      <label>每月储蓄金额（元）<output id="oPmt">3,000</output></label>
+      <input type="range" id="rPmt" min="500" max="50000" step="500" value="3000">
+      <label>年化收益率 %<output id="oRate">8%</output></label>
+      <input type="range" id="rRate" min="0" max="15" step="0.5" value="8">
+      <label>持续年限（年）<output id="oYears">30 年</output></label>
+      <input type="range" id="rYears" min="1" max="50" step="1" value="30">
+      <div class="stat-cards">
+        <div class="stat"><div class="num" id="sTotal">—</div><div class="lbl">最终财富</div></div>
+        <div class="stat"><div class="num" id="sPrincipal">—</div><div class="lbl">累计本金</div></div>
+        <div class="stat"><div class="num" id="sGain">—</div><div class="lbl">其中复利收益</div></div>
+      </div>
+      <p class="sim-note" id="sInsight"></p>
+    </div>
+    <div class="svg-wrap" style="margin:0">
+      <svg id="simSvg" viewBox="0 0 760 420" width="100%"></svg>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var rPmt=$('rPmt'),rRate=$('rRate'),rYears=$('rYears');
+  var fmt=function(n){return Math.round(n).toLocaleString('zh-CN')};
+  function fill(el){var p=(el.value-el.min)/(el.max-el.min)*100;el.style.setProperty('--fill',p+'%')}
+  ['rPmt','rRate','rYears'].forEach(function(id){fill($(id));$(id).addEventListener('input',function(){fill($(id));draw()})});
+
+  function series(pmt,rate,years){
+    var mr=rate/100/12,principal=[],total=[];
+    var pv=0,tv=0;
+    for(var m=0;m<=years*12;m++){
+      principal.push(pv); total.push(tv);
+      pv+=pmt; tv=tv*(1+mr)+pmt;
+    }
+    return {principal:principal,total:total};
+  }
+
+  function draw(){
+    var pmt=+rPmt.value, rate=+rRate.value, years=+rYears.value;
+    $('oPmt').textContent=fmt(pmt);
+    $('oRate').textContent=rate+'%';
+    $('oYears').textContent=years+' 年';
+    var s=series(pmt,rate,years), N=s.total.length;
+    var fin=s.total[N-1], pri=s.principal[N-1], gain=fin-pri;
+    $('sTotal').textContent='¥'+fmt(fin);
+    $('sPrincipal').textContent='¥'+fmt(pri);
+    $('sGain').textContent='¥'+fmt(gain);
+    var share= fin>0? (gain/fin*100):0;
+    $('sInsight').textContent= years>=2
+      ? '在 '+years+' 年里，复利收益占最终财富的 '+share.toFixed(1)+'%'+(rate>0? '；若把年限缩短一半（'+Math.floor(years/2)+' 年），收益占比将骤降至 '+(fin>0?(function(){var s2=series(pmt,rate,Math.max(1,Math.floor(years/2)));return ((s2.total[s2.total.length-1]-s2.principal[s2.principal.length-1])/s2.total[s2.total.length-1]*100).toFixed(1)})():'0')+'%——这就是「时间是复利唯一的燃料」。':'')
+      : '';
+    // ---- 绘图 ----
+    var W=760,H=420,padL=64,padR=18,padT=24,padB=40;
+    var iw=W-padL-padR, ih=H-padT-padB;
+    var maxV=Math.max(s.total[N-1],pmt*N,1);
+    var X=function(i){return padL+i/(N-1)*iw};
+    var Y=function(v){return padT+ih-v/maxV*ih};
+    var path=function(arr){var d='';for(var i=0;i<N;i++){d+=(i?'L':'M')+X(i).toFixed(1)+','+Y(arr[i]).toFixed(1)}return d};
+    var area=path(s.total)+' L'+X(N-1).toFixed(1)+','+Y(s.principal[N-1]).toFixed(1);
+    for(var j=N-1;j>=0;j--){area+='L'+X(j).toFixed(1)+','+Y(s.principal[j]).toFixed(1)}
+    area+='Z';
+    // y 轴刻度
+    var ticks=[],ty;
+    for(ty=0;ty<=4;ty++){ticks.push(maxV*ty/4)}
+    var g='';
+    ticks.forEach(function(v){
+      g+='<line x1="'+padL+'" x2="'+(W-padR)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="var(--line)" stroke-width="1"'+(v>0?' stroke-dasharray="3 6"':'')+'/>';
+      var lbl = v>=100000000 ? (v/100000000).toFixed(1).replace(/\.0$/,'')+'亿'
+              : v>=10000 ? (v/10000).toFixed(1).replace(/\.0$/,'')+'万'
+              : Math.round(v);
+      g+='<text x="'+(padL-8)+'" y="'+(Y(v)+4).toFixed(1)+'" font-size="11" fill="var(--ink-faint)" text-anchor="end">'+lbl+'</text>';
+    });
+    [0,0.25,0.5,0.75,1].forEach(function(f){
+      var i=Math.round((N-1)*f);
+      g+='<text x="'+X(i).toFixed(1)+'" y="'+(H-14)+'" font-size="11" fill="var(--ink-faint)" text-anchor="middle">'+i+'年</text>';
+    });
+    g+='<path d="'+area+'" fill="var(--gold)" opacity="0.16"/>';
+    g+='<path d="'+path(s.principal)+'" fill="none" stroke="var(--green)" stroke-width="2.5"/>';
+    g+='<path d="'+path(s.total)+'" fill="none" stroke="var(--gold)" stroke-width="3.5" stroke-linecap="round"/>';
+    g+='<circle cx="'+X(N-1)+'" cy="'+Y(s.total[N-1])+'" r="5" fill="var(--gold)"/>';
+    g+='<circle cx="'+X(N-1)+'" cy="'+Y(s.principal[N-1])+'" r="4" fill="var(--green)"/>';
+    g+='<text x="'+padL+'" y="14" font-size="12" fill="var(--gold)">━ 总财富（本金 + 复利收益）</text>';
+    g+='<text x="'+(padL+230)+'" y="14" font-size="12" fill="var(--green)">━ 累计本金</text>';
+    $('simSvg').innerHTML=g;
+  }
+  draw();
+})();
+</script>
+
+
+<!-- ======== _tmp_frag_d.html ======== -->
+<section class="chapter" id="ch-19">
+  <div class="ch-kicker">第19章 · CHAPTER 19</div>
+  <h2 class="ch-title">总结：把金钱心理学串成一条线</h2>
+  <p class="ch-sub">没有放之四海而皆准的理财答案，只有让你自己睡得踏实的答案。</p>
+  <blockquote class="epigraph"><p>我无法告诉你应该如何去管理你的财富，因为我不了解你。我不知道你的财务目标、时间规划和理财动机。</p><cite>—— 摩根·豪泽尔</cite></blockquote>
+
+  <p class="lead">作为全书收束，这一章先讲了一出医疗悲剧，再给出一份浓缩的经验清单，最后引出作者的私人答案：理财建议之所以危险，是因为它天然假设"每名患者都想被治愈""存在某种通用正确的方案"——而金钱世界恰恰相反，每个人的目标、时间规划与动机都截然不同。</p>
+
+  <h3 class="kp"><span class="kp-n">01</span>从拔牙悲剧说起：建议的边界</h3>
+  <div class="case-card">
+    <div class="case-head"><span class="case-name">克拉伦斯·休斯之死</span><span class="case-meta">1931年 · 美国</span></div>
+    <p>克拉伦斯因牙痛去看牙医，被麻醉后醒来时少了16颗牙，扁桃体也被摘除，一周后死于术后并发症。妻子起诉的理由并非手术失误——在1931年，每次手术都伴着死亡风险——而是他从一开始就不同意做这些手术，只是从未有人问过他。</p>
+    <p>那个年代的医疗伦理默认：医生只需治好患者，患者本人的意见无关紧要。此后五十年，医学才转向"以治疗患者为中心"——医生列出方案，由患者决定哪种最适合自己。杰伊·卡茨提醒我们：指望医者仁心与精准判断代替患者的选择，是"危险而荒谬的"。</p>
+    <p>提供理财建议的职业与此如出一辙：领域内确有普遍真理，但把这些真理应用成怎样的决策，必须由每个家庭自己拍板。重要的理财决策不是靠表格和教科书做出的，而是在餐桌上敲定的。</p>
+  </div>
+
+  <h3 class="kp"><span class="kp-n">02</span>值得随身携带的经验清单</h3>
+  <p>事态向好时保持谦逊，向差时心怀谅解——运气与风险真实存在也难以判别；虚荣越少，财富越多，财富存在于看不到的地方；用能让你睡踏实的方式理财；想提高回报，最简单有效的方法是拉长时间；就算错了一半也不要心态失衡，因为是少数几件事决定了整体结果；用财富换取对时间的掌控，这是幸福感最大的红利；多一些善意，少一些奢侈，尊重和赞赏更容易靠善良谦逊获得；存钱不需要理由，因为生命本就由一连串意外组成；明确成功的代价并把它当作费用而非罚款；重视容错空间，它让复利得以在时间长河中创造奇迹；避免极端的财务目标，因为人的愿望会变；喜欢风险，但对毁灭性风险格外敏感；明确自己在玩什么游戏；尊重每一个人——不同人的目标截然不同，并不存在统一的正确答案。</p>
+
+  <div class="callout insight"><strong>核心观点</strong>　理财中要付出的大部分成本是没有标价的：不确定性、疑虑和后悔是金融世界的常见代价。它们值得买单，但要看作"为得到好东西而付出的费用"，而不是千方百计规避的罚款。</div>
+  <div class="callout warn"><strong>常见误区</strong>　像1931年的医生那样替别人做决定——直接告诉他人"应该怎样管钱"。连作者本人也拒绝这样做：他给出的从来不是处方，而是让每个人自行选择的选项清单。</div>
+
+  <h3 class="kp"><span class="kp-n">03</span>作者自己的答案：为独立自主而理财</h3>
+  <p>桑迪·戈特斯曼面试投资人时会问："你手里现在拿的是什么股？"——看一个人实际怎么做，胜过听他理论上怎么说。作者的全部金融资产不过是一套无贷款的房子、一个支票账户和一些低成本的指数基金；流动资金比例高达两成，只为永远不必被迫卖出股票；全家闲钱定投指数基金，不设目标、不追热点。他追求的不是最高的回报率，而是每天早上醒来时确信：一家人可以按自己的方式做任何想做的事。这些原则将在实战工具箱中逐一拆解。</p>
+</section>
+
+<section class="chapter" id="appendix">
+  <div class="ch-kicker">附录 · APPENDIX</div>
+  <h2 class="ch-title">美国消费者心态形成简史</h2>
+  <p class="ch-sub">低利率制造了消费者，平等塑造了预期，而预期的调整总是晚于现实。</p>
+  <blockquote class="epigraph"><p>历史不过是糟心事接踵而至的过程。</p><cite>—— 附录开篇引语</cite></blockquote>
+
+  <p class="lead">若你在1945年长眠、2020年醒来，会认不出周围的世界：纽约与底特律的天壤之别、房价学费医保的飞涨、储蓄消费观念的剧变——这一切背后的原因不符合直觉、难以预见。理解现代消费者的心态，必须回到二战结束那一刻讲起。</p>
+
+  <h3 class="kp"><span class="kp-n">01</span>消费者是被刻意制造的</h3>
+  <p>1945年8月战争结束，1,600万美国人——总人口的11%——要在18个月内脱下军装回家，而住房建设几近停摆（1943年每月新建房屋不足1.2万套）、战时岗位骤然消失、结婚率却在飙升。经济学家担心美国将再度滑入大萧条。对策有二：其一是《退伍军人权利法案》（GI法案），让退伍军人可以零首付购房、首年免息、固定低利率，月供甚至比租金还低；其二是消费信贷爆炸式增长——第一张信用卡诞生于1950年，分期贷款、个人贷款涌现，且当时包括信用卡在内的所有债务利息都可免税。为压低6万亿美元战争融资的成本，美联储将短期利率钉在0.38%，七年未动一个基点。一个鼓励勒紧裤腰带的时代，就此变成大力提倡消费的时代：20世纪50年代家庭负债的增速，是21世纪头十年债务泛滥期的1.5倍。</p>
+
+  <h3 class="kp"><span class="kp-n">02</span>平等的黄金年代：繁荣落入每一个口袋</h3>
+  <p>大萧条的意外遗产是生产力的隐性积累，到50年代集中释放：1945—1949年售出2,100万辆汽车，随后六年又售出3,700万辆；1945—1950年落成700万套住房，到1955年再增800万套。更关键的是分配的公平：美国人平均工资1940—1948年翻了一番，到1963年又翻一番；顶端1%人群的税后收入占比从13%降至7%；女性劳动参与率持续攀升，少数族裔的权利开始起步。普通人开雪佛兰，富人开凯迪拉克，电视广播抹平了阶级差距——正如保罗·格雷厄姆所言，那时几千万户人家每晚在同一时间收看同一个节目。收入水平越接近，生活水平就越一致，人们身边到处是与自己相仿的同龄人。债务虽在飞涨，但收入涨得更快，家庭债务占收入比重始终低于60%，无人在意。</p>
+
+  <h3 class="kp"><span class="kp-n">03</span>1973年之后：预期与现实的大撕裂</h3>
+  <p>1973年是转折之年：失业率创三十年代以来新高，通胀居高不下，短期利率十年间从2.5%升至8%。此后的繁荣仍在——里根的"美国之晨"、克林顿的新经济——但等量的增长进入了完全不同的口袋：1993—2012年，顶端1%人群的收入增长86.1%，其余99%仅增长6.6%。问题在于，人们的预期仍停留在战后那种"大家都过得差不多"的年代。投资银行家乔年入90万美元，买大房豪车送子女进名校；年薪8万的分行经理彼得看着乔的生活，潜意识里认为自己也有权过上类似的日子——那是父母那一代的真实，却已是过去式。于是彼得背上巨额房贷与4.5万美元卡债：美国家庭新购房屋面积中位数在工资停滞期增长了50%，家庭债务占收入之比从1973年的约60%攀升至2007年的130%以上。海曼·明斯基所说的时刻到了——2008年，就像动画片里踩空的大野狼，人们向下看了一眼，然后坠了下去。</p>
+
+  <div class="case-card">
+    <div class="case-head"><span class="case-name">乔与彼得：同一种生活方式的两张账单</span><span class="case-meta">20世纪80—90年代 · 美国</span></div>
+    <p>乔负担得起他的生活，彼得负担不起却被迫追求同样的生活。源于50—70年代的平等文化，天真地演变为赶时髦、讲排场、向左邻右舍看齐的文化；广告与互联网又让每个人都能看见别人怎样生活，火上浇油。</p>
+    <p>新茶党运动、"占领华尔街"、英国脱欧、特朗普——每种现象背后都有一个群体在呐喊："停车，我要下去！"他们愤怒的共同根源，是战后形成的社会本该大体平等的预期落了空。</p>
+  </div>
+
+  <div class="callout insight"><strong>核心观点</strong>　范式一旦确立就很难改变。量化宽松、企业债务支持与减税让拥有金融资产的富人更受益，成功不再属于有能力的人，回报也比以往更高——而人们迟迟不肯放弃那个"太美好所以难舍"的旧梦。预期的调整总是晚于实际情况的变化，这正是理解今日消费者心态的钥匙。</div>
+  <div class="fn">附录中提及的历史细节均出自原书：GI 法案购房条款、1950 年第一张信用卡、债务利息免税、1950 年代家庭负债增速对比、1973 年利率与失业率数据、1993–2012 年收入分化数据等，皆以原文译述为准。</div>
+</section>
+
+<section class="chapter" id="toolbox">
+  <div class="ch-kicker">实战工具箱 · TOOLBOX</div>
+  <h2 class="ch-title">豪泽尔的家庭理财原则与读者行动清单</h2>
+  <p class="ch-sub">从作者的自我陈述中提炼可直接套用的框架——适合他的未必适合你，但判断标准是通用的。</p>
+
+  <div class="fig-cap">图 D-1 ｜ 全书心智地图：六大核心观点总览</div>
+  <div class="svg-wrap">
+    <svg viewBox="0 0 900 520" width="100%" xmlns="http://www.w3.org/2000/svg">
+      <!-- 连线 -->
+      <g stroke="var(--gold)" stroke-width="1.5" opacity="0.85">
+        <line x1="450" y1="260" x2="160" y2="105"/>
+        <line x1="450" y1="260" x2="740" y2="105"/>
+        <line x1="450" y1="260" x2="125" y2="265"/>
+        <line x1="450" y1="260" x2="775" y2="265"/>
+        <line x1="450" y1="260" x2="160" y2="415"/>
+        <line x1="450" y1="260" x2="740" y2="415"/>
+      </g>
+      <!-- 连线节点小圆点 -->
+      <g fill="var(--gold)">
+        <circle cx="450" cy="260" r="4"/>
+        <circle cx="160" cy="105" r="3.5"/>
+        <circle cx="740" cy="105" r="3.5"/>
+        <circle cx="125" cy="265" r="3.5"/>
+        <circle cx="775" cy="265" r="3.5"/>
+        <circle cx="160" cy="415" r="3.5"/>
+        <circle cx="740" cy="415" r="3.5"/>
+      </g>
+      <!-- 分支节点 -->
+      <g>
+        <rect x="60" y="71" width="200" height="68" rx="34" fill="var(--green)" fill-opacity="0.12" stroke="var(--green)"/>
+        <text x="160" y="99" text-anchor="middle" font-size="18" fill="var(--ink)">行为 &gt; 智商</text>
+        <text x="160" y="122" text-anchor="middle" font-size="13" fill="var(--ink-soft)">没有人真的对钱失去理智</text>
+
+        <rect x="640" y="71" width="200" height="68" rx="34" fill="var(--green)" fill-opacity="0.12" stroke="var(--green)"/>
+        <text x="740" y="99" text-anchor="middle" font-size="18" fill="var(--ink)">复利与时间</text>
+        <text x="740" y="122" text-anchor="middle" font-size="13" fill="var(--ink-soft)">时间是最强大的力量</text>
+
+        <rect x="25" y="231" width="200" height="68" rx="34" fill="var(--green)" fill-opacity="0.12" stroke="var(--green)"/>
+        <text x="125" y="259" text-anchor="middle" font-size="17" fill="var(--ink)">合乎情理 &gt; 绝对理性</text>
+        <text x="125" y="282" text-anchor="middle" font-size="13" fill="var(--ink-soft)">能睡踏实的方案最好</text>
+
+        <rect x="675" y="231" width="200" height="68" rx="34" fill="var(--green)" fill-opacity="0.12" stroke="var(--green)"/>
+        <text x="775" y="259" text-anchor="middle" font-size="18" fill="var(--ink)">存钱与自由</text>
+        <text x="775" y="282" text-anchor="middle" font-size="13" fill="var(--ink-soft)">财富藏在看不见的地方</text>
+
+        <rect x="60" y="381" width="200" height="68" rx="34" fill="var(--green)" fill-opacity="0.12" stroke="var(--green)"/>
+        <text x="160" y="409" text-anchor="middle" font-size="18" fill="var(--ink)">容错空间</text>
+        <text x="160" y="432" text-anchor="middle" font-size="13" fill="var(--ink-soft)">留在游戏场上比什么都重要</text>
+
+        <rect x="640" y="381" width="200" height="68" rx="34" fill="var(--green)" fill-opacity="0.12" stroke="var(--green)"/>
+        <text x="740" y="409" text-anchor="middle" font-size="18" fill="var(--ink)">谦卑与知足</text>
+        <text x="740" y="432" text-anchor="middle" font-size="13" fill="var(--ink-soft)">尊重运气与风险的力量</text>
+      </g>
+      <!-- 中心节点 -->
+      <ellipse cx="450" cy="260" rx="98" ry="48" fill="var(--gold)" fill-opacity="0.15" stroke="var(--gold)" stroke-width="2"/>
+      <text x="450" y="255" text-anchor="middle" font-size="21" fill="var(--ink)">金钱心理学</text>
+      <text x="450" y="280" text-anchor="middle" font-size="13" fill="var(--ink-soft)">财富 · 人性 · 幸福</text>
+    </svg>
+  </div>
+
+  <h3 class="kp"><span class="kp-n">01</span>豪泽尔家的七条个人理财原则</h3>
+  <ul class="frame-list">
+    <li><strong>目标只有一个：独立自主。</strong>不追求最高回报率，也不为炫耀而玩金钱游戏，只求每天早上醒来都能确定，一家人可以按自己的方式做想做的任何事。</li>
+    <li><strong>欲望不随收入水涨船高。</strong>收入增长十几年来生活方式基本不变，每一美元新增收入几乎都变成了储蓄——储蓄率由控制欲望决定，而非由收入水平决定。</li>
+    <li><strong>全款买房，不要抵押贷款。</strong>从理论上看这是最糟的财务决定，从心理上看却是最好的：完全拥有一处房产的自主感，远超利差投资的收益。合乎情理优先于绝对理性。</li>
+    <li><strong>持有约两成流动资金。</strong>高于顾问推荐的标准，只为把"被迫卖出股票"的概率降到零——复利的第一条原则是永远不要打断这个过程。</li>
+    <li><strong>为意外而存钱，不为标的而存钱。</strong>每个人无一例外终将面对一笔没预料到的巨大开支；无特定用途的丰厚储蓄是对意外的最佳对冲。</li>
+    <li><strong>低成本指数基金定投，长期持有。</strong>不做世界上最伟大的投资者影响甚微，做一个糟糕的投资者影响巨大；既然不冒险也能实现全部目标，何必去冒跑赢市场的额外风险。</li>
+    <li><strong>策略押注在三件可控的事上。</strong>高储蓄率、耐心，以及相信未来几十年全球经济将持续创造价值的乐观态度——努力和结果之间在投资领域几乎没有关系，抓住少数几个关键变量即可。</li>
+  </ul>
+
+  <h3 class="kp"><span class="kp-n">02</span>读者行动清单</h3>
+  <div class="callout insight"><strong>建立储蓄率目标</strong>　先算出收入的固定储蓄比例，再把生活水准锁定在低于收入水平的刻度上。自主性与收入无关，由储蓄率决定——这是你唯一完全可控的杠杆。</div>
+  <div class="callout insight"><strong>写下你的投资哲学并坚持</strong>　像作者一样用一句话说清自己的策略（例如：闲钱定投低成本指数基金、长期持有、不择时），写下来贴在看得见的地方，别受其他玩家游戏的干扰。</div>
+  <div class="callout insight"><strong>预留容错空间</strong>　为每项计划假设出错的可能：留足六个月以上的应急现金，确保任何意外开支都不会迫使你在错误的时点卖出资产。</div>
+  <div class="callout insight"><strong>警惕炫耀性消费</strong>　别人不会像你自己那样在意你有多少财富；豪车名表换来的不如善良谦逊换来的尊重持久。花钱前问一句：我想要的是物品本身，还是他人的认可？</div>
+  <div class="callout insight"><strong>定期复盘人生目标的变化</strong>　目标和愿望会随时间改变，过去的极端决定越极端越易后悔。每年检视一次：财务安排是否仍然服务于当下的生活，而不是多年前的执念。</div>
+  <div class="callout insight"><strong>用钱买时间与自由</strong>　在任何时候和喜欢的人做喜欢的事、想做多久就做多久的能力，是财富最大的红利。凡是不侵蚀这份自由的钱，才花得值。</div>
+</section>
+
+<section class="chapter" id="quotes">
+  <div class="ch-kicker">全书金句集 · QUOTES</div>
+  <h2 class="ch-title">值得抄录下来的句子</h2>
+  <p class="ch-sub">摘自原书第19章、第20章与附录的译文，注明出处。</p>
+
+  <figure class="quote"><blockquote>当事态朝正确的方向发展时，要保持谦逊；当事态朝错误的方向发展时，要心怀谅解或同情。任何事都没有表面看来那样美好或糟糕。</blockquote><figcaption>—— 第19章 · 总结</figcaption></figure>
+
+  <figure class="quote"><blockquote>通过缩减你今天可以购买的东西，你创造了未来可以购买更多东西或拥有更多选择的机会，而财富就是这样积累下来的。</blockquote><figcaption>—— 第19章 · 总结</figcaption></figure>
+
+  <figure class="quote"><blockquote>如果你想提高投资回报，最简单而有效的方法就是拉长时间。时间是投资中最强大的力量。</blockquote><figcaption>—— 第19章 · 总结</figcaption></figure>
+
+  <figure class="quote"><blockquote>在任何时候和喜欢的人去做喜欢的事而且想做多久就做多久的能力，才是财富能带给你的最大红利。</blockquote><figcaption>—— 第19章 · 总结</figcaption></figure>
+
+  <figure class="quote"><blockquote>存钱。存就是了。存钱不需要什么特定理由。每个人的生命都是由一连串意外组成的。</blockquote><figcaption>—— 第19章 · 总结</figcaption></figure>
+
+  <figure class="quote"><blockquote>无论何时，只要想改，就可以在某天早上醒来后随心改变当前的生活方式，可能是所有理财计划的终极目的。</blockquote><figcaption>—— 第20章 · 我的理财方案</figcaption></figure>
+
+  <figure class="quote"><blockquote>自主性与你的收入水平无关，而是由你的储蓄率决定的。而当你的收入超过一定水平后，你的储蓄率是通过控制自己对生活方式的欲望决定的。</blockquote><figcaption>—— 第20章 · 我的理财方案</figcaption></figure>
+
+  <figure class="quote"><blockquote>好的决定并不总是理性的。在某些时候，你必须在"正确"和幸福之间做出选择。</blockquote><figcaption>—— 第20章 · 我的理财方案</figcaption></figure>
+
+  <figure class="quote"><blockquote>复利的第一条原则是：除非万不得已，永远不要打断这个过程。</blockquote><figcaption>—— 查理·芒格，转引自第20章</figcaption></figure>
+
+  <figure class="quote"><blockquote>不做世界上最伟大的投资者对我来说影响甚微，但做一个糟糕的投资者对我来说影响巨大。</blockquote><figcaption>—— 第20章 · 我的理财方案</figcaption></figure>
+
+  <figure class="quote"><blockquote>退出无谓的激烈竞争，以获得内心平静为目标来调节你的行为，才是真正的成功。</blockquote><figcaption>—— 纳西姆·塔勒布，转引自第20章</figcaption></figure>
+
+  <figure class="quote"><blockquote>预期的调整总是晚于实际情况的变化。经济形势变了，可人们仍然坚守着当初的预期。</blockquote><figcaption>—— 附录 · 美国消费者心态形成简史</figcaption></figure>
+</section>
+
+
+<!-- ======== _tmp_shell_tail.html ======== -->
+</main>
+
+<footer>
+  <div class="fin">终 · FIN</div>
+  <p>《金钱心理学：财富、人性和幸福的永恒真相》读书笔记 ｜ 作者：摩根·豪泽尔（Morgan Housel）　译者：李青宗<br>
+  民主与建设出版社 · 后浪出品 ｜ 本页为个人学习笔记，单文件离线可用，支持亮 / 暗双主题</p>
+</footer>
+
+<button class="tbtn" id="backtop" title="回到顶部">↑</button>
+
+<script>
+(function(){
+  // ---------- 主题切换（记忆 + 跟随系统） ----------
+  var root=document.documentElement, btn=document.getElementById('themeBtn');
+  var saved=null;
+  try{saved=localStorage.getItem('pom-theme')}catch(e){}
+  if(!saved){saved=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}
+  apply(saved);
+  btn.addEventListener('click',function(){apply(root.getAttribute('data-theme')==='dark'?'light':'dark')});
+  function apply(t){root.setAttribute('data-theme',t);btn.textContent=t==='dark'?'☀️':'🌙';try{localStorage.setItem('pom-theme',t)}catch(e){}}
+
+  // ---------- 目录导航（按文档顺序） ----------
+  var nav=document.getElementById('topnav');
+  var navLinks={};
+  document.querySelectorAll('section[id]').forEach(function(s){
+    var id=s.id, label;
+    if(id==='top'){label='卷首'}
+    else{
+      var k=s.querySelector('.ch-kicker'), t=s.querySelector('h2.ch-title,h2');
+      var kn=k?k.textContent.split('·')[0].trim():'';
+      var tt=t?t.textContent.trim():'';
+      label=(kn?kn+' ':'')+tt;
+      if(label.length>15)label=label.slice(0,14)+'…';
+    }
+    var a=document.createElement('a'); a.href='#'+id; a.dataset.id=id; a.textContent=label;
+    nav.appendChild(a); navLinks[id]=a;
+  });
+  function setActive(id){
+    nav.querySelectorAll('a.active').forEach(function(a){a.classList.remove('active')});
+    var a=navLinks[id]; if(!a)return;
+    a.classList.add('active');
+    try{a.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'})}catch(e){}
+  }
+
+  // ---------- 表格包裹（圆角 + 横向滚动） ----------
+  document.querySelectorAll('table.tbl').forEach(function(t){
+    var w=document.createElement('div'); w.className='tbl-wrap';
+    t.parentNode.insertBefore(w,t); w.appendChild(t);
+  });
+
+  // ---------- 杂志式分栏重排 ----------
+  document.querySelectorAll('section.chapter').forEach(function(sec){
+    // 章头双栏：左侧标题组，右侧题词
+    var k=sec.querySelector(':scope > .ch-kicker'),
+        t=sec.querySelector(':scope > h2.ch-title'),
+        sub=sec.querySelector(':scope > p.ch-sub'),
+        epi=sec.querySelector(':scope > blockquote.epigraph');
+    if(k&&t&&epi&&!sec.querySelector('.ch-head')){
+      var head=document.createElement('div'); head.className='ch-head';
+      var left=document.createElement('div'); left.className='ch-left';
+      k.parentNode.insertBefore(head,k);
+      [k,t,sub].forEach(function(el){ if(el) left.appendChild(el); });
+      head.appendChild(left); head.appendChild(epi);
+    }
+    // 相邻同型卡片自动编组入栅格
+    [['figure.quote','quote-grid'],['.callout','card-grid'],['.case-card','case-grid']].forEach(function(pair){
+      var sel=pair[0], cls=pair[1], run=[];
+      function flush(){
+        if(run.length>1){
+          var w=document.createElement('div'); w.className=cls;
+          run[0].parentNode.insertBefore(w,run[0]);
+          run.forEach(function(el){ w.appendChild(el); });
+        }
+        run=[];
+      }
+      Array.prototype.slice.call(sec.children).forEach(function(el){
+        if(el.matches(sel)) run.push(el); else flush();
+      });
+      flush();
+    });
+  });
+  // 长方法清单转双栏
+  document.querySelectorAll('.frame-list').forEach(function(ul){
+    if(ul.querySelectorAll(':scope > li').length>=4) ul.classList.add('two-col');
+  });
+
+  // ---------- 阅读进度 & 返回顶部 ----------
+  var bar=document.getElementById('progress'), bt=document.getElementById('backtop');
+  window.addEventListener('scroll',function(){
+    var h=document.documentElement.scrollHeight-innerHeight;
+    bar.style.width=(h>0?(scrollY/h*100):0)+'%';
+    bt.classList.toggle('show',scrollY>900);
+  },{passive:true});
+  bt.addEventListener('click',function(){scrollTo({top:0,behavior:'smooth'})});
+
+  // ---------- 目录高亮（滚动侦测） ----------
+  var spy=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){ setActive(e.target.id); }
+    });
+  },{rootMargin:'-30% 0px -60% 0px'});
+  document.querySelectorAll('section[id]').forEach(function(s){spy.observe(s)});
+  // 兜底：滚动到页面最底部时激活最后一个目录项
+  window.addEventListener('scroll',function(){
+    if(innerHeight+scrollY>=document.documentElement.scrollHeight-4){
+      var ids=Object.keys(navLinks); setActive(ids[ids.length-1]);
+    }
+  },{passive:true});
+
+  // ---------- 章节淡入（尊重减弱动效偏好） ----------
+  var reduced=false;
+  try{reduced=matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
+  if(!reduced){
+    var fader=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){
+          e.target.style.transition='opacity .7s ease, transform .7s ease';
+          e.target.style.opacity=1; e.target.style.transform='none';
+          fader.unobserve(e.target);
+        }
+      });
+    },{rootMargin:'0px 0px -8% 0px'});
+    document.querySelectorAll('section.chapter > *, section.sim').forEach(function(el){
+      el.style.opacity=0; el.style.transform='translateY(18px)';
+      fader.observe(el);
+    });
+  }
+})();
+</script>
+</body>
+</html>
+

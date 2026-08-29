@@ -1,0 +1,2760 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>百万富翁快车道 · 读书笔记</title>
+<style>
+/* ═══════════════════════════════════════════════
+   CSS VARIABLES & RESET
+═══════════════════════════════════════════════ */
+:root {
+  --color-primary: #1a3a2a;
+  --color-primary-dark: #0f2218;
+  --color-primary-light: #2a5a3a;
+  --color-accent: #c9a84c;
+  --color-accent-light: #e8c97a;
+  --color-accent-dark: #a8883c;
+  --color-bg: #f8f5f0;
+  --color-bg-alt: #f0ece4;
+  --color-bg-card: #ffffff;
+  --color-text: #2c2c2c;
+  --color-text-secondary: #5a5a5a;
+  --color-text-muted: #888;
+  --color-border: #d4c9b8;
+  --color-border-light: #e8e2d8;
+  --shadow-sm: 0 2px 8px rgba(26,58,42,0.08);
+  --shadow-md: 0 4px 20px rgba(26,58,42,0.12);
+  --shadow-lg: 0 8px 40px rgba(26,58,42,0.16);
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --font-heading: "Noto Serif SC", "Source Han Serif SC", "Source Han Serif CN", Georgia, serif;
+  --font-body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+  --max-width: 920px;
+  --nav-height: 64px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.85;
+  font-weight: 400;
+  min-height: 100vh;
+}
+
+/* ═══════════════════════════════════════════════
+   TYPOGRAPHY
+═══════════════════════════════════════════════ */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--color-primary-dark);
+}
+
+h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); }
+h2 { font-size: clamp(1.4rem, 3vw, 1.9rem); }
+h3 { font-size: clamp(1.1rem, 2.5vw, 1.4rem); }
+h4 { font-size: 1.1rem; }
+
+p { margin-bottom: 1.1em; }
+p:last-child { margin-bottom: 0; }
+
+a {
+  color: var(--color-accent-dark);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+a:hover { border-bottom-color: var(--color-accent); }
+
+strong { font-weight: 700; color: var(--color-primary-dark); }
+em { font-style: italic; }
+
+::selection {
+  background-color: var(--color-accent);
+  color: #fff;
+}
+
+/* ═══════════════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════════════ */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main { flex: 1; }
+
+/* ═══════════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════════ */
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(248,245,240,0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-border-light);
+  height: var(--nav-height);
+}
+
+.top-nav .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  gap: 16px;
+}
+
+.nav-brand {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-primary-dark);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.nav-brand span {
+  color: var(--color-accent-dark);
+}
+
+.nav-links {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.nav-links::-webkit-scrollbar { display: none; }
+
+.nav-links a {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  border-radius: 20px;
+  white-space: nowrap;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════
+   COVER / HERO
+═══════════════════════════════════════════════ */
+.book-cover {
+  background: linear-gradient(160deg, var(--color-primary-dark) 0%, var(--color-primary) 50%, var(--color-primary-light) 100%);
+  color: #fff;
+  padding: 80px 0 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.book-cover::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 1;
+}
+
+.book-cover .container { position: relative; z-index: 1; }
+
+.cover-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--color-accent-light);
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.cover-eyebrow::before, .cover-eyebrow::after {
+  content: '';
+  display: block;
+  width: 30px;
+  height: 1px;
+  background: var(--color-accent);
+}
+
+.book-cover h1 {
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  color: #fff;
+  margin-bottom: 12px;
+  line-height: 1.15;
+}
+
+.book-cover .subtitle {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 32px;
+  font-style: italic;
+}
+
+.book-cover .cover-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 36px;
+}
+
+.cover-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cover-meta-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.cover-meta-value {
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.9);
+}
+
+.cover-divider {
+  width: 60px;
+  height: 3px;
+  background: var(--color-accent);
+  border-radius: 2px;
+  margin: 28px 0;
+}
+
+.book-cover .cover-intro {
+  font-size: 1.05rem;
+  color: rgba(255,255,255,0.8);
+  max-width: 700px;
+  line-height: 1.9;
+}
+
+.book-cover .cover-intro strong {
+  color: var(--color-accent-light);
+}
+
+/* ═══════════════════════════════════════════════
+   PART DIVIDER
+═══════════════════════════════════════════════ */
+.part-divider {
+  padding: 80px 0 60px;
+  text-align: center;
+  position: relative;
+}
+
+.part-divider::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 40px;
+  background: var(--color-border);
+}
+
+.part-number {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--color-accent-dark);
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.part-divider h2 {
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  margin-bottom: 16px;
+}
+
+.part-desc {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.8;
+}
+
+.part-divider .part-emoji {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  display: block;
+}
+
+/* ═══════════════════════════════════════════════
+   CHAPTER HEADERS
+═══════════════════════════════════════════════ */
+.chapter-header {
+  padding: 56px 0 32px;
+  border-bottom: 1px solid var(--color-border-light);
+  margin-bottom: 36px;
+}
+
+.chapter-number {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--color-accent-dark);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.chapter-number::after {
+  content: '';
+  flex: 1;
+  max-width: 60px;
+  height: 1px;
+  background: var(--color-accent);
+}
+
+.chapter-header h3 {
+  font-size: clamp(1.2rem, 2.5vw, 1.65rem);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.chapter-subtitle {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.chapter-header + * { margin-top: 0; }
+
+/* ═══════════════════════════════════════════════
+   SECTION BLOCKS
+═══════════════════════════════════════════════ */
+.section-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--color-accent-dark);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-label::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 16px;
+  background: var(--color-accent);
+  border-radius: 2px;
+}
+
+/* ═══════════════════════════════════════════════
+   CORE ARGUMENT CARDS (Green BG)
+═══════════════════════════════════════════════ */
+.core-card {
+  background: linear-gradient(135deg, #e8f2ec 0%, #d4e8da 100%);
+  border: 1px solid #b8d4be;
+  border-left: 4px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  padding: 24px 28px;
+  margin: 28px 0;
+}
+
+.core-card h4 {
+  color: var(--color-primary-dark);
+  font-size: 1rem;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.core-card h4::before {
+  content: '💡';
+  font-size: 1rem;
+}
+
+/* ═══════════════════════════════════════════════
+   QUOTE BLOCKS
+═══════════════════════════════════════════════ */
+.quote-block {
+  position: relative;
+  margin: 32px 0;
+  padding: 24px 28px 24px 56px;
+  background: var(--color-bg-alt);
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--color-accent);
+}
+
+.quote-block::before {
+  content: '"';
+  position: absolute;
+  top: 8px;
+  left: 18px;
+  font-family: Georgia, serif;
+  font-size: 3.5rem;
+  color: var(--color-accent);
+  line-height: 1;
+  opacity: 0.6;
+}
+
+.quote-block p {
+  font-size: 1.02rem;
+  font-style: italic;
+  color: var(--color-primary-dark);
+  margin-bottom: 8px;
+  line-height: 1.8;
+}
+
+.quote-block p:last-child { margin-bottom: 0; }
+
+.quote-attribution {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin-top: 10px;
+  font-style: normal;
+}
+
+/* ═══════════════════════════════════════════════
+   CRITICAL ANALYSIS (Warning/Gray BG)
+═══════════════════════════════════════════════ */
+.critical-block {
+  background: linear-gradient(135deg, #f5f0e8 0%, #ede8de 100%);
+  border: 1px solid #d4c8b0;
+  border-left: 4px solid #b08040;
+  border-radius: var(--radius-md);
+  padding: 24px 28px;
+  margin: 28px 0;
+}
+
+.critical-block h4 {
+  color: #7a5a20;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.critical-block h4::before {
+  content: '⚠️';
+  font-size: 0.95rem;
+}
+
+.critical-block ul {
+  margin-left: 0;
+  padding-left: 20px;
+}
+
+.critical-block li {
+  margin-bottom: 6px;
+  color: #5a4020;
+  font-size: 0.92rem;
+}
+
+.critical-block li::marker { color: var(--color-accent-dark); }
+
+/* ═══════════════════════════════════════════════
+   CROSS-FIELD BLOCK (Different Style)
+═══════════════════════════════════════════════ */
+.crossfield-block {
+  background: linear-gradient(135deg, #eae8f5 0%, #e2dff0 100%);
+  border: 1px solid #c0bce0;
+  border-left: 4px solid #7060c0;
+  border-radius: var(--radius-md);
+  padding: 24px 28px;
+  margin: 28px 0;
+}
+
+.crossfield-block h4 {
+  color: #403080;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.crossfield-block h4::before {
+  content: '🔗';
+  font-size: 0.95rem;
+}
+
+.crossfield-block ul {
+  margin-left: 0;
+  padding-left: 20px;
+}
+
+.crossfield-block li {
+  margin-bottom: 6px;
+  color: #3a2870;
+  font-size: 0.92rem;
+}
+
+.crossfield-block li::marker { color: #7060c0; }
+
+/* ═══════════════════════════════════════════════
+   SUMMARY BLOCK
+═══════════════════════════════════════════════ */
+.summary-block {
+  background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+  color: #fff;
+  border-radius: var(--radius-md);
+  padding: 28px 32px;
+  margin: 36px 0;
+}
+
+.summary-block h4 {
+  color: var(--color-accent-light);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 14px;
+  font-family: var(--font-body);
+  font-weight: 700;
+}
+
+.summary-block p, .summary-block li {
+  color: rgba(255,255,255,0.88);
+  font-size: 0.93rem;
+}
+
+.summary-block ul {
+  padding-left: 20px;
+}
+
+.summary-block li {
+  margin-bottom: 6px;
+}
+
+.summary-block li::marker { color: var(--color-accent); }
+
+/* ═══════════════════════════════════════════════
+   TABLES
+═══════════════════════════════════════════════ */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 24px 0;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  background: var(--color-bg-card);
+}
+
+thead {
+  background: var(--color-primary-dark);
+}
+
+thead th {
+  padding: 14px 16px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: rgba(255,255,255,0.92);
+  border-bottom: 2px solid var(--color-primary);
+  white-space: nowrap;
+}
+
+tbody tr {
+  border-bottom: 1px solid var(--color-border-light);
+  transition: background 0.15s;
+}
+
+tbody tr:last-child { border-bottom: none; }
+
+tbody tr:nth-child(even) {
+  background: rgba(240,236,228,0.5);
+}
+
+tbody tr:hover { background: rgba(201,168,76,0.06); }
+
+tbody td {
+  padding: 12px 16px;
+  vertical-align: top;
+  line-height: 1.6;
+}
+
+tbody td:first-child {
+  font-weight: 600;
+  color: var(--color-primary-dark);
+}
+
+/* ═══════════════════════════════════════════════
+   LISTS
+═══════════════════════════════════════════════ */
+ul, ol {
+  padding-left: 24px;
+  margin: 12px 0;
+}
+
+li {
+  margin-bottom: 6px;
+  line-height: 1.75;
+}
+
+ul li::marker { color: var(--color-accent-dark); }
+
+ol li::marker {
+  color: var(--color-accent-dark);
+  font-weight: 700;
+}
+
+.sub-list {
+  margin-top: 6px;
+  margin-bottom: 0;
+}
+
+/* ═══════════════════════════════════════════════
+   BOOK STRUCTURE TABLE (Part Overview)
+═══════════════════════════════════════════════ */
+.book-structure {
+  margin: 40px 0;
+}
+
+.book-structure .section-label { margin-bottom: 20px; }
+
+/* ═══════════════════════════════════════════════
+   KNOWLEDGE POINTS
+═══════════════════════════════════════════════ */
+.knowledge-block {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 24px 28px;
+  margin: 24px 0;
+}
+
+.knowledge-block h4 {
+  font-size: 0.95rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--color-border-light);
+  padding-bottom: 10px;
+}
+
+.knowledge-block h4::before {
+  content: '📖';
+  font-size: 0.95rem;
+}
+
+.knowledge-block dl { margin: 0; }
+
+.knowledge-block dt {
+  font-weight: 700;
+  color: var(--color-primary);
+  font-size: 0.9rem;
+  margin-top: 12px;
+  margin-bottom: 4px;
+}
+
+.knowledge-block dt:first-child { margin-top: 0; }
+
+.knowledge-block dd {
+  color: var(--color-text-secondary);
+  font-size: 0.88rem;
+  margin-left: 0;
+  line-height: 1.7;
+}
+
+/* ═══════════════════════════════════════════════
+   STEPS / NUMBERED LIST
+═══════════════════════════════════════════════ */
+.step-list {
+  list-style: none;
+  padding-left: 0;
+  counter-reset: step-counter;
+}
+
+.step-list li {
+  counter-increment: step-counter;
+  position: relative;
+  padding-left: 44px;
+  margin-bottom: 14px;
+}
+
+.step-list li::before {
+  content: counter(step-counter);
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 28px;
+  height: 28px;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════════
+   GOLDEN SENTENCE (small quote)
+═══════════════════════════════════════════════ */
+.golden-sentence {
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--color-primary-dark);
+  border-left: 3px solid var(--color-accent);
+  padding: 12px 20px;
+  margin: 20px 0;
+  background: rgba(201,168,76,0.06);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+/* ═══════════════════════════════════════════════
+   PART DIVIDER PAGE
+═══════════════════════════════════════════════ */
+.part-page {
+  background: linear-gradient(160deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: #fff;
+  padding: 100px 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.part-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.04' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.part-page .container { position: relative; z-index: 1; }
+
+.part-page .part-badge {
+  display: inline-block;
+  background: var(--color-accent);
+  color: var(--color-primary-dark);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  padding: 4px 16px;
+  border-radius: 20px;
+  margin-bottom: 24px;
+}
+
+.part-page h2 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  color: #fff;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.part-page .part-tagline {
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.75);
+  max-width: 560px;
+  margin: 0 auto 32px;
+  line-height: 1.8;
+  font-style: italic;
+}
+
+.part-page .part-stats {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.part-stat {
+  text-align: center;
+}
+
+.part-stat-number {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-accent-light);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.part-stat-label {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.6);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ═══════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════ */
+.site-footer {
+  background: var(--color-primary-dark);
+  color: rgba(255,255,255,0.6);
+  padding: 40px 0;
+  text-align: center;
+  margin-top: 80px;
+  font-size: 0.85rem;
+}
+
+.site-footer a { color: var(--color-accent-light); }
+
+/* ═══════════════════════════════════════════════
+   SCROLL TO TOP
+═══════════════════════════════════════════════ */
+.scroll-top {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: all 0.3s;
+  z-index: 50;
+}
+
+.scroll-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-top:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-2px);
+}
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  :root { --nav-height: 56px; }
+
+  .top-nav .nav-links { display: none; }
+  .top-nav .nav-links.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: var(--nav-height);
+    left: 0; right: 0;
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    padding: 12px;
+    box-shadow: var(--shadow-md);
+  }
+  .top-nav .nav-links.open a { padding: 10px 14px; }
+
+  .nav-toggle { display: flex; align-items: center; gap: 6px; }
+
+  .book-cover { padding: 50px 0 40px; }
+  .cover-meta { gap: 16px; }
+
+  .part-page { padding: 60px 0; }
+  .part-page .part-stats { gap: 24px; }
+
+  .chapter-header { padding: 40px 0 24px; }
+
+  .core-card, .critical-block, .crossfield-block,
+  .knowledge-block, .summary-block {
+    padding: 18px 20px;
+    margin: 20px 0;
+  }
+
+  table { font-size: 0.8rem; }
+  thead th, tbody td { padding: 10px 12px; }
+
+  blockquote, .quote-block { padding: 16px 16px 16px 40px; }
+  .quote-block::before { font-size: 2.5rem; left: 10px; }
+
+  h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.5rem; }
+}
+
+@media (max-width: 480px) {
+  .container { padding: 0 16px; }
+  .part-page h2 { font-size: 1.6rem; }
+  .book-cover h1 { font-size: 1.7rem; }
+}
+
+/* ═══════════════════════════════════════════════
+   PRINT
+═══════════════════════════════════════════════ */
+@media print {
+  .top-nav, .scroll-top { display: none; }
+  .book-cover { padding: 30px 0; }
+  .part-page { padding: 40px 0; }
+}
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+<!-- ══════════════════════════════════════════
+     TOP NAVIGATION
+══════════════════════════════════════════ -->
+<nav class="top-nav">
+  <div class="container">
+    <a href="#cover" class="nav-brand">百万富翁<span>快车道</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="#part1">Part 1</a>
+      <a href="#part2">Part 2</a>
+      <a href="#part3">Part 3</a>
+      <a href="#part4">Part 4</a>
+      <a href="#part5">Part 5</a>
+      <a href="#appendix">附录</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="菜单">☰ 目录</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ══════════════════════════════════════════
+     COVER / HERO
+══════════════════════════════════════════ -->
+<section class="book-cover" id="cover">
+  <div class="container">
+    <div class="cover-eyebrow">The Millionaire Fastlane</div>
+    <h1>百万富翁快车道</h1>
+    <p class="subtitle">破解财富密码的心理与数学公式 · 读书笔记完整版</p>
+
+    <div class="cover-divider"></div>
+
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <span class="cover-meta-label">作者</span>
+        <span class="cover-meta-value">MJ·德马科（MJ DeMarco）</span>
+      </div>
+      <div class="cover-meta-item">
+        <span class="cover-meta-label">译者</span>
+        <span class="cover-meta-value">郑磊 · 王占新</span>
+      </div>
+      <div class="cover-meta-item">
+        <span class="cover-meta-label">原版</span>
+        <span class="cover-meta-value">The Millionaire Fastlane</span>
+      </div>
+      <div class="cover-meta-item">
+        <span class="cover-meta-label">笔记范围</span>
+        <span class="cover-meta-value">第1–45章 + 附录A·B</span>
+      </div>
+    </div>
+
+    <div class="cover-intro">
+      <strong>这是一本关于财富观、创业与个人成长的书。</strong>
+      作者出身平民，从开出租车到建立互联网公司并成功出售，31岁买到兰博基尼，37岁实现真正自由。全书旗帜鲜明地反驳「努力工作+节俭持家+65岁退休」的传统慢车道思维，提出一条截然不同的财富路线——<strong>快车道</strong>。
+      <br><br>
+      本笔记涵盖原书全部45章内容，分为五大Part，涵盖三条财富路线图深度对比、五条快车道戒律、超级充电器20步等完整体系。
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     BOOK STRUCTURE OVERVIEW
+══════════════════════════════════════════ -->
+<section style="padding: 56px 0 0;">
+  <div class="container">
+    <div class="book-structure">
+      <div class="section-label">全书结构</div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>篇名</th>
+              <th>章次</th>
+              <th>核心主题</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>第1篇 轮椅上的财富</td><td>第1–2章</td><td>缓慢致富的本质与欺骗性；作者的个人觉醒故事</td></tr>
+            <tr><td>第2篇 财富是一场旅行</td><td>第3–4章</td><td>财富是过程而非结果；三条财富路线图概述</td></tr>
+            <tr><td>第3篇 贫穷：人行道路线图</td><td>第5–9章</td><td>人行道的特征、成因与危害</td></tr>
+            <tr><td>第4篇 平庸：慢车道路线图</td><td>第10–15章</td><td>慢车道的谎言与系统性缺陷</td></tr>
+            <tr><td>第5篇 财富：快车道路线图</td><td>第16–20章</td><td>快车道核心概念与系统引入</td></tr>
+            <tr><td>第6篇 获取财富的工具：你</td><td>第21–30章</td><td>影响力定律、决策力、时间管理、教育</td></tr>
+            <tr><td>第7篇 通向财富的正确道路</td><td>第31–37章</td><td>五条快车道戒律详解</td></tr>
+            <tr><td>第8篇 加速累积财富</td><td>第38–42章</td><td>执行速度、品牌、客户、口碑与团队</td></tr>
+            <tr><td>尾声 · 超级充电器</td><td>第43–45章</td><td>品牌构建、专注法则、20步行动框架</td></tr>
+            <tr><td>附录A·B</td><td>读者问答 + 40条指南</td><td>边缘案例处理、核心清单回顾</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     PART 1 DIVIDER
+══════════════════════════════════════════ -->
+<section class="part-page" id="part1">
+  <div class="container">
+    <div class="part-badge">Part One</div>
+    <h2>轮椅上的财富</h2>
+    <p class="part-tagline">缓慢致富是一场注定失败的游戏，它会将你的时间耗费在赌博中……65岁才富有，届时需要的是医生而不是兰博基尼。</p>
+    <div class="part-stats">
+      <div class="part-stat"><div class="part-stat-number">1–2</div><div class="part-stat-label">章次</div></div>
+      <div class="part-stat"><div class="part-stat-number">两条路线</div><div class="part-stat-label">核心洞见</div></div>
+      <div class="part-stat"><div class="part-stat-number">2001</div><div class="part-stat-label">原书出版</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     PART 1 CONTENT
+══════════════════════════════════════════ -->
+<section style="padding: 0 0 20px;">
+  <div class="container">
+
+    <!-- Chapter 1 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第1章</div>
+      <h3>伟大的欺骗</h3>
+      <p class="chapter-subtitle">The Great Trap — 缓慢致富的本质</p>
+    </div>
+
+    <div class="core-card">
+      <h4>核心论点</h4>
+      <p>缓慢致富是「轮椅上的财富计划」——65岁才富有，届时需要的是医生而不是兰博基尼。「理财专家」之所以发财，靠的不是慢车道建议，而是快车道。他们「教」你慢车道，自己却走快车道——这是系统性的欺骗。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>说白了，缓慢致富就是：牺牲你的今天、你的梦想、你的人生，当你生命几近尾声时，你将得到支付的股息。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>如果财富之路吞噬你充满活力的成年生活，那这条路一定是很烂的。如果你的财富之路过度依靠华尔街并且要赌上你毕生的时间，那么这条路一定是肮脏烂污的死胡同。</p>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>关键术语</h4>
+      <dl>
+        <dt>轮椅上的财富（Wealth in a Wheelchair）</dt>
+        <dd>缓慢致富的代名词——到65岁才致富，届时可能需要轮椅代步。这是本书的核心批判对象。</dd>
+        <dt>401K</dt>
+        <dd>美国员工退休计划，本书中被作为「慢车道策略」的代表。</dd>
+        <dt>「理财专家」的双重标准</dt>
+        <dd>他们教你的东西对他们自己不起作用，推销这些东西给他们带来了财富——这是制度性的欺骗。</dd>
+      </dl>
+    </div>
+
+    <div class="critical-block">
+      <h4>批判性分析</h4>
+      <ul>
+        <li><strong>极端化论证</strong>：作者将缓慢致富描述为「完全失败」，但实际上有些人确实通过此路径积累了财富，只是速度较慢。</li>
+        <li><strong>忽视结构性因素</strong>：过于强调个人选择和策略，忽视了家庭背景、教育机会、健康状况等初始条件。</li>
+        <li><strong>数据时效性</strong>：部分数据来自2001年，技术爆炸高峰期和2008年金融危机之前，经济环境与今天不同。</li>
+      </ul>
+    </div>
+
+    <div class="crossfield-block">
+      <h4>跨领域联想</h4>
+      <ul>
+        <li><strong>与纳西姆·塔勒布《黑天鹅》的对话</strong>：慢车道依赖的股票市场、共同基金、401K都是脆弱的系统，在黑天鹅事件（2008年金融危机）中不堪一击。</li>
+        <li><strong>与乔治·奥威尔《1984》「双重思想」的对话</strong>：「理财专家」推广对自己无效的策略（慢车道），却向公众推荐——这是制度性的欺骗。</li>
+        <li><strong>与芒格「最大化反面意见」的对话</strong>：作者要求读者质疑看似「常识」的主流财富建议，而非盲目接受。</li>
+      </ul>
+    </div>
+
+    <!-- Chapter 2 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第2章</div>
+      <h3>我是怎么逆转缓慢致富的</h3>
+      <p class="chapter-subtitle">作者的亲身觉醒故事</p>
+    </div>
+
+    <div class="core-card">
+      <h4>核心论点</h4>
+      <p>「名望或天赋不是致富的先决条件」——作者15岁时看到兰博基尼康塔什，决心不靠继承彩票，而是靠自己变富。90秒改变一生。研究「人数很少且隐秘的百万富翁群体」，发现：指数型增长（快车道）vs 线性增长（慢车道）是核心差异。当网站业务从「用时间换钱」转变为「被动收入流」时，真正的财富开始涌现。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>我没有一份工作，我有的是激情。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>当我的新朋友们出去喝酒聚会时，我却蹲在小公寓里反复推敲代码。我不知道这是星期四还是星期六，那并不重要。努力工作的荣耀感往往是这样的：你不觉得是在工作，相反觉得是在享受。</p>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>关键概念</h4>
+      <dl>
+        <dt>指数型财富增长</dt>
+        <dd>网站流量→客户→收入的非线性增长。与慢车道的线性增长（工作收入+复利）形成鲜明对比。</dd>
+        <dt>摇钱树（Money Tree）</dt>
+        <dd>可自动化运营、持续产生收入而无需投入时间投入的商业系统。</dd>
+        <dt>潜在客户开发（Lead Generation）</dt>
+        <dd>作者的创新盈利模式——不卖广告，卖「潜在客户」，在90年代末属于开创性做法。</dd>
+      </dl>
+    </div>
+
+    <div class="critical-block">
+      <h4>批判性分析</h4>
+      <ul>
+        <li><strong>幸存者偏差</strong>：作者描述了大量失败的创业尝试，但最终成功案例（卖掉网站）在整个过程中是极少数。</li>
+        <li><strong>时机依赖性</strong>：第一次成功变现（网络泡沫期被收购）高度依赖1999-2000年的互联网泡沫，这种时机几乎不可能复制。</li>
+        <li><strong>「卖掉公司后挥霍」的情节</strong>：作者第一次变现后「买了克尔维特」、投资失败，最终「只剩下不到30万」——这恰恰是他批判的「虚假财富」行为模式。</li>
+      </ul>
+    </div>
+
+    <div class="crossfield-block">
+      <h4>跨领域联想</h4>
+      <ul>
+        <li><strong>与硅谷「精益创业」方法的对话</strong>：作者虽然不知道这个术语，但他的实践完全符合「快速迭代、最小可行产品」的精益创业原则。</li>
+        <li><strong>与詹姆斯·克利尔《原子习惯》「环境设计」的对话</strong>：作者强调「控制环境」（搬到凤凰城）是改变行为系统的第一步。</li>
+      </ul>
+    </div>
+
+    <div class="summary-block">
+      <h4>本章小结</h4>
+      <ul>
+        <li>缓慢致富是一个「轮椅上的财富计划」——65岁才富有，需要的是医生而不是兰博基尼</li>
+        <li>「理财专家」教你的慢车道策略对他们自己无效，他们靠卖课/出书走的是快车道</li>
+        <li>作者没有名望和天赋，但通过研究隐秘的年轻百万富翁群体，发现了「指数型增长」vs「线性增长」的核心差异</li>
+        <li>摇钱树（被动收入系统）是从「时间换钱」转变为真正财富的关键</li>
+        <li>幸存者偏差和时机依赖是理解作者故事时必须保持警惕的两个因素</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     PART 2 DIVIDER
+══════════════════════════════════════════ -->
+<section class="part-page" id="part2">
+  <div class="container">
+    <div class="part-badge">Part Two</div>
+    <h2>财富是一场旅行</h2>
+    <p class="part-tagline">方向正确只是前提，还需要合适的工具、路线、车辆和速度。财富公式是一个整体，而不是一部分。</p>
+    <div class="part-stats">
+      <div class="part-stat"><div class="part-stat-number">3–4</div><div class="part-stat-label">章次</div></div>
+      <div class="part-stat"><div class="part-stat-number">三条</div><div class="part-stat-label">财富路线图</div></div>
+      <div class="part-stat"><div class="part-stat-number">四要素</div><div class="part-stat-label">财富公式</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     PART 2 CONTENT
+══════════════════════════════════════════ -->
+<section style="padding: 0 0 20px;">
+  <div class="container">
+
+    <!-- Chapter 3 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第3章</div>
+      <h3>旅行在财富之路上</h3>
+      <p class="chapter-subtitle">财富是一场旅行，而不仅仅是一条路</p>
+    </div>
+
+    <div class="core-card">
+      <h4>核心论点</h4>
+      <p>财富是一场旅行（Journey），而不仅仅是一条路（Road）。许多书籍只给出一个策略（买房地产！积极思考！），但没有给出完整的「配方」。财富公式就像食谱，需要多种配料按正确比例组合——单一配料不能成功。过程（Process）创造结果（Result），百万富翁的财富是过程的结果，而非神秘机遇的产物。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>如果你的焦点是道路和目的地，而不是旅途时，你追求的财富注定会折戟。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>过程造就了百万富翁，你耳闻目睹的结果来自过程。</p>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>四要素公式</h4>
+      <dl>
+        <dt>路线图</dt>
+        <dd>人行道 / 慢车道 / 快车道——决定你的方向</dd>
+        <dt>交通工具</dt>
+        <dd>你自己——你是财富系统的核心引擎</dd>
+        <dt>道路</dt>
+        <dd>商业 / 投资选择——具体执行路径</dd>
+        <dt>速度</dt>
+        <dd>执行力——你多快能把系统建起来</dd>
+      </dl>
+    </div>
+
+    <div class="crossfield-block">
+      <h4>跨领域联想</h4>
+      <ul>
+        <li><strong>与约瑟夫·坎贝尔「英雄之旅」的对话</strong>：财富旅途遵循「分离→考验→回归」的叙事结构，英雄必须独自面对挑战。</li>
+        <li><strong>与W.钱·金《蓝海战略》的对话</strong>：大多数财富书籍只提供「红海策略」（竞争激烈的传统路径），而快车道是「蓝海」——创造新的价值空间。</li>
+      </ul>
+    </div>
+
+    <!-- Chapter 4 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第4章</div>
+      <h3>财富路线图</h3>
+      <p class="chapter-subtitle">三条路线，三个目的地</p>
+    </div>
+
+    <div class="core-card">
+      <h4>核心论点</h4>
+      <p>「路线图」决定信念，信念决定行动，行动决定结果。三条路线图对应三个目的地：<br>
+      <strong>人行道</strong> → 贫穷 &nbsp;|&nbsp; <strong>慢车道</strong> → 平庸 &nbsp;|&nbsp; <strong>快车道</strong> → 财富<br>
+      每个路线图都有其内在的「真实本质」（True Nature），你无法通过一条不指向财富的路线图到达财富。</p>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>维度</th><th>人行道</th><th>慢车道</th><th>快车道</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>目的地</td><td>贫穷/破产</td><td>平庸</td><td>财富</td></tr>
+          <tr><td>核心公式</td><td>财富=收入+债务</td><td>财富=工作+投资收益</td><td>净利润+资产价值</td></tr>
+          <tr><td>时间框架</td><td>即时满足</td><td>40-50年</td><td>5-10年</td></tr>
+          <tr><td>控制者</td><td>外部因素（运气、雇主）</td><td>市场、雇主、政府</td><td>自己</td></tr>
+          <tr><td>核心思维</td><td>「活在今天」</td><td>「牺牲今天换明天」</td><td>「过程创造结果」</td></tr>
+          <tr><td>依赖</td><td>信用卡、即时满足</td><td>401K、共同基金、雇主</td><td>可规模化商业系统</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="quote-block">
+      <p>你的信念系统的作用就像一幅路线图、一个指南针，如果它是错的，那你将走一辈子弯路。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>虚构的信仰是错误的路线图，它们会带你走进死胡同，那里你永远找不到「下一个出口：财富」的指示牌。</p>
+    </div>
+
+    <div class="critical-block">
+      <h4>批判性分析</h4>
+      <ul>
+        <li><strong>路线图决定论的过度简化</strong>：似乎认为只要「更换路线图」就能改变结果，忽略了个人能力、社会资本、经济基础等中间变量。</li>
+        <li><strong>三条路线的二元划分过于绝对</strong>：实际上很多人的财务生活同时包含多条路线的特征，不是非此即彼。</li>
+      </ul>
+    </div>
+
+    <!-- Chapters 5-10: Sidewalk and Slow Lane -->
+    <div class="chapter-header">
+      <div class="chapter-number">第5–10章</div>
+      <h3>人行道与慢车道：贫穷与平庸的路线图</h3>
+      <p class="chapter-subtitle">两条被错误选择占据的财富路径</p>
+    </div>
+
+    <div class="core-card">
+      <h4>人行道（第5–9章）核心洞见</h4>
+      <p>人行道是阻力最小的路径，追求即时满足，不考虑明天，是大多数人的默认选择。55%美国家庭净资产为零或负数。生活方式奴役（Lifestyle Slavery）让人们为了维持高消费水平而被迫持续工作，形成恶性循环。虚假财富 vs 真实财富：前者通过债务和收入维持；后者来自资产和被动收入。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>人行道上从来不会有通往财富的出口匝道，只有一个「此路不通」的标牌，厄运随时会来临。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>糟糕的财务管理就像是赌博，坐庄的人总是赢家。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>看起来有钱才是真正富有的敌人。</p>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>财富三位一体</h4>
+      <dl>
+        <dt>Family（家庭）</dt>
+        <dd>人际关系——归属感的基础</dd>
+        <dt>Fitness（健康）</dt>
+        <dd>身体和心理健康——没有健康就没有自由</dd>
+        <dt>Freedom（自由）</dt>
+        <dd>选择的自由——财富的真正标志</dd>
+      </dl>
+    </div>
+
+    <div class="core-card">
+      <h4>慢车道（第10章）核心洞见</h4>
+      <p>慢车道是被「可信的人」（父母、老师、财务顾问）推广的错误方向，他们自己不信这套，却让公众相信。「5对2交易」的数学荒谬：用5天工作换2天自由，回报率是-60%——任何正常人都会拒绝这种投资。约书亚·贝尔火车站实验揭示了慢车道如何麻木人对生活中美好事物的感知。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>一个普通人每周辛苦工作50小时，50年后被迫退休，然后被送进养老院，希望在病痛缠身之前有尊严地死去，这不算疯狂吗？</p>
+    </div>
+
+    <div class="quote-block">
+      <p>对我来说，每天都是星期六，因为我没有卖掉星期一到星期五的时间。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>轮椅装不进兰博基尼的后备厢中。</p>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>慢车道思维路标</h4>
+      <dl>
+        <dt>债务观</dt><dd>债务是邪恶的，要不惜代价避免</dd>
+        <dt>时间观</dt><dd>时间很多，愿意用时间换钱</dd>
+        <dt>教育观</dt><dd>教育帮助获得更高薪水</dd>
+        <dt>金钱观</dt><dd>钱是稀缺的，必须极度节俭</dd>
+        <dt>主要收入来源</dt><dd>工作</dd>
+        <dt>主要财富增长</dt><dd>投资共同基金、401K、房产</dd>
+        <dt>财富公式</dt><dd>财富 = 工作 + 市场投资</dd>
+        <dt>目的</dt><dd>65岁退休</dd>
+        <dt>责任/控制</dt><dd>依赖雇主、经济环境、政府</dd>
+        <dt>人生观</dt><dd>放弃梦想，退而求其次</dd>
+      </dl>
+    </div>
+
+    <div class="critical-block">
+      <h4>批判性分析</h4>
+      <ul>
+        <li>对「65岁退休」目标的过度简化：并非所有人都将「退休」视为主要目标，有些人确实热爱工作，只是讨厌被工作控制。</li>
+        <li>忽视了慢车道的稳定性价值：对于有家庭、需要稳定医疗保障的人，慢车道的「确定性」可能比快车道的高风险更合适。</li>
+        <li>对401K/共同基金的全盘否定过于极端：低费率指数基金确实为许多遵循慢车道的人创造了实质财富。</li>
+      </ul>
+    </div>
+
+    <div class="crossfield-block">
+      <h4>跨领域联想</h4>
+      <ul>
+        <li><strong>与大卫·格雷伯「狗屁工作」（Bullshit Jobs）的对话</strong>：慢车道中的很多工作本质上是「无意义的工作」——需要「庆祝周末」才能忍受。</li>
+        <li><strong>与亚伯拉罕·马斯洛对「工作中的疏离感」的研究对话</strong>：慢车道工作产生疏离感，与人本主义心理学家对「异化劳动」的批评呼应。</li>
+        <li><strong>与丹尼尔·卡尼曼「快乐水车」的对话</strong>：收入超过约7.5万美元后，幸福感不再显著增加——但这可能是因为这些人被生活方式奴役了，而非收入本身的问题。</li>
+      </ul>
+    </div>
+
+    <div class="summary-block">
+      <h4>本章小结 · 人行道与慢车道</h4>
+      <ul>
+        <li><strong>人行道</strong>：追求即时满足，财富=收入+债务，55%美国家庭净资产为零或负数，最终目的地是贫穷</li>
+        <li><strong>慢车道</strong>：牺牲今天换明天，财富=工作+投资收益，但公式中的变量都不可控，40-50年时间成本极高</li>
+        <li><strong>财富=自由</strong>：真正的财富三位一体是家庭+健康+自由，而非物质商品</li>
+        <li><strong>过程>结果</strong>：财富是过程的副产品，不是神秘机遇的产物</li>
+        <li><strong>三条路线图</strong>：人行道→贫穷，慢车道→平庸，快车道→财富——路线图决定命运</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     PART 3 DIVIDER
+══════════════════════════════════════════ -->
+<section class="part-page" id="part3">
+  <div class="container">
+    <div class="part-badge">Part Three</div>
+    <h2>慢车道深入批判<br>+ 快车道引入</h2>
+    <p class="part-tagline">打工是一笔用自由换取金钱的不平等交易。快车道是可控的无限平衡，慢车道则是无可控的变量加上没有平衡调节。</p>
+    <div class="part-stats">
+      <div class="part-stat"><div class="part-stat-number">11–20</div><div class="part-stat-label">章次</div></div>
+      <div class="part-stat"><div class="part-stat-number">6+5</div><div class="part-stat-label">慢车道现象 + 摇钱树种苗</div></div>
+      <div class="part-stat"><div class="part-stat-number">7</div><div class="part-stat-label">大危险</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     PART 3 CONTENT
+══════════════════════════════════════════ -->
+<section style="padding: 0 0 20px;">
+  <div class="container">
+
+    <!-- Chapter 11 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第11章</div>
+      <h3>不平等的交易：你的工作</h3>
+      <p class="chapter-subtitle">The Unfair Trade: Your Job</p>
+    </div>
+
+    <div class="core-card">
+      <h4>核心论点</h4>
+      <p>打工的本质是「用你的自由（以时间形式）换取自由（以金钱形式）」，这本身就是一个自相矛盾的悖论。作者提出<strong>慢车道的6个核心现象</strong>：</p>
+      <ol style="margin-top:10px;">
+        <li><strong>花时间去换钱</strong>：出卖时间换薪水，一旦停止工作，收入立即归零</li>
+        <li><strong>经验受限</strong>：打工学到的技能只在有限市场中有价值</li>
+        <li><strong>无法控制</strong>：你的收入被雇主、经济、裁员等因素支配</li>
+        <li><strong>办公室政治</strong>：员工必须参与办公室政治游戏</li>
+        <li><strong>高额税收</strong>：员工的收入在到手之前就被政府扣除</li>
+        <li><strong>收入独裁</strong>：老板单方面定价你的劳动价值</li>
+      </ol>
+    </div>
+
+    <div class="quote-block">
+      <p>是谁告诉你花时间去换钱是一个伟大的想法？为什么这个想法逐渐转化成为一个误区？如果你被工作所束缚，那么你正在做的事情就是用你的时间（生命）来换取几张纸币，而这些纸币能给你带来自由。你出卖你的自由再去获得自由，看出问题了吗？</p>
+    </div>
+
+    <div class="quote-block">
+      <p>每天一心一意地工作8小时，你可能最终会成为老板，然后每天工作12小时。—— 罗伯特·弗罗斯特</p>
+    </div>
+
+    <div class="critical-block">
+      <h4>批判性分析</h4>
+      <ul>
+        <li><strong>极端化倾向</strong>：作者将打工描绘为一无是处，但现实中确实存在高收入、高自主性的优质工作（医生、律师、顶级咨询顾问等）。</li>
+        <li><strong>忽视行业差异</strong>：打工可能是积累快车道启动资源的必要路径，作者自己也是先打工后创业。</li>
+      </ul>
+    </div>
+
+    <div class="crossfield-block">
+      <h4>跨领域联想</h4>
+      <ul>
+        <li><strong>与卡尔·马克思「异化劳动」的对话</strong>：打工让人成为「时间」的奴隶，失去了对生命本质的控制权。</li>
+        <li><strong>与纳西姆·塔勒布《反脆弱》的对话</strong>：打工具有典型的脆弱性——一旦外部冲击（裁员、经济危机）发生，脆弱系统就会崩溃。</li>
+      </ul>
+    </div>
+
+    <!-- Chapter 12 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第12章</div>
+      <h3>慢车道：你为什么不富有</h3>
+      <p class="chapter-subtitle">The Slowlane: Why You Are Not Wealthy</p>
+    </div>
+
+    <div class="core-card">
+      <h4>核心论点</h4>
+      <p>慢车道财富公式受制于「不可控的有限平衡」，在数学结构上根本无法让你致富。</p>
+      <p style="margin-top:12px;"><strong>慢车道财富公式</strong>：<br>
+      财富 = 工作收入（内在价值）+ 市场投资收入（复利）<br>
+      <strong>更精确地</strong>：财富 = [时间 × 时薪/年薪] + 投资总额 × (1 + 收益率)^时间</p>
+    </div>
+
+    <div class="quote-block">
+      <p>通过复利完成财富增长的模式是有缺陷的，因为其变量本身有缺陷，无论是时间还是收益率都无法控制。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>不要想着在手扶拐杖的时候才拥有百万财富，而是要想在你青春年华的时候就财源滚滚。</p>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>关键概念</h4>
+      <dl>
+        <dt>不可控的有限平衡</dt>
+        <dd>慢车道的核心缺陷——「有限」指的是财富公式中的变量存在硬性上限；「不可控」指的是这些变量都不在你的掌控之内。</dd>
+        <dt>内在价值（Intrinsic Value）</dt>
+        <dd>时薪 × 工作时长（或年薪），它是以时间为单位衡量的，而时间是不可再生资源。</dd>
+        <dt>复利的谬误</dt>
+        <dd>即便以15%的年化收益率计算，40年后1万美元变成250万美元，但那时购买力可能仅相当于今天的25万美元（通胀因素）。</dd>
+      </dl>
+    </div>
+
+    <div class="critical-block">
+      <h4>批判性分析</h4>
+      <ul>
+        <li><strong>数据时效性问题</strong>：部分数据基于特定历史时期，可能不适用于所有时代。</li>
+        <li><strong>忽视了风险调整后的收益</strong>：8%的年化收益在40年的时间跨度中确实能产生显著财富，问题不在于复利本身，而在于它是否「快速」和「足够」。</li>
+        <li><strong>自我利益冲突</strong>：作者写作本书的目的是引导读者购买他的课程，有动机贬低传统投资工具。</li>
+      </ul>
+    </div>
+
+    <!-- Chapter 13 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第13章</div>
+      <h3>徒劳的抗争：教育</h3>
+      <p class="chapter-subtitle">Futile Resistance: Education</p>
+    </div>
+
+    <div class="core-card">
+      <h4>核心论点</h4>
+      <p>通过教育提升「内在价值」是对慢车道变量不可控问题的徒劳反应——改善的代价（时间和学费）极为昂贵，且回报依然是「更高时薪的时间交易」，没有控制权，没有杠杆。更危险的是：学生贷款债务成为寄生虫式的负担，将人永久绑定在打工上。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>如果教育让你背负如山的债务，让你的余生和打工捆绑在一起，难道它真的是好的教育吗？如果MBA能让你的工资提高15%，但你得到学位需要支付15年的薪水，这是一个很好的投资吗？</p>
+    </div>
+
+    <div class="quote-block">
+      <p>妨碍我学习的唯一障碍就是我接受的教育。—— 阿尔伯特·爱因斯坦</p>
+    </div>
+
+    <div class="critical-block">
+      <h4>批判性分析</h4>
+      <ul>
+        <li><strong>幸存者偏差</strong>：作者列举的辍学亿万富翁（比尔·盖茨等）是极少数的幸存者，更多辍学者并没有获得类似成功。</li>
+        <li><strong>学历与收入的正相关性</strong>：大量实证研究表明，控制其他变量后，学历与终身收入之间仍存在显著正相关。</li>
+        <li><strong>作者自身的双重标准</strong>：作者承认自己读完了大学（尽管自认是「表演」），这种批评他人教育投资而自己享用教育红利的做法，存在一定程度的言行不一。</li>
+      </ul>
+    </div>
+
+    <!-- Chapter 14 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第14章</div>
+      <h3>大师们的虚伪</h3>
+      <p class="chapter-subtitle">The Gurus' Hypocrisy</p>
+    </div>
+
+    <div class="core-card">
+      <h4>核心论点</h4>
+      <p>大多数理财大师传授一种财富公式，自己却用另一种完全不同的公式致富——理论与实践严重悖离。核心武器是「实践悖论」（Practice Paradox）：「照我说的做，但不要学我怎么做。」（Do as I say, not as I do）</p>
+    </div>
+
+    <div class="quote-block">
+      <p>你会不会听一个满脸油污的人讲皮肤护理？你会不会接受一个破产流浪汉的财务建议？</p>
+    </div>
+
+    <div class="quote-block">
+      <p>这本书能使我富裕，我也会利用相同的财富公式教你。换句话说，「照我说的做」和「学我怎么做」是完全一致的。</p>
+    </div>
+
+    <div class="critical-block">
+      <h4>批判性分析</h4>
+      <ul>
+        <li><strong>过度概括的风险</strong>：用苏茜·欧曼和大卫·巴赫等个别案例概括整个理财咨询行业，存在以偏概全的问题。</li>
+        <li><strong>商业动机的双重标准</strong>：作者自己也出书、卖课，他的商业模式本质上与这些「大师」并无不同。</li>
+      </ul>
+    </div>
+
+    <!-- Chapter 15 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第15章</div>
+      <h3>慢车道的胜利——一场关于希望的赌博</h3>
+      <p class="chapter-subtitle">The Slowlane's "Victory" — A Gamble on Hope</p>
+    </div>
+
+    <div class="core-card">
+      <h4>慢车道上的7个危险</h4>
+      <ol>
+        <li><strong>健康风险</strong>：你的身体可能撑不到65岁退休</li>
+        <li><strong>工作风险</strong>：必须数十年保持高薪工作，避免被裁员</li>
+        <li><strong>房屋风险</strong>：2008年作者的房屋净值暴跌80万美元</li>
+        <li><strong>公司风险</strong>：将财富寄托于公司退休金，无异于把命运交给管理层</li>
+        <li><strong>生活方式风险</strong>：慢车道要求你成为「守财奴」，生活质量严重受损</li>
+        <li><strong>经济风险</strong>：2008年股市单年下跌60%，抹去数十年积累</li>
+        <li><strong>人行道风险</strong>：当慢车道让你感到无力时，你会转向消费主义寻找即时满足</li>
+      </ol>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>维度</th><th>慢车道百万富翁</th><th>快车道百万富翁</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>财富积累时间</td><td>30年以上</td><td>10年或更短</td></tr>
+          <tr><td>住房</td><td>中产阶级社区</td><td>豪宅</td></tr>
+          <tr><td>学位</td><td>拥有MBA</td><td>雇有MBA的人</td></tr>
+          <tr><td>投资控制</td><td>让市场控制</td><td>自己控制</td></tr>
+          <tr><td>时间</td><td>为时间工作</td><td>让时间为自己工作</td></tr>
+          <tr><td>身份</td><td>员工</td><td>老板</td></tr>
+          <tr><td>401K</td><td>自己缴纳</td><td>提供者</td></tr>
+          <tr><td>重视程度</td><td>钱</td><td>时间</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="quote-block">
+      <p>慢车道之所以危险是因为它的变量是不可控的，其平衡也不存在。不可控的有限平衡真正的含义是：它永远不会让你发财。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>走慢车道的成功人士通常都是有才华的人、老年人或者劳累过度的人。</p>
+    </div>
+
+    <!-- Chapter 16: Fastlane Introduction -->
+    <div class="chapter-header">
+      <div class="chapter-number">第16章</div>
+      <h3>财富的捷径：快车道</h3>
+      <p class="chapter-subtitle">The Fastlane: The Road to Wealth</p>
+    </div>
+
+    <div class="core-card">
+      <h4>核心论点</h4>
+      <p>快车道是一种基于「可控的无限平衡」的财富路线图，通过建立商业系统实现快速财富创造。</p>
+      <p style="margin-top:10px;"><strong>三种抽奖的思想实验</strong>：<br>
+      人行道：一等奖1000万美元，当场兑现，中奖概率六百万分之一<br>
+      慢车道：一等奖50万美元，40年分期获得，中奖概率17%<br>
+      <strong>快车道：一等奖1000万美元，6年内兑现，中奖概率14%</strong> ← 答案</p>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>快车道4个关键特征</h4>
+      <dl>
+        <dt>可控的无限平衡</dt>
+        <dd>与慢车道的「不可控的有限平衡」相反，快车道公式允许个人控制各变量（销售数量、利润率、行业乘数），同时这些变量是无限的（没有硬性上限）。</dd>
+        <dt>业务（Business）</dt>
+        <dd>自我雇用，以商业系统为核心，而非以时间为交换单位。</dd>
+        <dt>生活方式（Lifestyle）</dt>
+        <dd>融合信念、过程和行动的全面承诺，而非牺牲生活质量换取财富。</dd>
+        <dt>快速创造财富</dt>
+        <dd>在相对短时间内超越中产阶级，而非等待40年。</dd>
+      </dl>
+    </div>
+
+    <div class="quote-block">
+      <p>区别在于，致富计划并非快速致富特有的产物，而它邪恶的孪生兄弟是轻易发财。轻易发财的阴影遮蔽了天真的人们，留下了一长串受害者。</p>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>金字塔寓言</h4>
+      <dl>
+        <dt>安祖尔（Anzur）慢车道代表</dt>
+        <dd>用人力搬运石头建金字塔，耗时耗力，40年后仍未完工，最终死于心脏病——慢车道 = 努力工作。</dd>
+        <dt>朱玛（Juma）快车道代表</dt>
+        <dd>先花3年发明了一台搬运石头的机器，然后用机器在8年内完成金字塔，获得自由和财富——快车道 = 建立为你工作的系统。</dd>
+      </dl>
+    </div>
+
+    <div class="quote-block">
+      <p>金字塔寓言的核心：安祖尔没有依赖机器，而是誓言「我必须变得更强壮！我必须举起更重的石头！」——这就是慢车道思维的本质。拒绝承认自己的战略有缺陷，继续忍耐重复的旧过程。</p>
+    </div>
+
+    <!-- Chapter 17 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第17章</div>
+      <h3>转换团队和剧本</h3>
+      <p class="chapter-subtitle">Switching Teams and Scripts</p>
+    </div>
+
+    <div class="core-card">
+      <h4>核心论点：消费者 → 生产者</h4>
+      <p>大多数人从出生就被「编入」了消费者的队伍，他们习惯于需求、寻找、购买最便宜的商品——而这一「消费者协议」正是财富积累的根本障碍。破解之道：从消费者转换为生产者（Switch from Consumer to Producer）。</p>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>不要（消费者思维）</th><th>要（生产者思维）</th></tr></thead>
+        <tbody>
+          <tr><td>在电视购物节目中购买产品</td><td>去销售产品</td></tr>
+          <tr><td>挖金矿</td><td>卖铁锹</td></tr>
+          <tr><td>参加培训班</td><td>举办培训班</td></tr>
+          <tr><td>想着去借钱</td><td>贷款给别人</td></tr>
+          <tr><td>想着去找工作</td><td>给别人提供工作</td></tr>
+          <tr><td>靠抵押取得贷款</td><td>给别人办理抵押贷款业务</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="quote-block">
+      <p>要充分消费，首先要充分生产。不幸的是，大多数人正好相反，他们只有消费，没有生产。生产者能致富，而消费者则会成为穷人。</p>
+    </div>
+
+    <!-- Chapter 18 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第18章</div>
+      <h3>富人发财的真相</h3>
+      <p class="chapter-subtitle">The Truth About How Rich People Get Rich</p>
+    </div>
+
+    <div class="core-card">
+      <h4>快车道财富公式</h4>
+      <p><strong>财富 = 净利润（Net Profit）+ 资产价值（Asset Value）</strong></p>
+      <p style="margin-top:8px;">净利润 = 销售数量 × 单位利润<br>
+      资产价值 = 净利润 × 行业乘数</p>
+    </div>
+
+    <div class="quote-block">
+      <p>24永远小于12000。你变得有钱了，而走慢车道的人变老了。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>当你的财富变量拥有很高的杠杆率，那么你还愿意靠内在价值坚持24小时的工作上限吗？</p>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>行业乘数（Industry Multiplier）</h4>
+      <dl>
+        <dt>软件/互联网</dt><dd>4-6倍 ← 解释了为何软件和互联网行业诞生了最多的亿万富翁</dd>
+        <dt>医疗设备</dt><dd>17倍</dd>
+        <dt>零售/特许经营</dt><dd>2倍</dd>
+        <dt>专业服务</dt><dd>1-2倍</dd>
+      </dl>
+    </div>
+
+    <div class="critical-block">
+      <h4>批判性分析</h4>
+      <ul>
+        <li><strong>幸存者偏差</strong>：引用的成功案例都是幸存者，更大量的失败者没有被呈现。</li>
+        <li><strong>忽略了市场风险</strong>：快车道创业的核心风险是「市场不接受你的产品」——这不是一个可控变量。</li>
+      </ul>
+    </div>
+
+    <!-- Chapter 19 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第19章</div>
+      <h3>破解财富和时间的联姻</h3>
+      <p class="chapter-subtitle">Breaking the Marriage of Wealth and Time</p>
+    </div>
+
+    <div class="core-card">
+      <h4>5种摇钱树种苗（Five Money Tree Seedlings）</h4>
+      <ol>
+        <li><strong>租赁系统（Rental Systems）</strong> — 被动等级：A<br>房地产、专利/版权、特许使用权</li>
+        <li><strong>计算机/软件系统</strong> — 被动等级：A-<br>互联网业务、App、软件，24小时运行，从不抱怨</li>
+        <li><strong>内容系统（Content Systems）</strong> — 被动等级：B+<br>书籍、杂志、博客、电子书，一次创作，长期销售</li>
+        <li><strong>分销系统（Distribution Systems）</strong> — 被动等级：B<br>特许经营/连锁加盟、网络营销、电视购物</li>
+        <li><strong>人力资源系统</strong> — 被动等级：C<br>警告：最昂贵、最复杂、最难管理的系统。作者选择了卖掉公司，而非扩大人力资源系统。</li>
+      </ol>
+    </div>
+
+    <div class="quote-block">
+      <p>我的商业系统用时间通道来赚钱，而我的时间却被置换出来了。这就像是一棵摇钱树，它不关心我在做什么。不管我在看脱口秀还是在牙买加滑雪，它本身就是一个充满活力的实体，忠实地为我赚钱。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>人力资源系统可以增加被动收入也可以侵蚀被动收入。好员工会培育出摇钱树，而糟糕的员工会摘下摇钱树果实。</p>
+    </div>
+
+    <!-- Chapter 20 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第20章</div>
+      <h3>招募你的自由战士</h3>
+      <p class="chapter-subtitle">Recruiting Your Army of Freedom</p>
+    </div>
+
+    <div class="core-card">
+      <h4>核心洞见：金钱本身是最好的摇钱树</h4>
+      <p>大多数人每月在支付利息（债务人角色），而富人的游戏规则是：成为收取利息的人（债权人）。1000万美元，年利率5% → 每月被动收入约41,666美元。这就是「复利在岸边」的真正含义——大额本金的复利效果才是真正的财富机器。</p>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>维度</th><th>慢车道</th><th>快车道</th></tr></thead>
+        <tbody>
+          <tr><td>复利用途</td><td>积累财富</td><td>获取收入和流动性</td></tr>
+          <tr><td>起步本金</td><td>小额（月省200美元）</td><td>大额（企业退出/资产变现）</td></tr>
+          <tr><td>效果显现时间</td><td>30-40年</td><td>立竿见影</td></tr>
+          <tr><td>本质</td><td>财富创造工具</td><td>财富维护和消费工具</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="quote-block">
+      <p>富人统治穷人，债务人是债权人的奴隶。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>复利就像远离海岸线的潮汐，直到它靠近海岸时，你才能感受到其强大的力量。当潮汐抵达海岸线后，其力量会异常强大。大部分走慢车道的人乘着复利的潮汐，漂泊在100万英里外的大海上。</p>
+    </div>
+
+    <div class="summary-block">
+      <h4>本章小结 · Part 2 核心公式对比</h4>
+      <ul>
+        <li><strong>慢车道公式</strong>：财富 = 工作收入 + 市场投资（线性/不可控）</li>
+        <li><strong>快车道公式</strong>：财富 = 净利润 + 资产价值（净利润 = 销售数量 × 单位利润；资产价值 = 净利润 × 行业乘数）</li>
+        <li><strong>快车道4个关键特征</strong>：可控的无限平衡 + 业务 + 生活方式 + 快速创造</li>
+        <li><strong>5种摇钱树种苗</strong>：租赁系统 > 计算机/软件 > 内容系统 > 分销系统 > 人力资源系统</li>
+        <li><strong>金字塔寓言</strong>：慢车道 = 人力搬运石头；快车道 = 发明机器</li>
+        <li><strong>实践悖论</strong>：理财大师教你的东西对他们自己不起作用</li>
+        <li><strong>慢车道7大危险</strong>：健康、工作、房屋、公司、生活方式、经济、人行道</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     PART 4 DIVIDER
+══════════════════════════════════════════ -->
+<section class="part-page" id="part4">
+  <div class="container">
+    <div class="part-badge">Part Four</div>
+    <h2>获取财富的工具<br>你自己</h2>
+    <p class="part-tagline">影响力定律才是财富的真正驱动，而非吸引力定律。你影响的人越多，你就越富有——这是数学，不是魔法。</p>
+    <div class="part-stats">
+      <div class="part-stat"><div class="part-stat-number">21–30</div><div class="part-stat-label">章次</div></div>
+      <div class="part-stat"><div class="part-stat-number">影响力</div><div class="part-stat-label">核心定律</div></div>
+      <div class="part-stat"><div class="part-stat-number">5种</div><div class="part-stat-label">摇钱树种苗</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     PART 4 CONTENT
+══════════════════════════════════════════ -->
+<section style="padding: 0 0 20px;">
+  <div class="container">
+
+    <!-- Chapter 21 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第21章</div>
+      <h3>真正的财富定律</h3>
+      <p class="chapter-subtitle">影响力定律 vs 吸引力定律</p>
+    </div>
+
+    <div class="core-card">
+      <h4>核心论点</h4>
+      <p>真正驱动财富的不是「吸引力定律」（Law of Attraction），而是「<strong>影响力定律</strong>」（Law of Impact）。吸引力定律是「新瓶装旧酒」的营销骗术，而影响力定律是一个数学驱动的绝对法则——你影响的人越多（无论在规模还是数量上），你就越富有。</p>
+    </div>
+
+    <div class="core-card">
+      <h4>核心公式</h4>
+      <p><strong>净利润 = 销售单位（规模）× 单位利润（等级）</strong></p>
+      <p style="margin-top:8px;">高价值 = 高价格 = 高等级</p>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>维度</th><th>含义</th><th>财富公式中的体现</th></tr></thead>
+        <tbody>
+          <tr><td>规模（Scale）</td><td>影响的人的数量</td><td>「销售单位」——薄利多销，如销售2000万支钢笔，每支赚75美分 = 1500万美元</td></tr>
+          <tr><td>等级（Magnitude）</td><td>对每个人影响的深度/价值</td><td>「单位利润」——高价值低销量，如400套公寓，每套月利润100美元 = 月收入4万美元</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="quote-block">
+      <p>如果你想变得富有，就要开始观察宇宙的真实规律——数学，而不是一些既无法证明，也没有记录的骗人戏法。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>你能影响百万人，你就能成为百万富翁。没有比这更简单的说法了！</p>
+    </div>
+
+    <div class="critical-block">
+      <h4>批判性分析</h4>
+      <ul>
+        <li><strong>对吸引力定律的批评过于绝对化</strong>：积极心理学研究（塞利格曼等）表明，心态确实对成功有影响。</li>
+        <li><strong>「影响百万人就成为百万富翁」的逻辑循环</strong>：如何影响百万人？需要什么具体步骤？作者没有给出路径。</li>
+        <li><strong>忽视了权力、资本和阶级优势的作用</strong>：有些财富并非通过「影响他人」获得（继承财富），被统一归因于影响力定律可能过于简化。</li>
+      </ul>
+    </div>
+
+    <!-- Chapter 22 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第22章</div>
+      <h3>首先管好你自己</h3>
+      <p class="chapter-subtitle">优先付钱给自己</p>
+    </div>
+
+    <div class="core-card">
+      <h4>核心论点</h4>
+      <p>真正的「优先付钱给自己」需要拥有自己的公司（C型公司、S型公司或有限责任公司），通过公司架构实现税收优惠和资产保护，从而真正掌握自己的财富命运。</p>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>实体类型</th><th>特点</th><th>适用场景</th></tr></thead>
+        <tbody>
+          <tr><td>C型公司</td><td>存续期长，易转让；企业所得税+股东股息税双重课税；利润不分配可避税</td><td>大公司、资产增长战略、考虑上市</td></tr>
+          <tr><td>S型公司</td><td>「过手」实体，不在企业层面征税；股东上限100人</td><td>中小型企业，避免自雇税</td></tr>
+          <tr><td>有限责任公司（LLC）</td><td>兼具合伙/独资优势和公司保护；利润直接分配给股东</td><td>小型初创公司</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="quote-block">
+      <p>建议走慢车道的人优先付钱给自己，就像建议一个四肢瘫痪的人爬一段楼梯，这是徒劳无功的。</p>
+    </div>
+
+    <div class="critical-block">
+      <h4>批判性分析</h4>
+      <ul>
+        <li>过于简化税务复杂性：不同国家的税务体系差异很大，美国的S-Corp等概念在其他地区可能不适用。</li>
+        <li>「公司就是保护」的过度乐观：有限责任公司并不能完全保护个人资产免受所有类型的诉讼。</li>
+      </ul>
+    </div>
+
+    <!-- Chapter 23 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第23章</div>
+      <h3>生活的方向盘</h3>
+      <p class="chapter-subtitle">选择决定命运</p>
+    </div>
+
+    <div class="core-card">
+      <h4>核心论点</h4>
+      <p>贫穷的主要原因不是缺钱、缺教育或缺机会，而是糟糕的选择。你的生活结果由你的选择造成，不管是有意识还是无意识的。成功不是单次选择，而是数百次选择积累的结果。年轻时的选择具有最大影响力（像靠近树干的粗壮树枝）；随着年龄增长，旧选择形成的「积习难改」（像树梢的纤细树枝）。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>你的生活结果是由你的选择造成的，不管你是有意识还是无意识的。如果你能控制选择的过程，你就能控制你生活中的方方面面。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>你越年轻，你的选择就越多，你所拥有的能量就越大。随着时间的推移，能量会逐渐衰退，因为那些旧的选择已然使你积习难返。</p>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>决策工具</h4>
+      <dl>
+        <dt>WCCA（更坏情况分析）</dt>
+        <dd>三个关键问题：① 这个选择最坏的后果是什么？② 这种后果的概率是多少？③ 这是一个可以接受的风险吗？用于避免危险和叛逆的选择。</dd>
+        <dt>WADM（加权平均决策矩阵）</dt>
+        <dd>列出所有选择 → 列出决定因素并赋予权重 → 对每个选项的每个因素打分 → 汇总最高分 = 最佳选择。适用于重大人生决定（搬家、职业选择、投资）。</dd>
+      </dl>
+    </div>
+
+    <div class="critical-block">
+      <h4>批判性分析</h4>
+      <ul>
+        <li><strong>过度强调个人选择，忽视结构性因素</strong>：贫困有强烈的结构性原因（社区、学校、家庭网络），不是单纯「选择」的问题。</li>
+        <li><strong>「每个人都可以选择成为富人」的精英主义倾向</strong>：忽略了阶级固化、种族歧视、教育不平等等系统性障碍。</li>
+      </ul>
+    </div>
+
+    <!-- Chapters 24-28 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第24–28章</div>
+      <h3>快车道执行工具箱</h3>
+      <p class="chapter-subtitle">挡风玻璃 · 绊脚石 · 时间 · 教育 · 红线</p>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>第24章：将你的挡风玻璃擦拭干净</h4>
+      <dl>
+        <dt>认知选择 vs 行动选择</dt>
+        <dd>认知选择是行动选择的动力（思维模式决定行为）。改变认知 → 改变行动 → 改变未来。「世界不会记住你的过去，只有你自己才会。」</dd>
+        <dt>消极 → 积极语言转换</dt>
+        <dd>「我从来没有……」→「这是可能的……」；「我不能……」→「我会超越……」</dd>
+      </dl>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>第25章：排除阻碍你的绊脚石</h4>
+      <dl>
+        <dt>社会自然引力</dt>
+        <dd>追求卓越越需要突破社会教化的束缚。你追求的东西越卓越，就越需要突破社会教化的束缚。</dd>
+        <dt>谁是绊脚石？</dt>
+        <dd>偷梦者（说你「不行」「做不到」）、笃信财富与自己无缘的父母、宣扬慢车道理念的教育机构、消极的朋友和家人。</dd>
+        <dt>「副驾驶」问题</dt>
+        <dd>最糟糕的逆风：不支持你的生活伴侣。不良人际关系 = 阻碍快车道成功的路障。</dd>
+      </dl>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>第26章：你的原始燃料：时间</h4>
+      <dl>
+        <dt>时间 vs 金钱</dt>
+        <dd>时间是最伟大的资产——不是金钱，不是汽车，不是金币。时间是「伟大的平衡器」——每个人每天都是24小时。</dd>
+        <dt>巧克力饼干法则</dt>
+        <dd>饼干没进购物车 → 就不会到家 → 就不会吃 → 就不会变胖。控制寄生性债务 = 控制源头 = 即时满足感。</dd>
+        <dt>「时间弃儿」的行为</dt>
+        <dd>为省4美元排长队；为省10美元开40分钟车；看4小时电视（65岁 = 9年生命）。</dd>
+      </dl>
+    </div>
+
+    <div class="quote-block">
+      <p>时间为王。</p>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>第27章：换掉脏机油</h4>
+      <dl>
+        <dt>快车道 vs 慢车道的教育目的</dt>
+        <dd>慢车道：提升内在价值（成为更好的打工者）；快车道：构建和发展业务系统（成为摇钱树的主人）。</dd>
+        <dt>「生活大学」策略</dt>
+        <dd>驾驶大学（堵车时听有声书）+ 锻炼大学（跑步机上读书）+ 等候大学（机场/医院）+ 洗手间大学 + 电视大学（边看电视边工作）。</dd>
+      </dl>
+    </div>
+
+    <div class="quote-block">
+      <p>教育是免费的。无穷无尽的知识就在你的手边，挡在你面前的唯一障碍就是你自己。</p>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>第28章：冲击红线</h4>
+      <dl>
+        <dt>红线 = 100%承担责任</dt>
+        <dd>承担责任 ≠ 轻松成功，而是「抚养孩子」般的持续投入。轻松致富 = 糖衣炮弹。</dd>
+        <dt>兴趣 vs 承担责任</dt>
+        <dd>读一本书是兴趣，经常运用书中的知识则是承担责任。每周7天有时间就工作是承担责任，周一至周五每天工作1小时只是兴趣。</dd>
+        <dt>明智的风险</dt>
+        <dd>有限下行（最多损失投资额）+ 无限上行（可能改变一生）。愚蠢的风险：无限下行 + 有限上行。</dd>
+      </dl>
+    </div>
+
+    <div class="quote-block">
+      <p>快车道赢家是在红线炼成的。那条红线是什么？红线就是百分之百地承担责任。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>世界上没有完美的时点，等待「某一天」只是浪费时间而已。机会才不理会你的时间表，不会关心你的处境。它随性而来，随意而去，对困境视若无睹。</p>
+    </div>
+
+    <div class="summary-block">
+      <h4>本章小结 · Part 3 核心工具</h4>
+      <ul>
+        <li><strong>影响力定律</strong>：净利润 = 规模（销售单位）× 等级（单位利润）；影响力是财富的守门人</li>
+        <li><strong>快车道财富公式</strong>：财富 = 净利润 + 资产价值；净利润 = 销售数量 × 单位利润</li>
+        <li><strong>5种摇钱树种苗</strong>：租赁系统 > 计算机/软件 > 内容系统 > 分销系统 > 人力资源</li>
+        <li><strong>选择决定命运</strong>：数百次选择积累 → 生活方式 → 财富水平；用WCCA和WADM做决策</li>
+        <li><strong>时间为王</strong>：时间是最伟大的资产；寄生性债务吞噬你的自由时间</li>
+        <li><strong>教育是机油</strong>：持续学习才能持续前进；毕业 ≠ 教育终点，而是起点</li>
+        <li><strong>红线 = 100%承担责任</strong>：兴趣 ≠ 承担责任；明智的风险有有限下行+无限上行</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     PART 5 DIVIDER
+══════════════════════════════════════════ -->
+<section class="part-page" id="part5">
+  <div class="container">
+    <div class="part-badge">Part Five</div>
+    <h2>通向财富的<br>正确道路</h2>
+    <p class="part-tagline">只有遵循影响力定律的路，才是通向财富的正确道路。满足全部五条戒律的路才能快速致富。</p>
+    <div class="part-stats">
+      <div class="part-stat"><div class="part-stat-number">31–37</div><div class="part-stat-label">章次</div></div>
+      <div class="part-stat"><div class="part-stat-number">5条</div><div class="part-stat-label">快车道戒律</div></div>
+      <div class="part-stat"><div class="part-stat-number">3条</div><div class="part-stat-label">高速快车道</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     PART 5 CONTENT
+══════════════════════════════════════════ -->
+<section style="padding: 0 0 20px;">
+  <div class="container">
+
+    <!-- Five Commandments Overview -->
+    <div class="core-card" style="margin-bottom: 40px;">
+      <h4>五条快车道戒律一览</h4>
+      <div class="table-wrapper" style="margin-top:12px;">
+        <table>
+          <thead><tr><th>戒律</th><th>核心问题</th><th>快车道检验</th></tr></thead>
+          <tbody>
+            <tr><td>① 需求戒律</td><td>我为谁解决问题？</td><td>我的路能解决真实需求吗？</td></tr>
+            <tr><td>② 进入戒律</td><td>壁垒有多高？</td><td>我能进入这个市场吗？</td></tr>
+            <tr><td>③ 控制戒律</td><td>我控制什么？</td><td>我是否控制核心资产？</td></tr>
+            <tr><td>④ 规模戒律</td><td>我能影响多少人？</td><td>我的系统能规模化吗？</td></tr>
+            <tr><td>⑤ 时间戒律</td><td>我的时间值多少钱？</td><td>收入是否与时间脱钩？</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Chapter 29 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第29章</div>
+      <h3>通向财富的正确道路</h3>
+      <p class="chapter-subtitle">只有遵循影响力定律的路才是正确的路</p>
+    </div>
+
+    <div class="quote-block">
+      <p>一条从芝加哥开始向东走的路，永远也到不了拉斯维加斯。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>不是所有生意都是正确的路，其中只有少数遵循或接近影响力定律。</p>
+    </div>
+
+    <!-- Chapter 30 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第30章</div>
+      <h3>需求戒律</h3>
+      <p class="chapter-subtitle">90%的新业务在5年内失败，是因为它们没有遵循需求戒律</p>
+    </div>
+
+    <div class="core-card">
+      <h4>错误动机的三种类型</h4>
+      <ol>
+        <li><strong>「我需要钱」</strong>：从自我出发，而非市场需求</li>
+        <li><strong>「我是XX专家」</strong>：爱好 ≠ 市场需求</li>
+        <li><strong>「读书说创业能致富」</strong>：从众行为，缺乏思考</li>
+      </ol>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>金钱追逐者</th><th>价值创造者</th></tr></thead>
+        <tbody>
+          <tr><td>从自我出发</td><td>从需求出发</td></tr>
+          <tr><td>追逐金钱</td><td>被需求吸引</td></tr>
+          <tr><td>消费者心态</td><td>生产者心态</td></tr>
+          <tr><td>随波逐流（泡沫猎人）</td><td>解决问题</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="quote-block">
+      <p>停止追逐金钱，从寻找需求入手。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>「做你喜欢的事」是虚伪的大师们给出的另一个神谕，那些人顶着所谓的人生导师的名头，靠两三个主顾关照他们以不至于破产。</p>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>激情 vs 爱好</h4>
+      <dl>
+        <dt>爱好（Love）</dt>
+        <dd>对某个活动的喜欢；可能违背需求戒律；受阻时放弃</dd>
+        <dt>激情（Passion）</dt>
+        <dd>对某个目标的渴望；源自最终目标和「理由」；受阻时调整策略</dd>
+      </dl>
+    </div>
+
+    <!-- Chapter 31 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第31章</div>
+      <h3>进入戒律</h3>
+      <p class="chapter-subtitle">可以做绵羊，也可以做牧羊人</p>
+    </div>
+
+    <div class="core-card">
+      <h4>核心论点</h4>
+      <p>做任何业务都存在进入壁垒，当竞争加剧时，致富效果就会减弱。如果一项生意只需支付200美元、填个表格就能「开业」，那么这条路上早已挤满了人。你可以做金字塔的修建者，也可以成为攀登金字塔的人——做绵羊，还是做牧羊人，这是进入戒律要求你思考的首要问题。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>如果「做生意」就是支付200美元拿到一套分销产品那么简单的话，就不会有进入壁垒，你应该放弃这个机会。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>当羊群排着队走向屠宰场时，你应该是那个屠宰场的主人。</p>
+    </div>
+
+    <div class="critical-block">
+      <h4>批判性分析</h4>
+      <ul>
+        <li><strong>门槛过低就放弃？</strong>：历史上许多从低门槛起步的生意（亚马逊、Facebook）最终创造了巨额财富。关键不仅在于进入壁垒本身，更在于执行力和商业模式的可扩展性。</li>
+        <li><strong>MLM的全盘否定</strong>：忽略了不同MLM公司在产品品质、激励机制和合规性上的巨大差异。</li>
+      </ul>
+    </div>
+
+    <!-- Chapter 32 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第32章</div>
+      <h3>控制戒律</h3>
+      <p class="chapter-subtitle">靠人不如靠自己</p>
+    </div>
+
+    <div class="core-card">
+      <h4>核心论点</h4>
+      <p>如果你不能控制自己生意的每一个方面——产品、定价、收入模式、经营选择——你就是搭便车者，由他人掌控方向盘。作者详细列举了「司机」与「搭便车者」的对比：</p>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>搭便车者</th><th>司机</th></tr></thead>
+        <tbody>
+          <tr><td>加入多层次营销公司</td><td>创立多层次营销公司</td></tr>
+          <tr><td>购买连锁经营权</td><td>出售连锁经营权</td></tr>
+          <tr><td>加入别人连锁店</td><td>提供加盟计划</td></tr>
+          <tr><td>买股票</td><td>管理对冲基金</td></tr>
+          <tr><td>买股票</td><td>出售股票</td></tr>
+          <tr><td>认购股票</td><td>发行IPO</td></tr>
+          <tr><td>付租金</td><td>收租金</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="quote-block">
+      <p>请停止攀登金字塔，开始自己建造金字塔。</p>
+    </div>
+
+    <div class="critical-block">
+      <h4>批判性分析</h4>
+      <ul>
+        <li><strong>对加盟连锁的现实复杂性</strong>：现实中麦当劳、7-Eleven等加盟商确实有很多人赚到了钱，问题不是「加盟」本身，而是加盟的条款和品牌的控制力。</li>
+        <li><strong>忽略「借力」策略</strong>：Airbnb房东、亚马逊第三方卖家——这些人难道都是「搭便车者」？作者的全有或全无逻辑过于绝对。</li>
+      </ul>
+    </div>
+
+    <!-- Chapter 33 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第33章</div>
+      <h3>规模戒律</h3>
+      <p class="chapter-subtitle">要想在商业上获得成功，你只需要做对一次。——马克·库班</p>
+    </div>
+
+    <div class="core-card">
+      <h4>核心论点</h4>
+      <p>你的生意必须能够最大化快车道财富公式。作者将商业生态环境比喻为水域：本地/社区 = 水池（量级最小）；全州 = 泻湖；全国 = 海；全球 = 洋。在主街开一家三明治店（本地水池）不可能创造百万财富，因为销售数量被锁定在「周边社区的潜在顾客」这一极小范围内。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>努力完成全垒打，而不只是安打。生意就像是打垒球。要在能够打出全垒打的赛场比赛，不要在不可能打出这种球的地方浪费时间！</td></tr></p>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>规模的两条路径</h4>
+      <dl>
+        <dt>销售数量（规模）</dt>
+        <dd>接触更多客户（薄利多销）</dd>
+        <dt>利润率（量级）</dt>
+        <dd>每单位更高利润（高价值低销量）</dd>
+      </dl>
+    </div>
+
+    <!-- Chapter 34 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第34章</div>
+      <h3>时间戒律</h3>
+      <p class="chapter-subtitle">时间戒律要求你的生意必须与你的时间脱钩</p>
+    </div>
+
+    <div class="core-card">
+      <h4>时间戒律的核心测试（四个问题）</h4>
+      <ol>
+        <li>当我不在场时，这项生意是否可以自动有序地运转？</li>
+        <li>我的边际收益是否足够多，可以让我雇人去做？</li>
+        <li>我的经营是否得益于这是一项摇钱树似的业务？</li>
+        <li>如何让生意经营不占用自己的时间？</li>
+      </ol>
+    </div>
+
+    <div class="quote-block">
+      <p>你愿意每周工作10小时赚6万美元，还是每周工作70小时赚14万美元？无论如何，我都更愿意选择前者。</p>
+    </div>
+
+    <div class="critical-block">
+      <h4>批判性分析</h4>
+      <ul>
+        <li><strong>快车道创业初期的时间投入</strong>：几乎所有快车道企业在早期都需要创始人大量投入时间（「all-in」阶段）。时间戒律的「脱钩」目标可能只适用于企业成熟期。</li>
+        <li><strong>行业适用性问题</strong>：时间戒律对互联网、软件、内容类业务非常适用，但对许多必须在线下提供服务的技术性行业天然不适用（按摩师、理发师、厨师）。</li>
+      </ul>
+    </div>
+
+    <!-- Chapter 35 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第35章</div>
+      <h3>快速致富的3条大道</h3>
+      <p class="chapter-subtitle">最强大、最快速的财富路径</p>
+    </div>
+
+    <div class="core-card">
+      <h4>3条高速快车道</h4>
+      <ol>
+        <li><strong>互联网生意（Internet Business）</strong><br>7种模式：订阅服务、内容服务、引导性销售、社交网络、中介系统、广告、电子商务</li>
+        <li><strong>创新产品或服务（Innovation Products/Services）</strong><br>第一阶段：制造（发明产品）；第二阶段：销售（将产品分发到数百万人手中）</li>
+        <li><strong>创造规模效应（Creating a Scale-Up）</strong><br>「安打」变「全垒打」的路径：本地生意通过连锁经营/规模效应复制</li>
+      </ol>
+    </div>
+
+    <div class="quote-block">
+      <p>发明一件可以解决一项需求的产品只是打了半场仗，另外半场是将你的发明卖给几百万人。</p>
+    </div>
+
+    <!-- Chapter 36 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第36章</div>
+      <h3>找到你的金光大道</h3>
+      <p class="chapter-subtitle">机会极少是「突破性发明」，而是「未被很好满足的需求」</p>
+    </div>
+
+    <div class="core-card">
+      <h4>发现机会的「代码词汇」方法</h4>
+      <ul>
+        <li>「我憎恨……」 → 化解这种憎恨就是你的路</li>
+        <li>「这让我很烦恼……」 → 去除烦恼就是你的路</li>
+        <li>「为什么是这种情况？」 → 找到原因就是你的路</li>
+        <li>「我不得不做吗？」 → 去掉「不得不」就是你的路</li>
+        <li>「我希望有……」 → 让这个希望变成现实就是你的路</li>
+      </ul>
+    </div>
+
+    <div class="quote-block">
+      <p>「有人正在做那件事」是一个幻觉，让你觉得那是一个难以逾越的障碍。所有事情都有人在做。问题在于，你可以做得更好吗？</p>
+    </div>
+
+    <div class="quote-block">
+      <p>放弃新奇点子，专注于很好地执行。你无须去做从未有人尝试过的生意。旧的点子没什么不好的，关键是比别人做得更好！</p>
+    </div>
+
+    <!-- Chapter 37 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第37章</div>
+      <h3>为你的路设定终点</h3>
+      <p class="chapter-subtitle">快车道是手段，终点是自由</p>
+    </div>
+
+    <div class="core-card">
+      <h4>设定终点的4个步骤</h4>
+      <ol>
+        <li><strong>定义生活方式</strong>：写下你想要的具体东西</li>
+        <li><strong>评估成本</strong>：计算每月生活总成本（含税费和保险）</li>
+        <li><strong>设定目标</strong>：建立两个目标——商业系统收入目标 + 金钱系统目标</li>
+        <li><strong>实现</strong>：将大目标分解为可执行的小步骤</li>
+      </ol>
+    </div>
+
+    <div class="quote-block">
+      <p>自由是有代价的，代价就是金钱。伟大的梦想，无论是奢华的法拉利，还是无私的非营利性基金会，都需要花钱。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>金钱不会改变人，只是让他们更像自己。</p>
+    </div>
+
+    <!-- Chapters 38-42 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第38–42章</div>
+      <h3>加速累积财富</h3>
+      <p class="chapter-subtitle">执行·品牌·口碑·团队·差异化</p>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>第38章：成功的速度</h4>
+      <dl>
+        <dt>速度 = 执行，而非想象</dt>
+        <dd>兰博基尼仪表盘上「350公里/时」的刻度比喻「想法」——潜在速度可以很高，但如果没有执行，车就停在车库里。象棋 vs 跳棋：跳棋是单维度（价格），象棋是多维度（执行、营销、客服、产品、销售、点子同时协调）。</dd>
+      </dl>
+      <p style="margin-top:10px;font-style:italic;color:var(--color-text-secondary);">绝妙点子（320）× 不执行（$1）= $320<br>普通点子（56）× 出色执行（$1000万）= $5.6亿<br><strong>执行把成功者和失败者从点子中区别开来。</strong></p>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>第39章：烧掉商业计划，立即开始行动</h4>
+      <dl>
+        <dt>核心论点</dt>
+        <dd>世界按照自己的逻辑行事，商业计划是无用的突发奇想；最佳商业计划是执行记录本身。作者6周重新设计网站却惨遭失败——精心设计的网站上线后跳出率翻倍、转化率陡降，他立刻放弃重新用回旧版本。「世界给了我一个信号，我读懂了，然后做出反馈。」</dd>
+      </dl>
+    </div>
+
+    <div class="quote-block">
+      <p>商业计划完全没用！它们只是一些突发奇想。除非你认为这些脏兮兮的纸有价值，而我从来没有什么商业计划。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>世界上最好的商业计划书就是执行的记录。</p>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>第40章：步行者会让你发财</h4>
+      <dl>
+        <dt>糟糕的客户服务是一个机会</dt>
+        <dd>现代社会的客户服务普遍糟糕，这反而给快车道创业者提供了「超越预期」的机会。4类客户投诉：①变化投诉（信息含量极少）；②期望投诉（暴露了操作问题）；③无效投诉（暴露了有待满足的需求，是免费的商业情报）；④欺诈投诉（可忽略，但不能忽视）。</dd>
+      </dl>
+    </div>
+
+    <div class="quote-block">
+      <p>糟糕的客户服务却能对期望产生积极作用。把「差劲」变成「超越预期的客户服务」。</p>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>第41章：把搭便车者扔出去</h4>
+      <dl>
+        <dt>合伙如同婚姻</dt>
+        <dd>合伙失败的根本原因：人们因「分散风险/费用/工作量」的错误理由而合伙，而非真正的愿景和价值观一致。</dd>
+        <dt>「先验证，后信任」</dt>
+        <dd>里根总统的「先信任，后验证」被作者颠覆——信任需要争取得到。</dd>
+      </dl>
+    </div>
+
+    <div class="quote-block">
+      <p>在这个世界上，只有一个人是你完全可以信任的，那就是你自己。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>出色的客户服务可以弥补产品缺点，但是出色的产品无法弥补糟糕的客户服务。</p>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>第42章：成为别人的救星</h4>
+      <dl>
+        <dt>商品化是快车道的大敌</dt>
+        <dd>商品化 = 产品/服务与竞争对手无法区分，客户只能以价格作为唯一选择依据。错误的创业前提导致商品化：「我想做个生意」「我知道怎么做这个」「我想要自己的公司」——而不都是「市场需要什么？」</dd>
+        <dt>利用竞争对手</dt>
+        <dd>竞争揭示「你不应该做什么」（反祓设计），而非「你应该做什么」。95%时间忘掉竞争对手，5%时间利用竞争对手的弱点做差异化。</dd>
+      </dl>
+    </div>
+
+    <div class="quote-block">
+      <p>平庸的拥挤世界。人人在做的生意只能带来平庸的收入。</p>
+    </div>
+
+    <div class="summary-block">
+      <h4>本章小结 · 五条戒律核心关联</h4>
+      <ul>
+        <li><strong>需求戒律</strong>：市场需要吗？→ 先发现需求，再创造供给；「做你喜欢的事」≠ 满足市场需求</li>
+        <li><strong>进入戒律</strong>：门槛够高吗？→ 低进入壁垒 = 竞争激烈 = 致富效果减弱</li>
+        <li><strong>控制戒律</strong>：我掌控全局吗？→ 做司机，不做搭便车者；不要把控制权交给别人</li>
+        <li><strong>规模戒律</strong>：收入能指数增长吗？→ 「全垒打」赛道，而非「安打」赛道</li>
+        <li><strong>时间戒律</strong>：我能抽身吗？→ 被动收入系统；无法脱钩 = 仍在「打工」</li>
+        <li><strong>加速策略</strong>：执行>计划；口碑是最强的免费增长引擎；差异化而非商品化</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     PART 6 / FINAL DIVIDER
+══════════════════════════════════════════ -->
+<section class="part-page" id="appendix">
+  <div class="container">
+    <div class="part-badge">Finale</div>
+    <h2>超级充电器<br>+ 附录</h2>
+    <p class="part-tagline">FASTLANE S-U-P-E-R-C-H-A-R-G-E-R · 20步快车道行动框架 · 40条核心指南</p>
+    <div class="part-stats">
+      <div class="part-stat"><div class="part-stat-number">43–45</div><div class="part-stat-label">终章</div></div>
+      <div class="part-stat"><div class="part-stat-number">20步</div><div class="part-stat-label">行动框架</div></div>
+      <div class="part-stat"><div class="part-stat-number">40条</div><div class="part-stat-label">快车道指南</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     PART 6 / FINAL CONTENT
+══════════════════════════════════════════ -->
+<section style="padding: 0 0 20px;">
+  <div class="container">
+
+    <!-- Chapters 43-45: Brand, Focus, Supercharger -->
+
+    <!-- Chapter 43 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第43章</div>
+      <h3>打造品牌而不是生意</h3>
+      <p class="chapter-subtitle">品牌是商业世界真正的「皇后」</p>
+    </div>
+
+    <div class="core-card">
+      <h4>核心论点</h4>
+      <p>品牌（Brand）才是商业世界真正的「皇后」，比产品、服务乃至整个生意本身都更重要。缺乏品牌的生意就像失去皇后的棋局——生存艰难，随时可能溃败。品牌是商品化的最佳防御工具，一旦建立品牌忠诚度，竞争者就很难撼动你。</p>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>USP开发六步法</h4>
+      <ol class="step-list">
+        <li>发掘优点：进入行业要有合适的理由——解决一个问题或满足某种需求</li>
+        <li>确立独特性：用有力的动词——将「减轻重量」改为「消灭脂肪」</li>
+        <li>具体化+提供证据：「30分钟内送到否则免费」比「快速卖房」更有说服力</li>
+        <li>简短、清晰：USP必须一秒钟内传达核心价值</li>
+        <li>贯穿所有营销资料：货车、设备、建筑物、广告、商业卡片、网站</li>
+        <li>说到做到：承诺30分钟就必须30分钟以内</li>
+      </ol>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>五种克服噪音的方法</h4>
+      <ol>
+        <li><strong>极化（Polarization）</strong>：传递极端观点，强迫人们要么爱你，要么恨你。代价：会失去一半潜在客户。</li>
+        <li><strong>性吸引（Sex Appeal）</strong>：性是最常用、最持久的注意力干扰器。</li>
+        <li><strong>调动情绪（Evoke Emotion）</strong>：消费者基于情绪而非实用性做购买决定。</li>
+        <li><strong>鼓励互动（Interactive）</strong>：交互性提高回应率——人们喜欢谈论自己。</li>
+        <li><strong>不落俗套（Be Unconventional）</strong>：打破惯例制造惊喜——如劲量兔（Energizer Bunny）。</li>
+      </ol>
+    </div>
+
+    <div class="quote-block">
+      <p>消费者基于情绪而不是实用性做出购买决定。</p>
+    </div>
+
+    <div class="critical-block">
+      <h4>批判性分析</h4>
+      <ul>
+        <li><strong>性吸引作为营销手段的道德边界</strong>：可能损害品牌的「专业性」感知，过度依赖性吸引会排斥特定消费群体。</li>
+        <li><strong>品牌建设需要资源</strong>：打造品牌需要大量时间、资金和专业能力，而许多快车道业务在初期缺乏这些资源。</li>
+      </ul>
+    </div>
+
+    <!-- Chapter 44 -->
+    <div class="chapter-header">
+      <div class="chapter-number">第44章</div>
+      <h3>选择「一夫一妻」制</h3>
+      <p class="chapter-subtitle">专注是快车道成功的前提</p>
+    </div>
+
+    <div class="core-card">
+      <h4>特克尔症状（Tekel Syndrome）</h4>
+      <p>创业者每周甚至每天都在不同的生意和机会之间跳跃切换，导致所有业务都平庸无奇，没有任何一项能产生足够的积累效应。核心逻辑链：重点不集中 → 发散的结果 → 弱资产 → 无法产生规模效应 → 财富积累速度极慢。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>没有配鞍，马儿跑不远。没有加压，蒸汽推不动任何东西。没有管道，尼亚加拉大瀑布的水发不了电。专注、投入和自律，才能让生命变得伟大。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>10项业务共赚1万美元，倒不如做好一个业务。</p>
+    </div>
+
+    <div class="critical-block">
+      <h4>批判性分析</h4>
+      <ul>
+        <li><strong>专注的时机问题</strong>：很多成功的创业者初期都有过多次尝试（Edison的6000次失败实验），专注力和探索试错之间的边界在哪里？</li>
+        <li><strong>特克尔症状 vs 精益创业的「快速迭代」</strong>：两者之间存在张力，快速转向下一个假设难道不是理性的做法吗？</li>
+      </ul>
+    </div>
+
+    <!-- Chapter 45: Supercharger -->
+    <div class="chapter-header">
+      <div class="chapter-number">第45章</div>
+      <h3>为你的致富计划充满电</h3>
+      <p class="chapter-subtitle">FASTLANE SUPERCHARGER · 快车道超级充电器20步</p>
+    </div>
+
+    <div class="core-card">
+      <h4>快车道超级充电器 20步详解</h4>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>步骤</th><th>关键词</th><th>核心含义</th></tr></thead>
+        <tbody>
+          <tr><td>F</td><td>Formula（公式）</td><td>财富是一个公式和信仰、选择、行动、生活方式构成的系统性过程</td></tr>
+          <tr><td>A</td><td>Admit（认同）</td><td>认同三个核心：缓慢致富是错误的；「无计划」不是好计划；运气=全心投入</td></tr>
+          <tr><td>S</td><td>Stop and Swap（弃旧迎新）</td><td>停止使用旧路线图；重点从消费者转移到生产者</td></tr>
+          <tr><td>T</td><td>Time（时间）</td><td>时间是快车道最宝贵的资产；避开时间窃贼</td></tr>
+          <tr><td>L</td><td>Leverage（杠杆）</td><td>快车道公式包含杠杆，慢车道没有</td></tr>
+          <tr><td>A</td><td>Assets（资产和收入）</td><td>财富通过生意的收入和资产价值指数增长</td></tr>
+          <tr><td>N</td><td>Number（数字）</td><td>确定具体的财富目标数字；可视化梦想</td></tr>
+          <tr><td>E</td><td>Effection（影响力）</td><td>影响力定律——你影响的人越多，你赚到的钱越多</td></tr>
+          <tr><td>S</td><td>Steer（导向）</td><td>用WCCA和WADM做决策；行为改变始于对过去选择的反思</td></tr>
+          <tr><td>U</td><td>Uncouple（脱钩）</td><td>与慢车道财富方程正式脱钩；成立合适的公司实体</td></tr>
+          <tr><td>P</td><td>Passion（激情）</td><td>激情不是「做你喜欢的事」，而是「做令你激动万分的事」</td></tr>
+          <tr><td>E</td><td>Educate（教育）</td><td>教育开始于毕业之后；信息是财务之旅的燃油</td></tr>
+          <tr><td>R</td><td>Road（道路）</td><td>训练头脑去发现需求和问题；最好的生意建立在已有产品基础上</td></tr>
+          <tr><td>C</td><td>Control（控制）</td><td>掌控你的财务计划；要做鲨鱼，而不是孔雀鱼</td></tr>
+          <tr><td>H</td><td>Have（满足）</td><td>满足别人的需求，钱就会涌向你；停止追逐金钱</td></tr>
+          <tr><td>A</td><td>Automate（自动化）</td><td>自动化你的生意，使时间和业务脱钩</td></tr>
+          <tr><td>R</td><td>Replicate（复制）</td><td>复制你的系统；选择能打出全垒打的场地</td></tr>
+          <tr><td>G</td><td>Grow（成长）</td><td>像下象棋一样从多方面壮大；打造品牌而不是生意</td></tr>
+          <tr><td>E</td><td>Exit（退出）</td><td>制定退出策略；终点是完全的被动收益系统</td></tr>
+          <tr><td>R</td><td>Retire, Reward, or Repeat</td><td>每个里程碑都应奖励自己；超过1000万→买一辆兰博基尼！</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="quote-block">
+      <p>财富是一个公式和信仰、选择、行动、生活方式构成的系统性过程。财富是一个过程，而不是结果。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>在你能够控制的环境里，受你影响的人越多，你赚到的钱越多。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>千里之行始于足下。不要学别人了，开始行动吧，今天就做出改变你未来生活的选择。我们已经浪费了太多时间，太阳都落山了，咖啡店的伙计已经挂上打烊的牌子了。</p>
+    </div>
+
+    <!-- Appendix A -->
+    <div class="chapter-header">
+      <div class="chapter-number">附录A</div>
+      <h3>读者反馈 · 常见问题</h3>
+      <p class="chapter-subtitle">20+个边缘案例解答</p>
+    </div>
+
+    <div class="knowledge-block">
+      <h4>核心问答精华</h4>
+      <dl>
+        <dt>做生意19年不富有的人的问题是什么？</dt>
+        <dd>违背了时间戒律——生意没有成为摇钱树，反而成为永远摆脱不掉的工作。拥有生意≠自动获得财富。</dd>
+        <dt>有$1.2万债务，收支难以平衡怎么办？</dt>
+        <dd>「如果你的生意每月能带来$1.5万收益，那个$1.2万债务怎么会成为负担？」——收入是解决问题的答案。</dd>
+        <dt>房地产投资是快车道吗？</dt>
+        <dd>房地产是「财富1.0」；是否快车道要看是否满足5项戒律；「量级」是关键——200个小物业可以致富，但需要很多年。</dd>
+        <dt>每周工作4小时可以致富吗？</dt>
+        <dd>可以，但这4小时是摇钱树的果实，不是种摇钱树的过程。「每周工作4小时是摇钱树的果实，但是每周工作4小时是无法种出摇钱树的！」</dd>
+        <dt>应该辍学吗？</dt>
+        <dd>取决于费用、成熟度、目标和边际收益；警惕「教育奴役」——大学不是致富的充分条件，正规教育有时会起副作用。</dd>
+      </dl>
+    </div>
+
+    <div class="quote-block">
+      <p>如果你解决了其他人的需求，就可以解决你自己的问题。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>快车道不是买东西，而是有关自由，是可以自由地买你想要的东西。</p>
+    </div>
+
+    <!-- Appendix B: 40 Rules -->
+    <div class="chapter-header">
+      <div class="chapter-number">附录B</div>
+      <h3>40条快车道指南</h3>
+      <p class="chapter-subtitle">快车道世界观的「宪法条文」</p>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>序号</th><th>指南</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>不要认为快速致富不可能。</td></tr>
+          <tr><td>2</td><td>不要让慢车道埋葬我们的梦想。</td></tr>
+          <tr><td>3</td><td>不要让慢车道鼓吹者用他们的教条玷污我的真理。</td></tr>
+          <tr><td>4</td><td>不要采用慢车道作为你的计划，但可以把它作为计划的一部分。</td></tr>
+          <tr><td>5</td><td>不要为了换取周末就出卖灵魂。</td></tr>
+          <tr><td>6</td><td>不必期望或以为做一名司机就能致富。</td></tr>
+          <tr><td>7</td><td>不要为了省钱浪费自己的时间。</td></tr>
+          <tr><td>8</td><td>不要把时间放在控制财务计划上。</td></tr>
+          <tr><td>9</td><td>不要放弃对财务计划的控制权。</td></tr>
+          <tr><td>10</td><td>不要以为时间很充裕。</td></tr>
+          <tr><td>11</td><td>不要关注结果，而应关注过程。</td></tr>
+          <tr><td>12</td><td>不要接受那些鼓吹一套方法，实际上却依靠其他方法致富的大师们的建议。</td></tr>
+          <tr><td>13</td><td>不要用复利致富，而要用其获得收入。</td></tr>
+          <tr><td>14</td><td>不要忽视金钱的被动性。</td></tr>
+          <tr><td>15</td><td>毕业后不要停止学习，而应该开始自我教育。</td></tr>
+          <tr><td>16</td><td>不要让生活被寄生性债务缠住。</td></tr>
+          <tr><td>17</td><td>不要站在消费者的角度，要转做生产者。</td></tr>
+          <tr><td>18</td><td>不要否定梦想成真的可能性。</td></tr>
+          <tr><td>19</td><td>不要盯着我的花费，要看的是我的收入。</td></tr>
+          <tr><td>20</td><td>不要做大家都在做的事情。</td></tr>
+          <tr><td>21</td><td>不要先消费，要先生产后消费。</td></tr>
+          <tr><td>22</td><td>不要让自己最后一个收到钱，你要第一个拿到收入。</td></tr>
+          <tr><td>23</td><td>不要做大家都在做的事情。</td></tr>
+          <tr><td>24</td><td>不要相信每个人，但要给他人证明自己的机会。</td></tr>
+          <tr><td>25</td><td>不要放弃对自己生意的控制权。</td></tr>
+          <tr><td>26</td><td>不要搭便车，要争取自己驾驶。</td></tr>
+          <tr><td>27</td><td>不要把自己限制在有限规模和细小空间中经营。</td></tr>
+          <tr><td>28</td><td>不要轻视选择的力量。</td></tr>
+          <tr><td>29</td><td>不要像一只池塘里的孔雀鱼，要像大海里的一头鲨鱼。</td></tr>
+          <tr><td>30</td><td>不要先消费，要先生产后消费。</td></tr>
+          <tr><td>31</td><td>不要轻易涉足无壁垒或进入门槛低的生意。</td></tr>
+          <tr><td>32</td><td>不要投资于别人的品牌，要投资自己的。</td></tr>
+          <tr><td>33</td><td>想法不能只是说说，重要的是去实施。</td></tr>
+          <tr><td>34</td><td>不要为了其他利益相关人而放弃客户。</td></tr>
+          <tr><td>35</td><td>不是打造业务，而是建立品牌。</td></tr>
+          <tr><td>36</td><td>不要关注产品特点方面的营销信息，而要关注它能为客户带来的好处。</td></tr>
+          <tr><td>37</td><td>不要做多头兼顾的机会主义者，要聚焦！</td></tr>
+          <tr><td>38</td><td>不要像下跳棋那样做生意，要像下象棋。</td></tr>
+          <tr><td>39</td><td>不要超过自己的能力范围生活，但要寻找机会扩展自己的能力范围。</td></tr>
+          <tr><td>40</td><td>要具备基本的金融知识。</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="quote-block">
+      <p>想法不能只是说说，重要的是去实施。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>不要像一只池塘里的孔雀鱼，要像大海里的一头鲨鱼。</p>
+    </div>
+
+    <div class="quote-block">
+      <p>不是打造业务，而是建立品牌。</p>
+    </div>
+
+    <!-- Final Global Summary -->
+    <div class="summary-block" style="margin-top:48px;">
+      <h4>全局总结 · 全书核心框架</h4>
+      <p style="margin-bottom:16px;">三条路线图的本质区别：</p>
+      <ul>
+        <li><strong>人行道</strong>：财富 = 收入 + 债务，即时满足，终点 = 贫穷</li>
+        <li><strong>慢车道</strong>：财富 = 工作 + 投资收益，牺牲今天，终点 = 平庸（65岁）</li>
+        <li><strong>快车道</strong>：财富 = 净利润 + 资产价值，净利润 = 销售数量 × 单位利润，终点 = 真正的自由</li>
+      </ul>
+      <p style="margin:16px 0 8px;"><strong>五条戒律</strong>：需求戒律（解决真实问题）→ 进入戒律（门槛够高）→ 控制戒律（掌控核心）→ 规模戒律（可复制扩张）→ 时间戒律（收入与时间脱钩）</p>
+      <p style="margin:8px 0;"><strong>核心认知</strong>：影响力定律（你影响的人越多，你就越富有）> 吸引力定律；执行力 > 点子；过程 > 结果</p>
+      <p style="margin:8px 0;"><strong>最重要的三句话</strong>：</p>
+      <ol style="margin-left:20px;">
+        <li>「每周工作4小时是摇钱树的果实，但是每周工作4小时是无法种出摇钱树的！」</li>
+        <li>「品牌是商品化的最佳防御工具。」</li>
+        <li>「财富是一个过程，而不是结果。」</li>
+      </ol>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<!-- ══════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="container">
+    <p>《百万富翁快车道》读书笔记 · 完整版</p>
+    <p style="margin-top:6px; opacity:0.6;">
+      原书：<em>The Millionaire Fastlane</em> by MJ DeMarco ·
+      译者：郑磊 · 王占新 ·
+      中信出版社，2017
+    </p>
+    <p style="margin-top:10px; opacity:0.4; font-size:0.78rem;">
+      笔记整理日期：2026年4月15日 · 涵盖第1–45章 + 附录A·B
+    </p>
+  </div>
+</footer>
+
+</div><!-- /page-wrapper -->
+
+<!-- Scroll to top button -->
+<button class="scroll-top" id="scrollTop" aria-label="回到顶部">↑</button>
+
+<script>
+// Navigation toggle (mobile)
+document.getElementById('navToggle').addEventListener('click', function() {
+  document.getElementById('navLinks').classList.toggle('open');
+});
+
+// Active nav link on scroll
+const sections = document.querySelectorAll('.part-page, .book-cover');
+const navLinks = document.querySelectorAll('.nav-links a');
+
+function updateActiveNav() {
+  const scrollPos = window.scrollY + 120;
+  let current = '';
+  sections.forEach(function(sec) {
+    if (scrollPos >= sec.offsetTop) {
+      current = sec.id;
+    }
+  });
+  navLinks.forEach(function(link) {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) {
+      link.classList.add('active');
+    }
+  });
+}
+
+// Scroll to top
+document.getElementById('scrollTop').addEventListener('click', function() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// Show/hide scroll button
+window.addEventListener('scroll', function() {
+  var btn = document.getElementById('scrollTop');
+  if (window.scrollY > 600) {
+    btn.classList.add('visible');
+  } else {
+    btn.classList.remove('visible');
+  }
+  updateActiveNav();
+});
+
+// Close mobile nav on link click
+document.querySelectorAll('.nav-links a').forEach(function(link) {
+  link.addEventListener('click', function() {
+    document.getElementById('navLinks').classList.remove('open');
+  });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>【读书笔记】要钱还是要生活 · Your Money or Your Life</title>
+<style>
+/* ========== 主题变量 ========== */
+:root{
+  --bg:#F4F1EA; --panel:#ECE8DE; --ink:#1A1916; --ink-sub:#55524A;
+  --accent:#B4432E; --accent2:#3E5641; --accent3:#C89B3C; --line:#D8D2C4;
+  --serif:Georgia,"Times New Roman","Source Han Serif SC","Noto Serif SC","Songti SC",SimSun,serif;
+  --mono:"SF Mono","Cascadia Code",Consolas,"Courier New",monospace;
+  --sbw:242px;
+}
+[data-theme="dark"]{
+  --bg:#161512; --panel:#1F1D18; --ink:#E8E4DA; --ink-sub:#A39F93;
+  --accent:#D97757; --accent2:#7FA184; --accent3:#D9B45F; --line:#33302A;
+}
+/* ========== 基础 ========== */
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:var(--serif); font-size:17px; line-height:1.85;
+  transition:background .25s,color .25s;
+}
+::selection{background:var(--accent);color:var(--bg)}
+a{color:inherit;text-decoration:none}
+p{margin:.9em 0}
+em{font-style:normal;color:var(--accent)}
+strong{font-weight:700}
+/* ========== 进度条 / 主题按钮 ========== */
+#pbar{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent);z-index:99;transition:width .1s linear}
+#themeBtn{
+  position:fixed;top:14px;right:3vw;z-index:98;cursor:pointer;
+  font-family:var(--mono);font-size:13px;letter-spacing:.12em;
+  color:var(--ink);background:var(--panel);border:1px solid var(--line);
+  padding:.4em .9em;border-radius:2px;transition:border-color .2s,color .2s;
+}
+#themeBtn:hover{border-color:var(--accent);color:var(--accent)}
+/* ========== 导航：固定侧边栏（宽屏）/ 抽屉（窄屏） ========== */
+#sidebar{
+  position:fixed;top:0;left:0;bottom:0;width:var(--sbw);z-index:96;
+  background:var(--panel);border-right:1px solid var(--line);
+  display:none;flex-direction:column;overflow-y:auto;
+  padding:1.7em 1.05em 1.3em;transition:background .25s,border-color .25s;
+}
+.sb-brand{font-weight:900;font-size:18px;line-height:1.3;border-bottom:4px solid var(--ink);padding-bottom:.75em;margin-bottom:1.1em}
+.sb-brand .accent-dot{color:var(--accent)}
+.sb-brand .en{display:block;font-family:var(--mono);font-weight:400;font-size:10px;letter-spacing:.2em;color:var(--ink-sub);margin-top:.55em;line-height:1.6;text-transform:uppercase}
+.sb-nav{flex:1}
+.sb-nav ol{list-style:none}
+.sb-nav a{
+  display:flex;align-items:baseline;gap:.55em;padding:.36em .5em;
+  font-size:13.5px;line-height:1.5;color:var(--ink-sub);
+  border-left:2px solid transparent;transition:color .15s,border-color .15s,background .15s;
+}
+.sb-nav a .no{font-family:var(--mono);font-size:11px;color:var(--accent);min-width:1.9em;flex:none}
+.sb-nav li.sub a{padding-left:1.7em;font-size:12.5px}
+.sb-nav a:hover{color:var(--accent)}
+.sb-nav a.on{color:var(--accent);border-left-color:var(--accent);font-weight:700;background:color-mix(in srgb,var(--accent) 7%,transparent)}
+.sb-foot{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--ink-sub);border-top:1px solid var(--line);padding-top:.9em;margin-top:1.1em;text-transform:uppercase}
+#drawer{
+  position:fixed;top:0;left:0;bottom:0;width:min(80vw,330px);z-index:100;
+  background:var(--panel);border-right:1px solid var(--line);
+  transform:translateX(-103%);transition:transform .28s ease;
+  overflow-y:auto;padding:1.5em 1.05em 1.3em;
+}
+body.drawer-open #drawer{transform:none}
+#scrim{position:fixed;inset:0;z-index:99;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .25s}
+body.drawer-open #scrim{opacity:1;pointer-events:auto}
+#menuBtn{
+  position:fixed;top:14px;left:3vw;z-index:98;display:inline-flex;align-items:center;gap:.5em;cursor:pointer;
+  font-family:var(--mono);font-size:13px;letter-spacing:.12em;
+  color:var(--ink);background:var(--panel);border:1px solid var(--line);
+  padding:.4em .9em;border-radius:2px;transition:border-color .2s,color .2s;
+}
+#menuBtn:hover{border-color:var(--accent);color:var(--accent)}
+[id]{scroll-margin-top:24px}
+@media(min-width:1180px){
+  #sidebar{display:flex}
+  body{padding-left:var(--sbw)}
+  .wrap{width:min(calc(97vw - var(--sbw)),1900px)}
+  #menuBtn,#drawer,#scrim{display:none}
+}
+@media(max-width:1179.9px){[id]{scroll-margin-top:64px}}
+/* ========== 容器：90%~96vw 全宽 ========== */
+.wrap{width:min(94vw,1900px);margin-inline:auto}
+/* ========== 封面 masthead ========== */
+.masthead{padding:9vh 0 0}
+.issue-row{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:.5em;
+  font-family:var(--mono);font-size:12px;letter-spacing:.28em;color:var(--ink-sub);text-transform:uppercase;
+  border-bottom:1px solid var(--line);padding-bottom:.8em}
+.masthead h1{
+  font-size:clamp(46px,9.5vw,132px);line-height:1.06;font-weight:900;letter-spacing:.02em;margin:.35em 0 .1em}
+.masthead h1 .accent-dot{color:var(--accent)}
+.mast-sub{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1em;padding-bottom:1.2em}
+.mast-sub .en-title{font-family:var(--mono);letter-spacing:.18em;color:var(--ink-sub);font-size:clamp(12px,1.4vw,16px)}
+.mast-sub .authors{font-size:clamp(15px,1.6vw,19px)}
+.mast-sub .authors b{color:var(--accent)}
+.rule-heavy{height:6px;background:var(--ink);margin-bottom:.6em}
+.rule-thin{height:1px;background:var(--line);margin-bottom:5vh}
+.deck{max-width:62em;font-size:clamp(16px,1.7vw,20px);color:var(--ink-sub);margin-bottom:6vh}
+.deck em{color:var(--accent)}
+/* ========== 目录 ========== */
+.toc-block{border-top:6px solid var(--ink);padding-top:1.4em;margin-bottom:8vh}
+.toc-block h2,.eyebrow-h{font-family:var(--mono);font-size:12px;letter-spacing:.34em;color:var(--ink-sub);text-transform:uppercase;font-weight:400}
+.toc ol{list-style:none;margin-top:1.2em;columns:2;column-gap:5vw}
+.toc li{break-inside:avoid;margin-bottom:.15em}
+.toc a{display:flex;align-items:baseline;gap:.7em;padding:.42em .2em;border-bottom:1px dotted var(--line);transition:color .2s}
+.toc a:hover{color:var(--accent)}
+.toc a .no{font-family:var(--mono);font-size:13px;color:var(--accent);min-width:2.2em}
+.toc a .t{flex:none}
+.toc a .leader{flex:1}
+.toc a.on{color:var(--accent)}
+.toc a.on .t{font-weight:700}
+.toc .sub{padding-left:3.2em;font-size:.86em;color:var(--ink-sub)}
+@media(max-width:900px){.toc ol{columns:1}}
+/* ========== 章节 ========== */
+.chapter{position:relative;padding:4vh 0 5vh;border-top:1px solid var(--line)}
+.chapter:first-of-type{border-top:none}
+.ch-num{
+  position:absolute;top:-1vh;right:0;z-index:0;pointer-events:none;
+  font-size:clamp(90px,16vw,230px);font-weight:900;line-height:1;color:var(--ink);opacity:.055;font-family:var(--serif)}
+.ch-head{position:relative;z-index:1;margin-bottom:3vh}
+.ch-head .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.32em;color:var(--accent);text-transform:uppercase;display:block;margin-bottom:.7em}
+.ch-head h2{font-size:clamp(26px,3.6vw,46px);line-height:1.25;font-weight:900}
+.ch-head .lede{max-width:58em;color:var(--ink-sub);margin-top:1em;font-size:clamp(15px,1.55vw,18px)}
+.step-head h3{font-size:clamp(20px,2.4vw,30px);font-weight:900;margin:.4em 0 .2em}
+.step-no{font-family:var(--mono);color:var(--accent);font-size:14px;letter-spacing:.25em}
+h4{font-size:clamp(17px,1.8vw,21px);font-weight:900;margin:1.6em 0 .4em}
+h4::before{content:"❋ ";color:var(--accent);font-size:.8em}
+/* ========== 网格 ========== */
+.grid{display:grid;gap:clamp(1.2em,2.5vw,3em);margin:1.4em 0}
+.g75{grid-template-columns:7fr 5fr}
+.g84{grid-template-columns:2fr 1fr}
+.g53{grid-template-columns:5fr 3fr}
+.g55{grid-template-columns:1fr 1fr}
+.g444{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:720px){.g75,.g84,.g53,.g55,.g444{grid-template-columns:1fr}}
+/* ========== 组件 ========== */
+.panel{background:var(--panel);border:1px solid var(--line);padding:1.2em 1.4em;transition:transform .25s,border-color .25s}
+.panel:hover{transform:translateY(-2px);border-color:var(--accent)}
+.aside-note{border-left:3px solid var(--accent);background:var(--panel);padding:1em 1.3em;font-size:.93em;margin:1.2em 0}
+.aside-note .tag{font-family:var(--mono);font-size:11px;letter-spacing:.25em;color:var(--accent);text-transform:uppercase;display:block;margin-bottom:.4em}
+.datacard{border-top:3px solid var(--accent);padding-top:.7em}
+.datacard .num{font-family:var(--mono);font-size:clamp(24px,2.6vw,36px);font-weight:700;line-height:1.2}
+.datacard .lab{font-size:.82em;color:var(--ink-sub)}
+.pullquote{
+  margin:2em 0;padding-left:1.4em;border-left:5px solid var(--accent);
+  font-size:clamp(19px,2.3vw,28px);line-height:1.6;font-style:italic;font-weight:700}
+.pullquote .who{display:block;margin-top:.6em;font-size:.5em;font-style:normal;font-weight:400;color:var(--ink-sub);font-family:var(--mono);letter-spacing:.15em}
+.divider{text-align:center;color:var(--accent);letter-spacing:1.2em;padding:4.5vh 0;font-size:15px}
+ul.plain{list-style:none}
+ul.plain li{padding-left:1.3em;position:relative;margin:.45em 0}
+ul.plain li::before{content:"—";position:absolute;left:0;color:var(--accent)}
+ol.steps-list{padding-left:1.5em}
+ol.steps-list li{margin:.5em 0}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.3em;color:var(--ink-sub);text-transform:uppercase}
+.small{font-size:.85em;color:var(--ink-sub)}
+code,.mono{font-family:var(--mono);font-size:.92em}
+/* 表格 */
+.tbl-wrap{overflow-x:auto;margin:1.4em 0}
+table.data{width:100%;border-collapse:collapse;font-size:.92em}
+table.data th{
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:400;
+  color:var(--ink-sub);text-align:left;border-bottom:2px solid var(--ink);padding:.6em .7em}
+table.data td{border-bottom:1px solid var(--line);padding:.55em .7em;vertical-align:top}
+table.data tr:nth-child(even) td{background:color-mix(in srgb,var(--panel) 55%,transparent)}
+table.data td.n{font-family:var(--mono);white-space:nowrap}
+table.data .hl td{background:color-mix(in srgb,var(--accent) 8%,transparent)}
+caption{caption-side:top;text-align:left;font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--ink-sub);padding-bottom:.7em;text-transform:uppercase}
+/* 图表 */
+figure.chart{margin:2em 0}
+figure.chart svg{width:100%;height:auto;display:block}
+figure.chart figcaption{font-family:var(--mono);font-size:12px;color:var(--ink-sub);letter-spacing:.12em;margin-top:.7em}
+figure.chart text{font-family:var(--mono)}
+/* 挂件 */
+.widget{background:var(--panel);border:1px solid var(--line);padding:1.6em clamp(1.2em,2.5vw,2.2em);margin:1.6em 0}
+.widget h4{margin-top:0}
+.w-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.1em;margin:1.1em 0}
+.field label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-sub);margin-bottom:.4em}
+.field input[type=number],.field input[type=text]{
+  width:100%;font-family:var(--mono);font-size:16px;color:var(--ink);
+  background:var(--bg);border:1px solid var(--line);padding:.45em .6em;border-radius:2px}
+.field input:focus{outline:none;border-color:var(--accent)}
+.field input[type=range]{width:100%;accent-color:var(--accent)}
+.out-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1em;margin-top:1.1em}
+.out .v{font-family:var(--mono);font-size:clamp(20px,2.2vw,30px);font-weight:700;color:var(--accent)}
+.out .k{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-sub)}
+.w-note{font-size:.85em;color:var(--ink-sub);border-top:1px dotted var(--line);margin-top:1.2em;padding-top:.9em}
+/* 金句集 */
+.quotes-grid{columns:2;column-gap:3vw;margin-top:1.5em}
+@media(max-width:900px){.quotes-grid{columns:1}}
+.q-card{break-inside:avoid;border:1px solid var(--line);padding:1.3em 1.4em;margin-bottom:1.4em;transition:border-color .25s,transform .25s}
+.q-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.q-card p{font-style:italic;font-size:1.05em;margin:0 0 .6em}
+.q-card .who{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--ink-sub);text-transform:uppercase}
+/* 页脚 */
+footer{border-top:6px solid var(--ink);margin-top:8vh;padding:2.5vh 0 6vh;font-size:.88em;color:var(--ink-sub)}
+footer .mono{font-size:.92em}
+@media(max-width:720px){
+  body{font-size:16px}
+  .wrap{width:96vw}
+  .masthead h1{font-size:13.5vw}
+}
+</style>
+</head>
+<body>
+<div id="pbar"></div>
+<button id="themeBtn" type="button" aria-label="切换明暗主题">◐ 夜间</button>
+
+<!-- ======== 固定侧边导航（宽屏）／抽屉（窄屏） ======== -->
+<aside id="sidebar" aria-label="侧边目录">
+  <div class="sb-brand">要钱<span class="accent-dot">,</span><br>还是要生活<span class="accent-dot">?</span>
+    <span class="en">Your Money or Your Life · 读书笔记特辑 NO.01</span>
+  </div>
+  <nav class="sb-nav" id="navList">
+    <ol>
+      <li><a href="#intro"><span class="no">00</span><span>导语 · 本书是什么</span></a></li>
+      <li><a href="#ch1"><span class="no">01</span><span>核心命题：谋生还是求死</span></a></li>
+      <li><a href="#ch2"><span class="no">02</span><span>满足感曲线与「足够」</span></a></li>
+      <li><a href="#steps"><span class="no">03</span><span>九步骤方法论</span></a></li>
+      <li class="sub"><a href="#step1"><span class="no">Ⅰ</span><span>坦然接受过去</span></a></li>
+      <li class="sub"><a href="#step2"><span class="no">Ⅱ</span><span>追踪生命能量／实际时薪</span></a></li>
+      <li class="sub"><a href="#step3"><span class="no">Ⅲ</span><span>月度表</span></a></li>
+      <li class="sub"><a href="#step4"><span class="no">Ⅳ</span><span>改变一生的三个问题</span></a></li>
+      <li class="sub"><a href="#step5"><span class="no">Ⅴ</span><span>挂图：生命能量可见化</span></a></li>
+      <li class="sub"><a href="#step6"><span class="no">Ⅵ</span><span>尽量减少支出</span></a></li>
+      <li class="sub"><a href="#step7"><span class="no">Ⅶ</span><span>尽量增加收入</span></a></li>
+      <li class="sub"><a href="#step8"><span class="no">Ⅷ</span><span>资本与交叉跨越点</span></a></li>
+      <li class="sub"><a href="#step9"><span class="no">Ⅸ</span><span>投资，以钱养钱</span></a></li>
+      <li><a href="#cases"><span class="no">04</span><span>案例档案馆</span></a></li>
+      <li><a href="#toolbox"><span class="no">05</span><span>工具箱 · 交互挂件</span></a></li>
+      <li><a href="#quotes"><span class="no">06</span><span>金句集</span></a></li>
+      <li><a href="#outro"><span class="no">07</span><span>结语 ＆ 版权说明</span></a></li>
+    </ol>
+  </nav>
+  <div class="sb-foot">九个步骤 · 一种生活</div>
+</aside>
+<button id="menuBtn" type="button" aria-label="打开目录" aria-expanded="false">☰ 目录</button>
+<div id="scrim"></div>
+<nav id="drawer" aria-label="导航抽屉"></nav>
+
+<main class="wrap">
+
+<!-- ================= 封面 ================= -->
+<header class="masthead" id="top">
+  <div class="issue-row"><span>读书笔记 · 特辑 NO.01</span><span>Personal Finance · Life Energy</span><span>单文件离线版</span></div>
+  <h1>要钱<span class="accent-dot">,</span><br>还是要生活<span class="accent-dot">?</span></h1>
+  <div class="mast-sub">
+    <div class="en-title">YOUR MONEY OR YOUR LIFE — READING NOTES</div>
+    <div class="authors">维姬·罗宾 / 乔·多明格斯 &nbsp;·&nbsp; 九个步骤，重新定义你与金钱的关系</div>
+  </div>
+  <div class="rule-heavy"></div>
+  <div class="rule-thin"></div>
+  <p class="deck">像劫匪拿枪指着你问出这句话时，多数人会交出钱包——因为我们爱惜生命甚于爱惜金钱。<em>但果真如此吗？</em>本书的全部内容，都建立在对这个反问的回答之上。</p>
+
+</header>
+
+<!-- ================= 00 导语 ================= -->
+<section class="chapter" id="intro">
+  <span class="ch-num">00</span>
+  <div class="ch-head">
+    <span class="eyebrow">Prologue · 导语</span>
+    <h2>这本书是什么，不是什么</h2>
+    <p class="lede">新版序言开宗明义：「这不是一本理财书。」它不教你选股，也不承诺带来金钱或财物的增加——它只承诺改变你与金钱的关系。</p>
+  </div>
+  <div class="grid g75">
+    <div>
+      <h4>它不是什么</h4>
+      <p>它不是选股攒积分式的技术手册，也不是「价值观中立」的普通理财建议书。序言作者「钱胡子先生」直言那类建议「基本上是在胡说八道」——因为它们假设人与人的偏好差异大于相似性，而事实上人类幸福的要素是普遍的：<em>友谊、健康、社群归属、用智慧迎接挑战、能掌控生活的感觉。</em>原文明确写道：「本计划并不承诺带来金钱或财物的增加，它只承诺改变你与金钱的关系。」</p>
+      <h4>它是什么</h4>
+      <p>一份<strong>个人发展指南</strong>：帮助你厘清自己真正想要的生活，训练你改掉乱花钱的坏习惯；治本而非治标——改变的是观念与习惯，而不是仅仅盯着每月银行流水和信用卡账单。它是一套<strong>九步骤计划</strong>，首创者是乔·多明格斯，本书是两位作者近 20 年讲学、写作、演说的工作结晶。正如一位财务自由人士所说：「这其实不是一本关于理财的书，这是一本关于人生的书。」</p>
+    </div>
+    <aside class="aside-note">
+      <span class="tag">卷首自测</span>
+      你的钱够用吗？陪伴家人的时间够多吗？下班回家精神饱满吗？有时间做真正有意义的事吗？被解雇会视为重新开始的机遇吗？对贡献满意吗？没有金钱烦恼吗？工作能体现价值吗？积蓄够维持几个月开支吗？人生各部分——工作、开销、人际关系、价值观念——彼此契合吗？<br><br><strong>哪怕只有一个答案是否定的，就该读这本书。</strong>
+    </aside>
+  </div>
+  <div class="grid g444">
+    <div class="panel datacard"><div class="num">60%</div><div class="lab">以自我实现和人生意义为代价执意追求金钱地位者中，患上抑郁焦虑及工作相关疾病的比例（《现代疯狂》抽样几百人）</div></div>
+    <div class="panel datacard"><div class="num">&lt;1/2</div><div class="lab">世界大型企业研究会同年研究：对自己职业感到「满意」的美国人不到一半</div></div>
+    <div class="panel datacard"><div class="num">5%</div><div class="lab">美国个人储蓄率近年徘徊值——高于 2007 年不到 2% 的低位，低于 1980 年以前超过 10% 的水平</div></div>
+  </div>
+  <p class="small">序言的宏观补充：我们的支出并非纯个人选择——无论买什么都会在其他地方造成看不见的破坏，且近几十年不断累积；简化生活方式不仅带来幸福感，也大大减少环境破坏。生活方式与环境的冲突，最终会变成压力。</p>
+</section>
+
+<!-- ================= 01 核心命题 ================= -->
+<section class="chapter" id="ch1">
+  <span class="ch-num">01</span>
+  <div class="ch-head">
+    <span class="eyebrow">Chapter 01 · 核心命题</span>
+    <h2>谋生还是求死：金钱＝生命能量</h2>
+    <p class="lede">我们不是在谋生，而是在求死——为了钱牺牲生命的过程很慢很慢，几乎毫无察觉。</p>
+  </div>
+  <div class="pullquote">「我们难道不是在为了工作而扼杀自己，扼杀我们的健康、我们的人际关系、我们的愉悦与好奇心吗？我们在为了钱而牺牲自己的生命，但这个过程很慢很慢，我们几乎毫无察觉。」<span class="who">第一章 · 我们不是在谋生，而是在求死</span></div>
+  <div class="grid g75">
+    <div>
+      <h4>「求死」的日常图景</h4>
+      <p>原书以一个工业化城市普通工薪族的一天逐时刻还原：6:45 闹钟响→看手机→冲澡→穿职业装→抓保温杯公文包→汇入早高峰或挤地铁→9 到 17 点处理工作、应付老板、「魔鬼派来跟你过不去的同事」、堆积如山的邮件、装忙、刷社交媒体、掩饰失误、对不可能的期限微笑、裁员斧头落下时松一口气并扛起额外工作量→回家「假装对伴侣孩子充满情感」→做饭发朋友圈→追剧→回最后一封邮件→睡 8 小时，「如果运气好的话」。唯一的时间流逝标志，是苍白的鬓角、渐粗的腰围和高阶办公室、公务车之类「隐隐约约的进步迹象」。</p>
+      <h4>工作与身份地位</h4>
+      <p>我们对自己价值的认同多半来源于工作；社会存在一个基于挣钱方式的隐秘等级制度——为什么全职妈妈被视为二等公民？为什么教师与医生同有价值却地位不等？同学聚会上公认的「成功标志」是职务、房子、车子、孩子上哪所大学，而不是是否充实、是否践行了价值观。</p>
+    </div>
+    <div>
+      <aside class="aside-note">
+        <span class="tag">求死的代价 · 数据档案</span>
+        <ul class="plain">
+          <li>OECD 2015：将近 <strong>12%</strong> 的美国人每周工作 50 小时以上。</li>
+          <li>经济政策研究所 2016：2000 年以来收入最低 70% 劳动者工资只涨 <strong>5.3%</strong>，最穷 10% 只增 <strong>2.2%</strong>；最顶端前 10%、前 5% 薪酬分别增长 <strong>15.7%</strong> 和 <strong>19.8%</strong>。</li>
+          <li>结果：储蓄减少、债务大升（房贷、车贷、助学贷款、信用卡），加上全球化与公司合并下的普遍裁员，使我们不敢松懈地朝九晚五。</li>
+        </ul>
+      </aside>
+    </div>
+  </div>
+  <h4>消费循环：一台永不停歇的跑步机</h4>
+  <p>周六洗衣店送衣、修车换胎、全家一周食品采购（「记得过去买 4 袋杂货只要 75 美元而不是 125 美元」）、逛书店买成西装半价促销加鞋子加童装全刷卡、修枝剪刀带回报春花新花盆、烤箱烤焦面包顺手买回书架乳胶漆、周日煎饼没面粉又买回草莓蓝莓枫糖苏门答腊咖啡、湖边游泳加油皱眉、乡间饭馆刷卡、晚上任由电视广告诱惑（保时捷、出国度假、新电脑）。归根结底：<em>我们认为工作是为了付账单，但我们花的比挣的多、买的比需要的多，于是需要再去工作挣钱。</em></p>
+  <div class="pullquote">「这是你能断言百分之百永远属实的唯一一件事：金钱是你用生命能量去换取的东西。……你拥有的唯一真正财富就是你的时间，你一生里的分分秒秒。」<span class="who">乔·多明格斯 · 第二章「什么是金钱」</span></div>
+  <div class="grid g53">
+    <div>
+      <h4>什么是金钱？——乔的讲习会剧场</h4>
+      <p>乔·多明格斯身着华尔街精英装扮上台踱步，盯着最高大彪悍的人问「你的有多大？」——全场先鸦雀无声后哄堂大笑，他其实在问薪水。他掏出一张百元美钞拉扯揉捏「是很结实的纸」，掏出打火机要试能否燃烧，全屋倒吸一口气之际啪的一声关掉：为什么烧一张纸会让你们有这样的反应？随后听众定义逐一被否——<strong>交换媒介？</strong>「我把这 100 美元给你，就可以买下你老婆，对吗？」前提是交易双方一致认可其价值（插入萧伯纳轶事：赌 100 美元夫人羞愤，「那 1000 块怎么样？」——行为不重要，价钱才重要）。<strong>价值储存手段？</strong>食人族根本不认得你的钱；恶性通胀下昨天买一头奶牛今天买不到一升牛奶——借用科拜尔的话，「价值储存」貌似真实（truthiness），并不真实。<strong>万恶之源？</strong>熟读《圣经》的乔反驳：「不，对金钱的热爱才是万恶之源，金钱本身并不是。」没有一个定义坚不可摧。</p>
+      <h4>你的生命能量有多少</h4>
+      <p>一年约 <strong>8800 小时</strong>，一辈子也许 <strong>65 万小时</strong>；其中一半很可能用于睡眠及吃饭穿衣适当享乐。40 岁的人余生估计还剩约 <strong>356,500 小时（合 40.7 年）</strong>，扣除身体保养后剩约 <strong>178,000 小时</strong>可用于你在乎的所有事情。你用其中一些宝贵时光换取没有意义的钞票——你的时间是所有意义和价值所在。</p>
+    </div>
+    <div>
+      <aside class="aside-note">
+        <span class="tag">关于金钱的四层面误解</span>
+        <ol class="steps-list">
+          <li><strong>物质层面</strong>：纸片金属磁卡、每日收支、银行账目投资；</li>
+          <li><strong>心理层面</strong>：担忧与渴望、挥金如土或吝啬惜财；</li>
+          <li><strong>文化层面</strong>：「更多就会更好」、增长是好事、赢家输家；</li>
+          <li><strong>生命能量层面</strong>：你用生命中的时间换取的东西。——前三层真实重要但不总是如此；第四层才是重点。</li>
+        </ol>
+      </aside>
+      <aside class="aside-note">
+        <span class="tag">财务自由初探</span>
+        富有只存在于同其他人或物的对比中。约翰·斯图尔特·密尔：「人所渴望的不是富有，而是比别人更富有。」本书定义：财务自由与富有无关，而是<strong>体验到自己所拥有的已经足够且有富余</strong>。「朝九晚五干到六十五」只是众多选择中的一个剧本。
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 02 满足感曲线 ================= -->
+<section class="chapter" id="ch2">
+  <span class="ch-num">02</span>
+  <div class="ch-head">
+    <span class="eyebrow">Chapter 02 · 满足感曲线</span>
+    <h2>「更多就会更好」是个谬论：曲线的顶点叫「足够」</h2>
+    <p class="lede">从美加随机选取的 1000 多名受访者中，无论月收入 1500 美元以下还是 6000 美元以上，平均幸福分数都在 2.6～2.8 之间——连「还可以」（3 分）都达不到。</p>
+  </div>
+
+  <figure class="chart" id="fig-curve">
+    <svg viewBox="0 0 760 400" role="img" aria-label="满足感曲线">
+      <title>图 1-1 满足感曲线：先陡升，放缓，顶点为「足够」，越过顶点后下行；找到足够点后曲线可反转笔直上升</title>
+      <!-- 坐标轴 -->
+      <line x1="70" y1="340" x2="720" y2="340" stroke="var(--ink-sub)" stroke-width="1.5"/>
+      <line x1="70" y1="340" x2="70" y2="40" stroke="var(--ink-sub)" stroke-width="1.5"/>
+      <text x="726" y="344" font-size="13" fill="var(--ink-sub)" text-anchor="end">金钱换来的体验／占有 →</text>
+      <text x="62" y="36" font-size="13" fill="var(--ink-sub)" text-anchor="end">满足感 ↑</text>
+      <!-- 横轴三区段 -->
+      <line x1="70" y1="356" x2="300" y2="356" stroke="var(--line)" stroke-width="1"/>
+      <line x1="300" y1="356" x2="490" y2="356" stroke="var(--line)" stroke-width="1"/>
+      <line x1="490" y1="356" x2="700" y2="356" stroke="var(--line)" stroke-width="1"/>
+      <text x="185" y="374" font-size="12" fill="var(--ink-sub)" text-anchor="middle">必需品</text>
+      <text x="395" y="374" font-size="12" fill="var(--ink-sub)" text-anchor="middle">舒适与美好享受</text>
+      <text x="595" y="374" font-size="12" fill="var(--ink-sub)" text-anchor="middle">纯粹奢华 · 过剩</text>
+      <!-- 主曲线：陡升→放缓→顶点→缓降 -->
+      <path d="M 80,330 C 160,140 230,92 350,78 C 400,73 430,72 455,74 C 520,82 600,130 690,215"
+            fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"/>
+      <!-- 足够点 -->
+      <circle cx="455" cy="74" r="5.5" fill="var(--accent)"/>
+      <line x1="455" y1="74" x2="455" y2="46" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3"/>
+      <text x="455" y="38" font-size="14" fill="var(--accent)" font-weight="bold" text-anchor="middle">足够（Enough）</text>
+      <!-- 反转上升分支 -->
+      <path d="M 455,74 C 520,40 590,30 668,26" fill="none" stroke="var(--accent2)" stroke-width="2"
+            stroke-dasharray="6 4" stroke-linecap="round"/>
+      <text x="665" y="18" font-size="12" fill="var(--accent2)" text-anchor="end">找到足够点后，曲线反转、笔直上升</text>
+      <!-- 废物标注 -->
+      <circle cx="620" cy="163" r="4" fill="none" stroke="var(--accent3)" stroke-width="2"/>
+      <line x1="620" y1="163" x2="585" y2="120" stroke="var(--accent3)" stroke-width="1"/>
+      <text x="580" y="112" font-size="13" fill="var(--accent3)" text-anchor="end">废物：归属你、对你没用、占据空间的一切</text>
+      <!-- 平缓段注释 -->
+      <text x="255" y="180" font-size="12" fill="var(--ink-sub)">增速放缓：</text>
+      <text x="255" y="196" font-size="12" fill="var(--ink-sub)">每份激动的成本越来越高，</text>
+      <text x="255" y="212" font-size="12" fill="var(--ink-sub)">「高潮」消退得越来越快</text>
+    </svg>
+    <figcaption>图 1-1 · 满足感曲线（重绘）：顶点是「足够」，下行段的产物是「废物」；虚线为 FI 机制下的反转分支</figcaption>
+  </figure>
+
+  <div class="grid g75">
+    <div>
+      <h4>幸福与收入无关的证据</h4>
+      <p>早期现场演讲中的练习：请参与者按 1（苦恼）到 5（快乐）给幸福打分，3 代表「还可以」。追问「你要有多少钱才会觉得幸福快乐？」一半以上的答案是<em>「比我现在拥有的要多」</em>。丹尼尔·卡尼曼发现超过一定充足度（目前美国约为每年 7.5 万美元）之后，更多的钱买不来更多的幸福。作者 20 世纪 80 年代的讲习会调查：无论收入水平如何，每个人对「赚多少钱你才满意」的回答都是「比现在多 50%」；收入最高者与最低者的幸福自评无显著差别。</p>
+      <h4>「足够」像地平线</h4>
+      <p>这句箴言鞭策人们三年换一辆车、每逢大事换季置新衣、一有钱就换更大房子、因新款发布换手机。美国民意研究中心调查：自 20 世纪 50 年代末以来，自称「非常快乐」的美国人比例稳步下降。在「更多就会更好」的观念下，「足够」像地平线——无论怎么追它总在后退远去。这是该谬论里的「第 22 条军规」：<em>假如更多就会更好，那我拥有的就永远不够。</em></p>
+      <h4>信念模式与「购物僵尸」</h4>
+      <p>心智会制造并重复来自生命头五年、遗传基因与文化特性的模式，而这些模式并不全都与客观现实有关。行为暴露真相：沮丧失意时会买东西，庆祝喜事也买东西，无聊买东西，觉得生活该添内容还买东西。我们学会了在头脑内心灵魂发出失衡信号时谋求外在解决办法。原文对购物僵尸有一段绝妙描写：那只「仿佛不属于你（却附在你身体上）的胳膊」伸出去拿起商品，买回家放进已有另外 5 个或 10 个同类物品的专用抽屉，然后忘掉，直至下次。</p>
+    </div>
+    <aside class="aside-note">
+      <span class="tag">「足够」的定义式描述</span>
+      「足够」是一种无所畏惧的状态、胸有成竹的状态、坦坦荡荡有自知之明的状态；充分欣赏和享受金钱给生活带来的一切，但绝不购买不需要、不想要的东西。<br><br>
+      关键推论：一旦找到自己的足够点，曲线就可以反转方向、笔直上升。<br><br>
+      <span class="tag">辨析</span>
+      「足够」不等于极简主义的美学化形象——不是一尘不染梳妆台的花瓶里沐浴阳光怒放的雏菊；它是<strong>一种恰到好处的感觉</strong>。「甲之蜜糖，乙之砒霜」，每个人的「足够」都不一样。
+    </aside>
+  </div>
+  <h4>废物的三个来源与清理方法</h4>
+  <div class="grid g444">
+    <div class="panel"><strong>① 物质主义之弊</strong><p class="small">「更多就会更好」的信念之门——从外在所有物寻求内在满足。</p></div>
+    <div class="panel"><strong>② 幼年经验</strong><p class="small">认定不适感可由外在事物缓解——奶瓶、毯子、自行车、学位、宝马车。</p></div>
+    <div class="panel"><strong>③ 无意识的习惯</strong><p class="small">「逢见必买之物」：耳塞、小螺丝刀、鞋子、钢笔、好时巧克力……只要遇见就非买不可。</p></div>
+  </div>
+  <p>废物的面貌：阁楼、地下室、车库、壁橱是废物避风港；它也包括无形之物——无意义的活动（商务午餐、鸡尾酒会、长时间看手机）、毫无成就感的杂乱日子、待办清单上始终未完成的任务、爱好里堆的比例攀升的装备（摄影爱好者拎着满箱镜头滤镜却用手机拍出最好的照片）。清理的第一步是问自己：<em>「它现在对我来说有什么价值？真的吗？」</em>倡导简朴生活的谱系：清教徒、梭罗、贵格会、杜安·埃尔金、塞西尔·安德鲁斯。</p>
+</section>
+
+<div class="divider">❋ ❋ ❋</div>
+
+<!-- ================= 03 九步骤方法论 ================= -->
+<section class="chapter" id="steps">
+  <span class="ch-num">03</span>
+  <div class="ch-head">
+    <span class="eyebrow">Chapter 03 · 方法论主体</span>
+    <h2>九步骤计划：从坦然接受过去，到投资维护自由</h2>
+    <p class="lede">「没有更便捷的捷径了，由九个步骤组成的这本书就是捷径。」九步依次排列，横跨三段旅程：过去 → 当下 → 未来。</p>
+  </div>
+
+  <figure class="chart" id="fig-map">
+    <svg viewBox="0 0 760 560" role="img" aria-label="九步骤地图">
+      <title>九步骤地图：过去（第一步）、当下（第二至六步）、未来（第七至九步）纵向路线图</title>
+      <!-- 三阶段色带 -->
+      <rect x="40" y="20" width="24" height="130" fill="var(--accent3)" opacity=".35"/>
+      <rect x="40" y="160" width="24" height="230" fill="var(--accent)" opacity=".30"/>
+      <rect x="40" y="400" width="24" height="140" fill="var(--accent2)" opacity=".35"/>
+      <text x="76" y="36" font-size="12" fill="var(--accent3)">过 去</text>
+      <text x="76" y="176" font-size="12" fill="var(--accent)">当 下</text>
+      <text x="76" y="416" font-size="12" fill="var(--accent2)">未 来</text>
+      <!-- 主干 -->
+      <line x1="380" y1="34" x2="380" y2="528" stroke="var(--line)" stroke-width="2"/>
+      <!-- 步骤节点：左奇右偶 -->
+      <g font-size="14">
+        <line x1="380" y1="52" x2="240" y2="52" stroke="var(--line)"/><circle cx="232" cy="52" r="15" fill="var(--bg)" stroke="var(--accent)" stroke-width="2"/><text x="232" y="57" text-anchor="middle" fill="var(--accent)" font-weight="bold">1</text>
+        <text x="210" y="50" text-anchor="end" fill="var(--ink)">坦然接受过去</text>
+        <text x="210" y="67" text-anchor="end" font-size="11" fill="var(--ink-sub)">一生总收入 ＋ 资产负债表</text>
+
+        <line x1="380" y1="112" x2="520" y2="112" stroke="var(--line)"/><circle cx="528" cy="112" r="15" fill="var(--bg)" stroke="var(--accent)" stroke-width="2"/><text x="528" y="117" text-anchor="middle" fill="var(--accent)" font-weight="bold">2</text>
+        <text x="550" y="110" fill="var(--ink)">活在当下 · 追踪生命能量</text>
+        <text x="550" y="127" font-size="11" fill="var(--ink-sub)">实际时薪 ＋ 记录每一分钱</text>
+
+        <line x1="380" y1="172" x2="240" y2="172" stroke="var(--line)"/><circle cx="232" cy="172" r="15" fill="var(--bg)" stroke="var(--accent)" stroke-width="2"/><text x="232" y="177" text-anchor="middle" fill="var(--accent)" font-weight="bold">3</text>
+        <text x="210" y="170" text-anchor="end" fill="var(--ink)">月度表</text>
+        <text x="210" y="187" text-anchor="end" font-size="11" fill="var(--ink-sub)">类别 · 汇总 · 换算生命能量小时数</text>
+
+        <line x1="380" y1="232" x2="520" y2="232" stroke="var(--line)"/><circle cx="528" cy="232" r="15" fill="var(--bg)" stroke="var(--accent)" stroke-width="2"/><text x="528" y="237" text-anchor="middle" fill="var(--accent)" font-weight="bold">4</text>
+        <text x="550" y="230" fill="var(--ink)">三个问题（本计划的核心）</text>
+        <text x="550" y="247" font-size="11" fill="var(--ink-sub)">满足相称？符合价值观？不为钱工作会怎样？</text>
+
+        <line x1="380" y1="292" x2="240" y2="292" stroke="var(--line)"/><circle cx="232" cy="292" r="15" fill="var(--bg)" stroke="var(--accent)" stroke-width="2"/><text x="232" y="297" text-anchor="middle" fill="var(--accent)" font-weight="bold">5</text>
+        <text x="210" y="290" text-anchor="end" fill="var(--ink)">挂图</text>
+        <text x="210" y="307" text-anchor="end" font-size="11" fill="var(--ink-sub)">月收入线 ＋ 月支出线，挂在每天可见处</text>
+
+        <line x1="380" y1="352" x2="520" y2="352" stroke="var(--line)"/><circle cx="528" cy="352" r="15" fill="var(--bg)" stroke="var(--accent)" stroke-width="2"/><text x="528" y="357" text-anchor="middle" fill="var(--accent)" font-weight="bold">6</text>
+        <text x="550" y="350" fill="var(--ink)">珍惜生命能量 · 尽量减少支出</text>
+        <text x="550" y="367" font-size="11" fill="var(--ink-sub)">创造性节俭，10 个省钱妙招</text>
+
+        <line x1="380" y1="418" x2="240" y2="418" stroke="var(--line)"/><circle cx="232" cy="418" r="15" fill="var(--bg)" stroke="var(--accent2)" stroke-width="2"/><text x="232" y="423" text-anchor="middle" fill="var(--accent2)" font-weight="bold">7</text>
+        <text x="210" y="416" text-anchor="end" fill="var(--ink)">珍惜生命能量 · 尽量增加收入</text>
+        <text x="210" y="433" text-anchor="end" font-size="11" fill="var(--ink-sub)">以健康与诚信换取最高时薪</text>
+
+        <line x1="380" y1="478" x2="520" y2="478" stroke="var(--line)"/><circle cx="528" cy="478" r="15" fill="var(--bg)" stroke="var(--accent2)" stroke-width="2"/><text x="528" y="483" text-anchor="middle" fill="var(--accent2)" font-weight="bold">8</text>
+        <text x="550" y="476" fill="var(--ink)">资本与交叉跨越点</text>
+        <text x="550" y="493" font-size="11" fill="var(--ink-sub)">（资本 × 长期利率）÷ 12 ＝ 月度投资收入</text>
+
+        <line x1="380" y1="528" x2="240" y2="528" stroke="var(--line)"/><circle cx="232" cy="528" r="15" fill="var(--bg)" stroke="var(--accent2)" stroke-width="2"/><text x="232" y="533" text-anchor="middle" fill="var(--accent2)" font-weight="bold">9</text>
+        <text x="210" y="526" text-anchor="end" fill="var(--ink)">投资，以钱养钱</text>
+        <text x="210" y="543" text-anchor="end" font-size="11" fill="var(--ink-sub)">资本 · 缓冲资金 · 缓存金三大支柱</text>
+      </g>
+    </svg>
+    <figcaption>图 0-3 · 九步骤地图（重绘）：过去 → 当下 → 未来；咒语贯穿始终——「不羞愧，不责怪」</figcaption>
+  </figure>
+
+  <!-- ---------- 第一步 ---------- -->
+  <article class="chapter" id="step1" style="border-top:none">
+    <div class="step-head ch-head">
+      <span class="step-no">STEP 01 · 过去</span>
+      <h3>第一步：坦然接受过去</h3>
+      <p class="lede"><strong>目的：</strong>检视过去赚钱和花钱的行为。不必以此开头、不必完成后再往下读；建议先把全书读一遍再回头做。</p>
+    </div>
+    <div class="grid g75">
+      <div>
+        <h4>两项任务</h4>
+        <ol class="steps-list">
+          <li><strong>算出你一生到目前为止已经挣了多少钱</strong>——从挣到第一分钱到最近一次薪水的总和。方法：翻旧所得税申报表，加上未报税项目（回扣、赌博赢钱、亲友馈赠、现金奖、出租所得），回想中学大学打工收入；实在搜集不到依据就尽量准确估计。宗旨：尽可能准确诚实地弄清总收入。</li>
+          <li><strong>制作个人资产负债表，算出净值。</strong></li>
+        </ol>
+        <h4>为什么重要（四点益处）</h4>
+        <p>①拨开笼罩在你与金钱之间的迷雾；②根除「我挣不到大钱」「不必担心，钱总会有的」的错误认知；③带着对自己赚钱能力的信心着手执行计划；④看清过去的隐情并释怀——秘密或谎言也许正扭曲当下与金钱的关系。</p>
+        <aside class="aside-note">
+          <span class="tag">案例 · 离异女子</span>
+          30 多岁，婚后大部分时间当家庭主妇，觉得自己依附于人、毫无价值，一直羞于接受离婚协议应得的钱。细查后发现自以为「毫无」贡献的那些年里，她从各种零工挣到了逾 <strong>50,000 美元</strong>——第一次认识到自己是有能力挣工资的人。刚完成这一步，就申请并得到了薪水为预期两倍的工作。
+        </aside>
+      </div>
+      <div>
+        <aside class="aside-note">
+          <span class="tag">有益的态度</span>
+          本计划的咒语是<strong>「不羞愧，不责怪」</strong>。反责关乎羞愧责怪善恶，让你停滞不前；分辨是厘清事实与谎言，照亮陷阱让你绕开。「你的一生所得不过是个数字而已，并不代表你的价值。」
+        </aside>
+        <aside class="aside-note">
+          <span class="tag">资产负债表操作细则</span>
+          <ul class="plain">
+            <li><strong>流动资产</strong>：手头现金、活期储蓄（含忘了的旧存折）、支票账户、定期存单、储蓄债券、股票基金按市值、人寿保险现金价值。</li>
+            <li><strong>固定资产</strong>：房子汽车按当前市值；<em>逐项列出所有价值一美元以上的东西</em>，定价标准是旧货市场现金时价。不要让情绪成为拦路虎——那辆自行车和哑铃组的真正价值是「能在旧货市场上卖个好价钱」。</li>
+            <li><strong>负债</strong>：一切债务——未付清房款、车贷、信用卡债、学生贷款、未付医药费。</li>
+            <li><strong>净值</strong>＝流动资产＋固定资产−负债。警语：<em>净值不等于自我价值。</em></li>
+          </ul>
+        </aside>
+      </div>
+    </div>
+    <p>有人一两天完成清点；有一位女性花了 3 个月，翻遍每个箱子、照片、抽屉橱柜，罗列清单的同时回顾每件物品如何及为何进入她的生活——过程让她对已然拥有的一切生出深深感激。有人完成后表示：一旦超越温饱层次，贫与富的差别不过在于感恩程度。<strong>案例 A（变卖即自由）：</strong>有位女性意识到可变卖多余财产、收益投资的利息足以让她马上实现财务自由；虽未立即那样做，这个意识让她更大胆地追求真爱——艺术。<strong>案例 B（卖掉再买）：</strong>另一人把「说不定哪天会需要」的闲置卖掉留收益、将来需要重新买——期间钱生利息、生活更单纯、物品派上了真正的用场。</p>
+  </article>
+
+  <!-- ---------- 第二步 ---------- -->
+  <article class="chapter" id="step2">
+    <div class="step-head ch-head">
+      <span class="step-no">STEP 02 · 当下</span>
+      <h3>第二步：活在当下——追踪你的生命能量</h3>
+      <p class="lede">①确定维持你的职业<strong>实际</strong>需要花费的时间和金钱，算出<strong>实际时薪</strong>；②追踪记录生活中进进出出的<strong>每一分钱</strong>。</p>
+    </div>
+
+    <figure class="chart" id="fig-wage">
+      <svg viewBox="0 0 760 330" role="img" aria-label="实际时薪构成分解">
+        <title>生命能量换算示意：名义时薪 25 美元，扣除工作相关花费与隐形时间后，实际时薪仅 10 美元</title>
+        <!-- 时间条 -->
+        <text x="70" y="46" font-size="13" fill="var(--ink)">每周时间投入</text>
+        <rect x="70" y="58" width="343" height="30" fill="var(--accent)" opacity=".85"/>
+        <rect x="413" y="58" width="257" height="30" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="5 4"/>
+        <text x="241" y="78" font-size="12" fill="var(--bg)" text-anchor="middle">正常工作 40 小时</text>
+        <text x="541" y="78" font-size="12" fill="var(--accent)" text-anchor="middle">＋隐性工作时间 30 小时</text>
+        <text x="700" y="52" font-size="13" fill="var(--ink)" font-weight="bold" text-anchor="end">＝70 小时/周</text>
+        <!-- 金钱条 -->
+        <text x="70" y="140" font-size="13" fill="var(--ink)">每周净得收入</text>
+        <rect x="70" y="152" width="240" height="30" fill="var(--accent2)"/>
+        <rect x="310" y="152" width="103" height="30" fill="none" stroke="var(--accent2)" stroke-width="1.5" stroke-dasharray="5 4"/>
+        <text x="190" y="172" font-size="12" fill="var(--bg)" text-anchor="middle">净得 700 美元</text>
+        <text x="361" y="172" font-size="12" fill="var(--accent2)" text-anchor="middle">−300 美元</text>
+        <text x="700" y="146" font-size="13" fill="var(--ink)" font-weight="bold" text-anchor="end">名义 1000 美元/周</text>
+        <!-- 扣减项明细 -->
+        <g font-size="12" fill="var(--ink-sub)">
+          <text x="70" y="216">隐性时间（小时/周）：通勤 7.5 · 置装 1.5 · 餐饮 5 · 减压 5 · 逃避性娱乐 5 · 度假 5 · 与工作有关的疾病 1 ＝ 30 小时</text>
+          <text x="70" y="238">隐性花费（美元/周）：通勤 100 · 置装 25 · 餐饮 50 · 减压 30 · 娱乐 40 · 度假 30 · 疾病 25 ＝ 300 美元</text>
+        </g>
+        <!-- 结果箭头 -->
+        <line x1="70" y1="268" x2="690" y2="268" stroke="var(--line)" stroke-width="1"/>
+        <text x="70" y="300" font-size="15" fill="var(--ink)">名义时薪 <tspan font-weight="bold" fill="var(--accent2)">25 美元</tspan></text>
+        <text x="300" y="300" font-size="18" fill="var(--ink-sub)">→</text>
+        <text x="340" y="300" font-size="15" fill="var(--ink)">实际时薪 <tspan font-weight="bold" fill="var(--accent)" font-size="20">10 美元</tspan><tspan font-size="12" fill="var(--ink-sub)">（而且是税前！）</tspan></text>
+        <text x="690" y="300" font-size="13" fill="var(--accent3)" text-anchor="end" font-weight="bold">1 美元 ≈ 6 分钟生命能量</text>
+      </svg>
+      <figcaption>图 2-2 · 实际时薪分解（依原书表 2-2 示例值重绘；原文申明数值系随意分配，仅用于生成示例）</figcaption>
+    </figure>
+
+    <div class="grid g75">
+      <div>
+        <h4>计算逻辑：正确问法</h4>
+        <p>常见错觉：「一周挣 1000 美元、每周工作 40 小时，所以一小时生命能量换来 25 美元」——不现实、不充分。正确问法是：<em>如果不需要那份差事，有哪些时间和金钱开销会节省下来？</em>需自查的隐性成本类别：通勤（汽油、保养、停车、通行费、车辆损耗）、置装（职业行头＋梳妆打扮）、餐饮（外卖午饭＋拿铁）、日常减压（下班瘫坐电视机前「今天累坏了」、向人痛斥工作和同事的时间）、逃避性娱乐（品味艺术不算此项——那是自我提升）、度假（「躲到角落休整以便重新投入战斗」的度假才算；年度数除以 52）、与工作有关的疾病。另有帮手费用、浏览招聘岗位建人脉的时间、职业能力提升开支等「与工作有关的其他费用」。</p>
+        <p><strong>汇总规则：</strong>把额外时间加进正常工作周，从常规薪酬里减去工作相关花费；跨季项目按 50 周均摊。若雇主提供补助（医疗保险、养老保险认缴）应加入名义时薪，但因非人人都有未纳入计算。</p>
+        <aside class="aside-note">
+          <span class="tag">案例 · 马克</span>
+          建筑业项目经理 10 年：「不喜欢自己为了谋生而从事的工作，但收支能够相抵，所以我就一直忍受。」算完实际时薪发现：<strong>挣的钱将近一半花在了工作上</strong>。「我可以待在家里，就近做兼职，挣以前工资的一半反而能省下钱。」此后还清信用卡欠款、不再到餐馆吃午饭，与妻子重新规划后认识到完全可以靠她热爱的工作（教特殊需要的孩子）过日子，他回学校培训去当一直想当的心理咨询和治疗师。
+        </aside>
+      </div>
+      <div>
+        <aside class="aside-note">
+          <span class="tag">为什么必须做这一步</span>
+          ①使有偿工作接受真实检验；②现实评估当前与未来就业——通勤更长着装要求更高的职业可能还不如低薪职业挣得多；③弄清参加工作与职业取舍的动机。一位财务自由人士借此认清工作相关不必要花费，每小时净收入竟增加了<em>一倍</em>：自带午餐、改乘公交（回家路上顺带减压）、精简时髦衣服、每天与妻子散步。
+        </aside>
+        <aside class="aside-note">
+          <span class="tag">第二部分 · 追踪每一分钱</span>
+          思想障碍：「钱就是钱，爱就是爱，两者永远不该有交集。」本书添加一项西方务实思维更易接受的精神修炼：<strong>不是盯着自己的呼吸，而是盯着钱</strong>。规则反复只有一句话：「追踪记录你生活中进进出出的每一分钱。」精确到分的原因是要养成终身习惯——开始作弊「只是一点点」，就会越来越大。弹性案例集：卡罗琳夫妇为不擅追踪的丈夫增设「去向不明」类别；迈克在翻修房子期间只用借记卡；凯伦坚持 14 年，得以一半时间在欧洲、一半在美国生活；年轻的唐把饭馆午饭改为自带便当，食物花费减近一半，很快攒够去欧洲旅行 3 个星期的钱。《邻家的百万富翁》：净值相对收入较高的人知道自己在服装、旅行、住房、交通上的花费，净值不高的人对此毫无概念。
+        </aside>
+      </div>
+    </div>
+    <div class="pullquote">「天文望远镜哪怕其中一个镜头稍有偏差也会让你无法观测星球。人生亦然，一点点的蒙蔽造假就会让穿透云层的光亮减弱。」<span class="who">第二步 · 有益的态度：不留余地</span></div>
+  </article>
+
+  <!-- ---------- 第三步 ---------- -->
+  <article class="chapter" id="step3">
+    <div class="step-head ch-head">
+      <span class="step-no">STEP 03 · 当下</span>
+      <h3>第三步：月度表——钱都到哪儿去了？</h3>
+      <p class="lede">这种对待金钱的方式实际上与做预算背道而驰。它基于自觉性、满足感和抉择，不是基于预算或刻意受苦。</p>
+    </div>
+    <div class="grid g75">
+      <div>
+        <h4>不是预算，而是「正念饮食」式的财务观</h4>
+        <p>预算是以收入为基础的规划工具，依赖标准化分类与百分比（住房贷款占总支出 25%～35%、只存收入的 5% 指望社保），照做很可能走上「朝九晚五干到六十五」的常规道路。本计划的核心类比是<strong>节食 vs 正念饮食</strong>：节食是由外而内执行一套规矩；正念饮食是由内而外，放慢节奏、留意真正渴求、饱了就停。对应到财务：①识别并遵循内在信号；②观察和调整长期的消费模式。<strong>例证：</strong>贾斯汀住在老妇人家，条件是每周做 10 小时家务——预算里没有这一项；他攒钱买野营车打算开车环游美国、写旅行博客拉赞助、想学觅食打猎。「并不是每个人都能将其复杂的生活填进分类鲜明的电子表格。」</p>
+        <aside class="aside-note">
+          <span class="tag">案例 · 安妮塔</span>
+          购物狂，多年购物成瘾的结果全堆在衣橱里，最终入不敷出。某天在最喜欢的百货公司寻觅新毛衣时突然觉醒：「我的一生就要这样度过吗？一辈子就为了这些吗？我的衣服已经够多了！」两手空空离开商场，此后失去了购物欲望。
+        </aside>
+        <h4>确立类别的原则与主要类别</h4>
+        <p>诚实精确但不吹毛求疵；类别要反映自身实际行为，是「记载你独特支出习惯的百科全书」。书中细分示例：<strong>食物</strong>（自家人／客人／餐馆／零食／电视食品）；<strong>住房</strong>（50 年前经验法则是不超过收入 25%，如今人们常发现购房相关费用占收入 40% 以上）；<strong>衣着</strong>——<em>医生案例</em>：一直有 20% 收入不知去向，设立「鞋类」子类后真相大白（高尔夫球鞋、网球鞋、跑鞋、划船鞋……而他几乎只穿居家便鞋。2015 年美国平均每位女性拥有 19 双鞋，其中只有 4 双经常穿）；<strong>交通</strong>（反思为什么拥车；检视选错地点造成的费用）；<strong>电子产品</strong>与<strong>娱乐</strong>（警惕「家庭娱乐中心升级链」）。作者的亲身领悟：<em>「每个月都是不寻常的一个月，特殊开销在生活中是持续不断的。」</em></p>
+      </div>
+      <div>
+        <aside class="aside-note">
+          <span class="tag">月底结算 · 魔法钥匙</span>
+          若记录准确：月底实际拥有的钱 ＝ 月初拥有的钱＋月度总收入−月度总支出。误差恒为零时，「你已经创造了一个小小的奇迹」。<br><br>
+          让钱变得真切的换算公式：<br>
+          <code>花在某类的钱 ÷ 实际时薪 ＝ 生命能量小时数</code><br><br>
+          例1：杂志每月 80 美元 ÷ 10 美元 ＝ <strong>8 小时</strong>生命时光——还觉得没时间陪家人吗？<br>
+          例2：房租每月 1500 美元 ÷ 10 美元 ＝ <strong>150 小时</strong>——住房费用消耗着你工作中投入的几乎每一小时。「要感谢这一觉悟的残酷性。」
+        </aside>
+      </div>
+    </div>
+
+    <figure class="chart">
+    <div class="tbl-wrap">
+    <table class="data">
+      <caption>表 3-1 · 月度表示例（数据依底稿可复原项填列；评估列留待读者按第四步三问填写 ↑／↓／0）</caption>
+      <thead><tr><th>类别 / 子类</th><th>本月金额</th><th>生命能量（小时）</th><th>问①满足相称？</th><th>问②符合价值观？</th><th>问③不为钱工作会怎样？</th></tr></thead>
+      <tbody>
+        <tr class="hl"><td>住房 · 房租／房贷</td><td class="n">$1,500.00</td><td class="n">150 h</td><td class="n">—</td><td class="n">—</td><td class="n">↓ 或迁往低成本居所</td></tr>
+        <tr><td>食物 · 食品杂货</td><td class="n">$359.00</td><td class="n">35.9 h</td><td class="n">—</td><td class="n">—</td><td class="n">在家做饭 ↑</td></tr>
+        <tr><td>食物 · 餐馆就餐</td><td class="n">$232.00</td><td class="n">23.2 h</td><td class="n">—</td><td class="n">—</td><td class="n">↓（伊莱恩后降至 $77）</td></tr>
+        <tr><td>订阅 · 杂志（床头越堆越高却未读）</td><td class="n">$80.00</td><td class="n">8 h</td><td class="n">↓</td><td class="n">↓</td><td class="n">↓ 取消订阅</td></tr>
+        <tr><td>交通 · 通勤相关</td><td class="n">$433.00</td><td class="n">43.3 h</td><td class="n">—</td><td class="n">—</td><td class="n">↓（伊莱恩搬到上班地点附近，汽油费 −60%）</td></tr>
+        <tr><td>个人成长（罗丝玛丽的独特类别）</td><td class="n">＿＿＿＿</td><td class="n">＿＿</td><td class="n"></td><td class="n"></td><td class="n"></td></tr>
+        <tr><td>捐赠（大到足以单列）</td><td class="n">＿＿＿＿</td><td class="n">＿＿</td><td class="n"></td><td class="n"></td><td class="n"></td></tr>
+        <tr><td>美容 / 美学 / 保健产品 / 保健服务（同上）</td><td class="n">＿＿＿＿</td><td class="n">＿＿</td><td class="n"></td><td class="n"></td><td class="n"></td></tr>
+        <tr class="hl"><td><strong>汇总</strong></td><td class="n"><strong>(A) 本月支出总额 ____</strong></td><td class="n">＝ A ÷ 实际时薪</td><td colspan="3">(B) 本月收入总额 ____　(B−A) 本月结余 ____</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <figcaption style="font-family:var(--mono);font-size:12px;color:var(--ink-sub);margin-top:.6em">金额出处：杂志 $80 与房租 $1,500 为原书换算示例（实际时薪按 $10 计）；杂货 $359、餐馆 $232→$77、汽油 −60% 出自伊莱恩案例；空白行为罗丝玛丽式个性类别示意。</figcaption>
+    </figure>
+
+    <div class="grid g55">
+      <aside class="aside-note">
+        <span class="tag">案例 · 玛迪和汤姆（实际时薪计算）</span>
+        缅因州乡下，汤姆开卡车、玛迪当会计，合并收支让他们心意相通。合并总收入＝1080.31＋402.50＝<strong>$1482.81</strong>；合并调整后工时＝77.5＋67.5＝<strong>145 小时</strong>；实际时薪＝1482.81÷145＝<strong>$10.23/小时</strong>。花掉的每一美元代表约 <strong>6 分钟</strong>生命能量。（反例：玛丽和唐同好音乐同为程序员但性格相反，一起记账提供不了太多信息，分开管理后玛丽重获自主性。）
+      </aside>
+      <aside class="aside-note">
+        <span class="tag">案例 · 伊莱恩（资产负债表）</span>
+        用程序员逻辑设计，准确简练：活期储蓄、货币市场账户和债券加起来是她的「资本」。8 月份她的净值增加了将近 <strong>$6000</strong>，追踪过程中漏掉了 $15.40。作者强调：「你不是在学习『正确的方式』，而是在创造属于自己的方式。」
+      </aside>
+    </div>
+    <h4>第三步提要（六条）</h4>
+    <ol class="steps-list">
+      <li>根据一个月跟踪记录的收入开支，列出独特的支出和收入类别及子类；</li>
+      <li>制作月度表；③把所有金钱往来输入相应类别；④每个子类加总算出总数；</li>
+      <li>算出月度总收入与总支出，运用公式核对现金与银行余额；</li>
+      <li>用第二步算出的实际时薪，把每个子类美元转换成生命能量小时数。</li>
+    </ol>
+  </article>
+
+  <!-- ---------- 第四步 ---------- -->
+  <article class="chapter" id="step4">
+    <div class="step-head ch-head">
+      <span class="step-no">STEP 04 · 当下 · 本计划的核心</span>
+      <h3>第四步：思考能改变你一生的三个问题</h3>
+      <p class="lede">针对月度表每个支出子类提问，答案填在开支旁预留的三个空白列：相称填 ＋（↑），很少或没有填 −（↓），感觉还行填 0。</p>
+    </div>
+    <div class="grid g444">
+      <div class="panel">
+        <span class="kicker">问题 ①</span>
+        <p><strong>我得到的充实感、满足感和价值，与所消耗的生命能量相称吗？</strong></p>
+        <p class="small">揭示哪些支出是不假思索甚至成瘾的；暴露「购物弱点」（逢见必买之物）。一旦看清为又一件逢见必买之物耗费多少小时生命，它「恐怕就不再是一件珍宝，而更像是一个安慰奖」。诀窍是客观：不找理由也不自责。<em>玛莎和泰德案例：</em>玛莎不直接质疑泰德的某项花费，而是冷静问他是否真的从中获得了与生命能量相称的满足——「讨论财务上的抉择而不争吵……实际上促进了他们的婚姻美满」。</p>
+      </div>
+      <div class="panel">
+        <span class="kicker">问题 ②</span>
+        <p><strong>这种生命能量消耗与我的价值观念和人生目标一致吗？</strong></p>
+        <p class="small">「我们的行为是自身价值观的具体体现。消耗时间和金钱的方式能清楚地说明我们是谁、我们主张什么。」外出就餐 250 美元（25 小时）揭示了什么——重视方便？喜欢美食？<em>塞缪尔案例：</em>拥有房子车子工作等「标配」却愤怒沮丧；月度评估让他看清最大愿望是为解决世界难题做贡献，遂离开教育系统办私人咨询公司。「现在他表里如一，他终于快乐了。」人生目标的三条寻找方向（乔安娜·梅西）：利用你的热忱、利用你的痛苦、利用身边小事。</p>
+      </div>
+      <div class="panel">
+        <span class="kicker">问题 ③</span>
+        <p><strong>如果我不必为了钱而工作，这项开销会有什么变化？</strong></p>
+        <p class="small">会减少填 −，会增加填 ＋，不变填 0。自问清单：衣服买更多还是更少？会不会干脆卖车？还会用全新逢见必买之物犒劳工作辛苦吗？令人瞠目的结论：<em>如果不把大部分时间花在挣钱上，生活花费可能会大大减少！</em>「财务自由」的一个内容就是「不需要用钱来满足需要」。</p>
+      </div>
+    </div>
+    <h4>低级兴奋 vs 深层兴奋</h4>
+    <div class="grid g75">
+      <div>
+        <p>祖孙对话：热爱简朴生活的祖父试图灌输价值观，男孩激动宣布：「爷爷，我知道什么是幸福了。——<em>就是你在刚买了点东西之后会有的那种感觉。</em>」低级兴奋＝买东西时心中的小小涟漪，「只能维持从收银机到汽车的距离」。深层兴奋＝超乎预期地实现梦想时的感觉。<strong>满足感是内在衡量深度兴奋的标尺。</strong>「足够」是最深层次的兴奋：「我们通过质疑这个梦而清醒。」回想满足感曲线：到了「足够」点欲望就降低了——<em>「少一分则嫌不足，多一分则又太过。」</em>拥有内在衡量标准是「财务诚信」的组成部分：<em>尼娜的自述</em>：「我走进一家商店，钱就从钱包里飞走了……我阻止不了。」对下意识的消费「断然说不」就是财务自由的一种形式。</p>
+      </div>
+      <aside class="aside-note">
+        <span class="tag">债务是伟大梦想的破坏者</span>
+        无论受教育、成家立业还是办婚礼，它站在每个梦想门口抱着双臂说：<strong>「付钱吧！不然就不许再往前走。」</strong>如果你已把梦想献上金钱的祭坛，要把它们收回——它们是旅程的燃料。（重拾梦想的六个触动性问题之一：「如果不必为生计工作，会如何安排时间？」）
+      </aside>
+    </div>
+    <h4>四个梦想者故事</h4>
+    <ul class="plain">
+      <li><strong>格兰特·萨巴蒂耶尔</strong>：发现自己钱不够买一张玉米煎饼后决定 30 岁前赚到 100 万美元，5 年达成；达标后却意识到梦想远不止 100 万美元。</li>
+      <li><strong>艾米和吉姆（《守财通讯》）</strong>：结婚时两人共工作 20 多年却只有 1500 美元积蓄；只靠吉姆的海军薪水，7 年间有了 4 个孩子、攒够缅因州农舍首付款、还清全部债务。证明「乡下拥有一幢房子之类普普通通的梦想真的是可以实现的」。</li>
+      <li><strong>韦斯</strong>：空气质量化学师，特意搬到走路就能上班的地方住以免制造他要测量的空气污染。「他的人生罗盘是自然界，生活的方方面面都指向那个方向。」</li>
+      <li><strong>凯西和兰登</strong>：医生＋教师，空巢后退出有偿就业，搬到小镇买地建立生态村；外向的兰登当了镇长，凯西迷上绘画。</li>
+    </ul>
+    <h4>趋向「足够」：四个共同特质</h4>
+    <div class="grid g444">
+      <div class="panel"><strong>可说明性</strong><p class="small">知道多少钱进出你的生活——从来不知道有多少钱、钱去了哪，就永远不会「足够」。</p></div>
+      <div class="panel"><strong>满足感的内在衡量标准</strong><p class="small">若标准是别人拥有什么或怎么想，好比顺着下行扶梯往上爬。</p></div>
+      <div class="panel"><strong>更高尚的人生目标</strong><p class="small">「得到的反面是给予，这就是满足感的秘诀所在。」</p></div>
+      <div class="panel"><strong>责任心</strong><p class="small">responsibility＝response＋ability：有能力且愿意回应他人需求。</p></div>
+    </div>
+    <p class="small">可选的第四个问题（「财务依存」）：「假如每个人无论现在还是将来都拥有他们需要的一切……那么这个类别的开销会是什么样的？」简版：「如果人人都这么做的话会怎样？」——第四问对本计划并非必要，但执行步骤成为习惯后你会不由自主地猜想。</p>
+    <h4>第四步提要（四条）</h4>
+    <p>①对每个开支子类提问 1 并以＋/−/0 标记；②提问 2 并标记；③提问 3 并标记、写下大约变化金额；④浏览并列出所有带 − 号的类别清单。重点不在于通过愧疚推动改变，而在于调整开支直到对所有类别的评定都是零或加号。</p>
+  </article>
+
+  <!-- ---------- 第五步 ---------- -->
+  <article class="chapter" id="step5">
+    <div class="step-head ch-head">
+      <span class="step-no">STEP 05 · 当下</span>
+      <h3>第五步：让生命能量清晰可见——一张挂图</h3>
+      <p class="lede">左边纵轴代表金钱，下面横轴代表时间（按月递增，要能标记 5–10 年）；每月月底绘出月度总收入和月度总支出两个点并连线。</p>
+    </div>
+
+    <figure class="chart" id="fig-wallchart">
+      <svg viewBox="0 0 760 400" role="img" aria-label="伊莱恩的挂图：收入与支出双折线">
+        <title>挂图（图 5-1）：横轴月份，纵轴金额；支出线从收入线上方穿越到下方，两线间空白即储蓄</title>
+        <!-- 坐标区 -->
+        <line x1="64" y1="330" x2="730" y2="330" stroke="var(--ink-sub)" stroke-width="1.5"/>
+        <line x1="64" y1="330" x2="64" y2="36" stroke="var(--ink-sub)" stroke-width="1.5"/>
+        <g font-size="11" fill="var(--ink-sub)">
+          <text x="58" y="334" text-anchor="end">$0</text>
+          <text x="58" y="256" text-anchor="end">$1250</text>
+          <text x="58" y="182" text-anchor="end">$2500</text>
+          <text x="58" y="108" text-anchor="end">$3750</text>
+          <text x="58" y="42" text-anchor="end">$5000</text>
+        </g>
+        <g font-size="11" fill="var(--ink-sub)" text-anchor="middle">
+          <text x="90" y="350">第1月</text><text x="250" y="350">第4月</text><text x="420" y="350">第8月</text><text x="580" y="350">第12月</text><text x="716" y="350">第18月</text>
+        </g>
+        <!-- 网格虚线 -->
+        <g stroke="var(--line)" stroke-width="0.6" stroke-dasharray="2 4">
+          <line x1="64" y1="256" x2="730" y2="256"/><line x1="64" y1="182" x2="730" y2="182"/><line x1="64" y1="108" x2="730" y2="108"/><line x1="64" y1="42" x2="730" y2="42"/>
+        </g>
+        <!-- 储蓄区域阴影：支出降到收入下方后两线之间 -->
+        <path d="M 300,196 L 730,268 L 730,236 L 300,150 Z" fill="var(--accent2)" opacity=".14"/>
+        <text x="640" y="222" font-size="12" fill="var(--accent2)">储蓄（「近些年已被废弃的一个名词」）</text>
+        <!-- 收入线 ~4400 → 4700 -->
+        <path d="M 90,96 L 160,94 L 230,92 L 300,88 L 370,86 L 440,82 L 510,78 L 580,72 L 650,66 L 716,62"
+              fill="none" stroke="var(--accent3)" stroke-width="2.2"/>
+        <!-- 支出线：4770 → 骤降 → 反弹 → 持续下降至 1640 → 900~1200 -->
+        <path d="M 90,84 L 160,206 L 230,116 L 300,150 L 370,208 L 440,248 L 510,262 L 580,272 L 650,282 L 716,292"
+              fill="none" stroke="var(--accent)" stroke-width="2.2"/>
+        <!-- 关键标注 -->
+        <circle cx="90" cy="84" r="4" fill="var(--accent)"/>
+        <text x="100" y="76" font-size="12" fill="var(--accent)">当月收入 $4400 · 支出 $4770：「我没想到自己花的比挣的还多」</text>
+        <circle cx="160" cy="206" r="4" fill="var(--accent)"/>
+        <text x="170" y="228" font-size="12" fill="var(--ink-sub)">第2个月捂紧钱包，支出骤降</text>
+        <circle cx="230" cy="116" r="4" fill="var(--accent)"/>
+        <text x="240" y="132" font-size="12" fill="var(--ink-sub)">第3个月反弹回升</text>
+        <circle cx="300" cy="150" r="4" fill="var(--accent)"/>
+        <line x1="300" y1="150" x2="300" y2="330" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="306" y="166" font-size="12" fill="var(--accent)">不到 4 个月还清债务，开支降至 $1640</text>
+        <!-- 图例 -->
+        <rect x="500" y="46" width="18" height="3" fill="var(--accent3)"/><text x="524" y="51" font-size="12" fill="var(--ink-sub)">月总收入</text>
+        <rect x="620" y="46" width="18" height="3" fill="var(--accent)"/><text x="644" y="51" font-size="12" fill="var(--ink-sub)">月总支出</text>
+      </svg>
+      <figcaption>图 5-1 · 伊莱恩的挂图（依原书案例数字重绘）：支出线从收入线上方穿越到下方，剪刀差张开＝储蓄区</figcaption>
+    </figure>
+
+    <div class="grid g75">
+      <div>
+        <h4>最初的起起落落</h4>
+        <p>典型轨迹：第一个月入账很可能低于出账；震惊之下发誓改进，全家节衣缩食按定量吃豆子米饭燕麦片——第二个月数字大幅下降。<strong>但这种紧缩不可持续：到第三个月，开支往往急剧反弹。</strong>此时有更好的办法。行为变化的三个关键点：①让它成为一个习惯而不是选择——像刷牙一样；②向他人做出说明——问责伙伴、每月见面交流成果；③制图进行标记——如同减肥时每天称体重。</p>
+        <p>伊莱恩由此意识到：<em>需要做的不是设法改变图表，而是改变自己。</em>「不到 4 个月，我就还清了债务，开支降到了 1640 美元。」食品杂货账单从 359 美元减至 203 美元；餐馆账单从 232 美元降到 77 美元；搬到离上班地点更近的房子后汽油费减少了 60%；医疗费用也减半。「这一切都没有让我觉得是在受苦……一切都是自然而然发生的。」</p>
+        <aside class="aside-note">
+          <span class="tag">经验数据</span>
+          「看了几百名财务自由人士的挂图之后，我们有把握说，那些经过了 3 个月艰苦努力的人会发现他们的开支自然而然且毫无痛苦地下降了大约 <strong>20%</strong>。」
+        </aside>
+      </div>
+      <div>
+        <aside class="aside-note">
+          <span class="tag">三个问题如何压低支出线</span>
+          <ul class="plain">
+            <li><strong>问题①→开支自动减少：</strong>「每一个 − 标记都是对你的生存本能的侮辱。」<em>艾薇案例：</em>贫寒出身、以衣着衡量与贫穷的距离；认清购衣未获对等满足后停止购买——每天受到的赞美丝毫未减。<em>哈尔案例：</em>办公室月租 2900 降至 750；不再用花钱免除不陪孩子的愧疚；总开支减少 50%。</li>
+            <li><strong>问题②→一致性与协调：</strong>诚信与否的反馈系统。<em>伊莱恩下半场：</em>经和平团体集会找到人生目标，原本每月花 4500 美元以上，如今生活费稳定在 900～1200 美元之间。</li>
+            <li><strong>问题③→进一步下降：</strong>在当前支出线下方画一条虚线表示离职后生活方式的预估，激发对自由生活的向往。</li>
+          </ul>
+        </aside>
+        <aside class="aside-note">
+          <span class="tag">案例 · 坦尼娅与莱尼希夫妇</span>
+          <em>坦尼娅：</em>欠 2.6 万美元债务，在挂图上贴了个标签写着「迈向无债」，用带数字的魔术贴追踪确切金额——「就像我在融化一支蜡烛」。没有加薪、没有受苦感，只用两年还清债务，随后辞职去肯尼亚帮助开设牙科诊所一年，房车租金供养全部花销。<br><br>
+          <em>莱尼希夫妇（图 5-3）：</em>1992 年 7 月开始执行时有 5.2 万美元债务；到 1993 年 7 月还清了全部欠债。挂图还能把债务追溯到 1986 年的 7.5 万美元以上——当年一个「必赚百万」投资方案曾使他们负债高达 12.5 万美元。
+        </aside>
+      </div>
+    </div>
+    <h4>公开展示财务状况 ＆ 自测</h4>
+    <p>自测：<em>试想把这张财务挂图挂在客厅墙上、每个来访者都能看见的地方，你坦然还是忐忑？你的不自在程度可衡量你的财务不健全程度。</em>艾薇带挂图赴 20 人互助小组时旧恐惧袭来——怕人用几个数字对她估量；她拿出走出婚姻的决心赴会，恐惧烟消云散：「她可以轻松自如地跟人讲这些事情，就像跟人说她客厅沙发的颜色一样。」</p>
+    <div class="pullquote">「我们常听人说『千里之行，始于足下』，但不常听人说的是：你还要继续迈出几十万步，才能抵达目的地。……无须刻意努力，你的支出就会一降再降。」<span class="who">第五章 · 最初的起起落落</span></div>
+    <p class="small"><strong>财务自由＝摆脱债务＋积累储蓄（副产品）。</strong>研究表明用信用卡比用现金花得多；30 年房贷付清时花费是购房价的两三倍。「无论经济环境如何，能够说『我不欠任何人任何东西』是理智、尊严与自由的告白。」成为超级储蓄者：花掉 100% 的薪水就永远不能退休；存得越多越早自由；独居者添个室友可把退休日期提前 4 年。美联储 2015 年报告：要拿出 400 美元应急资金，47% 的美国人将不得不借钱或卖掉点东西。「存钱就像在河上建水坝，大坝后面蓄积的水会有越来越大的势能。」挂图的八项作用：忠实的提醒者、反馈系统、激励、动力、把诚信和盘托出、持续建议尊重生命能量、激发理财兴趣、争取持续支持。</p>
+  </article>
+
+  <!-- ---------- 第六步 ---------- -->
+  <article class="chapter" id="step6">
+    <div class="step-head ch-head">
+      <span class="step-no">STEP 06 · 当下</span>
+      <h3>第六步：珍惜你的生命能量——尽量减少支出</h3>
+      <p class="lede">所谓节俭，就是享受我们所拥有的。衡量节俭是否成功，不看吝啬程度，看对物质世界的享受程度。</p>
+    </div>
+    <div class="grid g75">
+      <div>
+        <h4>为「节俭」正名</h4>
+        <p>英语中没有一个词能描述生活在满足感曲线顶点的状态。frugal 与拉丁词根 frug（美德）、frux（价值）、frui（享受）同源——<strong>节俭就是享受这样一个优势：你的每一分钟生命能量和你所能使用的每一样东西都很好地体现了价值。</strong>西班牙语 aprovechar 一词涵盖所有含义，「毫无小气意味，是一个生机勃勃的词，充满了阳光与清香」。</p>
+        <p>经典意象：物质主义者早餐前一口气喝掉 5 个橘子榨的果汁；节俭的人津津有味品尝一个橘子——享受剥皮时的香气、每个橘瓣的清澈透亮，再把橘皮留着烘焙。「如果你从每件物质财产中都得到一个单位的愉悦，那就是节俭。但是，如果你需要 10 件物品才能勉强感到一点愉悦，那你就错失了活着的意义。」节俭也是学会分享：「社区归属感是真正的宝藏」；<em>财务依存是成功地从「更多就会更好」向「要适可而止」过渡的关键。</em></p>
+        <aside class="aside-note">
+          <span class="tag">一个省钱新观念</span>
+          <strong>别再试图给别人留下深刻印象</strong>——那是时间和金钱无止境、无效果的浪费。1899 年凡勃伦《有闲阶级论》创造的「炫耀性消费」深入文化核心；社交媒体进一步提高了挣脱自我比较枷锁的难度。
+        </aside>
+      </div>
+      <div>
+        <aside class="aside-note">
+          <span class="tag">节俭的谱系</span>
+          苏格拉底和柏拉图赞誉「中庸之道」；《圣经·旧约》「不要给我贫穷，也不要给我富裕，给我足够的就好」；富兰克林、梭罗、爱默生；阿米什人、贵格会、门诺会。「我们今天所享有的财富是几个世纪的人节俭的结果。『更多就会更好』的消费文化是美国舞台上的新贵。<strong>节俭是我们的根基。</strong>」
+        </aside>
+        <aside class="aside-note">
+          <span class="tag">案例 · 安和弗雷德</span>
+          在简单生活网络论坛相识。弗雷德拥有计算机科学硕士学位，27 岁读本书后下定决心彻底告别有偿就业，35 岁已经「退休」且「过着有品位的简朴生活」，甚至到欧洲一家环保组织工作（薪水是原来的三分之一，乐趣却加倍）。安告别无聊的「网络从业人员」。两人住在旧金山的一艘船屋：「我们已经 5 年不开车了……生活很美好！」
+        </aside>
+      </div>
+    </div>
+    <h4>10 个省钱小妙招（行动清单：花钱之前要三思）</h4>
+    <div class="grid g55">
+      <ol class="steps-list">
+        <li><strong>不去购物</strong>——2014 年调查中 75% 的美国成年人有过冲动购物；订立规矩：只买需要的东西。</li>
+        <li><strong>量入为出</strong>——赊购结果往往支付购买价格的 3 倍；今年去夏威夷玩两周，明年可能要多工作大概 4 个月才能还清。</li>
+        <li><strong>爱惜所有</strong>——爱护牙齿可省成千上万牙医账单；着眼于修复而非更换。</li>
+        <li><strong>用坏为止</strong>——把物品多用哪怕 20% 的时间；但边界是：不停敲打才亮的台灯不值得再用一年。</li>
+        <li><strong>自己动手</strong>——<em>供暖系统案例：</em>三家竞标诊断皆错，她自己研究管道定案，省下数百美元并免除施工破坏。</li>
+      </ol>
+      <ol class="steps-list" start="6">
+        <li><strong>预见需求</strong>——预先筹划采购省一大笔；帕金森定律的推论：「需求不断增加，以囊括你一时冲动想买的任何东西。」</li>
+        <li><strong>全面研究</strong>——花 40 美元买能用 10 年的工具胜过花 30 美元买 5 年就得换的。</li>
+        <li><strong>降低花销</strong>——货比三家／讨价还价／买二手货。作者买每辆新车都给 160 公里以内所有经销商打电话，每辆都比标价低 30%～50%；95 美元建议零售价的跑鞋 28 美元成交。</li>
+        <li><strong>换个方式满足需求</strong>——多妮拉·梅多斯：「人们不需要笨重的汽车，只是需要尊重。……试图用物质上的东西来满足这些需求，就是建立起无法抑制的欲望。」<em>替代不是限制，而是解放。</em></li>
+        <li><strong>遵循本计划中的 9 个步骤</strong>——让这些人省钱的是这种转变，不是各种小贴士。</li>
+      </ol>
+    </div>
+    <h4>省钱的基础知识（选项菜单）</h4>
+    <div class="grid g444">
+      <div class="panel"><strong>找个地方住</strong><p class="small">1973 年一套全新独栋住宅平均面积 155 平方米，2015 年是 250 平方米！<em>蕾切尔：</em>把楼上卧室租出付月供，辞职仍有生活费。<em>卡拉和理查德：</em>做公寓管理员——免费住房＋零通勤＋月收入，得以放弃主业投入艺术。</p></div>
+      <div class="panel"><strong>四处走走</strong><p class="small"><em>罗斯玛丽：</em>卖掉仅有的一辆车加入共享汽车合作社；朋友车载露营她出油费——「两人结伴出游的快乐加倍而费用减半」。<em>特德：</em>算账后发现需要时租车更便宜，卖掉两辆多余的车。</p></div>
+      <div class="panel"><strong>照顾好身体</strong><p class="small">基本健康四支柱：健康饮食、坚持锻炼、好好休息、减少压力。预防还能避免最昂贵的就医方式——急诊。</p></div>
+      <div class="panel"><strong>吃喝 ＆ 通信娱乐</strong><p class="small">每周杂货账单上最贵的项目通常是肉、酒和咖啡；迈克尔·波伦七字规则：「别多吃，植物为主」。无合约套餐可随时货比三家；公共图书馆的资源「你已经用税金付过钱了」。</p></div>
+      <div class="panel"><strong>抚养子女 ＆ 上大学</strong><p class="small">美国农业部估计普通家庭把孩子养到 18 岁超过 23 万美元。AP/CLEP 考试费用不到 100 美元却能每学分省数千美元。<em>凯茜和兰登：</em>「我们为了让他们上心仪的大学就得再工作 10 年，这有道理吗？」只供州内四年制。</p></div>
+      <div class="panel"><strong>保护你所拥有的</strong><p class="small"><em>凯茜和兰登：</em>祖母传家珠宝的保险附件每月 6 美元——按计划实现财务自由时需要有 1000 美元本金才有这 6 美元的利息，于是放弃这笔保险。</p></div>
+      <div class="panel"><strong>送礼物和庆祝节日</strong><p class="small"><em>厄休拉：</em>给每个家庭成员写信阐明既不送也不收圣诞礼物的愿望——做好了遭反抗的准备，得到的却是尊重；她还自己操办婚礼。</p></div>
+      <div class="panel"><strong>省钱即是拯救地球</strong><p class="small">金钱是地球资源的抵押留置物。「每次我们花钱都是在投票表明自己想给子孙后代留下一个什么样的地球。」对生命能量的任何一点浪费都意味着在激烈的竞争中输掉更多的时间，而那就是「求死」。</p></div>
+    </div>
+    <p class="small">「一百万零一个省钱妙招」：只需短短 11.6 天就会有 1,000,001 个想法，大部分与欲望有关。「佛说，欲望是一切痛苦之源。它也是一切采购活动之源。」广告不能使你购物，别人的期望不能使你购物，电视不能使你购物，只有你的想法能使你购物。</p>
+    <h4>第六步提要</h4>
+    <p>通过重视生命能量和增强花钱时的意识来降低月度总支出；学会在选择时注重生活质量甚于注重物质水准。坚持做月度表一年以后，15～30 个支出类别下会有总共约 1001 个条目——指明道路的是对生命能量的尊重态度，不是效仿他人的秘诀。</p>
+  </article>
+
+  <!-- ---------- 第七步 ---------- -->
+  <article class="chapter" id="step7">
+    <div class="step-head ch-head">
+      <span class="step-no">STEP 07 · 未来</span>
+      <h3>第七步：珍惜你的生命能量——尽量增加收入</h3>
+      <p class="lede">提要原文：「通过珍惜你在工作中所投入的生命能量来增加收入，用它交换与你的健康和诚信相符的最高工资。」</p>
+    </div>
+    <div class="grid g75">
+      <div>
+        <h4>看似贪婪，实则相反</h4>
+        <p>出于理性和自尊，为报酬工作时应该根据诚信和健康状况赚取最大限度的时薪——不是为了地位声望权力安全感，而是为了更大程度的自由、体现自尊和对生命能量的珍惜。<strong>数学逻辑：</strong>若「足够」是每月 2500 美元、每小时挣 25 美元，须每月工作 100 小时；每小时挣 50 美元则只需 50 小时有偿工作，或者把 50% 的收入存起来！也可以回到工业化以前的生活方式：独立承包商每天工作两三小时挣钱，其余时间放松、娱乐、自我提升、参与社区活动。</p>
+        <aside class="aside-note">
+          <span class="tag">案例 · 特德（木匠）与罗斯玛丽</span>
+          <em>特德：</em>践行 FI 计划不到一年攒够一年生活费；为腾出时间写作，他给装修工作开出更高价格想过滤掉合同——结果很多人对手艺印象深刻、要价多少都愿意付；从事有偿工作的时间减少、收入增加、焦虑减轻，写作时间无穷无尽。<br><br>
+          <em>罗斯玛丽：</em>养老院活动总监，想追求旅行、写作、环保活动；没有另寻压力更大的全职，而是在一家小公司兼职——一周远超 40 小时但目标使她精力旺盛。
+        </aside>
+        <h4>提高薪水：关键在态度</h4>
+        <p>限制收入潜力的重要因素是态度：「我不够优秀」「他们刁难我」「根本没有就业机会」。自视为受害者就无暇注意机遇。对策：培养积极自尊，以贡献为荣，全身心投入——「无论在哪儿工作，你都是在为了自己而工作」。「你会惊讶于工作满意度在多大程度上取决于工作者，而非取决于工作。」<em>玛迪案例：</em>热爱「整体会计师」工作，算了实际时薪发现每小时收费 90 美元却只净赚 7.5 美元（丈夫冬天给缅因州农村送丙烷都比这挣得多）；决定把收费提高 23%、缩减客户数量和工作时长——之后工作时间减少、挣钱更多。</p>
+      </div>
+      <div>
+        <aside class="aside-note">
+          <span class="tag">重点案例 · 尼娜（图 7-1）</span>
+          开始执行计划的 10 年前离异独自抚养 4 个孩子；与朋友同住、做家务换取食宿，同时开始追踪花销；到汽车旅馆申请保洁成功——回家才意识到忘了问薪水；几个月后还清几千美元债务；对每个临时职位计算实际时薪，收入增加一倍；争取到医院部门主管的全职行政助理职位，工资猛增到每小时 17 美元以上且有福利；某周末会议当志愿者时自告奋勇顶上突然离岗抗议的全体工作人员，董事会找新执行董事时她成为人选——<strong>到退休时年薪超过 4.8 万美元</strong>，不得不在挂图上边拼接一张纸才有空间填月收入，「她的收入名副其实超出了图表！」着眼珍惜生命能量，尼娜的收入翻了<strong>两番</strong>。
+        </aside>
+        <aside class="aside-note">
+          <span class="tag">重新定义工作（第七章）</span>
+          普遍看法把工作定义为「我们为了谋生而做的事情」，这个定义「剥离了我们的生活」。<strong>重新定义：</strong>「工作」是指一切生产性的或有目的的活动，有偿就业则是众多这种活动中的一种。有偿就业能达到的目的只有一个：获得报酬——那是工作和金钱之间的唯一真实联系；成长潜力、沟通渠道、赏识认可等其他报偿在无偿活动中同样能获得。<em>斩断工作与工资的联系的八个影响：</em>使选择更多（唐娜医生开办全女性医护的诊所）、得以遂心如愿、能规划生活而不仅仅是挣工资、给退休生活增添活力、让无偿活动得到尊重（南希的 15 分钟记录实验）、使工作和游戏相结合、更加享受闲暇、对「正确生计」有新的认识（类人猿实验：引入花生「报酬」后，纯粹为花生乱画——营利主义毁了艺术家品质）。
+        </aside>
+      </div>
+    </div>
+    <div class="pullquote">「工作是眼睛能看见的爱。」<span class="who">纪伯伦 · 第七章</span></div>
+    <p class="small"><strong>历史参照：</strong>成年人为维持基本生存一生所需的工作量约为每天 3 小时；卡拉哈里的昆人在受西方影响前每周狩猎两天到两天半、平均每周工作 15 小时。19 世纪工人把周工时从 60 小时降到 35 小时；此后固定在 40 小时，近年上升到一周 50 甚至 60 小时。世界大型企业研究会 2014 报告：职场满意度 1987 年首次调查为 61.1%，历史最低点是 2010 年的 42.6%。「退休并不意味着停止工作，它意味着你可以停止为了钱而工作。」第七步的附加效应：债务减少、储蓄增加、空闲时间更多、工作时更有劲头、家庭更和美、心情更平静。</p>
+  </article>
+
+  <!-- ---------- 第八步 ---------- -->
+  <article class="chapter" id="step8">
+    <div class="step-head ch-head">
+      <span class="step-no">STEP 08 · 未来</span>
+      <h3>第八步：资本与交叉跨越点</h3>
+      <p class="lede">提要原文：「每个月套用以下公式对你的累计资本总额进行计算，在挂图上单画一条月度投资收入线：（资本 × 当前长期利率）÷ 12 ＝ 月度投资收入。」</p>
+    </div>
+
+    <figure class="chart" id="fig-crossover">
+      <svg viewBox="0 0 760 420" role="img" aria-label="交叉跨越点三线图">
+        <title>图 8-5 交叉跨越点：月支出平稳、月投资收入缓慢爬升最终与支出线相交；交点即财务自由</title>
+        <!-- 坐标 -->
+        <line x1="64" y1="350" x2="730" y2="350" stroke="var(--ink-sub)" stroke-width="1.5"/>
+        <line x1="64" y1="350" x2="64" y2="36" stroke="var(--ink-sub)" stroke-width="1.5"/>
+        <text x="726" y="372" font-size="12" fill="var(--ink-sub)" text-anchor="end">时间（月份 / 年份）→</text>
+        <text x="58" y="32" font-size="12" fill="var(--ink-sub)" text-anchor="end">每月金额 ↑</text>
+        <g font-size="11" fill="var(--ink-sub)" text-anchor="middle">
+          <text x="90" y="370">起点</text><text x="250" y="370">第3年</text><text x="410" y="370">第6年</text><text x="570" y="370">第9年</text><text x="720" y="370">第12年</text>
+        </g>
+        <g font-size="11" fill="var(--ink-sub)">
+          <text x="56" y="354" text-anchor="end">$0</text>
+          <text x="56" y="276" text-anchor="end">$1000</text>
+          <text x="56" y="202" text-anchor="end">$2000</text>
+          <text x="56" y="128" text-anchor="end">$3000</text>
+          <text x="56" y="52" text-anchor="end">$4000</text>
+        </g>
+        <g stroke="var(--line)" stroke-width="0.6" stroke-dasharray="2 4">
+          <line x1="64" y1="276" x2="730" y2="276"/><line x1="64" y1="202" x2="730" y2="202"/><line x1="64" y1="128" x2="730" y2="128"/>
+        </g>
+        <!-- 月总收入：上升后平台 ~4500 -->
+        <path d="M 90,96 C 200,60 320,44 430,42 L 730,40" fill="none" stroke="var(--accent3)" stroke-width="2" opacity=".9"/>
+        <!-- 月总支出：缓降并平稳于 3200 -->
+        <path d="M 90,120 C 220,132 340,130 460,128 L 730,128" fill="none" stroke="var(--accent2)" stroke-width="2.2"/>
+        <!-- 月投资收入：指数爬升，与支出线相交 -->
+        <path d="M 90,346 C 240,342 360,330 480,300 C 540,282 580,250 620,196 C 645,162 668,140 700,120"
+              fill="none" stroke="var(--accent)" stroke-width="2.6"/>
+        <!-- 交点：空心圆 -->
+        <circle cx="652" cy="172" r="8" fill="var(--bg)" stroke="var(--accent)" stroke-width="2.6"/>
+        <line x1="652" y1="172" x2="652" y2="350" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="64" y1="172" x2="652" y2="172" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="652" y="146" font-size="14" fill="var(--accent)" font-weight="bold" text-anchor="middle">交叉跨越点 ＝ 财务自由</text>
+        <text x="660" y="192" font-size="11" fill="var(--ink-sub)">越过此点后，就业正式变得可有可无</text>
+        <!-- 图例 -->
+        <rect x="380" y="46" width="18" height="3" fill="var(--accent3)"/><text x="404" y="51" font-size="12" fill="var(--ink-sub)">月总收入</text>
+        <rect x="500" y="46" width="18" height="3" fill="var(--accent2)"/><text x="524" y="51" font-size="12" fill="var(--ink-sub)">月总支出</text>
+        <rect x="620" y="46" width="18" height="3" fill="var(--accent)"/><text x="644" y="51" font-size="12" fill="var(--ink-sub)">月投资收入</text>
+      </svg>
+      <figcaption>图 8-5 · 交叉跨越点（重绘）：全书最重要的图形——月度投资收入线追上月支出线的时刻，你从职业以外的来源获得被动收入</figcaption>
+    </figure>
+
+    <div class="grid g75">
+      <div>
+        <h4>资本的定义 ＆ 第三条线</h4>
+        <p>挂图上收入与支出之间的空白就是积蓄。有 FI 思维之前那是「有更多钱可花」；FI 思维称之为<strong>资本——「资本是能赚钱的钱，不是存在银行里的钱。」</strong>不管是 50 美元还是 500 美元，都可以开始产生收入。计算示例：1000 美元积蓄×4%÷12＝3.33 美元；第二个月又省下 500 美元：(1500×4%)÷12＝5.00 美元。几个月后挂图底部缓缓攀升出第三条线。<strong>关于利率：</strong>用长期（30 年）美国国债或定期存款的当前收益率——为计算简便使用 4%，恰与传统财务规划的「安全提款率」重合。</p>
+        <h4>终点线的反向计算</h4>
+        <p>假设年均支出 36000 美元（每月 3000 美元）：(3000×12)÷4%＝<strong>900,000 美元</strong>。钱胡子先生的快速估算法：「『交叉跨越点』到来的标志是你拥有 <em>25 倍于年支出额的资产</em>。」复利速算：任何东西以 7% 增长可在 10 年内翻倍；按保守的 4%，100 美元将在 18 年内变成 200 美元。</p>
+        <aside class="aside-note">
+          <span class="tag">案例 · 尼娜挂图上的复利轨迹（图 8-4）</span>
+          尼娜的支出线很快稳定在每月 950 美元左右；月度投资收入线直到旅馆做保洁约一年后才显现：第四年的 1 月投资收入 <strong>$215</strong>／支出 $845；下一年 1 月 <strong>$350</strong>；第五年 2 月 <strong>$545</strong>／支出仍在 950 以下。即使每月新增资本是常量，复利也确保投资收入线呈上行曲线。
+        </aside>
+      </div>
+      <div>
+        <aside class="aside-note">
+          <span class="tag">看得见的时间给人力量 · 拉里（图 8-6）</span>
+          一家大公司的人力资源员工，历时多年跟踪记录、评估、制作挂图。当他能计算出自己将在有限时间内到达交叉跨越点时简直变了个人：「终于，我看到财务自由即将到来。……我不再担心会不会有人解雇我。」他下班回家宣告：「我什么都不怕了！」本计划的基石之一：「<strong>现在专心挣钱，以便今后不必挣钱</strong>」。<em>多萝西和拉里：</em>1995 年以 40 万美元资产实现「交叉跨越」；三处出租房产＋「岳母房」出租＋共同基金与个股＋一半以上延税工具＋始终量入为出——积蓄增加了两倍。
+        </aside>
+        <aside class="aside-note">
+          <span class="tag">案例 · 山姆和唐娜</span>
+          回堪萨斯州家乡建被动式太阳房、永续农庄，却陷入「钱已花光而日子还很长」综合征。「看起来，伊甸园和郊区一样，到处是陷阱。」学习 FI 课程 4 年后山姆到达了自己的交叉跨越点——投资收入与收垃圾的收入不相上下了。
+        </aside>
+      </div>
+    </div>
+    <h4>财务自由的三大支柱</h4>
+    <div class="grid g444">
+      <div class="panel"><strong>① 资本</strong><p class="small">财务自由的创收核心——能赚钱的钱。乔·多明格斯曾建议购买美国国债；眼下重点是增加流动现金，然后购买阶梯式定期存单或低成本指数基金。善用公司计划：许多雇主平均按每份薪水 6% 等额缴费，「基本是免费的投资本钱」。</p></div>
+      <div class="panel"><strong>② 缓冲资金</strong><p class="small">足够应付 6 个月开支的流动现金（普遍看法 3 个月、理想 6 个月）；联邦储蓄保险使银行倒闭时每个账户高达 25 万美元理赔。很多人叫它「应急基金」。</p></div>
+      <div class="panel"><strong>③ 缓存金</strong><p class="small">除了核心资本和缓冲资金之外的储蓄。<em>罗斯玛丽案例：</em>交叉跨越点临近时越来越心神不宁——「也许这就是高空秋千表演者在估摸什么时候撒手能抓住另一个秋千时的感受吧」；多存几千美元后烦恼迎刃而解。</p></div>
+      <div class="panel"><strong>自然财富四要素</strong><p class="small">能力（DIY 技能）、亲友（关爱经济）、社区（「孤独是一种流行病，而且代价高昂」「共享则是财富」），以及你来之不易的「东西」。乔·多明格斯名言：<strong>「觉悟比通货膨胀增长得更快。」</strong></p></div>
+    </div>
+    <div class="pullquote">「『选择』是财务自由的真正核心。它跟金钱无关，它关乎你往哪里投放最宝贵的资源：你的时间，你的注意力，你的生命。」<span class="who">第八章末</span></div>
+    <p class="small"><strong>交叉跨越点恐慌：</strong>有富有热情和创造力的男士来电：「我做到了，财务自由了。……你没搞明白！我其实很害怕，有了这种自由我该怎么办？」乔的准备法：周末就做设想自由后将做的事——想在退休后开着房车周游全国，就在积累财富的年代设计一辆野营车、周末到公园露营。</p>
+  </article>
+
+  <!-- ---------- 第九步 ---------- -->
+  <article class="chapter" id="step9">
+    <div class="step-head ch-head">
+      <span class="step-no">STEP 09 · 未来</span>
+      <h3>第九步：进行投资来维护财务自由——以钱养钱</h3>
+      <p class="lede">提要原文：「了解并熟练掌握长期创收投资，对财务进行管理，使之产生源源不断的收入来满足你长远的需求。」投资的目的是让你确信余生会拥有那个「足够」的金额——且有富余，不是「大赚一笔」。</p>
+    </div>
+    <div class="grid g75">
+      <div>
+        <h4>财务自由人士的创收方式</h4>
+        <p>①保守投资债券或循环贷款基金；②在 IRA、401(K) 或经纪账户里投资共同基金或 ETF；③投资房地产（自住或出租）；④投资企业。其余方式要么风险更高，要么伦理上不可靠。<strong>收益的五种途径：</strong>利息、红利、资本利得、租金、特许使用费。关键认知：「没有人——真的没有任何一个人能择定市场时机或预测未来。」</p>
+        <aside class="aside-note">
+          <span class="tag">乔的方案 ＆ 警示故事</span>
+          1969 年乔刚过完 31 岁生日就退休：当时国债利率在 6.5% 以上而通胀低于 3%，1981 年飙升至将近 15%，1997 年（乔去世那一年）跌回 6.5%——这一黄金机会一去不复返。乔攒了 7.5 万美元（约当今 22.5 万），按 8% 利息每年约赚 2 万美元（今值）完全够花；以今天的利率他需要那个数额的四倍。他的九项标准核心：本金与利息有最大程度的安全保障、免交州税地方税、绝对流动性、长远收入绝对稳定。<em>沙皇债券警示：</em>乔送给新人一张泛黄的俄国沙皇债券——息票剪到 1917 年俄国革命使其一文不值。「你的任何投资都不能保证地缘政治或经济条件不会改变。<strong>投资须谨慎。</strong>如果有人说他有连傻子都能学会的赚钱办法而你信了——你就是那个傻子。」
+        </aside>
+      </div>
+      <div>
+        <aside class="aside-note">
+          <span class="tag">低成本指数基金 · 博格尔一族</span>
+          巴菲特：「对绝大多数投资者来说，低成本基金是最明智的股权投资。」过去 90 年股市遭受 5 次严重打击：大萧条下跌 86%、复苏花了 27 年；70 年代中期下跌 46%、复苏近 10 年；1987 年 3 个月下跌 32%、复苏 4 年；大衰退下跌 50%、复苏 6 年。「你只在两个日子里关心一项投资的价值，那就是你买下它的那天和你卖掉它的那天。」<strong>博格尔一族的简单规则（4 条）：</strong>还清债务并避免再欠债；花的要比挣的少；余钱投资于低成本指数基金；将基金持有多年。
+        </aside>
+        <aside class="aside-note">
+          <span class="tag">社会责任投资（SRI）＆ 房地产</span>
+          SRI 已成为全球 23 万亿美元的产业；自 20 世纪 90 年代初起其回报已达或超过传统未经筛选的投资。房地产：<em>斯科特·特伦奇</em>——四单元以下的双拼／三联／四联栋可用 FHA 贷款低至 3.5% 首付购买，前提是自住一年以上；炒房不适合 FI 投资组合。<em>「节俭森林」夫妇肯特和贝丝：</em>太平洋西北部 32000 平方米林地上的破败低价房屋逐间翻修出租——他们将在 6 年内而不是二三十年内还清抵押贷款。
+        </aside>
+      </div>
+    </div>
+    <h4>作者自述的多个有社会责任感的收入来源</h4>
+    <p>大部分债券购于 1981—1997 年（拥有一只票面利率 15% 的债券，最低 8%）；1986 年与乔等花 13.7 万美元在西雅图买下一幢七卧室大房子容纳新路线图基金会和 6 个人共 20 年，卖房收入是当初购买价的 3 倍；惠德比岛购房与朋友合买、车库改公寓出租，据计算<strong>投资实现了 8% 的年收益</strong>；本地借贷基金迄今向本地企业投资了近 8 万美元，要求贷款利息 5%，一部分兑换成产品——猫砂、蔬菜、鸡舍、鸡蛋；绿色能源 LLC 股份获 3% 收益率。「我把钱花在什么地方能体现我是谁——对你来说也一样。」</p>
+    <div class="panel">
+      <span class="kicker">投资时要考虑的事项一览表（7 问）</span>
+      <ol class="steps-list">
+        <li>这项投资符合我的价值观吗？②符合我的风险容忍度吗？③会使我的投资多样化吗？</li>
+        <li>会提供我目前和未来所需的收入吗？⑤变现容易吗？⑥进出的费用或罚金多少？⑦税收影响如何？</li>
+      </ol>
+      <p class="small">「你构建的 FI 投资组合要符合你的思维方式和生活方式……它完全取决于你。你即将夺回自己曾经拱手让给金钱和理财『专家』的权力。你已经准备好成为一个尽职尽责、充满爱心、知识渊博的生命能量管家。」</p>
+    </div>
+  </article>
+
+  <!-- 九步骤检索表 -->
+  <h4 id="steps-index">九步骤计划快速检索</h4>
+  <div class="tbl-wrap">
+  <table class="data">
+    <caption>九步骤速查（原文概要摘录）</caption>
+    <thead><tr><th style="width:16%">步骤</th><th>要点</th></tr></thead>
+    <tbody>
+      <tr><td><strong>第一步</strong></td><td>核实一生总收入；创建个人资产负债表，查明净值。</td></tr>
+      <tr><td><strong>第二步</strong></td><td>确定保住工作所需时间和金钱的实际成本，算出实际时薪；追踪记录每一分钱。</td></tr>
+      <tr><td><strong>第三步</strong></td><td>按独特消费模式划分类别，每月汇总；用实际时薪把美元换算成生命能量小时数。</td></tr>
+      <tr><td><strong>第四步</strong></td><td>三问评估每个类别（满足相称？价值观一致？不为钱工作会怎样？）——本计划的核心。</td></tr>
+      <tr><td><strong>第五步</strong></td><td>制作月度总收入／总支出挂图，挂在每天能看到的地方。</td></tr>
+      <tr><td><strong>第六步</strong></td><td>明智使用生命能量，尽量减少支出；注重生活质量甚于物质水准。</td></tr>
+      <tr><td><strong>第七步</strong></td><td>珍惜工作中投入的生命能量，怀着目标和诚信争取最高时薪。</td></tr>
+      <tr><td><strong>第八步</strong></td><td>每月计算：（资本×当前长期利率）÷12＝月度投资收入，在挂图上单画一条线。</td></tr>
+      <tr><td><strong>第九步</strong></td><td>掌握长期创收投资；三大支柱：资本＋缓冲资金（6 个月开支现金）＋缓存金（盈余）。</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<div class="divider">❋ ❋ ❋</div>
+
+<!-- ================= 04 案例档案馆 ================= -->
+<section class="chapter" id="cases">
+  <span class="ch-num">04</span>
+  <div class="ch-head">
+    <span class="eyebrow">Chapter 04 · Case Files</span>
+    <h2>案例档案馆</h2>
+    <p class="lede">书中数十个真实人物的关键数字与转折时刻——他们不过是「巧妙地利用了现有风向扬帆起航」。</p>
+  </div>
+  <div class="tbl-wrap">
+  <table class="data">
+    <caption>主要案例速查（含具体数字）</caption>
+    <thead><tr><th style="width:15%">人物</th><th style="width:12%">出处</th><th>情节与关键数字</th></tr></thead>
+    <tbody>
+      <tr><td><strong>伊莱恩</strong></td><td>一／三／五／八章</td><td>讨厌程序员职业，豪华跑车乡下别墅只能勉强抵消工作的无趣；挂图起步当月收入 $4400／支出 $4770；不到 4 个月还清债务、开支降至 $1640；杂货 $359→$203、餐馆 $232→$77、汽油费 −60%、医疗费减半；经和平团体找到人生目标后月生活费稳定在 $900~1200（原 $4500+）；资产负债表显示 8 月净值 +近 $6000、漏记 $15.40。</td></tr>
+      <tr><td><strong>尼娜</strong></td><td>四／七／八章</td><td>离异独自抚养 4 个孩子，从汽车旅馆保洁做起→行政助理（时薪 $17+）→执行董事（年薪超 $4.8 万）；支出线稳定在每月 $950 左右；投资收入第四年 1 月 $215 → 次年 $350 → 第五年 2 月 $545；收入翻了<strong>两番</strong>，「名副其实超出了图表」。</td></tr>
+      <tr><td><strong>罗丝玛丽</strong></td><td>三／六／八章</td><td>月度表有两个与美有关的类别（美容、美学），设「保健产品」「保健服务」「捐赠」「个人成长」，刻意没有疾病类别；卖掉唯一汽车入共享汽车合作社；交叉跨越点临近时建缓存金——「高空秋千表演者」之喻。</td></tr>
+      <tr><td><strong>玛迪和汤姆</strong></td><td>三章</td><td>缅因州；会计＋卡车司机；合并收入 $1482.81 ÷ 145 小时 ＝ 实际时薪 <strong>$10.23</strong>/小时；1 美元 ≈ 6 分钟生命能量。玛迪后来发现会计师业务每小时收费 $90 只净赚 $7.50，提价 23% 并精简客户后工时更少、挣钱更多。</td></tr>
+      <tr><td><strong>多萝西和拉里</strong></td><td>八／九章</td><td>1995 年以 <strong>$40 万资产实现交叉跨越</strong>；三处出租房产＋「岳母房」出租＋共同基金个股（NAIC 四原则）＋一半以上延税工具＋始终量入为出；积蓄增加了两倍；拉里宣言「我什么都不怕了！」</td></tr>
+      <tr><td><strong>莱尼希夫妇</strong></td><td>五章</td><td>1992 年 7 月启动时有 <strong>$5.2 万债务</strong>，一年内还清；债务可追溯到 1986 年的 $7.5 万以上（「必赚百万」方案曾致负债峰值 $12.5 万）。FI 后琳达缝制被子、迈克学吉他偶尔演出赚外快。</td></tr>
+      <tr><td><strong>恩德里娅与凯尔</strong></td><td>二章开头</td><td>凯尔负债 $1.5 万、恩德里娅逾 $4 万；结婚即接纳债务增加三倍；执行第一步面对事实：净值 <strong>−$55,000</strong>，从此开始全新生活方式。</td></tr>
+      <tr><td><strong>马克</strong></td><td>二章</td><td>建筑业项目经理 10 年；发现挣的钱将近一半花在了工作上——「在家附近兼职拿一半工资反而能省下钱」；转型心理咨询和治疗师之路。</td></tr>
+      <tr><td><strong>乔·多明格斯</strong></td><td>新版前言</td><td>拉丁裔，纽约哈莱姆区长大，不懂英语的母亲靠福利抚养；没读完大学进华尔街，1960 年代初开发出最早的股市技术分析方法之一；目标唯一——<strong>30 岁前退休</strong>：1969 年刚过完 31 岁生日就退休，靠 $7.5 万本金（约当今 $22.5 万）8% 利息生活；讲习会收益全部捐给新路线图基金会，当时每人月生活费不到 $800「但这已经足够了」。1997 年因癌症去世。</td></tr>
+      <tr><td><strong>维姬·罗宾</strong></td><td>新版前言</td><td>1970 年代与乔结为生活与工作伙伴；2004 年确诊癌症且癌细胞扩散后退休搬到西北太平洋岛上千人小村庄；十余年后遇到一群谈论金钱困惑的人而重燃激情，着手修订经典。</td></tr>
+      <tr><td><strong>艾薇</strong></td><td>五章</td><td>贫寒出身、以每天受赞美的次数衡量与贫穷的距离；停止无效购衣后赞美未减；离婚携子乘 U-Haul 西迁；20 人组团学 FI，带挂图赴会放下羞耻。</td></tr>
+      <tr><td><strong>哈尔</strong></td><td>五章</td><td>财务策划师；办公室月租 $2900→$750；9 个孩子愧疚式给钱学会甄别；总开支 −50%，比以前快乐多了。</td></tr>
+      <tr><td><strong>坦尼娅</strong></td><td>五章</td><td>$2.6 万债务→挂图「迈向无债」魔术贴追踪→两年还清→辞职赴肯尼亚帮开牙科诊所一年，房车租金供养全部花销。</td></tr>
+      <tr><td><strong>艾米和吉姆</strong></td><td>四／六章</td><td>结婚时仅 $1500 积蓄；只靠一份海军薪水 7 年生 4 孩、农舍首付、还清债务；1990 年 6 月创刊《守财通讯》。</td></tr>
+      <tr><td><strong>凯茜和兰登</strong></td><td>四／六章</td><td>医生＋教师建生态村；放弃祖母珠宝保险（每月 $6 ≈ 需 $1000 本金利息）；大学费用只供州内四年制。</td></tr>
+      <tr><td><strong>唐娜医生</strong></td><td>七章</td><td>在不健康的体系中做健康服务（每周工作上百小时）；开办医护全女性并服务于女性的诊所；「如果健康的行医之道意味着少挣钱，那就少挣吧！」</td></tr>
+      <tr><td><strong>安和弗雷德</strong></td><td>六章</td><td>弗雷德 27 岁读本书立志、35 岁「退休」；旧金山船屋；5 年不开车；弗雷德到欧洲环保组织工作，薪水是原来的三分之一，乐趣却加倍。</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="small">更多速写：<em>妮可尔</em>（听律师父亲安排攻读高级家庭护理学位耗时 8 年多、欠债逾 10 万美元，净收入连贷款利息都不够）；<em>布赖恩与凯文</em>（「这只昂贵的鹅并没有下金蛋」）；<em>克丽丝蒂夫妇</em>（目睹同事差点猝死办公桌前，「我不能再这样下去了，这不值得」）；<em>职业转换群像</em>（医生转木匠、木匠转建筑师、社会工作者转农民、生物学家离开实验室带人观赏丛林风光……）。</p>
+</section>
+
+<div class="divider">❋ ❋ ❋</div>
+
+<!-- ================= 05 工具箱 ================= -->
+<section class="chapter" id="toolbox">
+  <span class="ch-num">05</span>
+  <div class="ch-head">
+    <span class="eyebrow">Chapter 05 · Toolbox</span>
+    <h2>工具箱：算一算你的生命能量</h2>
+    <p class="lede">所有计算纯前端完成，数据不出本页面。</p>
+  </div>
+
+  <!-- 挂件一 -->
+  <div class="widget" id="widget-wage">
+    <span class="kicker">Widget 01</span>
+    <h4>实际时薪计算器 ＋「这件东西＝多少小时生命能量」换算</h4>
+    <div class="w-grid">
+      <div class="field"><label for="wSalary">月薪总额（税前，元）</label><input type="number" id="wSalary" value="3000" min="0" step="100"></div>
+      <div class="field"><label for="wHours">每周为工作付出的总小时数（含通勤置装减压等）</label><input type="number" id="wHours" value="50" min="1" step="0.5"></div>
+      <div class="field"><label for="wCost">每月工作相关开销（元）</label><input type="number" id="wCost" value="600" min="0" step="50"></div>
+      <div class="field"><label for="wPrice">这件东西的价格（元）</label><input type="number" id="wPrice" value="1000" min="0" step="10"></div>
+    </div>
+    <div class="out-grid">
+      <div class="out"><div class="v" id="oRate">—</div><div class="k">实际时薪</div></div>
+      <div class="out"><div class="v" id="oMin">—</div><div class="k">1 元 ＝ 多少分钟生命能量</div></div>
+      <div class="out"><div class="v" id="oLife">—</div><div class="k">这件东西 = 你的生命能量</div></div>
+      <div class="out"><div class="v" id="oDays">—</div><div class="k">按每天 8 小时折合</div></div>
+    </div>
+    <p class="w-note"><strong>公式：</strong>实际时薪 ＝（月薪 − 工作相关月开销）÷（每周总小时 × 52 ÷ 12）。<br>
+    <strong>手算验证（默认值）：</strong>(3000 − 600) ÷ (50 × 52 ÷ 12) ＝ 2400 ÷ 216.67 ≈ <em>11.08 元/小时</em>；一件 1000 元的东西 ≈ 1000 ÷ 11.08 ≈ <em>90.3 小时</em>生命能量——它值你两小时在路上奔波、开车上班、挖掘未来客户的九十倍吗？</p>
+  </div>
+
+  <!-- 挂件二 -->
+  <div class="widget" id="widget-cross">
+    <span class="kicker">Widget 02</span>
+    <h4>交叉跨越点模拟器</h4>
+    <div class="w-grid">
+      <div class="field"><label for="cIncome">月收入（元）</label><input type="number" id="cIncome" value="5000" min="0" step="500"></div>
+      <div class="field"><label for="cCap">现有可投资产（元）</label><input type="number" id="cCap" value="20000" min="0" step="1000"></div>
+      <div class="field"><label for="rSave">储蓄率：<output id="vSave">40%</output>　（月支出 = 收入 × (1−储蓄率) = <b id="vSpend"></b>）</label><input type="range" id="rSave" min="5" max="80" step="1" value="40"></div>
+      <div class="field"><label for="rRet">预期年化收益率：<output id="vRet">4%</output>（原书建议取长期国债利率，示例用安全提款率 4%）</label><input type="range" id="rRet" min="0.5" max="10" step="0.25" value="4"></div>
+    </div>
+    <div class="out-grid">
+      <div class="out"><div class="v" id="vNeed">—</div><div class="k">所需资产（年支出 ÷ 收益率，即「25 倍法则」）</div></div>
+    </div>
+    <figure class="chart" style="margin:1.2em 0 .6em">
+      <svg id="crossSvg" viewBox="0 0 760 380" role="img" aria-label="交叉跨越点实时模拟曲线"></svg>
+    </figure>
+    <p style="font-size:1.05em" id="crossMsg">—</p>
+    <p class="w-note"><strong>模拟规则：</strong>每月资本增加「月储蓄」，并按年化收益率/12 复利增长；当月度投资收入（资本×收益率÷12）≥ 月支出，即达交叉跨越点。<br>
+    <strong>手算验证：</strong>月收入 5000、储蓄率 40%（存 2000／支 3000）、收益 4%、初始资产 0 → 所需资本 900000；由等额月供终值公式解得约 275 个月 ≈ <em>23 年</em>。提高储蓄率或初始资产可显著缩短——这正是第六步与第七步的意义。</p>
+  </div>
+
+  <!-- 金钱观讨论法 -->
+  <h4 id="money-talk">后记 · 「金钱观」讨论法：打破沉默，开启新交谈</h4>
+  <div class="grid g75">
+    <div>
+      <p>「金钱万能！」早在欧里庇得斯时代就一针见血；但一旦谈到金钱，交谈通常就结束了。你最后一次公开谈论自己的债务是什么时候？谈收入呢？本着<strong>「不羞愧，不责怪」</strong>的精神，把臆断、恐惧、狂想、遗憾和谎言公之于众。<strong>投石问路的实验：</strong>找一人相互讲讲过去 6 个月里买了哪一样并不真正需要的东西——人人都有，概莫能外。<em>多妮塔案例：</em>在社区简朴生活组织交流欲望、恐惧、价值观后醒悟：「如果我不采取行动，我的生活是不会改变的」，于是辞职订机票独自背包去了世界的另一端。「金钱观」中没有专家——目的不是修复我们自己，而是了解我们自己。</p>
+      <h4>三种情形三种方法</h4>
+      <ul class="plain">
+        <li><strong>日记法（1 人）：</strong>在一页纸顶端写下金钱问题，不间断地书写至少 5 分钟。「你的答案会让自己大吃一惊的。」</li>
+        <li><strong>对话法（2 人）：</strong>伴侣、好朋友或年少的子女；半分钟的沉默会创造奇迹。</li>
+        <li><strong>小组法（3～8 人）：</strong>开场每人一两分钟发言、其他人不能打断；结束时每人谈收获；有一人扮演「主持人」但不给建议。不要仓促：两个人至少半小时。</li>
+      </ul>
+    </div>
+    <aside class="aside-note">
+      <span class="tag">契约（五条）</span>
+      <ol class="steps-list">
+        <li><strong>不羞愧，不责怪</strong>——竭尽所能保持不偏不倚的客观态度；</li>
+        <li><strong>注意保密</strong>——小组里说的话不得外传；</li>
+        <li><strong>人在心在</strong>——准时到达，待到最后，认真倾听；</li>
+        <li><strong>言简意赅</strong>——诚实有深度但保持简练；</li>
+        <li><strong>杜绝商业色彩</strong>——营销建言讲座放到别处别时去做。</li>
+      </ol>
+      <span class="tag" style="margin-top:.9em">万能话题模板</span>
+      在一个词（金钱、工作、债务、保险……）后面附加三个问题：①你对它怎么看？②你对它有何感想？③你在这方面做了些什么？
+    </aside>
+  </div>
+</section>
+
+<div class="divider">❋ ❋ ❋</div>
+
+<!-- ================= 06 金句集 ================= -->
+<section class="chapter" id="quotes">
+  <span class="ch-num">06</span>
+  <div class="ch-head">
+    <span class="eyebrow">Chapter 06 · Pull Quotes</span>
+    <h2>金句集</h2>
+    <p class="lede">逐字摘录，按全书脉络分组。</p>
+  </div>
+  <div class="quotes-grid">
+    <div class="q-card"><p>「你所遇到的多数难题都不是单靠钱能解决的。事实上，金钱只是快乐、健康人生的附属品。」</p><span class="who">新版序言 · 钱胡子先生</span></div>
+    <div class="q-card"><p>「这本书并不是一本理财书。它是一份个人发展指南，帮助你厘清自己真正想要的生活，同时训练你改掉可能已经形成的乱花钱的坏习惯。」</p><span class="who">新版序言</span></div>
+    <div class="q-card"><p>「无止境的欲望是一个人性陷阱，如果你想更快地前进，它是首先需要治愈的病症之一。」</p><span class="who">新版序言</span></div>
+    <div class="q-card"><p>「你会投入生命来实现自身价值，而不是投入所有时间去挣钱。」</p><span class="who">新版前言</span></div>
+    <div class="q-card"><p>「从最基本的层面上讲，财务自由的意思就是不必再为了钱而工作。」</p><span class="who">新版前言</span></div>
+    <div class="q-card"><p>「『拥有更多』是一个欲望的无底洞。」</p><span class="who">新版前言 · 本书为谁而写</span></div>
+    <div class="q-card"><p>「成功的真正秘诀是与金钱建立自觉、清晰、有主动权的关系，而不是一心要赚到某个『数字』。」</p><span class="who">新版前言 · 本书为谁而写</span></div>
+    <div class="q-card"><p>「这其实不是一本关于理财的书，这是一本关于人生的书。」</p><span class="who">新版前言 · 一位财务自由人士语</span></div>
+    <div class="q-card"><p>「然而日益明显的事实是，除了最低限度的舒适之外，金钱并没有带来我们所追求的幸福。」</p><span class="who">第一章</span></div>
+    <div class="q-card"><p>「我们的体验是：拥有的越多，想要的就越多，对现状的满意度就越低。」</p><span class="who">第一章</span></div>
+    <div class="q-card"><p>「在『更多就会更好』的观念影响下，『足够』就像地平线——无论你怎么追，它总在后退远去。」</p><span class="who">第一章</span></div>
+    <div class="q-card"><p>「『足够』是一种无所畏惧的状态，一种胸有成竹的状态，一种坦坦荡荡、有自知之明的状态。它是指充分欣赏和享受金钱给生活带来的一切，但绝不购买不需要、不想要的东西。」</p><span class="who">第一章 · 足够：曲线的顶点</span></div>
+    <div class="q-card"><p>「凡是对你来说多余的东西都是废物。」</p><span class="who">第一章 · 开始清理人生</span></div>
+    <div class="q-card"><p>「你的一生所得不过是个数字而已，并不代表你的价值。」</p><span class="who">第一步 · 不羞愧，不责怪</span></div>
+    <div class="q-card"><p>「它是你目前唯一能用来证明一生总收入的东西，其余的都是记忆和幻想。」（指净值数字）</p><span class="who">第一步 · 净值</span></div>
+    <div class="q-card"><p>「无论你有什么发现，重要的是记住：净值不等于自我价值。」</p><span class="who">第一步 · 净值</span></div>
+    <div class="q-card"><p>「这是你能断言百分之百永远属实的唯一一件事：金钱是你用生命能量去换取的东西。」</p><span class="who">第二章 · 乔的总结</span></div>
+    <div class="q-card"><p>「你拥有的唯一真正财富就是你的时间，你一生里的分分秒秒。」</p><span class="who">第二章 · 什么是金钱</span></div>
+    <div class="q-card"><p>「金钱就像一面镜子，让我们得以看清自己。」</p><span class="who">第二章</span></div>
+    <div class="q-card"><p>「一旦懂得生命能量与金钱的转换关系，就好比吞下红色药丸。」</p><span class="who">第二章</span></div>
+    <div class="q-card"><p>「人所渴望的不是富有，而是比别人更富有。」</p><span class="who">第二章 · 引约翰·斯图尔特·密尔</span></div>
+    <div class="q-card"><p>「天文望远镜哪怕其中一个镜头稍有偏差也会让你无法观测星球。人生亦然，一点点的蒙蔽造假就会让穿透云层的光亮减弱。」</p><span class="who">第二步 · 不留余地</span></div>
+    <div class="q-card"><p>「不羞愧，不责怪。」</p><span class="who">全书贯穿咒语</span></div>
+    <div class="q-card"><p>「本计划与其他几十个、几百个理财方案的不同之处就在于：它基于自觉性、满足感和抉择，不是基于预算或刻意受苦。」</p><span class="who">第三章</span></div>
+    <div class="q-card"><p>「记住金钱是你用生命能量换来的。」</p><span class="who">第三章 · 让钱变得真切</span></div>
+    <div class="q-card"><p>「你不是在学习『正确的方式』，而是在创造属于自己的方式。要做这件事就动手去做，除此之外别无正确方式。」</p><span class="who">第三步结尾</span></div>
+    <div class="q-card"><p>「你打算如何对待你仅此一次的自由而珍贵的生命？」</p><span class="who">第四章卷首 · 引诗人玛丽·奥利弗</span></div>
+    <div class="q-card"><p>「不要去想世界需要什么，想想什么能让你富有活力，然后付诸行动。因为世界需要的是有活力的人。」</p><span class="who">第四章卷首 · 引霍华德·瑟曼</span></div>
+    <div class="q-card"><p>「对许多人来说，债务是伟大梦想的破坏者……它会站在将来每一个梦想的门口，抱着双臂说：『付钱吧！不然就不许再往前走。』」</p><span class="who">第四章开篇</span></div>
+    <div class="q-card"><p>「就是你在刚买了点东西之后会有的那种感觉。」（男孩对幸福 的「发现」）</p><span class="who">第四章 · 低级兴奋与深层兴奋</span></div>
+    <div class="q-card"><p>「低级兴奋是短暂的，深度兴奋则能持久。你的满足感是内在衡量深度兴奋的标尺。」</p><span class="who">第四章</span></div>
+    <div class="q-card"><p>「少一分则嫌不足，多一分则又太过。」</p><span class="who">第四章 · 足够——最深层次的兴奋</span></div>
+    <div class="q-card"><p>「生而为人意味着与自身以外的事或人产生联系并与之校准。」</p><span class="who">第四章 · 引维克多·弗兰克尔</span></div>
+    <div class="q-card"><p>「我们的任务是把自己从这座牢狱中解救出来，把我们的同情圈子扩大到包含地球上所有生物的范围、包含整个美丽的大自然。」</p><span class="who">第四章 · 引爱因斯坦（1950）</span></div>
+    <div class="q-card"><p>「故此，我所愿意的善，我反不作；我所不愿意的恶，我倒去作。」</p><span class="who">第五章 · 引《罗马书》7:19</span></div>
+    <div class="q-card"><p>「我们常听人说『千里之行，始于足下』，但不常听人说的是：你还要继续迈出几十万步，才能抵达目的地。」</p><span class="who">第五章</span></div>
+    <div class="q-card"><p>「无须刻意努力，你的支出就会一降再降。」</p><span class="who">第五章</span></div>
+    <div class="q-card"><p>「无论经济环境如何，能够说『我不欠任何人任何东西』是理智、尊严与自由的告白。」</p><span class="who">第五章 · 财务自由就是摆脱债务</span></div>
+    <div class="q-card"><p>「存钱就像在河上建水坝，大坝后面蓄积的水会有越来越大的势能。」</p><span class="who">第五章 · 成为超级储蓄者</span></div>
+    <div class="q-card"><p>「所谓节俭，就是享受我们所拥有的。」</p><span class="who">第六章 · 节俭的乐趣</span></div>
+    <div class="q-card"><p>「浪费不是指拥有的东西多，而是指未能享受它们。要衡量你在节俭方面是否成功，不必看你的吝啬程度，要看你对物质世界的享受程度。」</p><span class="who">第六章</span></div>
+    <div class="q-card"><p>「佛说，欲望是一切痛苦之源。它也是一切采购活动之源。」</p><span class="who">第六章 · 一百万零一个省钱妙招</span></div>
+    <div class="q-card"><p>「工作是眼睛能看见的爱。」</p><span class="who">第七章 · 引纪伯伦</span></div>
+    <div class="q-card"><p>「工作就是人们不想做的事情，金钱则作为奖赏用于补偿工作带来的不愉快。」</p><span class="who">第七章 · 引罗伯特·西奥博尔德</span></div>
+    <div class="q-card"><p>「凡是我们所做的与人生目标一致的事情都叫『工作』。……通过斩断这一联系，我们找回自己的人生。」</p><span class="who">第七章</span></div>
+    <div class="q-card"><p>「幸福是我们与生俱来的权利。」</p><span class="who">第七章</span></div>
+    <div class="q-card"><p>「退休并不意味着停止工作，它意味着你可以停止为了钱而工作。」</p><span class="who">第七章</span></div>
+    <div class="q-card"><p>「你会惊讶于工作满意度在多大程度上取决于工作者，而非取决于工作。」</p><span class="who">第七步</span></div>
+    <div class="q-card"><p>「现在专心挣钱，以便今后不必挣钱。」</p><span class="who">第八章 · 看得见的时间给人力量</span></div>
+    <div class="q-card"><p>「资本是能赚钱的钱，不是存在银行里的钱。」</p><span class="who">第八章 · 资本</span></div>
+    <div class="q-card"><p>「『交叉跨越点』为我们提供了『财务自由』的最终定义。在月度投资收入超过月度支出的那个交叉跨越点，你将实现传统意义上的财务自由。」</p><span class="who">第八章</span></div>
+    <div class="q-card"><p>「资本、缓冲资金、缓存金，它们是财务自由的三大支柱。」</p><span class="who">第八章 · 缓存金</span></div>
+    <div class="q-card"><p>「真正的财富是你掌握的技能、生活中与你同行的人以及你尽己所能为之做出贡献并获得相应回报的社会。」</p><span class="who">第八章 · 自然财富和财务依存</span></div>
+    <div class="q-card"><p>「节流和攒钱本身并不是目的，它是执行这些步骤的副产品。」</p><span class="who">第八章</span></div>
+    <div class="q-card"><p>「觉悟比通货膨胀增长得更快。」</p><span class="who">第八章 · 乔·多明格斯</span></div>
+    <div class="q-card"><p>「孤独是一种流行病，而且代价高昂。」</p><span class="who">第八章 · 亲友</span></div>
+    <div class="q-card"><p>「『选择』是财务自由的真正核心。它跟金钱无关，它关乎你往哪里投放最宝贵的资源：你的时间，你的注意力，你的生命。」</p><span class="who">第八章末</span></div>
+    <div class="q-card"><p>「我们要当未来的建筑师，不做它的受害者。」</p><span class="who">第八章末 · 引巴克敏斯特·富勒</span></div>
+    <div class="q-card"><p>「对绝大多数投资者来说，低成本基金是最明智的股权投资。」</p><span class="who">第九章 · 引沃伦·巴菲特</span></div>
+    <div class="q-card"><p>「你只在两个日子里关心一项投资的价值，那就是你买下它的那天和你卖掉它的那天。」</p><span class="who">第九章</span></div>
+    <div class="q-card"><p>「我把钱花在什么地方能体现我是谁——对你来说也一样，不管你做出什么样的选择。这是不可回避的。」</p><span class="who">第九章 · 作者自述</span></div>
+    <div class="q-card"><p>「如果我们崇尚在自己与金钱的关系问题上保持沉默，我们就会始终受制于从小听到的教诲——要懂得羞愧与责怪，『更多就会更好』且永远不够，贪婪是好事，谁到临死时拥有的消遣品最多谁就赢了。」</p><span class="who">后记结尾</span></div>
+  </div>
+</section>
+
+<div class="divider">❋ ❋ ❋</div>
+
+<!-- ================= 07 结语 ================= -->
+<section class="chapter" id="outro">
+  <span class="ch-num">07</span>
+  <div class="ch-head">
+    <span class="eyebrow">Epilogue · 结语</span>
+    <h2>Coda：足够，且有富余</h2>
+  </div>
+  <div class="grid g75">
+    <div>
+      <p>九个步骤走完，你会发现这套计划从头到尾只做了一件事：<strong>把「钱」翻译回「生命能量」</strong>。一旦完成这场翻译，每一个消费决定都变成一个时间决定，每一份工作都变成一次生命的出借——而你是否愿意继续出借、以什么价钱出借、出借到哪一天为止，重新回到了你自己手里。</p>
+      <p>财务自由从来不是一个天文数字，而是月度表上一条缓缓爬升的投资收入线追上支出线的那个清晨；是挂图上两线之间不断张开的空白；是「我不欠任何人任何东西」的坦然；是把挂图挂在客厅墙上也不忐忑的诚信。<em>足够，且有富余。</em></p>
+      <p>最后，回到卷首那道劫匪式的选择题。读完全书你会明白：这道题的正确答案从来不是二选一——当你不再用生命去换你不需要的东西时，<strong>你要回了钱，也要回了生活。</strong></p>
+      <p class="small">延伸资源：原书官方网站 yourmoneyoryourlife.com（原书提及）；各步骤章末均附「金钱观」讨论题，可依第 05 章工具箱的契约自行组局开谈。「我们都来谈一谈吧！」</p>
+    </div>
+    <aside class="aside-note">
+      <span class="tag">笔记性质说明</span>
+      本页面为《要钱还是要生活》（Your Money or Your Life，维姬·罗宾／乔·多明格斯 著）的中文读书笔记，非原书文本本身；引文与数据转引自中文版正文并注明出处章节；图表系依笔记底稿重绘，凡属复原数据均已标注来源，未添加原书未载的虚构数字。
+    </aside>
+  </div>
+</section>
+
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><strong>版权说明：</strong>本页面为个人读书笔记，非商业用途。原书为维姬·罗宾（Vicki Robin）与乔·多明格斯（Joe Dominguez）所著《要钱还是要生活》（Your Money or Your Life），文中引文与数据均转引自中文版正文；图表系依笔记底稿重绘，凡属依正文叙述复原的数据均已注明出处章节，未添加任何原书未载的虚构数字。</p>
+    <p class="mono">READING NOTES · NO.01 · 单文件离线网页 · 明暗主题 · 零外部依赖</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s)};
+  /* ---------- 主题切换 ---------- */
+  var root=document.documentElement, btn=$('#themeBtn');
+  function applyTheme(t){
+    root.setAttribute('data-theme',t);
+    btn.textContent = t==='dark' ? '◑ 白昼' : '◐ 夜间';
+    try{localStorage.setItem('ymyl-theme',t);}catch(e){}
+  }
+  var saved=null; try{saved=localStorage.getItem('ymyl-theme');}catch(e){}
+  if(!saved && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) saved='dark';
+  applyTheme(saved||'light');
+  btn.addEventListener('click',function(){
+    applyTheme(root.getAttribute('data-theme')==='dark'?'light':'dark');
+  });
+  /* ---------- 顶部阅读进度条 ---------- */
+  var pbar=$('#pbar');
+  window.addEventListener('scroll',function(){
+    var h=document.documentElement;
+    var p=h.scrollTop/Math.max(1,(h.scrollHeight-h.clientHeight));
+    pbar.style.width=(p*100).toFixed(2)+'%';
+  },{passive:true});
+  /* ---------- 抽屉菜单（窄屏）：先填充，再统一收集链接 ---------- */
+  var drawer=$('#drawer'),menuBtn=$('#menuBtn'),scrim=$('#scrim');
+  if(drawer&&!drawer.childElementCount&&$('#navList')){
+    drawer.innerHTML='<div class="sb-brand">要钱<span class="accent-dot">,</span>还是要生活<span class="accent-dot">?</span><span class="en">目录 · Contents</span></div>'+
+      '<nav class="sb-nav">'+$('#navList').innerHTML+'</nav>';
+  }
+  /* ---------- 目录滚动高亮（侧边栏 + 抽屉） ---------- */
+  var links=Array.prototype.slice.call(document.querySelectorAll('#navList a[href^="#"],#drawer a[href^="#"]'));
+  var map=new Map();
+  links.forEach(function(a){
+    var sec=document.querySelector(a.getAttribute('href'));
+    if(sec){ if(!map.has(sec))map.set(sec,[]); map.get(sec).push(a); }
+  });
+  function setActive(sec){
+    links.forEach(function(l){l.classList.remove('on');});
+    (map.get(sec)||[]).forEach(function(a){a.classList.add('on');});
+  }
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){ setActive(e.target); }
+      });
+    },{rootMargin:'-15% 0px -70% 0px'});
+    map.forEach(function(arr,sec){io.observe(sec);});
+  }
+  /* ---------- 抽屉开关 ---------- */
+  function setDrawer(open){
+    document.body.classList.toggle('drawer-open',open);
+    menuBtn.setAttribute('aria-expanded',open?'true':'false');
+  }
+  if(menuBtn){
+    menuBtn.addEventListener('click',function(){
+      setDrawer(!document.body.classList.contains('drawer-open'));
+    });
+  }
+  if(scrim)scrim.addEventListener('click',function(){setDrawer(false);});
+  if(drawer)drawer.addEventListener('click',function(e){
+    if(e.target.closest('a'))setDrawer(false);
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape')setDrawer(false);
+  });
+  /* ==================================================
+     挂件一：实际时薪计算器 ＋ 生命能量换算
+     公式：实际时薪 = (月薪 − 工作相关月开销) ÷ (每周总小时 × 52 ÷ 12)
+     ================================================== */
+  var wS=$('#wSalary'),wH=$('#wHours'),wC=$('#wCost'),wP=$('#wPrice');
+  function fmt(n,d){return isFinite(n)?n.toFixed(d===undefined?1:d):'—';}
+  function calcWage(){
+    if(!wS||!wH||!wC||!wP)return;
+    var S=parseFloat(wS.value)||0, H=parseFloat(wH.value)||0,
+        C=parseFloat(wC.value)||0, P=parseFloat(wP.value)||0;
+    var mh=H*52/12;                       /* 月投入小时数 */
+    var rate=mh>0?(S-C)/mh:0;             /* 实际时薪 */
+    var oR=$('#oRate'),oM=$('#oMin'),oL=$('#oLife'),oD=$('#oDays');
+    if(!oR)return;
+    if(rate>0){
+      oR.textContent='¥ '+fmt(rate,2)+' /小时';
+      oM.textContent=fmt(60/rate,1)+' 分钟';
+      oL.textContent=P>0?fmt(P/rate,1)+' 小时':'—';
+      oD.textContent=P>0?'约 '+fmt(P/rate/8,1)+' 个工作日':'—';
+    }else{
+      oR.textContent=oM.textContent=oL.textContent=oD.textContent='—';
+    }
+  }
+  [wS,wH,wC,wP].forEach(function(el){if(el)el.addEventListener('input',calcWage);});
+  calcWage();
+  /* ==================================================
+     挂件二：交叉跨越点模拟器
+     每月：资本 += 月储蓄 + 资本×年收益率/12；
+     当 月投资收入(资本×r/12) ≥ 月支出 即达交叉跨越点
+     ================================================== */
+  var cI=$('#cIncome'),cC=$('#cCap'),rS=$('#rSave'),rR=$('#rRet');
+  function calcCross(){
+    if(!cI||!cC||!rS||!rR||!$('#crossSvg'))return;
+    var inc=parseFloat(cI.value)||0, cap0=parseFloat(cC.value)||0;
+    var s=(parseFloat(rS.value)||0)/100, r=(parseFloat(rR.value)||0)/100;
+    $('#vSave').textContent=Math.round(s*100)+'%';
+    $('#vRet').textContent=r.toFixed(1).replace(/\.0$/,'')+'%';
+    var spend=inc*(1-s), saveM=inc*s, i=r/12;
+    $('#vSpend').textContent='¥ '+Math.round(spend).toLocaleString();
+    var need=r>0?spend*12/r:Infinity;
+    $('#vNeed').textContent=isFinite(need)&&spend>0?'¥ '+Math.round(need).toLocaleString():'—';
+    /* 月度模拟，上限 600 个月（50 年） */
+    var N=600, cap=cap0, pts=[cap0*i], cross=-1, m;
+    for(m=1;m<=N;m++){
+      cap+=saveM; cap+=cap*i;
+      var ii=cap*i;
+      pts.push(ii);
+      if(cross<0 && ii>=spend && spend>0) cross=m;
+    }
+    if(spend<=0){cross=0;}
+    var msg=$('#crossMsg');
+    if(cross>=0){
+      msg.innerHTML='距财务自由还有 <b>'+Math.floor(cross/12)+'</b> 年 <b>'+(cross%12)+'</b> 个月'+
+        (cross===0?'（你已经站在交叉跨越点上）':'');
+    }else{
+      msg.innerHTML='按当前参数，<b>50 年内无法跨越</b> —— 试着提高储蓄率或收益率。';
+    }
+    drawCross(pts,spend,cross,r);
+  }
+  function drawCross(pts,spend,cross,r){
+    var svg=$('#crossSvg');
+    var W=760,Hh=380,mx=64,my=34,pw=W-mx-24,ph=Hh-my-56;
+    var horizon=cross>=0?Math.max(Math.round(cross*1.25),24):pts.length-1;
+    var yMax=Math.max(spend,pts[Math.min(horizon,pts.length-1)])*1.18||1;
+    function X(m){return mx+m/horizon*pw;}
+    function Y(v){return my+ph-v/yMax*ph;}
+    var parts=[];
+    parts.push('<rect x="'+mx+'" y="'+my+'" width="'+pw+'" height="'+ph+'" fill="none" stroke="var(--line)" stroke-width="1"/>');
+    /* 水平网格与纵轴刻度 */
+    for(var g=0;g<=4;g++){
+      var gy=my+ph-g/4*ph, gv=yMax*g/4;
+      parts.push('<line x1="'+mx+'" y1="'+gy.toFixed(1)+'" x2="'+(mx+pw)+'" y2="'+gy.toFixed(1)+'" stroke="var(--line)" stroke-width="0.6" stroke-dasharray="2 4"/>');
+      parts.push('<text x="'+(mx-8)+'" y="'+(gy+4).toFixed(1)+'" text-anchor="end" font-size="11" fill="var(--ink-sub)">'+Math.round(gv).toLocaleString()+'</text>');
+    }
+    /* 横轴刻度（年） */
+    var yearStep=Math.max(1,Math.round(horizon/12/5));
+    for(var yy=0;yy<=horizon/12;yy+=yearStep){
+      parts.push('<text x="'+X(yy*12).toFixed(1)+'" y="'+(my+ph+20)+'" text-anchor="middle" font-size="11" fill="var(--ink-sub)">第'+yy+'年</text>');
+    }
+    /* 支出线（缓降示意：取平稳直线） */
+    parts.push('<line x1="'+mx+'" y1="'+Y(spend)+'" x2="'+(mx+pw)+'" y2="'+Y(spend)+'" stroke="var(--accent2)" stroke-width="2"/>');
+    /* 投资收入折线 */
+    var pl='';
+    for(var k=0;k<=horizon && k<pts.length;k++){
+      pl+=(k? ' L':'M')+X(k).toFixed(1)+','+Y(pts[k]).toFixed(1);
+    }
+    parts.push('<path d="'+pl+'" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linejoin="round"/>');
+    /* 交叉点：空心圆＋标注 */
+    if(cross>=0&&cross<=horizon){
+      var cx=X(cross),cy=Y(spend);
+      parts.push('<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="6" fill="none" stroke="var(--accent)" stroke-width="2.4"/>');
+      parts.push('<text x="'+cx.toFixed(1)+'" y="'+(cy-14).toFixed(1)+'" text-anchor="middle" font-size="13" fill="var(--accent)" font-weight="bold">交叉跨越点</text>');
+    }
+    /* 图例 */
+    parts.push('<text x="'+(mx+pw-170)+'" y="'+(my-12)+'" font-size="12" fill="var(--accent2)">— 月支出 '+Math.round(spend).toLocaleString()+'</text>');
+    parts.push('<text x="'+(mx+pw-320)+'" y="'+(my-12)+'" font-size="12" fill="var(--accent)">— 月投资收入（年化 '+$('#vRet').textContent+'）</text>');
+    parts.push('<text x="'+mx+'" y="'+(Hh-8)+'" font-size="11" fill="var(--ink-sub)">横轴：时间　纵轴：每月金额　公式：（资本 × 当前长期利率）÷ 12 ＝ 月度投资收入</text>');
+    svg.innerHTML=parts.join('');
+  }
+  [cI,cC].forEach(function(el){if(el)el.addEventListener('input',calcCross);});
+  [rS,rR].forEach(function(el){if(el)el.addEventListener('input',calcCross);});
+  calcCross();
+})();
+</script>
+</body>
+</html>

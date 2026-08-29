@@ -461,8 +461,8 @@ export async function fetchMagazineData() {
     if (env.NOTION_TOKEN && env.NOTION_NOTES_DB_ID) {
       const res = await queryDatabaseAll({
         databaseId: env.NOTION_NOTES_DB_ID,
-        pageSize: 50,
-        maxPages: 6,
+        pageSize: 100,
+        maxPages: 10,
         sorts: [{ property: "Date", direction: "descending" }],
       });
       if (res.length > 0) {

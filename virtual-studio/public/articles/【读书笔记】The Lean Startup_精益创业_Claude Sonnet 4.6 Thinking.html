@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《精益创业》学习笔记 · Eric Ries</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #141414;
+    --surface:   #1e1e1e;
+    --surface2:  #252525;
+    --border:    #2e2e2e;
+    --text:      #ddd8ce;
+    --muted:     #888880;
+    --accent:    #e07b39;
+    --accent2:   #c45e1f;
+    --green:     #4caf7d;
+    --green-bg:  #1a2b22;
+    --blue:      #5ba4cf;
+    --blue-bg:   #192433;
+    --red:       #e05c5c;
+    --red-bg:    #2b1919;
+    --gold:      #c9a84c;
+    --gold-bg:   #251f0f;
+    --purple:    #9b7fe8;
+    --purple-bg: #1e1a2e;
+    --serif:     'Noto Serif SC', 'Playfair Display', serif;
+    --sans:      'Noto Sans SC', sans-serif;
+    --mono:      'JetBrains Mono', monospace;
+    --radius:    6px;
+    --max:       860px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--serif);
+    font-weight: 300;
+    line-height: 1.85;
+    padding: 0 1rem 6rem;
+  }
+
+  /* ─── HEADER ─── */
+  .book-header {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 5rem 0 4rem;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .book-header::before {
+    content: 'STUDY NOTES';
+    font-family: var(--mono);
+    font-size: .68rem;
+    letter-spacing: .25em;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 1.6rem;
+  }
+
+  .book-title {
+    font-family: 'Playfair Display', var(--serif);
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    font-weight: 900;
+    font-style: italic;
+    color: #f5f0e8;
+    line-height: 1.1;
+    margin-bottom: .6rem;
+  }
+
+  .book-subtitle {
+    font-family: var(--sans);
+    font-size: .9rem;
+    font-weight: 300;
+    color: var(--muted);
+    letter-spacing: .08em;
+    margin-bottom: 2.4rem;
+  }
+
+  .book-meta {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    font-family: var(--sans);
+    font-size: .78rem;
+    color: var(--muted);
+  }
+
+  .meta-item strong {
+    color: var(--text);
+    font-weight: 500;
+    display: block;
+    font-size: .68rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    margin-bottom: .2rem;
+  }
+
+  /* ─── NAV ─── */
+  .toc {
+    max-width: var(--max);
+    margin: 3rem auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.8rem 2rem;
+  }
+
+  .toc-title {
+    font-family: var(--mono);
+    font-size: .72rem;
+    letter-spacing: .2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+
+  .toc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: .4rem .8rem;
+  }
+
+  .toc-grid a {
+    font-family: var(--sans);
+    font-size: .82rem;
+    color: var(--muted);
+    text-decoration: none;
+    padding: .3rem 0;
+    border-bottom: 1px solid transparent;
+    transition: color .2s, border-color .2s;
+  }
+
+  .toc-grid a:hover { color: var(--accent); border-color: var(--accent); }
+
+  .toc-grid a span {
+    font-family: var(--mono);
+    font-size: .68rem;
+    color: var(--border);
+    margin-right: .4rem;
+  }
+
+  /* ─── MAIN CONTENT ─── */
+  main { max-width: var(--max); margin: 0 auto; }
+
+  /* Section headers */
+  .part-label {
+    font-family: var(--mono);
+    font-size: .68rem;
+    letter-spacing: .3em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-top: 5rem;
+    margin-bottom: .6rem;
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+  }
+
+  .part-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  h2.section-title {
+    font-family: 'Playfair Display', var(--serif);
+    font-size: clamp(1.5rem, 3.5vw, 2.1rem);
+    font-weight: 700;
+    color: #f0ebe0;
+    line-height: 1.25;
+    margin-bottom: 1.6rem;
+  }
+
+  h3.sub-title {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #d8d0c2;
+    margin: 2.4rem 0 .8rem;
+    padding-left: .8rem;
+    border-left: 2px solid var(--accent);
+  }
+
+  h4.mini-title {
+    font-family: var(--sans);
+    font-size: .85rem;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    margin: 1.6rem 0 .6rem;
+  }
+
+  p { margin-bottom: 1rem; font-size: .96rem; }
+
+  strong { font-weight: 600; color: #e8e0d0; }
+
+  em { font-style: italic; color: #c8c0b0; }
+
+  /* ─── BLOCK TYPES ─── */
+
+  /* Core Argument — amber border left */
+  .core {
+    background: var(--surface);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 1.2rem 1.4rem;
+    margin: 1.4rem 0;
+    font-size: .94rem;
+  }
+
+  .core .label {
+    font-family: var(--mono);
+    font-size: .62rem;
+    letter-spacing: .18em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: .5rem;
+  }
+
+  /* Quote */
+  .quote {
+    border: 1px solid var(--gold);
+    background: var(--gold-bg);
+    border-radius: var(--radius);
+    padding: 1.4rem 1.6rem;
+    margin: 1.6rem 0;
+    position: relative;
+  }
+
+  .quote::before {
+    content: '\201C';
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    color: var(--gold);
+    opacity: .4;
+    position: absolute;
+    top: .2rem;
+    left: .8rem;
+    line-height: 1;
+  }
+
+  .quote p {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: .97rem;
+    color: #d4b96a;
+    padding-left: 1.6rem;
+    margin-bottom: .4rem;
+  }
+
+  .quote .attr {
+    font-family: var(--mono);
+    font-size: .68rem;
+    color: var(--muted);
+    padding-left: 1.6rem;
+  }
+
+  /* Insight — green */
+  .insight {
+    background: var(--green-bg);
+    border: 1px solid #2a5040;
+    border-radius: var(--radius);
+    padding: 1.2rem 1.4rem;
+    margin: 1.4rem 0;
+  }
+
+  .insight .label {
+    font-family: var(--mono);
+    font-size: .62rem;
+    letter-spacing: .18em;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: .5rem;
+  }
+
+  .insight p { font-size: .93rem; color: #a8d4b8; }
+
+  /* Cross-domain — blue */
+  .cross {
+    background: var(--blue-bg);
+    border: 1px solid #2a4060;
+    border-radius: var(--radius);
+    padding: 1.2rem 1.4rem;
+    margin: 1.4rem 0;
+  }
+
+  .cross .label {
+    font-family: var(--mono);
+    font-size: .62rem;
+    letter-spacing: .18em;
+    color: var(--blue);
+    text-transform: uppercase;
+    margin-bottom: .5rem;
+  }
+
+  .cross p { font-size: .93rem; color: #9ac4e4; }
+
+  /* Critical — red */
+  .critical {
+    background: var(--red-bg);
+    border: 1px solid #5a2a2a;
+    border-radius: var(--radius);
+    padding: 1.2rem 1.4rem;
+    margin: 1.4rem 0;
+  }
+
+  .critical .label {
+    font-family: var(--mono);
+    font-size: .62rem;
+    letter-spacing: .18em;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: .5rem;
+  }
+
+  .critical p { font-size: .93rem; color: #e0a0a0; }
+
+  /* Concept card */
+  .concept {
+    background: var(--purple-bg);
+    border: 1px solid #3a2a5a;
+    border-radius: var(--radius);
+    padding: 1.2rem 1.4rem;
+    margin: 1.4rem 0;
+  }
+
+  .concept .label {
+    font-family: var(--mono);
+    font-size: .62rem;
+    letter-spacing: .18em;
+    color: var(--purple);
+    text-transform: uppercase;
+    margin-bottom: .5rem;
+  }
+
+  .concept p { font-size: .93rem; color: #bba8e8; }
+
+  /* ─── DEFINITION LIST ─── */
+  .def-list {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 1.4rem 0;
+  }
+
+  .def-item {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .def-item:last-child { border-bottom: none; }
+
+  .def-term {
+    background: var(--surface2);
+    padding: .8rem 1rem;
+    font-family: var(--sans);
+    font-size: .8rem;
+    font-weight: 500;
+    color: var(--accent);
+    display: flex;
+    align-items: flex-start;
+    padding-top: .85rem;
+  }
+
+  .def-desc {
+    padding: .8rem 1rem;
+    font-size: .87rem;
+    color: var(--text);
+    background: var(--surface);
+  }
+
+  /* ─── COMPARISON TABLE ─── */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .84rem;
+    margin: 1.4rem 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .compare-table th {
+    background: var(--surface2);
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: .72rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: .7rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .compare-table td {
+    padding: .65rem 1rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  .compare-table tr:last-child td { border-bottom: none; }
+
+  .compare-table tr:nth-child(even) td { background: var(--surface); }
+
+  /* ─── LOOP / CYCLE DIAGRAM ─── */
+  .loop-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+    gap: .5rem;
+  }
+
+  .loop-node {
+    background: var(--surface2);
+    border: 1.5px solid var(--accent);
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--sans);
+    font-size: .78rem;
+    font-weight: 500;
+    color: var(--accent);
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .loop-node .node-icon {
+    font-size: 1.3rem;
+    margin-bottom: .3rem;
+  }
+
+  .loop-arrow {
+    font-size: 1.4rem;
+    color: var(--border);
+    flex-shrink: 0;
+  }
+
+  /* ─── PIVOT GRID ─── */
+  .pivot-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: .8rem;
+    margin: 1.4rem 0;
+  }
+
+  .pivot-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: .9rem 1rem;
+  }
+
+  .pivot-card .name {
+    font-family: var(--sans);
+    font-size: .78rem;
+    font-weight: 500;
+    color: var(--accent);
+    margin-bottom: .35rem;
+  }
+
+  .pivot-card .desc {
+    font-size: .83rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ─── ENGINE OF GROWTH ─── */
+  .engine-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1.4rem 0;
+  }
+
+  .engine-card {
+    border-radius: var(--radius);
+    padding: 1.2rem;
+    text-align: center;
+  }
+
+  .engine-card.viral   { background: #1e2e20; border: 1px solid #3a5a3c; }
+  .engine-card.sticky  { background: #1e1e2e; border: 1px solid #3a3a5a; }
+  .engine-card.paid    { background: #2e2010; border: 1px solid #5a4020; }
+
+  .engine-card .e-icon { font-size: 2rem; margin-bottom: .5rem; }
+  .engine-card .e-name {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: .88rem;
+    color: var(--text);
+    margin-bottom: .5rem;
+  }
+
+  .engine-card .e-key {
+    font-family: var(--mono);
+    font-size: .72rem;
+    color: var(--muted);
+    margin-bottom: .4rem;
+  }
+
+  .engine-card.viral   .e-key { color: #5aaf6a; }
+  .engine-card.sticky  .e-key { color: var(--blue); }
+  .engine-card.paid    .e-key { color: var(--accent); }
+
+  .engine-card .e-desc { font-size: .82rem; color: var(--muted); line-height: 1.6; }
+
+  /* ─── INNOVATION ACCOUNTING ─── */
+  .ia-steps {
+    counter-reset: ia;
+    margin: 1.4rem 0;
+  }
+
+  .ia-step {
+    counter-increment: ia;
+    display: flex;
+    gap: 1rem;
+    margin-bottom: .8rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: .9rem 1rem;
+    align-items: flex-start;
+  }
+
+  .ia-step::before {
+    content: counter(ia);
+    font-family: var(--mono);
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--accent);
+    flex-shrink: 0;
+    width: 1.5rem;
+    padding-top: .05rem;
+  }
+
+  .ia-step p { font-size: .88rem; margin: 0; }
+
+  /* ─── FIVE WHYS DIAGRAM ─── */
+  .five-whys {
+    margin: 1.4rem 0;
+  }
+
+  .why-row {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    margin-bottom: .5rem;
+  }
+
+  .why-badge {
+    font-family: var(--mono);
+    font-size: .68rem;
+    background: var(--accent2);
+    color: #fff;
+    border-radius: 3px;
+    padding: .15rem .4rem;
+    flex-shrink: 0;
+    width: 3.5rem;
+    text-align: center;
+  }
+
+  .why-text {
+    font-size: .85rem;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: .5rem .8rem;
+    flex: 1;
+    line-height: 1.5;
+  }
+
+  .why-arrow {
+    color: var(--muted);
+    font-size: .8rem;
+    padding-left: 4rem;
+    margin-bottom: .4rem;
+  }
+
+  /* ─── DIALOGUE BOX ─── */
+  .dialogue {
+    border: 1px solid #3a3a4a;
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 1.6rem 0;
+  }
+
+  .dialogue-header {
+    background: #252535;
+    padding: .6rem 1rem;
+    font-family: var(--mono);
+    font-size: .7rem;
+    letter-spacing: .12em;
+    color: var(--purple);
+    text-transform: uppercase;
+  }
+
+  .dialogue-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dialogue-row:last-child { border-bottom: none; }
+
+  .dialogue-cell {
+    padding: .9rem 1rem;
+    font-size: .85rem;
+    line-height: 1.6;
+  }
+
+  .dialogue-cell:first-child {
+    border-right: 1px solid var(--border);
+    color: var(--blue);
+    background: #192233;
+  }
+
+  .dialogue-cell:last-child {
+    color: #c0b8a0;
+    background: var(--surface);
+  }
+
+  .dialogue-cell .who {
+    font-family: var(--mono);
+    font-size: .65rem;
+    color: var(--muted);
+    margin-bottom: .3rem;
+    display: block;
+  }
+
+  /* ─── FORMULA / HIGHLIGHT BOX ─── */
+  .formula {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.4rem;
+    font-family: var(--mono);
+    font-size: .9rem;
+    color: var(--accent);
+    margin: 1.2rem 0;
+    text-align: center;
+    letter-spacing: .05em;
+  }
+
+  /* ─── TAG CLOUD ─── */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin: 1rem 0;
+  }
+
+  .tag {
+    font-family: var(--mono);
+    font-size: .72rem;
+    padding: .2rem .6rem;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  /* ─── FOOTNOTE / ASIDE ─── */
+  aside {
+    font-size: .8rem;
+    color: var(--muted);
+    font-style: italic;
+    border-left: 2px solid var(--border);
+    padding-left: .9rem;
+    margin: 1rem 0 1.4rem;
+  }
+
+  /* ─── DIVIDER ─── */
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 3rem 0;
+  }
+
+  /* ─── REFLECTION ─── */
+  .reflection {
+    background: var(--surface);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 1.2rem 1.4rem;
+    margin: 1.4rem 0;
+  }
+
+  .reflection .label {
+    font-family: var(--mono);
+    font-size: .62rem;
+    letter-spacing: .18em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: .7rem;
+  }
+
+  .reflection ol {
+    margin-left: 1.4rem;
+    font-size: .88rem;
+    color: var(--muted);
+    line-height: 1.9;
+  }
+
+  .reflection ol li { margin-bottom: .2rem; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    max-width: var(--max);
+    margin: 5rem auto 0;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: .68rem;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: .5rem;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 600px) {
+    .def-item { grid-template-columns: 1fr; }
+    .def-term { border-bottom: 1px solid var(--border); }
+    .dialogue-row { grid-template-columns: 1fr; }
+    .dialogue-cell:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+    .loop-diagram { flex-direction: column; }
+    .loop-arrow { transform: rotate(90deg); }
+    .engine-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ─── SCROLL ANIMATION ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .book-header { animation: fadeUp .6s ease both; }
+  main > * { animation: fadeUp .5s ease both; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ HEADER -->
+<header class="book-header">
+  <div class="book-title">精益创业</div>
+  <div class="book-subtitle">THE LEAN STARTUP · Eric Ries · 2011（中文版 2012）</div>
+  <div class="book-meta">
+    <div class="meta-item"><strong>作者</strong>埃里克·莱斯 Eric Ries</div>
+    <div class="meta-item"><strong>领域</strong>创业管理 · 产品开发</div>
+    <div class="meta-item"><strong>核心方法</strong>Build-Measure-Learn</div>
+    <div class="meta-item"><strong>笔记字数</strong>约 10,000 字</div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════ TOC -->
+<nav class="toc">
+  <div class="toc-title">目录 / Contents</div>
+  <div class="toc-grid">
+    <a href="#overview"><span>01</span>全书概览与作者背景</a>
+    <a href="#part1"><span>02</span>第一部分：愿景</a>
+    <a href="#validated"><span>03</span>经过验证的认知</a>
+    <a href="#loop"><span>04</span>Build-Measure-Learn 循环</a>
+    <a href="#part2"><span>05</span>第二部分：转向</a>
+    <a href="#mvp"><span>06</span>最小化可行产品 MVP</a>
+    <a href="#metrics"><span>07</span>创新核算与虚荣指标</a>
+    <a href="#pivot"><span>08</span>转型还是坚持</a>
+    <a href="#part3"><span>09</span>第三部分：加速</a>
+    <a href="#batch"><span>10</span>批量大小与流程</a>
+    <a href="#engine"><span>11</span>增长引擎</a>
+    <a href="#fivewhy"><span>12</span>五个为什么</a>
+    <a href="#dialogue"><span>13</span>与其他理论的对话</a>
+    <a href="#crossdomain"><span>14</span>跨领域联想</a>
+    <a href="#critique"><span>15</span>批判性重构</a>
+    <a href="#reflection"><span>16</span>个人思考与问题</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ═══════════════════════════════════════════ 01 OVERVIEW -->
+<div class="part-label" id="overview">01 · 全书概览</div>
+<h2 class="section-title">为什么要写这本书？</h2>
+
+<p>埃里克·莱斯是 IMVU 的联合创始人，该公司早年犯了几乎所有传统创业教条鼓励的错误——花大量时间秘密打磨产品、把"客户不懂"当借口拒绝真实反馈，最终接近失败。他从这段经历中提炼出一套方法论，并以丰田生产方式（TPS）中"精益"（Lean）的哲学为母体，将其移植到创业的不确定性环境中。</p>
+
+<div class="core">
+  <div class="label">核心命题</div>
+  <p><strong>创业的最大浪费，不是做了错误的事，而是以极高效率做了一件根本不该做的事。</strong>精益创业的核心任务就是在浪费资源之前，尽快确认（或推翻）关于产品与市场的假设。</p>
+</div>
+
+<p>本书出版于 2011 年，在十余年间催生了数以百万计的追随者和争议，并深刻改变了硅谷乃至全球的产品开发文化。它不是一本讲"如何想出好创意"的书，而是一本讲<strong>「如何在极度不确定的条件下，用科学方法管理创业」</strong>的书。</p>
+
+<h3 class="sub-title">作者的三个核心背景</h3>
+
+<div class="def-list">
+  <div class="def-item">
+    <div class="def-term">IMVU 实践</div>
+    <div class="def-desc">创业失败与自我颠覆的亲身经历，书中大量案例来自此处，包括"把产品导入老社交网络"这个后来被废弃的错误假设。</div>
+  </div>
+  <div class="def-item">
+    <div class="def-term">丰田 TPS</div>
+    <div class="def-desc">精益思想的来源——消除浪费、拉动式生产、单件流、安灯绳（Andon cord）。莱斯将其从制造业翻译到知识工作与软件开发。</div>
+  </div>
+  <div class="def-item">
+    <div class="def-term">史蒂夫·布兰克</div>
+    <div class="def-desc">客户开发（Customer Development）理论的提出者，莱斯在此基础上增加了迭代循环与精益制造的操作体系。</div>
+  </div>
+</div>
+
+<div class="quote">
+  <p>创业就是在极度不确定的条件下，创造新产品和新服务的人类活动。</p>
+  <div class="attr">— Eric Ries，《精益创业》定义性陈述</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ PART 1 -->
+<div class="part-label" id="part1">02 · 第一部分</div>
+<h2 class="section-title">愿景：创业即管理</h2>
+
+<p>莱斯开篇就颠覆了一个常见迷思：人们以为创业成功靠的是激情与直觉，失败则是运气不好。他认为这种叙事遮蔽了真相。创业可以被管理——不是用传统的项目管理方式，而是用一套专门为<strong>极度不确定性</strong>设计的科学方法。</p>
+
+<h3 class="sub-title">创业的"管理危机"</h3>
+<p>传统管理理论假设目标清晰、执行可预测。但初创公司的问题从来不是"怎么把已知的事做好"，而是"我们根本不知道哪些假设是真的"。在这种情况下，传统的里程碑、甘特图、绩效考核全部失灵，因为它们度量的是<strong>「执行确定性任务的效率」</strong>，而不是<strong>「在不确定中学习的速度」</strong>。</p>
+
+<div class="core">
+  <div class="label">关键区分</div>
+  <p>莱斯将"好的执行"（doing the right thing）与"高效的执行"（doing things right）严格区分。大多数创业公司以高效率在做错误的事，精益创业要先确认方向正确，再谈效率。</p>
+</div>
+
+<h3 class="sub-title">初创公司的真正产品是什么？</h3>
+<p>莱斯认为，初创公司的真正产品不是它正在开发的软件或硬件，而是它的<strong>商业模式本身</strong>——一套关于"谁是客户、他们有什么问题、我们的解决方案能否奏效、我们能否以此盈利"的假设体系。因此，初创公司的工作是系统性地<strong>测试并修正这套假设</strong>，直到找到一个可持续的商业模式。</p>
+
+<div class="insight">
+  <div class="label">认知突破</div>
+  <p>把"商业模式"看作假设系统而非计划，是精益创业哲学最重要的认识论基础。计划假定未来可知；假设则邀请你去验证。</p>
+</div>
+
+<!-- ═══════════════════════════════════════════ VALIDATED LEARNING -->
+<div class="part-label" id="validated">03 · 核心概念</div>
+<h2 class="section-title">经过验证的认知（Validated Learning）</h2>
+
+<p>这是全书最重要的概念之一。莱斯认为，初创公司最有价值的产出不是代码、不是功能、不是用户数，而是<strong>关于顾客行为的、经过科学验证的认知（learning）</strong>。</p>
+
+<div class="formula">
+有效工作 = 能够减少不确定性的工作 = 产生经过验证的认知的工作
+</div>
+
+<p>什么叫"经过验证"？这意味着你的学习来自于<strong>真实客户在真实条件下的真实行为</strong>，而非市场调研报告、焦点小组访谈或内部头脑风暴。用户说他们会买，和他们真的掏钱，是两件截然不同的事。</p>
+
+<div class="compare-table-wrapper">
+<table class="compare-table">
+  <thead>
+    <tr>
+      <th>类型</th>
+      <th>来源</th>
+      <th>可靠性</th>
+      <th>成本</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>经过验证的认知</strong></td>
+      <td>真实用户在真实场景下的行为数据</td>
+      <td>高</td>
+      <td>中高（需要构建与测量）</td>
+    </tr>
+    <tr>
+      <td>口头意向</td>
+      <td>用户访谈、问卷调查</td>
+      <td>低</td>
+      <td>低</td>
+    </tr>
+    <tr>
+      <td>行业分析</td>
+      <td>报告、专家意见</td>
+      <td>极低（过于宏观）</td>
+      <td>中</td>
+    </tr>
+    <tr>
+      <td>内部直觉</td>
+      <td>创始人/团队的感受</td>
+      <td>不稳定</td>
+      <td>零</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 class="sub-title">IMVU 案例：一次昂贵的"正确"错误</h3>
+<p>IMVU 团队早期花了几个月时间把虚拟形象系统接入 AIM、MSN 等即时通讯工具，因为他们"确信"用户不愿意切换到新网络。结果上线后，几乎没有用户通过这些接口使用 IMVU。真正的学习是：用户<strong>愿意</strong>切换到全新网络——只要产品本身足够好。这个认知让他们彻底改变了架构，节省了后续无数资源。</p>
+
+<div class="critical">
+  <div class="label">批判性观察</div>
+  <p>莱斯用这个案例证明"我们的假设是错的，早发现才对"。但值得追问：如果他们没有先花几个月构建接口，会有其他方式在更低成本下验证同一假设吗？这正是 MVP 理念要回答的问题。</p>
+</div>
+
+<!-- ═══════════════════════════════════════════ BUILD-MEASURE-LEARN -->
+<div class="part-label" id="loop">04 · 核心框架</div>
+<h2 class="section-title">Build-Measure-Learn 反馈循环</h2>
+
+<p>这是精益创业的核心操作框架。整个创业过程被理解为一个不断循环的反馈回路，而创业公司的首要任务是<strong>尽量缩短这个循环的周期</strong>。</p>
+
+<div class="loop-diagram">
+  <div class="loop-node">
+    <div class="node-icon">💡</div>
+    <div>想法<br>IDEAS</div>
+  </div>
+  <div class="loop-arrow">→</div>
+  <div class="loop-node" style="border-color: var(--green);">
+    <div class="node-icon">🔨</div>
+    <div>构建<br>BUILD</div>
+  </div>
+  <div class="loop-arrow">→</div>
+  <div class="loop-node" style="border-color: var(--blue);">
+    <div class="node-icon">📦</div>
+    <div>产品<br>PRODUCT</div>
+  </div>
+  <div class="loop-arrow">→</div>
+  <div class="loop-node" style="border-color: var(--gold);">
+    <div class="node-icon">📊</div>
+    <div>度量<br>MEASURE</div>
+  </div>
+  <div class="loop-arrow">→</div>
+  <div class="loop-node" style="border-color: var(--red);">
+    <div class="node-icon">📈</div>
+    <div>数据<br>DATA</div>
+  </div>
+  <div class="loop-arrow">→</div>
+  <div class="loop-node" style="border-color: var(--purple);">
+    <div class="node-icon">🧠</div>
+    <div>学习<br>LEARN</div>
+  </div>
+</div>
+
+<p>注意循环的运行方向：虽然叫"Build-Measure-Learn"，但<strong>设计应该从 Learn 倒推</strong>——先想清楚"我们需要学习什么"，再决定"为了学习这个，我们需要度量什么"，最后才是"为了度量，我们需要构建什么"。这与传统的"先做再看结果"的逻辑完全相反。</p>
+
+<div class="insight">
+  <div class="label">逆向设计原则</div>
+  <p>大多数团队从 Build 出发（因为工程师喜欢构建）。精益创业要求从 Learn 出发，倒推到最小化的 Build。这在认知上是一个巨大的颠倒。</p>
+</div>
+
+<h3 class="sub-title">循环的速度为什么重要？</h3>
+<p>在不确定性极高的环境中，每转一圈就意味着一次假设的验证或推翻。速度越快，单位时间内的学习量越多，找到正确方向的概率就越高。同时，更快的循环意味着在资源耗尽之前还有更多次"重来"的机会——这在创业语境中几乎等于生死之差。</p>
+
+<div class="cross">
+  <div class="label">跨领域联想 · 科学哲学</div>
+  <p>Build-Measure-Learn 与卡尔·波普尔（Karl Popper）的<strong>证伪主义</strong>高度同构：好的科学理论必须可被证伪，好的创业假设也必须能被证伪。MVP 就是波普尔意义上的"实验"，目的不是证明假设正确，而是尽快找出它的边界和缺陷。</p>
+</div>
+
+<!-- ═══════════════════════════════════════════ PART 2 -->
+<div class="part-label" id="part2">05 · 第二部分概述</div>
+<h2 class="section-title">转向：在不确定中驾驶</h2>
+
+<p>如果说第一部分建立了精益创业的哲学，第二部分则提供了操作工具箱。它回答了三个问题：用什么来测试假设（MVP）、用什么来判断进展（创新核算）、当结果不理想时如何决策（转型还是坚持）。</p>
+
+<!-- ═══════════════════════════════════════════ MVP -->
+<div class="part-label" id="mvp">06 · 核心工具</div>
+<h2 class="section-title">最小化可行产品（MVP）</h2>
+
+<p>MVP 是精益创业中最被滥用、也最被误解的概念。莱斯对 MVP 的定义非常精确：</p>
+
+<div class="core">
+  <div class="label">定义</div>
+  <p><strong>最小化可行产品（MVP）</strong>是这样一个版本的产品，它能用最少的力气和最短的开发时间，完成一个完整的 Build-Measure-Learn 循环。它的目的不是"交付一个可用的产品"，而是<strong>以最低成本测试最重要的假设</strong>。</p>
+</div>
+
+<p>MVP 的"最小化"不等于粗糙或低质量，而是指"恰好足够验证假设所需的最小功能集"。一个过于完整的 MVP 浪费了时间；一个过于简陋以至于无法测试核心价值主张的 MVP 则没有意义。</p>
+
+<h3 class="sub-title">MVP 的经典形态</h3>
+
+<div class="def-list">
+  <div class="def-item">
+    <div class="def-term">视频 MVP</div>
+    <div class="def-desc"><strong>案例：Dropbox</strong>。德鲁·休斯顿在任何代码存在之前，制作了一段演示视频，介绍产品概念。隔夜注册量从 5,000 暴涨到 75,000。这验证了"存在真实需求"这一核心假设，且几乎零成本。</div>
+  </div>
+  <div class="def-item">
+    <div class="def-term">礼宾式 MVP</div>
+    <div class="def-desc"><strong>案例：Zappos</strong>。尼克·斯文姆不建仓库，先在网上卖鞋，有人下单就去实体店买后邮寄。这验证了"人们愿意在网上买鞋"的假设，以极低成本、极高真实性。</div>
+  </div>
+  <div class="def-item">
+    <div class="def-term">绿野仙踪 MVP</div>
+    <div class="def-desc">前端展示"自动化系统"，后台实际由人工完成。用户体验到的是"产品"，而团队学到的是"用户是否真的需要这个自动化"，以及"自动化的规格应该是什么"。</div>
+  </div>
+  <div class="def-item">
+    <div class="def-term">落地页 MVP</div>
+    <div class="def-desc">搭建一个产品介绍页面，收集电子邮件地址或预购意向，以此测量需求是否存在，在实际产品开发之前就完成第一次验证。</div>
+  </div>
+  <div class="def-item">
+    <div class="def-term">单一功能 MVP</div>
+    <div class="def-desc">只构建核心价值主张的最核心功能，去掉一切"锦上添花"的部分，直接测试用户是否为这个核心功能买单或持续使用。</div>
+  </div>
+</div>
+
+<h3 class="sub-title">MVP 的常见误解</h3>
+
+<div class="critical">
+  <div class="label">批判性观察</div>
+  <p>"MVP"概念被广泛误用。最常见的误用是把 MVP 等同于"第一个版本"，于是团队拿着一个功能不完整的产品说"这是我们的 MVP"，但从未明确说清楚它要验证哪个具体假设，也没有预先定义"怎样的结果算验证通过"。这样的 MVP 只是一个借口，而不是科学实验。</p>
+</div>
+
+<div class="insight">
+  <div class="label">操作要点</div>
+  <p>设计 MVP 之前必须先回答三个问题：① 我们最担心哪个假设是错的？② 什么样的用户行为数据能够证伪它？③ 我们能接受多低质量的信号？答不上来，就还没有资格开始构建。</p>
+</div>
+
+<h3 class="sub-title">MVP 与品牌/声誉风险</h3>
+<p>莱斯也承认，并非所有情境都适合激进的 MVP 策略。在某些高度监管的行业（如医疗、金融）或品牌积累极其脆弱的早期阶段，过于粗糙的 MVP 可能造成不可逆的声誉损失。他建议在这些情况下，把 MVP 限定在一个小的、可控的用户群体中测试，并保持透明度（明确告知用户"这是一个早期实验"）。</p>
+
+<!-- ═══════════════════════════════════════════ METRICS -->
+<div class="part-label" id="metrics">07 · 创新核算</div>
+<h2 class="section-title">创新核算与虚荣指标</h2>
+
+<p>创业公司最大的认知陷阱之一，就是被一些看起来好看、但实际上无法指导决策的数据所蒙蔽。莱斯将其命名为<strong>虚荣指标（Vanity Metrics）</strong>。</p>
+
+<h3 class="sub-title">虚荣指标 vs. 可执行指标</h3>
+
+<table class="compare-table">
+  <thead>
+    <tr>
+      <th>类型</th>
+      <th>特征</th>
+      <th>典型例子</th>
+      <th>问题所在</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong style="color: var(--red)">虚荣指标</strong></td>
+      <td>只涨不跌、让人感觉良好</td>
+      <td>累计注册用户数、总下载量、总浏览量</td>
+      <td>无法区分好行为与坏行为，无法指导改变</td>
+    </tr>
+    <tr>
+      <td><strong style="color: var(--green)">可执行指标</strong></td>
+      <td>可拆分、可归因、可行动</td>
+      <td>每日活跃用户留存率、分群转化漏斗、LTV/CAC</td>
+      <td>（正确的指标，没有这类问题）</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="quote">
+  <p>如果你不能失败，你就无法学习。</p>
+  <div class="attr">— Eric Ries，关于可执行指标的隐含逻辑</div>
+</div>
+
+<h3 class="sub-title">同期群分析（Cohort Analysis）</h3>
+<p>莱斯强烈推荐同期群分析作为核心工具。与其看"总用户数"，不如看"2 月注册的用户，到 3 月还有多少人在活跃"。这种分析能揭示产品改进是否真正在提升核心指标，而不仅仅是因为拉新用户更多所以总数更大。</p>
+
+<div class="insight">
+  <div class="label">实操意义</div>
+  <p>同期群分析的本质是<strong>将时间维度引入数据</strong>。没有时间维度的数据往往是虚荣的；加入时间维度后，你才能看到"产品究竟在变好还是变坏"。</p>
+</div>
+
+<h3 class="sub-title">创新核算的三个里程碑</h3>
+<p>莱斯提出，初创公司应该用"创新核算"替代传统的财务核算。它包含三个步骤：</p>
+
+<div class="ia-steps">
+  <div class="ia-step">
+    <p><strong>建立基准点：</strong>用 MVP 获取真实的当前数据，哪怕结果惨不忍睹。这是你的"起点快照"——它告诉你真实情况，而非你希望的情况。</p>
+  </div>
+  <div class="ia-step">
+    <p><strong>朝理想状态调整引擎：</strong>通过一系列优化实验，尝试将核心指标向理想状态推进。每次改动都记录效果，区分哪些改动真正起了作用。</p>
+  </div>
+  <div class="ia-step">
+    <p><strong>转型还是坚持：</strong>如果经过充分的优化实验，核心指标仍然没有向理想状态移动，这是一个明确的信号：当前的基本假设可能有误，需要更大的转变（转型），而不仅仅是更多的优化。</p>
+  </div>
+</div>
+
+<div class="cross">
+  <div class="label">跨领域联想 · 统计学</div>
+  <p>创新核算的逻辑与<strong>A/B 测试</strong>和<strong>假设检验</strong>高度一致。莱斯虽未使用统计学术语，但他描述的实验逻辑——预先设定成功标准、收集足够样本、根据结果决策——正是严格的统计实验设计。</p>
+</div>
+
+<!-- ═══════════════════════════════════════════ PIVOT -->
+<div class="part-label" id="pivot">08 · 关键决策</div>
+<h2 class="section-title">转型还是坚持（Pivot or Persevere）</h2>
+
+<p>这是精益创业框架中最具实操价值的决策节点。当创新核算的数据显示，经过充分的优化后核心指标仍未改善，创业者需要面对一个艰难问题：是继续沿当前路径前进（坚持），还是做出根本性的战略改变（转型）？</p>
+
+<h3 class="sub-title">为什么转型决策如此困难？</h3>
+<p>莱斯指出，这个决策之所以艰难，不是因为信息不足，而是因为<strong>心理因素</strong>：沉没成本让人依恋过去的决定；乐观偏见让人相信"再给一点时间就会好的"；创始人的个人身份认同与当前的方向深度绑定。精益创业的创新核算，正是试图用<strong>客观数据替代主观意志</strong>来触发转型决策。</p>
+
+<div class="core">
+  <div class="label">精髓</div>
+  <p>转型不是失败。莱斯将转型定义为<strong>「在保持愿景不变的前提下，改变战略」</strong>。愿景是指南针，战略是当前选择的路径；转型意味着换一条路，而不是放弃目的地。</p>
+</div>
+
+<h3 class="sub-title">十种经典转型形态</h3>
+
+<div class="pivot-grid">
+  <div class="pivot-card">
+    <div class="name">① 放大转型（Zoom-in Pivot）</div>
+    <div class="desc">原产品的一个功能成为全新的产品。把精力聚焦在最有价值的那一点。</div>
+  </div>
+  <div class="pivot-card">
+    <div class="name">② 缩小转型（Zoom-out Pivot）</div>
+    <div class="desc">原来的整个产品成为更大产品的一个功能。扩展范围以提供更完整的价值。</div>
+  </div>
+  <div class="pivot-card">
+    <div class="name">③ 客户群转型（Customer Segment Pivot）</div>
+    <div class="desc">产品解决了真实问题，但目标客户群不对。换一批会真正需要它的人。</div>
+  </div>
+  <div class="pivot-card">
+    <div class="name">④ 客户需求转型（Customer Need Pivot）</div>
+    <div class="desc">深入了解客户后，发现他们的真实问题与最初假设不同，转而解决真实问题。</div>
+  </div>
+  <div class="pivot-card">
+    <div class="name">⑤ 平台转型（Platform Pivot）</div>
+    <div class="desc">从应用转向平台，或从平台转向应用。商业模式结构发生根本改变。</div>
+  </div>
+  <div class="pivot-card">
+    <div class="name">⑥ 业务架构转型（Business Architecture Pivot）</div>
+    <div class="desc">从高利润低销量（B2B复杂销售）转向低利润高销量（消费者），或反之。</div>
+  </div>
+  <div class="pivot-card">
+    <div class="name">⑦ 价值获取转型（Value Capture Pivot）</div>
+    <div class="desc">改变盈利模式——从广告转向订阅，从卖产品转向卖服务等。</div>
+  </div>
+  <div class="pivot-card">
+    <div class="name">⑧ 增长引擎转型（Engine of Growth Pivot）</div>
+    <div class="desc">从病毒式增长转向付费增长，或转向黏性增长，以求更可持续的扩张模式。</div>
+  </div>
+  <div class="pivot-card">
+    <div class="name">⑨ 渠道转型（Channel Pivot）</div>
+    <div class="desc">发现通过不同的销售/分发渠道更能触达目标客户，进行渠道重构。</div>
+  </div>
+  <div class="pivot-card">
+    <div class="name">⑩ 技术转型（Technology Pivot）</div>
+    <div class="desc">用完全不同的技术实现相同的方案，通常是为了获得价格或性能优势。</div>
+  </div>
+</div>
+
+<div class="quote">
+  <p>每一次转型都是一个新的假设，它重新开始 Build-Measure-Learn 循环。</p>
+  <div class="attr">— Eric Ries</div>
+</div>
+
+<aside>延伸案例：Instagram 最初是一款名为 Burbn 的位置签到 + 游戏 + 照片分享综合应用，用户只用照片分享功能——这是一次经典的放大转型，诞生了价值 10 亿美元的产品。</aside>
+
+<!-- ═══════════════════════════════════════════ PART 3 -->
+<div class="part-label" id="part3">09 · 第三部分概述</div>
+<h2 class="section-title">加速：让引擎全速运转</h2>
+
+<p>第三部分从个体公司的层面扩展到组织与系统的层面，讨论当方向找准之后，如何构建一个能够持续学习、快速扩张、并在规模化过程中保持创新能力的组织。</p>
+
+<!-- ═══════════════════════════════════════════ BATCH -->
+<div class="part-label" id="batch">10 · 系统思维</div>
+<h2 class="section-title">批量大小与单件流</h2>
+
+<p>这一章是本书中最具"精益制造"底色的部分，莱斯直接借用了丰田的<strong>单件流（Single-Piece Flow）</strong>概念，并演示了它为何同样适用于知识工作。</p>
+
+<h3 class="sub-title">邮件信封实验</h3>
+<p>莱斯用一个经典思维实验说明问题：假设你需要将 100 封信装入信封、封口、贴邮票，然后邮寄。有两种方式：</p>
+
+<table class="compare-table">
+  <thead>
+    <tr>
+      <th>策略</th>
+      <th>操作方式</th>
+      <th>直觉上的感受</th>
+      <th>实际结果</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>大批量策略</strong></td>
+      <td>先折完 100 封信，再全部装袋，再全部封口，再贴邮票</td>
+      <td>流水线、高效、专业化</td>
+      <td>通常更<strong>慢</strong>，且若最后发现信纸大小不对，100 份全废</td>
+    </tr>
+    <tr>
+      <td><strong>单件流策略</strong></td>
+      <td>一次完成折信、装袋、封口、贴邮票，然后处理下一封</td>
+      <td>看起来"低效"、重复搬运</td>
+      <td>通常更<strong>快</strong>，且发现错误时只需纠正一封</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="insight">
+  <div class="label">反直觉洞见</div>
+  <p>大批量看似高效，实则隐藏了两大成本：① <strong>等待成本</strong>（前序工序的所有半成品等待后序工序）；② <strong>错误传播成本</strong>（错误被大量复制后才被发现）。小批量（极端情况是单件流）虽然表面上增加了"切换"次数，但大幅降低了这两种成本。</p>
+</div>
+
+<h3 class="sub-title">在软件开发中的对应</h3>
+<p>这直接对应了持续集成（Continuous Integration）与持续部署（Continuous Deployment）的哲学：不要等到几周后"集中发布"，而是每天甚至每小时提交小的、可验证的改动。这样，问题在最小范围内被发现，反馈循环最短。</p>
+
+<div class="cross">
+  <div class="label">跨领域联想 · 敏捷开发</div>
+  <p>精益创业与<strong>敏捷开发（Agile/Scrum）</strong>存在重叠但不等同。敏捷解决的是"如何高效构建软件"，精益创业解决的是"如何确认值得构建什么"。两者应该叠加使用：先用精益创业确认方向，再用敏捷高效执行。</p>
+</div>
+
+<!-- ═══════════════════════════════════════════ ENGINE OF GROWTH -->
+<div class="part-label" id="engine">11 · 增长模型</div>
+<h2 class="section-title">增长引擎（Engine of Growth）</h2>
+
+<p>莱斯提出，所有可持续的商业增长都来自三种引擎之一（或其组合）。理解自己的业务运转在哪个引擎上，是制定正确增长策略的前提。</p>
+
+<div class="engine-grid">
+  <div class="engine-card viral">
+    <div class="e-icon">🔄</div>
+    <div class="e-name">病毒式增长引擎</div>
+    <div class="e-key">关键指标：病毒系数 K</div>
+    <div class="e-desc">每个新用户平均带来多少个新用户。K > 1 意味着指数级增长；K = 0.9 则只能靠外部投入维持。<br><br>驱动力：产品本身的使用场景强制或激励分享（如 Hotmail 的邮件签名"通过 Hotmail 发送"）。</div>
+  </div>
+  <div class="engine-card sticky">
+    <div class="e-icon">🪝</div>
+    <div class="e-name">黏性增长引擎</div>
+    <div class="e-key">关键指标：留存率 / 流失率</div>
+    <div class="e-desc">通过让用户高度依赖产品来驱动增长。如果留存率高于流失率，用户基数自然积累增长。<br><br>驱动力：习惯形成、数据锁定、切换成本、网络效应。</div>
+  </div>
+  <div class="engine-card paid">
+    <div class="e-icon">💰</div>
+    <div class="e-name">付费增长引擎</div>
+    <div class="e-key">关键指标：LTV / CAC 比率</div>
+    <div class="e-desc">将一部分用户生命周期价值（LTV）再投入为获客成本（CAC）来购买新用户。只要 LTV > CAC，引擎就能持续运转。<br><br>驱动力：盈利能力和资本效率。</div>
+  </div>
+</div>
+
+<div class="core">
+  <div class="label">战略意义</div>
+  <p>每个引擎都有自己独特的<strong>可执行指标</strong>。运转在病毒引擎上的公司，关注病毒系数；运转在黏性引擎上的，关注每月留存率；运转在付费引擎上的，关注 LTV/CAC 比率。用错了指标，就像用车速表来开飞机。</p>
+</div>
+
+<div class="critical">
+  <div class="label">批判性反思</div>
+  <p>这个三引擎框架颇为简洁，但现实中大多数成功的消费产品同时运转多个引擎——微信既有病毒属性（通讯工具强制拉新），也有极强黏性（数据、关系链），还有付费（小程序、广告）。莱斯承认引擎可以叠加，但对于"三引擎叠加时如何分配资源"着墨不多，留下了一个需要从其他框架（如 Hamilton Helmer 的"7种护城河"）补充的空白。</p>
+</div>
+
+<!-- ═══════════════════════════════════════════ FIVE WHYS -->
+<div class="part-label" id="fivewhy">12 · 组织工具</div>
+<h2 class="section-title">五个为什么（Five Whys）</h2>
+
+<p>从丰田生产系统直接借用的工具。当团队遇到问题时，连续问五次"为什么"，直到找到根本原因，而不是停留在表面症状上进行修补。</p>
+
+<h3 class="sub-title">案例演示：网站宕机</h3>
+
+<div class="five-whys">
+  <div class="why-row">
+    <div class="why-badge">问题</div>
+    <div class="why-text">网站对新用户崩溃了</div>
+  </div>
+  <div class="why-arrow">↳ 为什么？</div>
+  <div class="why-row">
+    <div class="why-badge">Why 1</div>
+    <div class="why-text">某个数据库查询超时</div>
+  </div>
+  <div class="why-arrow">↳ 为什么？</div>
+  <div class="why-row">
+    <div class="why-badge">Why 2</div>
+    <div class="why-text">新版本代码引入了低效查询</div>
+  </div>
+  <div class="why-arrow">↳ 为什么？</div>
+  <div class="why-row">
+    <div class="why-badge">Why 3</div>
+    <div class="why-text">工程师没有在生产环境容量下测试</div>
+  </div>
+  <div class="why-arrow">↳ 为什么？</div>
+  <div class="why-row">
+    <div class="why-badge">Why 4</div>
+    <div class="why-text">没有针对大流量的自动化测试流程</div>
+  </div>
+  <div class="why-arrow">↳ 为什么？</div>
+  <div class="why-row">
+    <div class="why-badge">Why 5</div>
+    <div class="why-text">团队过于注重快速发布，一直没有投资建立测试基础设施</div>
+  </div>
+</div>
+
+<p>注意根本原因是<strong>组织决策</strong>，而非技术问题。修复低层问题（修复查询）只能防止这一次崩溃；修复根本原因（建立测试文化与基础设施）才能防止整类问题。</p>
+
+<div class="insight">
+  <div class="label">五个为什么的正确使用姿势</div>
+  <p>莱斯特别强调：五个为什么应该<strong>与解决方案一一对应</strong>。找到了五层原因，就应该产生五个对应层级的解决措施，而不是只修复最表层或最底层的原因。并且，修复的力度应该与问题的严重程度成正比——第一次发生，小修复；反复发生，必须在根本层面投资。</p>
+</div>
+
+<div class="critical">
+  <div class="label">批判性观察</div>
+  <p>五个为什么的一个著名缺陷是<strong>"为什么"的路径不唯一</strong>。同一个问题，不同的团队可能沿着不同的"为什么链"走到完全不同的根本原因，从而产生不同的解决方案。Toyota 的实践中，五个为什么通常配合鱼骨图（石川图）使用，以系统性地穷举可能路径。莱斯对这一局限性没有充分讨论。</p>
+</div>
+
+<h3 class="sub-title">五个为什么与组织文化</h3>
+<p>莱斯强调，五个为什么的深层价值不在于它是一种"分析工具"，而在于它强制团队建立一种<strong>系统性问责文化</strong>：问题的根本原因通常是系统性的，而非个人的过失。"归咎于人"是一种浪费——它既不能防止问题重复，也会破坏心理安全感。五个为什么把追责对象从"人"转向"流程与系统"，这是一种更成熟的组织学习方式。</p>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════ DIALOGUE -->
+<div class="part-label" id="dialogue">13 · 理论对话</div>
+<h2 class="section-title">与不同理论的对话</h2>
+
+<div class="dialogue">
+  <div class="dialogue-header">精益创业 ↔ 其他理论框架的张力与互补</div>
+  <div class="dialogue-row">
+    <div class="dialogue-cell">
+      <span class="who">精益创业</span>
+      先验证，再执行。商业计划是假设清单，不是路线图。
+    </div>
+    <div class="dialogue-cell">
+      <span class="who">传统商业计划（MBA 范式）</span>
+      详细规划是减少风险的方式。五年财务预测、Porter 五力分析、完整 go-to-market 计划。
+    </div>
+  </div>
+  <div class="dialogue-row">
+    <div class="dialogue-cell">
+      <span class="who">精益创业</span>
+      "走出办公室"，接触真实客户，数据说话。反对封闭式开发。
+    </div>
+    <div class="dialogue-cell">
+      <span class="who">乔布斯主义</span>
+      "消费者不知道自己想要什么，直到你给他们看"。高度封闭开发、精心设计的发布仪式。
+    </div>
+  </div>
+  <div class="dialogue-row">
+    <div class="dialogue-cell">
+      <span class="who">精益创业</span>
+      专注于可重复、可扩展的商业模式，而非愿景。适合早期探索阶段。
+    </div>
+    <div class="dialogue-cell">
+      <span class="who">颠覆式创新（克里斯滕森）</span>
+      聚焦于低端破坏者如何颠覆既有市场结构。更关注市场动态与行业结构，而非单一公司的运营方法论。
+    </div>
+  </div>
+  <div class="dialogue-row">
+    <div class="dialogue-cell">
+      <span class="who">精益创业</span>
+      "先完成，再完美"，以学习速度优先。接受暂时的低质量作为实验成本。
+    </div>
+    <div class="dialogue-cell">
+      <span class="who">精益制造（TPS 原教旨）</span>
+      追求零缺陷、零浪费、标准化作业。"质量内建"不允许交付有缺陷的产品到下游。
+    </div>
+  </div>
+  <div class="dialogue-row">
+    <div class="dialogue-cell">
+      <span class="who">精益创业</span>
+      用数据驱动决策，破除"高管直觉"神话。
+    </div>
+    <div class="dialogue-cell">
+      <span class="who">《从优秀到卓越》（柯林斯）</span>
+      强调面对残酷现实的同时保持信念——与精益创业的"数据优先"有共鸣，但柯林斯更强调领导力叙事与长期价值观的力量。
+    </div>
+  </div>
+</div>
+
+<div class="concept">
+  <div class="label">综合判断</div>
+  <p>精益创业与乔布斯主义的冲突是表面的：它们适用于不同的情境。精益创业最适合<strong>假设密度高、不确定性极大</strong>的早期探索阶段；乔布斯式的愿景主导方式更适合<strong>方向已经清晰、需要高质量执行</strong>的阶段。真正的实践者应该能在两种模式之间灵活切换。</p>
+</div>
+
+<!-- ═══════════════════════════════════════════ CROSS DOMAIN -->
+<div class="part-label" id="crossdomain">14 · 跨领域联想</div>
+<h2 class="section-title">精益创业的跨领域回响</h2>
+
+<h3 class="sub-title">军事战略：博伊德的 OODA 循环</h3>
+<div class="cross">
+  <div class="label">联想 · 军事理论</div>
+  <p>美国空军上校约翰·博伊德（John Boyd）提出的<strong>OODA 循环</strong>（Observe → Orient → Decide → Act）与 Build-Measure-Learn 在结构上几乎同构。博伊德的核心主张是：<strong>谁能让循环运转得更快，谁就能压制对手</strong>——在空战中是占据优势，在商战中则是先于竞争对手找到有效的商业模式。两者都把"循环速度"作为竞争优势的核心来源。</p>
+</div>
+
+<h3 class="sub-title">认知科学：双系统理论</h3>
+<div class="cross">
+  <div class="label">联想 · 认知心理学</div>
+  <p>卡尼曼（Kahneman）的<strong>系统 1（快思考）与系统 2（慢思考）</strong>框架可以解释为什么虚荣指标如此诱人——系统 1 会迅速被"总用户数上升"这类视觉刺激满足，而真正有意义的同期群分析需要系统 2 的慢速反思。精益创业本质上是要在组织层面强制启动系统 2，让数据分析取代直觉反应。</p>
+</div>
+
+<h3 class="sub-title">医学：循证医学（EBM）</h3>
+<div class="cross">
+  <div class="label">联想 · 医学方法论</div>
+  <p>循证医学（Evidence-Based Medicine）要求临床决策必须基于系统性研究证据，而非医生的个人经验或权威意见。精益创业是将循证精神引入商业决策：每一个关于产品的决策都应该有可测量的依据，"感觉对"不够用，"数据说话"才算数。两者都是对领域内长期存在的<strong>权威崇拜与经验主义</strong>的科学性反叛。</p>
+</div>
+
+<h3 class="sub-title">生物进化：表现型可塑性</h3>
+<div class="cross">
+  <div class="label">联想 · 进化生物学</div>
+  <p>生物学中，<strong>表现型可塑性</strong>（phenotypic plasticity）指同一基因型在不同环境下能表达出不同表现型的能力——这是生物在不确定环境中提高适应性的关键机制。精益创业倡导的"转型"机制与此同构：<strong>愿景（基因型）保持不变，战略执行（表现型）根据环境反馈灵活调整</strong>。那些坚守单一战略无论环境如何变化的公司，在进化论意义上缺乏适应性，更容易灭绝。</p>
+</div>
+
+<h3 class="sub-title">设计思维：快速原型与用户测试</h3>
+<div class="cross">
+  <div class="label">联想 · 设计学</div>
+  <p>IDEO 的设计思维（Design Thinking）与精益创业高度共鸣，尤其是"快速原型化"与"用户测试"环节。但两者的差异也值得关注：设计思维更关注<strong>同理心与定性理解</strong>，善于发现隐藏的用户需求；精益创业更关注<strong>可量化的行为数据</strong>，要求数字层面的假设验证。完整的产品开发流程应该先用设计思维发现正确的问题，再用精益创业验证解决方案。</p>
+</div>
+
+<!-- ═══════════════════════════════════════════ CRITIQUE -->
+<div class="part-label" id="critique">15 · 批判性重构</div>
+<h2 class="section-title">对精益创业的批判与深化</h2>
+
+<h3 class="sub-title">批评一：适用范围的边界问题</h3>
+<div class="critical">
+  <div class="label">批判</div>
+  <p>精益创业对<strong>大周期、高确定性、基础科学驱动的创新</strong>效力有限。SpaceX 早期无法用 MVP 验证"重复使用火箭是否可行"——这需要十年以上的基础研发，任何 MVP 在技术可行性明确之前都缺乏意义。同样，生物技术、核聚变、量子计算等领域，假设验证的成本可能本身就高达数亿美元，与"最低成本 MVP"的逻辑相悖。</p>
+</div>
+<p>莱斯对此的回应是：这类技术风险（technology risk）与他讨论的<strong>市场风险</strong>（market risk）和<strong>客户风险</strong>（customer risk）性质不同。精益创业专门针对后两者——它不能降低你不知道某种材料是否导电的风险，但可以降低你不知道用户是否会为某种产品付钱的风险。</p>
+
+<h3 class="sub-title">批评二：数据压制愿景的危险</h3>
+<div class="critical">
+  <div class="label">批判</div>
+  <p>过度信赖 A/B 测试和量化数据，可能导致<strong>产品"优化陷阱"</strong>——每一步都沿着数据最优化的方向小步迭代，最终走向一个局部最优解，却永远无法到达真正颠覆性的目的地。YouTube 的推荐算法极度优化了"用户停留时间"这一数据指标，结果创造出了严重的社会问题。数据优化是有价值观假设的，而这个假设本身很少被精益框架质疑。</p>
+</div>
+<div class="insight">
+  <div class="label">深化建议</div>
+  <p>精益创业需要一个互补的<strong>"愿景保护层"</strong>：在进入 Build-Measure-Learn 循环之前，团队应该先确立哪些原则是不能被数据优化所侵蚀的（产品的伦理边界、用户体验的底线质量等）。这一点莱斯没有充分展开。</p>
+</div>
+
+<h3 class="sub-title">批评三：对"学习"的定义过于狭窄</h3>
+<div class="critical">
+  <div class="label">批判</div>
+  <p>莱斯所定义的"验证认知"几乎完全基于<strong>短期行为数据</strong>（用户今天是否付费、是否留存）。但有些真正重要的学习是长周期的——用户今天不付钱，不意味着他们未来不会；某个功能今天留存率不高，但在用户教育完成后可能成为核心价值。精益创业的快速循环偏向优化短期信号，可能系统性地低估需要培育的市场。</p>
+</div>
+<p>这与 Peter Thiel 在《从零到一》中的批评相呼应：<em>他认为"不断迭代"和"快速测试"的思维会阻止真正的颠覆性创新，因为颠覆性创新往往在被数据验证之前，看起来是愚蠢的。</em></p>
+
+<h3 class="sub-title">批评四：文化先决条件被低估</h3>
+<div class="critical">
+  <div class="label">批判</div>
+  <p>精益创业需要一种特定的组织文化：高心理安全感（人们愿意承认错误）、去政治化的数据解读（数据不是用来支持领导意志的）、对"转型"的去污名化（转型不等于失败）。莱斯在后期章节有所提及，但没有系统性地讨论<strong>如何在大型或传统组织中建立这种文化先决条件</strong>。大量精益创业"推广失败"案例的根本原因，正是把方法论移植到了不兼容的文化土壤中。</p>
+</div>
+
+<div class="concept">
+  <div class="label">综合评价</div>
+  <p>精益创业是一套<strong>适用于特定生命周期阶段（早期探索）和特定不确定性类型（市场与客户风险）</strong>的工具集。它的价值在于将科学思维引入了长期被"激情与直觉"主导的创业文化。它的局限在于，它是一张解决特定问题的地图——用好了，它能帮你找到路；但如果你把它当成描述所有地形的万能地图，就会在它无法覆盖的领域迷失。</p>
+</div>
+
+<!-- ═══════════════════════════════════════════ REFLECTION -->
+<div class="part-label" id="reflection">16 · 个人思考</div>
+<h2 class="section-title">读后思考问题</h2>
+
+<div class="reflection">
+  <div class="label">沉思与内化</div>
+  <ol>
+    <li>你当前最重要的产品/项目/决策中，最关键的一个<strong>未经验证的假设</strong>是什么？你是否已经把它清晰地写下来？</li>
+    <li>你的团队现在关注的核心指标是否是<strong>可执行指标</strong>（能够归因、能够驱动决策），还是虚荣指标（只会增长、无法指导行动）？</li>
+    <li>如果你现在的产品方向需要转型，你凭借什么来做这个决定？你是否有一套清晰的<strong>触发转型的判断标准</strong>，还是主要靠感觉？</li>
+    <li>你上一次 Build-Measure-Learn 循环花了多长时间？是什么在阻碍循环加速（技术债、流程、文化、审批）？</li>
+    <li>在你所在的行业或产品领域，精益创业哪些部分<strong>不适用</strong>？为什么？适用范围的边界在哪里？</li>
+    <li>你是否曾经用数据来<strong>支持一个已经决定了的结论</strong>，而不是真正地让数据指导结论？这与精益创业的精神有什么本质区别？</li>
+    <li>精益创业强调"愿景不变，战略灵活"——你如何判断一次改变是<strong>战略调整（转型）</strong>还是<strong>愿景动摇（放弃）</strong>？两者的边界在哪里？</li>
+  </ol>
+</div>
+
+<h3 class="sub-title">最值得被记住的三个核心洞见</h3>
+
+<div class="quote">
+  <p>初创公司存在的意义，不是执行一个计划，而是发现一个可行的计划。</p>
+  <div class="attr">— 对全书最精炼的一句总结（笔者重述莱斯核心思想）</div>
+</div>
+
+<div class="quote">
+  <p>浪费不是"做了不好的事"，而是"在还没有验证之前，以完美的效率做了大量的事"。</p>
+  <div class="attr">— 精益创业对"效率"的根本性再定义</div>
+</div>
+
+<div class="quote">
+  <p>Build-Measure-Learn 循环的核心问题不是"我们能构建什么"，而是"我们应该构建什么"——而这个问题只能通过真实的市场反馈来回答。</p>
+  <div class="attr">— 对工程驱动文化的根本性挑战</div>
+</div>
+
+<div class="tags">
+  <span class="tag">#精益创业</span>
+  <span class="tag">#MVP</span>
+  <span class="tag">#Build-Measure-Learn</span>
+  <span class="tag">#创新核算</span>
+  <span class="tag">#转型</span>
+  <span class="tag">#增长引擎</span>
+  <span class="tag">#五个为什么</span>
+  <span class="tag">#验证认知</span>
+  <span class="tag">#虚荣指标</span>
+  <span class="tag">#精益思想</span>
+  <span class="tag">#产品管理</span>
+  <span class="tag">#Eric Ries</span>
+</div>
+
+</main>
+
+<footer>
+  <span>《精益创业》读书笔记 · Lean Startup Study Notes</span>
+  <span>Eric Ries · 2011 · 约 10,000 字笔记</span>
+</footer>
+
+</body>
+</html>

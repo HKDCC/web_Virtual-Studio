@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>读书笔记 · 聪明的投资者</title>
+<style>
+:root{--bg:#faf9f7;--card:#fff;--text:#2c2c2c;--tl:#6b6b6b;--a:#1a4a6b;--al:#e8f0f7;--ad:#0d3350;--w:#b5651d;--wl:#fdf3ec;--r:#a63d40;--rl:#fdf0ef;--g:#3a6b4f;--gl:#e8f2ec;--go:#b08d3a;--gol:#fdf8ec;--p:#6b3a8a;--pl:#f3ebf8;--bo:#e5e2de;--sh:0 1px 3px rgba(0,0,0,.06),0 4px 12px rgba(0,0,0,.04);--ra:10px}
+*{margin:0;padding:0;box-sizing:border-box}html{font-size:16px;scroll-behavior:smooth}
+body{font-family:-apple-system,"Noto Serif SC","Source Han Serif SC","Songti SC",Georgia,serif;background:var(--bg);color:var(--text);line-height:1.85;-webkit-font-smoothing:antialiased}
+.cover{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem 1.5rem;background:linear-gradient(165deg,#0d3350,#1a4a6b 50%,#2a5a7b);color:#e8f0f7;position:relative;overflow:hidden}
+.cover::before{content:'';position:absolute;top:-30%;left:-15%;width:70vw;height:70vw;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.03),transparent 70%)}
+.cover-icon{font-size:4rem;margin-bottom:1.5rem;opacity:.85;position:relative}
+.cover h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:700;letter-spacing:.04em;margin-bottom:.4rem;position:relative}
+.cover .en{font-size:1.1rem;opacity:.6;font-style:italic;margin-bottom:1.5rem;position:relative}
+.cover .sub{font-size:1.15rem;opacity:.75;margin-bottom:2.5rem;max-width:28em;position:relative}
+.cover .meta{font-size:.9rem;opacity:.55;line-height:2;position:relative}
+.container{max-width:52rem;margin:0 auto;padding:0 1.5rem}
+section{padding:4rem 0}section+section{border-top:1px solid var(--bo)}
+h2{font-size:1.75rem;font-weight:700;margin-bottom:1.5rem;color:var(--ad);position:relative;padding-left:1.1rem}
+h2::before{content:'';position:absolute;left:0;top:.25em;width:4px;height:1.1em;background:var(--a);border-radius:2px}
+h3{font-size:1.25rem;font-weight:600;margin:2rem 0 .8rem;color:var(--a)}h4{font-size:1.05rem;font-weight:600;margin:1.4rem 0 .5rem}
+p{margin-bottom:1rem}.box{border-radius:var(--ra);padding:1.4rem 1.6rem;margin:1.6rem 0;box-shadow:var(--sh)}
+.bt{font-weight:700;font-size:.95rem;margin-bottom:.6rem;display:flex;align-items:center;gap:.45rem}.box p:last-child{margin-bottom:0}
+.bb{background:var(--al);border-left:4px solid var(--a)}.bb .bt{color:var(--ad)}
+.bw{background:var(--wl);border-left:4px solid var(--w)}.bw .bt{color:var(--w)}
+.br{background:var(--rl);border-left:4px solid var(--r)}.br .bt{color:var(--r)}
+.bg{background:var(--gl);border-left:4px solid var(--g)}.bg .bt{color:var(--g)}
+.bgo{background:var(--gol);border-left:4px solid var(--go)}.bgo .bt{color:#6b5520}
+.bp{background:var(--pl);border-left:4px solid var(--p)}.bp .bt{color:var(--p)}
+blockquote{border-left:3px solid var(--a);margin:1.5rem 0;padding:.8rem 1.4rem;background:var(--al);border-radius:0 var(--ra) var(--ra) 0;font-style:italic;color:var(--ad)}
+blockquote cite{display:block;text-align:right;font-style:normal;font-size:.88rem;margin-top:.4rem;opacity:.7}
+.lc{background:var(--card);border:1px solid var(--bo);border-radius:var(--ra);padding:1.6rem 1.8rem;margin:1.8rem 0;box-shadow:var(--sh);position:relative;border-top:3px solid var(--a)}
+.ln{font-size:.75rem;font-weight:700;color:var(--a);letter-spacing:.06em;margin-bottom:.3rem}
+.lc h4{color:var(--ad);font-size:1.1rem;margin-bottom:.6rem}
+ul,ol{margin:.6rem 0 1rem 1.4rem}li{margin-bottom:.35rem}
+.golden{font-size:1.15rem;font-weight:600;text-align:center;padding:1.8rem 2rem;margin:2rem 0;background:linear-gradient(135deg,var(--gol),#fff9ed);border-radius:var(--ra);border:1px solid #eed9a8;color:#6b5520;line-height:1.9;box-shadow:var(--sh)}
+.golden::before{content:'✦ '}.golden::after{content:' ✦'}
+.cw{margin:2rem 0;text-align:center}.cw canvas{max-width:100%;border-radius:var(--ra);box-shadow:var(--sh)}
+.cc{font-size:.85rem;color:var(--tl);margin-top:.6rem}
+.tw{overflow-x:auto;margin:1.5rem 0}table{width:100%;border-collapse:collapse;font-size:.92rem}
+th{background:var(--a);color:#fff;padding:.7rem 1rem;text-align:left;font-weight:600;white-space:nowrap}
+td{padding:.6rem 1rem;border-bottom:1px solid var(--bo)}tr:nth-child(even) td{background:#fafaf8}
+.tc{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin:1.2rem 0}
+@media(max-width:640px){.tc{grid-template-columns:1fr}}
+.toc{background:var(--card);border:1px solid var(--bo);border-radius:var(--ra);padding:1.6rem 2rem;margin:2rem 0;box-shadow:var(--sh)}
+.toc h3{margin-top:0}.toc ol{margin-left:1.2rem}.toc li{margin-bottom:.4rem}
+.toc a{color:var(--a);text-decoration:none;border-bottom:1px dashed var(--al);transition:border-color .2s}.toc a:hover{border-color:var(--a)}
+.toc-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem 2rem}
+footer{text-align:center;padding:3rem 1.5rem;font-size:.85rem;color:var(--tl);border-top:1px solid var(--bo)}
+@media(max-width:640px){html{font-size:15px}.container{padding:0 1rem}section{padding:2.5rem 0}h2{font-size:1.45rem}.box{padding:1rem 1.2rem}.lc{padding:1.2rem 1.3rem}.golden{font-size:1.05rem;padding:1.2rem 1.4rem}.toc-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="cover">
+<div class="cover-icon">📊</div>
+<h1>聪明的投资者</h1>
+<p class="en">The Intelligent Investor</p>
+<p class="sub">有史以来最伟大的投资经典<br>A Book of Practical Counsel</p>
+<div class="meta">[美] 本杰明·格雷厄姆 (Benjamin Graham) 著<br>贾森·兹威格 (Jason Zweig) 注疏<br><br>深度读书笔记</div>
+</header>
+
+<div class="container">
+
+<section>
+<div class="toc">
+<h3>📑 目录</h3>
+<div class="toc-grid">
+<ol>
+<li><a href="#s1">全书概览与核心定位</a></li>
+<li><a href="#s2">投资与投机：永恒的分野</a></li>
+<li><a href="#s3">投资者与通货膨胀</a></li>
+<li><a href="#s4">百年股市史：数据中的智慧</a></li>
+<li><a href="#s5">防御型投资者的组合策略</a></li>
+<li><a href="#s6">防御型投资者与普通股</a></li>
+<li><a href="#s7">积极型投资者：消极方法</a></li>
+<li><a href="#s8">积极型投资者：积极方法</a></li>
+<li><a href="#s9">市场先生</a></li>
+<li><a href="#s10">基金与顾问</a></li>
+</ol>
+<ol start="11">
+<li><a href="#s11">证券分析入门</a></li>
+<li><a href="#s12">每股收益的陷阱</a></li>
+<li><a href="#s13">股票选择标准</a></li>
+<li><a href="#s14">可转换证券与认股权证</a></li>
+<li><a href="#s15">股东与管理层</a></li>
+<li><a href="#s16">安全边际</a></li>
+<li><a href="#s17">核心图表</a></li>
+<li><a href="#s18">思想对话与跨领域联想</a></li>
+<li><a href="#s19">批判性反思</a></li>
+<li><a href="#s20">个人行动框架</a></li>
+</ol>
+</div>
+</div>
+</section>
+
+<section id="s1">
+<h2>一、全书概览与核心定位</h2>
+<p>《聪明的投资者》首次出版于1949年，是价值投资之父本杰明·格雷厄姆留给世界的最重要遗产。沃伦·巴菲特称其为"有史以来最伟大的投资书籍"，并在序言中写道："在我的血管里，百分之八十流淌的是格雷厄姆的血液。"</p>
+<p>这本书的核心命题极其朴素：<strong>投资的首要任务不是赚钱，而是不亏钱</strong>。格雷厄姆将投资者分为两类——防御型（Defensive）和积极型（Enterprising），为不同精力投入的人提供了截然不同的路径，但所有路径都指向同一个终点：理性、纪律、安全边际。</p>
+<div class="box bb">
+<div class="bt">🎯 全书核心框架</div>
+<p>格雷厄姆的投资哲学可以浓缩为三个支柱：</p>
+<ul>
+<li><strong>投资 vs 投机</strong>：必须清楚自己在做什么，不能自欺欺人</li>
+<li><strong>安全边际</strong>：永远以低于内在价值的价格买入，为错误留出空间</li>
+<li><strong>市场先生</strong>：市场是为你服务的仆人，而非指导你的主人</li>
+</ul>
+</div>
+<div class="box bgo">
+<div class="bt">📌 关键数据</div>
+<p>本书历经四版（1949/1954/1965/1973），跨越近四分之一世纪。第四版出版于1973年，正值美国"漂亮五十"泡沫前夕。杰森·兹威格在2003年版中添加了大量现代注疏，使经典焕发新生。全书共二十章加一篇后记，结构清晰，从基本概念到具体操作层层递进。</p>
+</div>
+</section>
+
+<section id="s2">
+<h2>二、投资与投机：永恒的分野</h2>
+<p>格雷厄姆在开篇就画出了一条清晰的界线：<strong>投资操作建立在透彻分析的基础上，确保本金的安全和满意的回报。不符合这些要求的操作就是投机。</strong></p>
+<blockquote>"投资行为必须经过透彻的分析，确保本金安全并获得适当的回报。凡是不满足这些条件的行为都属于投机。"<cite>— 本杰明·格雷厄姆</cite></blockquote>
+<div class="tc">
+<div class="box bg">
+<div class="bt">✅ 投资的三要素</div>
+<ul>
+<li><strong>透彻分析</strong>：基于事实和数据的系统研究</li>
+<li><strong>本金安全</strong>：避免永久性资本损失</li>
+<li><strong>适当回报</strong>：不是暴利，是合理收益</li>
+</ul>
+</div>
+<div class="box br">
+<div class="bt">⚠️ 投机的特征</div>
+<ul>
+<li>缺乏深入研究，依赖直觉或消息</li>
+<li>忽视本金风险，追求短期暴利</li>
+<li>把市场波动当作确定性的预测</li>
+</ul>
+</div>
+</div>
+<p>格雷厄姆最深刻的一点洞察是：<strong>投机本身并不邪恶，邪恶的是把自己在投机这件事伪装成在投资。</strong> 一个人完全可以拿一小部分钱去投机——只要他清楚地知道自己在投机，并且做好了亏掉这些钱的准备。</p>
+<div class="lc">
+<div class="ln">💡 批判性重构</div>
+<h4>"投资"与"投机"真的能二分吗？</h4>
+<p>凯恩斯在《通论》中提出了著名的"选美理论"——在金融市场中，参与者不是在选自己认为最美的面孔，而是在猜测别人认为最美的面孔。当所有人都在做"价值投资"时，价值本身就被重新定价了。这并非否认格雷厄姆，而是提醒我们：<strong>任何方法一旦被大众化，其超额收益就会被稀释。</strong></p>
+</div>
+<div class="golden">投资的全部秘诀就在于：安全边际。如果你以极大的安全边际购买证券，你就能在很大程度上降低风险。</div>
+</section>
+
+<section id="s3">
+<h2>三、投资者与通货膨胀</h2>
+<p>格雷厄姆用大量历史数据论证了一个常被忽视的事实：<strong>通货膨胀是投资者真正的敌人，但它不能通过股票投资来有效对冲。</strong></p>
+<p>在1940-1970年代，格雷厄姆观察到：尽管物价上涨了，但股票收益率并没有相应提高。他得出结论——<strong>试图通过预测通货膨胀或通货紧缩来调整投资组合是徒劳的</strong>。投资者应该同时持有股票和债券，不因通胀预期而大幅偏离。</p>
+<div class="box bb">
+<div class="bt">📊 格雷厄姆的50/50法则</div>
+<p>格雷厄姆建议防御型投资者采用<strong>50/50股债配置</strong>，并在市场极端时调整至<strong>75/25</strong>：</p>
+<ul>
+<li>当市场严重高估时：股票降至25%，债券升至75%</li>
+<li>当市场严重低估时：股票升至75%，债券降至25%</li>
+<li>平时保持50/50的平衡</li>
+</ul>
+<p>这个策略的精髓不在于"择时"，而在于<strong>纪律性的再平衡</strong>——自动让你在别人贪婪时恐惧，在别人恐惧时贪婪。</p>
+</div>
+<div class="lc">
+<div class="ln">🔗 跨领域联想</div>
+<h4>通胀对冲与物理学中的"噪声"</h4>
+<p>在物理学中，布朗运动告诉我们微观粒子的运动是随机的。通胀对投资的影响也有类似的"噪声"特征——短期内信号（通胀数据）和结果（股票回报）之间的关系极其不稳定。试图从噪声中提取信号，就像试图预测一个水分子下一秒的位置。格雷厄姆的智慧在于：承认噪声的存在，设计一个不依赖精确预测的系统。</p>
+</div>
+</section>
+
+<section id="s4">
+<h2>四、百年股市史：数据中的智慧</h2>
+<p>格雷厄姆用1871-1971年的美国股市数据，揭示了一个至关重要的规律：<strong>市场在"令人满意的"和"令人失望的"之间周期性摆动。</strong></p>
+<div class="tw">
+<table>
+<tr><th>时期</th><th>平均市盈率</th><th>市场特征</th></tr>
+<tr><td>1871-1897</td><td>约14倍</td><td>铁路时代，增长缓慢但稳定</td></tr>
+<tr><td>1897-1929</td><td>14→25倍+</td><td>工业化浪潮，市场狂热</td></tr>
+<tr><td>1929-1932</td><td>暴跌至9倍以下</td><td>大萧条，恐慌性抛售</td></tr>
+<tr><td>1932-1946</td><td>回升至15-18倍</td><td>复苏与战争</td></tr>
+<tr><td>1946-1970</td><td>10-22倍波动</td><td>战后繁荣与动荡</td></tr>
+</table>
+</div>
+<p>格雷厄姆的关键发现：<strong>投资者不应该被近期市场表现所迷惑。</strong>1929年的疯狂高估值和1932年的绝望低估值，都是市场偏离理性均衡的极端表现。聪明的投资者应该在这些极端之间保持冷静。</p>
+<div class="box bw">
+<div class="bt">⚠️ 格雷厄姆的警告</div>
+<p>"过去的收益不会自动延续到未来。"——这句话在每一轮牛市顶部都会被遗忘，在每一轮熊市底部都会被重新想起。投资者最大的敌人不是市场，而是<strong>自己对近期经验的过度外推</strong>。</p>
+</div>
+</section>
+
+<section id="s5">
+<h2>五、防御型投资者的组合策略</h2>
+<p>格雷厄姆对"防御型投资者"的定义非常务实：<strong>那些不愿意、或没有时间精力去深入研究个股的人。</strong>他不认为这有什么可耻的——实际上，他暗示大多数人应该做防御型投资者。</p>
+<div class="box bb">
+<div class="bt">🛡️ 防御型投资者的四条铁律</div>
+<ol>
+<li><strong>充分分散</strong>：持有10-30只不同行业的股票</li>
+<li><strong>只选大公司</strong>：大型、知名、财务保守的企业</li>
+<li><strong>连续分红</strong>：过去20年持续支付股息</li>
+<li><strong>市盈率有度</strong>：市盈率不超过过去三年平均盈利的25倍</li>
+</ol>
+</div>
+<h3>现代应用：指数基金的崛起</h3>
+<p>格雷厄姆的防御型策略在今天最直接的实现形式就是<strong>指数基金</strong>。格雷厄姆的学生约翰·博格尔（John Bogle）在1976年创建先锋标普500指数基金时，正是践行了这一理念。</p>
+<div class="lc">
+<div class="ln">💡 批判性重构</div>
+<h4>防御型投资的悖论</h4>
+<p>如果所有人都做防御型投资者，市场将失去定价效率，价值投资的机会从何而来？防御型投资者的存在依赖于积极型投资者的活跃。现代行为金融学证明了这个生态系统是可持续的——因为人类的非理性行为不会消失。只要恐惧和贪婪存在，价值投资就有生存空间。</p>
+</div>
+</section>
+
+<section id="s6">
+<h2>六、防御型投资者与普通股</h2>
+<p>格雷厄姆深入讨论了防御型投资者应该如何选择普通股。他的建议看似"无聊"，但正是这种"无聊"保护了投资者。</p>
+<div class="tw">
+<table>
+<tr><th>筛选标准</th><th>具体要求</th><th>背后的逻辑</th></tr>
+<tr><td>企业规模</td><td>市值排名前30%</td><td>大公司抗风险能力强</td></tr>
+<tr><td>财务状况</td><td>流动比率≥2:1</td><td>有足够流动性应对危机</td></tr>
+<tr><td>盈利稳定性</td><td>过去10年每年都有盈利</td><td>连续盈利说明商业模式可靠</td></tr>
+<tr><td>股息记录</td><td>过去20年持续派息</td><td>分红是管理层对股东承诺的兑现</td></tr>
+<tr><td>盈利增长</td><td>10年盈利至少增长1/3</td><td>确保企业有内生增长能力</td></tr>
+<tr><td>估值</td><td>市盈率≤25倍</td><td>避免为增长支付过高价格</td></tr>
+</table>
+</div>
+<blockquote>"聪明的投资并不复杂，虽然远非易事。投资者需要的是一种能力，不是去驾驭市场，而是控制自己的情绪。"<cite>— 本杰明·格雷厄姆</cite></blockquote>
+</section>
+
+<section id="s7">
+<h2>七、积极型投资者的消极方法</h2>
+<p>这一章看似矛盾——"积极"的投资者怎么会有"消极"的方法？格雷厄姆的意思是：<strong>积极型投资者应该通过排除法来缩小选股范围</strong>，而不是去寻找"最好的"股票。</p>
+<div class="box bg">
+<div class="bt">🚫 积极型投资者应避免的股票</div>
+<ul>
+<li><strong>新发行的股票（IPO）</strong>：大多数新股在上市后表现不佳</li>
+<li><strong>财务状况不佳的公司</strong>：负债过高的企业</li>
+<li><strong>二线企业的优先股</strong>：风险收益比不合理</li>
+<li><strong>海外企业股票</strong>：在格雷厄姆年代信息不透明</li>
+</ul>
+</div>
+<div class="lc">
+<div class="ln">🔗 跨领域联想</div>
+<h4>"消极方法"与"否定神学"</h4>
+<p>格雷厄姆的"消极方法"让人联想到哲学中的<strong>否定神学（Via Negativa）</strong>——通过定义"什么不是"来接近真理，比通过定义"什么是"更可靠。在投资中，你可能无法精确识别下一只十倍股，但你可以可靠地排除那些即将暴雷的公司。<strong>做减法比做加法更安全。</strong>塔勒布在《反脆弱》中也推崇类似思路：真正的智慧往往在于知道不做什么，而非做什么。</p>
+</div>
+</section>
+
+<section id="s8">
+<h2>八、积极型投资者的积极方法</h2>
+<p>对于愿意投入更多精力的投资者，格雷厄姆提供了三类积极策略：</p>
+<div class="lc">
+<div class="ln">策略一</div>
+<h4>低价股（便宜货）策略</h4>
+<p>寻找<strong>交易价格低于净流动资产价值</strong>的股票。这意味着即使公司立即清算，你也能拿回比股价更多的钱。这是格雷厄姆最钟爱的方法——"用50美分买1美元"。格雷厄姆和纽曼的基金在1926-1956年间主要就是靠这种方法取得了17%以上的年化回报。</p>
+</div>
+<div class="tc">
+<div class="lc">
+<div class="ln">策略二</div>
+<h4>特殊情况套利</h4>
+<p>在企业重组、并购、清算等特殊事件中寻找套利机会。这些事件提供了可计算的回报，与市场整体方向无关。</p>
+</div>
+<div class="lc">
+<div class="ln">策略三</div>
+<h4>相对低估的普通股</h4>
+<p>通过横向比较和纵向比较，寻找相对被低估的股票。必须基于严格的定量分析，而非主观判断。</p>
+</div>
+</div>
+<div class="box bw">
+<div class="bt">⚠️ 一个重要警告</div>
+<p>格雷厄姆反复强调：这些积极策略需要<strong>大量时间和专业知识</strong>。如果你不能投入足够的时间（他建议每周至少一小时用于投资研究），你就不应该做积极型投资者。大多数自以为是"积极型"的投资者，实际上只是"自以为是型"投资者。</p>
+</div>
+</section>
+
+<section id="s9">
+<h2>九、市场先生——人格化的股票市场</h2>
+<p>这是全书最著名的章节，也是格雷厄姆贡献给投资界最伟大的思想实验。</p>
+<blockquote>"假设你拥有一小部分企业股份，你的一个合伙人叫'市场先生'。他每天都会给你一个报价，想买你的股份或者把他的卖给你。你们的生意很稳定，但市场先生的报价却变化多端。当市场先生心情愉快时，他会报出一个很高的价格；当他沮丧时，他只愿意报出很低的价格。"<cite>— 本杰明·格雷厄姆</cite></blockquote>
+<div class="box bb">
+<div class="bt">🎭 市场先生的四重人格</div>
+<ul>
+<li><strong>躁郁症患者</strong>：情绪在极度乐观和极度悲观之间剧烈波动</li>
+<li><strong>强迫症患者</strong>：无论你是否交易，他每天都要报出一个价格</li>
+<li><strong>健忘症患者</strong>：每天的价格都是"全新的"，不记得昨天报了什么</li>
+<li><strong>慷慨的仆人</strong>：他的报价只对你有参考价值，决定权完全在你</li>
+</ul>
+</div>
+<div class="golden">市场先生的报价只能被利用，不能被预测。他为你服务，而不是指导你。如果他某天的报价愚蠢得离谱，你可以利用他，也可以完全忽略他。</div>
+<p>市场先生寓言的精髓不在于"低买高卖"，而在于一个更深刻的转变：<strong>从"我是市场的学生"到"我是市场的主人"。</strong></p>
+<div class="lc">
+<div class="ln">🔗 跨领域联想</div>
+<h4>市场先生与斯多葛哲学</h4>
+<p>市场先生的寓言与古罗马斯多葛学派的核心思想不谋而合。爱比克泰德说："困扰我们的不是事物本身，而是我们对事物的看法。"同样，市场波动不会伤害投资者，对波动的情绪反应才会。马可·奥勒留写道："你有能力控制你自己的思想——而不是外部事件。"这正是格雷厄姆告诉投资者的：<strong>你无法控制市场先生的情绪，但你可以控制自己的反应。</strong></p>
+</div>
+</section>
+
+<section id="s10">
+<h2>十、基金投资与顾问选择</h2>
+<p>格雷厄姆在第九章讨论了共同基金，他的结论在今天听来依然振聋发聩：</p>
+<div class="box br">
+<div class="bt">📉 基金投资的残酷真相</div>
+<ul>
+<li><strong>大多数基金跑不赢指数</strong>：扣除费用后，主动型基金的平均表现低于市场指数</li>
+<li><strong>费用是最大的敌人</strong>：每年1-2%的管理费在复利作用下会吞噬大量收益</li>
+<li><strong>过去的业绩不能预测未来</strong>：业绩最好的基金往往在下一期表现最差</li>
+<li><strong>基金规模是反面因素</strong>：基金越大，灵活性越低，越难创造超额收益</li>
+</ul>
+</div>
+<p>格雷厄姆的建议：<strong>如果你选择投资基金，应该选择费用最低的指数基金</strong>——这比试图找到"最好的"主动管理基金要可靠得多。关于投资顾问，他建议投资者了解顾问如何获得报酬，不要盲目跟从任何建议，始终保持独立思考。</p>
+</section>
+
+<section id="s11">
+<h2>十一、证券分析入门</h2>
+<p>格雷厄姆在第十一至十四章系统介绍了证券分析的基本框架。对于普通投资者，他提供了以下简化原则：</p>
+<div class="box bg">
+<div class="bt">🔍 证券分析四步法</div>
+<ol>
+<li><strong>检查盈利能力</strong>：过去7-10年的盈利记录是否稳定增长？</li>
+<li><strong>审查财务状况</strong>：负债率是否合理？流动比率是否足够？</li>
+<li><strong>评估盈利质量</strong>：盈利是来自经营还是来自一次性事件？</li>
+<li><strong>计算内在价值</strong>：基于盈利能力、资产价值和增长率，合理估值是多少？</li>
+</ol>
+</div>
+<p>格雷厄姆特别强调：<strong>证券分析不是精确的科学</strong>。它更像是医学诊断——你收集症状，运用经验，做出判断，但永远不能百分之百确定。一个看似健康的公司可能突然暴病，一个看似病入膏肓的公司也可能神奇康复。</p>
+</section>
+
+<section id="s12">
+<h2>十二、每股收益的陷阱</h2>
+<p>格雷厄姆在第十二章专门讨论了每股收益（EPS）的误导性。他认为这是投资者最容易犯的错误之一。</p>
+<div class="box bw">
+<div class="bt">⚠️ EPS的四大陷阱</div>
+<ul>
+<li><strong>会计操纵</strong>：公司可以通过折旧方法、收入确认时点等手段"管理"每股收益</li>
+<li><strong>一次性事件</strong>：出售资产、重组费用等非经常性项目会扭曲盈利数字</li>
+<li><strong>历史平均值 vs 单年数据</strong>：某一年的高盈利可能是偶然，不代表未来</li>
+<li><strong>忽略资产质量</strong>：高EPS可能伴随着资产质量的恶化</li>
+</ul>
+</div>
+<blockquote>"投资者不应对某一年的收益数据给予太多重视。单年收益就像一个人说'我今年很幸运'一样，不能说明长期趋势。"<cite>— 本杰明·格雷厄姆</cite></blockquote>
+<div class="lc">
+<div class="ln">💡 批判性重构</div>
+<h4>安然事件：格雷厄姆警告的极端验证</h4>
+<p>2001年安然公司崩溃完美地验证了格雷厄姆的警告。安然在崩溃前的每股收益看起来非常亮眼，但这些数字是通过复杂的特殊目的实体（SPE）创造出来的。如果投资者严格遵循格雷厄姆的分析方法——检查财务状况、评估盈利质量、关注现金流而非会计收益——安然的骗局本可以更早暴露。</p>
+</div>
+</section>
+
+<section id="s13">
+<h2>十三、股票选择标准</h2>
+<h3>防御型投资者的选股</h3>
+<p>格雷厄姆为防御型投资者提供了极其严格的标准：</p>
+<div class="tw">
+<table>
+<tr><th>标准</th><th>防御型投资者</th></tr>
+<tr><td>企业规模</td><td>工业企业：收入≥1亿美元；公用事业：总资产≥5000万美元</td></tr>
+<tr><td>财务状况</td><td>工业企业：流动比率≥200%，长期债务≤净流动资产</td></tr>
+<tr><td>盈利稳定性</td><td>过去10年每一年都有正盈利</td></tr>
+<tr><td>股息记录</td><td>过去20年连续支付股息</td></tr>
+<tr><td>盈利增长</td><td>过去10年盈利增长至少1/3</td></tr>
+<tr><td>市盈率</td><td>≤过去三年平均盈利的15倍</td></tr>
+<tr><td>市净率</td><td>≤净资产的1.5倍（PE×PB≤22.5）</td></tr>
+</table>
+</div>
+<h3>积极型投资者的选股</h3>
+<p>积极型投资者可以在防御型标准基础上适当放宽，但必须在其他方面加强：</p>
+<ul>
+<li>允许市盈率降至更低水平（寻找真正的便宜货）</li>
+<li>允许较小规模的企业，但必须有更强的资产负债表</li>
+<li>关注特殊情况：分拆、重组、合并等</li>
+<li>寻找被机构投资者忽视的小盘股</li>
+</ul>
+</section>
+
+<section id="s14">
+<h2>十四、可转换证券与认股权证</h2>
+<p>格雷厄姆在第十六章深入讨论了可转换债券、可转换优先股和认股权证。他的总体态度是<strong>谨慎的</strong>。</p>
+<div class="box br">
+<div class="bt">🔑 格雷厄姆的核心判断</div>
+<ul>
+<li><strong>可转换证券通常对发行方更有利</strong>：发行公司获得了融资的灵活性，而投资者获得的"转换权"往往被高估</li>
+<li><strong>认股权证本质上是一种投机工具</strong>：它的价值完全取决于股价是否上涨，没有内在价值的"底线"支撑</li>
+<li><strong>"甜头"的代价</strong>：低息可转换债券的低利率，往往就是为转换权付出的"保险费"</li>
+</ul>
+</div>
+<p>格雷厄姆提出了一个精妙的思路：<strong>如果你看好一家公司的股票，直接买股票通常比买它的可转换证券更划算。</strong>可转换证券的设计初衷是"既想享受股票的上涨，又想保留债券的安全"——但这种"两全其美"往往是幻觉。</p>
+</section>
+
+<section id="s15">
+<h2>十五、股东与管理层</h2>
+<p>格雷厄姆在第十九章讨论了一个常被忽视的话题：<strong>股东与管理层的关系</strong>。他批评了当时（以及今天仍然普遍存在的）管理层与股东之间的利益错位。</p>
+<div class="box bb">
+<div class="bt">⚖️ 格雷厄姆对管理层的核心批评</div>
+<ul>
+<li><strong>管理层薪酬过高</strong>：高管的薪酬往往与股东回报脱节</li>
+<li><strong>代理投票权的滥用</strong>：管理层利用信息不对称和投票权控制公司</li>
+<li><strong>忽视股东利益</strong>：不合理的收购、不经济的扩张、过低的分红</li>
+<li><strong>信息披露不足</strong>：财务报表的复杂性和不透明性</li>
+</ul>
+</div>
+<blockquote>"公司的管理层应该像管家一样为股东服务。但现实中，很多管理者把自己当成了城堡的主人，而股东不过是偶尔来收租的地主。"<cite>— 本杰明·格雷厄姆</cite></blockquote>
+<div class="lc">
+<div class="ln">🔗 跨领域联想</div>
+<h4>代理问题与社会契约论</h4>
+<p>格雷厄姆描述的股东-管理层矛盾，本质上是一个<strong>代理问题（Agency Problem）</strong>。这与卢梭的社会契约论有惊人的相似之处——人民（股东）将权力委托给政府（管理层），但政府可能利用这种权力为自己谋利。解决方案也类似：透明的监督机制、合理的激励约束、以及不可剥夺的退出权（卖出股票）。</p>
+</div>
+</section>
+
+<section id="s16">
+<h2>十六、安全边际——投资的核心概念</h2>
+<p>这是全书最核心的一章。格雷厄姆将"安全边际"这一工程学概念引入投资领域，构建了他的整个投资哲学。</p>
+<blockquote>"安全边际的功能本质上是使精确预测变得不再必要。"<cite>— 本杰明·格雷厄姆</cite></blockquote>
+<div class="box bb">
+<div class="bt">🛡️ 安全边际的三重含义</div>
+<ol>
+<li><strong>价格与价值的差额</strong>：以显著低于内在价值的价格买入，即使你的估值有偏差，仍然可以盈利</li>
+<li><strong>对错误的保护</strong>：没有人能精确预测未来。安全边际是为不可避免的错误预留的缓冲区</li>
+<li><strong>对运气的保险</strong>：即使运气不好，安全边际也能防止永久性资本损失</li>
+</ol>
+</div>
+<div class="golden">真正的安全边际在于：以足够低的价格购买优质证券，使得即使未来的表现不如预期，投资者也能获得合理的回报。</div>
+<h3>如何量化安全边际？</h3>
+<p>格雷厄姆没有给出一个精确的公式，但他提供了一些经验法则：</p>
+<div class="tw">
+<table>
+<tr><th>指标</th><th>安全边际充足的标志</th></tr>
+<tr><td>市盈率</td><td>远低于行业平均水平或历史中位数</td></tr>
+<tr><td>市净率</td><td>接近或低于1倍净资产</td></tr>
+<tr><td>股息率</td><td>高于债券收益率</td></tr>
+<tr><td>净流动资产</td><td>股价低于净流动资产/股</td></tr>
+<tr><td>负债率</td><td>长期债务远低于资产价值</td></tr>
+</table>
+</div>
+<div class="lc">
+<div class="ln">🔗 跨领域联想</div>
+<h4>安全边际与工程学</h4>
+<p>格雷厄姆直接借用了工程学中的"安全系数"概念。建筑师在设计桥梁时，会让桥的承载能力是预期最大荷载的若干倍——不是因为他认为荷载一定会达到那个水平，而是因为他不知道荷载会达到什么水平。投资中的安全边际遵循完全相同的逻辑：<strong>你不知道未来会怎样，所以你需要足够的余量来应对最坏的情况。</strong></p>
+</div>
+<div class="lc">
+<div class="ln">🔗 跨领域联想</div>
+<h4>安全边际与进化生物学</h4>
+<p>进化论中有一个概念叫"冗余设计"——生物体的器官功能往往有备份。人类有两个肾脏、两个肺叶，即使失去一个仍然能生存。安全边际就是投资组合的"冗余器官"：它平时看起来"浪费"了收益潜力，但在危机时刻保全了你的"生命"。</p>
+</div>
+</section>
+
+<section id="s17">
+<h2>十七、核心图表</h2>
+<div class="cw">
+<canvas id="chart1" width="700" height="400"></canvas>
+<div class="cc">图1：价值投资 vs 市场随大流的长期回报对比（模拟）</div>
+</div>
+<div class="cw">
+<canvas id="chart2" width="700" height="400"></canvas>
+<div class="cc">图2：安全边际的概念——价格与内在价值的关系</div>
+</div>
+<div class="cw">
+<canvas id="chart3" width="700" height="400"></canvas>
+<div class="cc">图3：市场先生的情绪周期与理性投资者的应对</div>
+</div>
+<div class="cw">
+<canvas id="chart4" width="700" height="380"></canvas>
+<div class="cc">图4：格雷厄姆投资决策流程图</div>
+</div>
+</section>
+
+<section id="s18">
+<h2>十八、思想对话与跨领域联想</h2>
+
+<h3>与现代投资理论的对话</h3>
+<div class="lc">
+<div class="ln">对话一</div>
+<h4>格雷厄姆 vs 马科维茨：分散化的边界</h4>
+<p>哈里·马科维茨的现代投资组合理论（MPT）用数学证明了分散化可以降低风险。格雷厄姆也在书中强烈建议分散化（10-30只股票）。两者的区别在于：<strong>马科维茨认为分散化本身就是目的（风险收益最优化），而格雷厄姆认为分散化只是保护手段。</strong>格雷厄姆更关心每一只股票本身的品质，而MPT更关心组合的整体波动率。</p>
+<p>有趣的是，两者都指向同一个结论：<strong>不要把鸡蛋放在一个篮子里。</strong>只是理由不同——马科维茨因为数学，格雷厄姆因为经验和谦逊。</p>
+</div>
+<div class="lc">
+<div class="ln">对话二</div>
+<h4>格雷厄姆 vs 巴菲特：进化的价值投资</h4>
+<p>巴菲特说他"85%是格雷厄姆，15%是费雪"。但实际的进化幅度可能更大：</p>
+<ul>
+<li><strong>格雷厄姆</strong>：不关心公司质量，只关心价格便宜。"用40美分买1美元的东西"</li>
+<li><strong>巴菲特</strong>：开始关心公司的"护城河"、管理层品质、竞争优势的持久性</li>
+<li><strong>芒格</strong>：推动巴菲特从"以合理价格买普通公司"转向"以合理价格买伟大公司"</li>
+</ul>
+<p>这个转变的深层含义是：<strong>在信息效率不断提高的市场中，单纯依靠"捡烟蒂"变得越来越困难。你需要更深层次的分析来找到真正的价值。</strong></p>
+</div>
+<div class="lc">
+<div class="ln">对话三</div>
+<h4>格雷厄姆 vs 行为金融学：谁更了解人性？</h4>
+<p>格雷厄姆在没有现代心理学工具的情况下，通过直觉和经验洞察了投资者的心理弱点。行为金融学后来用实验证实了这些洞察：</p>
+<ul>
+<li><strong>过度自信</strong>：投资者系统性地高估自己预测市场的能力</li>
+<li><strong>损失厌恶</strong>：人们对亏损的痛苦感约是盈利快乐感的两倍</li>
+<li><strong>锚定效应</strong>：人们过于依赖最先获得的信息（如买入价）</li>
+<li><strong>从众心理</strong>：在市场狂热中跟随大众，而非独立判断</li>
+</ul>
+<p>格雷厄姆的方法本质上是一套<strong>反行为偏差的操作系统</strong>：通过纪律（规则化选股）、逆向（在恐慌时买入）、耐心（长期持有）来对抗这些心理本能。</p>
+</div>
+
+<h3>与哲学思想的交汇</h3>
+<div class="lc">
+<div class="ln">交汇一</div>
+<h4>价值投资与价值哲学</h4>
+<p>价值投资隐含了一个哲学假设：<strong>内在价值是存在的、客观的、可近似的。</strong>这与柏拉图的理念论有共鸣——市场价格是"洞穴中的影子"，而内在价值是"理念世界中的真实"。格雷厄姆的整个方法论，就是试图通过数据分析这个"洞穴"，窥见"真实"的一斑。</p>
+</div>
+<div class="lc">
+<div class="ln">交汇二</div>
+<h4>格雷厄姆与概率论</h4>
+<p>格雷厄姆的投资框架与凯恩斯的概率论有深层联系。凯恩斯认为概率不是客观频率，而是主观信心度。格雷厄姆的方法与此一致：<strong>安全边际本质上是在概率不均匀分布的情况下，将赌注押在有利的一边。</strong>你不需要每次都对，只要在对的时候赚的比错的时候亏的多。</p>
+</div>
+</section>
+
+<section id="s19">
+<h2>十九、批判性反思</h2>
+
+<h3>格雷厄姆的局限性</h3>
+<p>尽管《聪明的投资者》是不朽经典，但以今天的视角审视，有几个方面值得批判性思考：</p>
+
+<div class="lc">
+<div class="ln">局限一</div>
+<h4>"捡烟蒂"策略的退化</h4>
+<p>格雷厄姆的"净流动资产价值"策略——以低于净流动资产的价格买入股票——在今天几乎不可能系统性地实施。原因：</p>
+<ul>
+<li>信息效率提高：任何明显的低估都会被迅速发现和消除</li>
+<li>对冲基金的兴起：数以万计的专业投资者在搜索同样的机会</li>
+<li>会计标准变化：现代财报的编制方式与1940年代大不相同</li>
+</ul>
+<p>这并不意味着价值投资失效了，而是说价值的定义需要进化——从"有形资产的折扣"转向"未来现金流的折现"。</p>
+</div>
+
+<div class="lc">
+<div class="ln">局限二</div>
+<h4>对成长性的低估</h4>
+<p>格雷厄姆对"成长股"的态度过于谨慎。他写道，投资者不应该为成长支付溢价。但在科技革命的时代，拒绝为成长支付合理溢价可能意味着错过亚马逊、谷歌、腾讯这样的公司。格雷厄姆的方法在工业时代非常有效，但在信息时代需要调整。</p>
+</div>
+
+<div class="lc">
+<div class="ln">局限三</div>
+<h4>通货膨胀与股票关系的过度保守</h4>
+<p>格雷厄姆认为股票不能有效对冲通胀，但长期数据显示，在超过20年的时间跨度内，股票确实是最好的通胀对冲工具之一。他的保守判断可能源于他所处的特殊历史时期（1940-1970年代），而这段时期恰好是美国股市估值压缩的阶段。</p>
+</div>
+
+<h3>格雷厄姆的永恒价值</h3>
+<div class="box bg">
+<div class="bt">✅ 至今仍完全正确的洞见</div>
+<ul>
+<li><strong>市场先生</strong>：市场的情绪波动不会消失，因为人性不会改变</li>
+<li><strong>安全边际</strong>：以低于价值的价格买入，永远是降低风险的最佳方法</li>
+<li><strong>投资纪律</strong>：不被市场情绪左右，遵循系统性的方法</li>
+<li><strong>费用意识</strong>：交易成本和管理费用是长期收益的最大敌人之一</li>
+<li><strong>独立思考</strong>：不要跟风，不要依赖专家，保持自己的判断力</li>
+<li><strong>认识自己的边界</strong>：如果你不是专家，就做防御型投资者</li>
+</ul>
+</div>
+</section>
+
+<section id="s20">
+<h2>二十、个人行动框架</h2>
+
+<h3>我是哪种投资者？</h3>
+<div class="tc">
+<div class="box bb">
+<div class="bt">🛡️ 你可能是防御型投资者，如果……</div>
+<ul>
+<li>你每周用于投资研究的时间不到一小时</li>
+<li>你对财务报表的分析能力有限</li>
+<li>你更关心长期财富增值而非短期收益</li>
+<li>你不想为投资决策承受过多压力</li>
+<li>你有全职工作，投资只是副业</li>
+</ul>
+<p style="margin-top:1rem"><strong>建议策略：</strong>70%宽基指数基金 + 20%债券基金 + 10%现金。每半年再平衡一次。</p>
+</div>
+<div class="box bg">
+<div class="bt">⚔️ 你可能是积极型投资者，如果……</div>
+<ul>
+<li>你愿意每周投入数小时研究个股</li>
+<li>你能读懂财务报表和年报</li>
+<li>你对市场波动有较强的情绪抵抗力</li>
+<li>你享受研究公司基本面的过程</li>
+<li>你有能力识别市场中的定价错误</li>
+</ul>
+<p style="margin-top:1rem"><strong>建议策略：</strong>用核心仓位（60-70%）做防御型配置，用卫星仓位（30-40%）做积极型投资。永远不要在投机中损失超过你能承受的金额。</p>
+</div>
+</div>
+
+<h3>格雷厄姆的十条行动清单</h3>
+<div class="tw">
+<table>
+<tr><th>#</th><th>行动</th><th>原因</th></tr>
+<tr><td>1</td><td>每月定投指数基金</td><td>低成本、自动分散、不需择时</td></tr>
+<tr><td>2</td><td>股债50/50配比，极端时调至75/25</td><td>纪律性再平衡，自动逆向操作</td></tr>
+<tr><td>3</td><td>永远不借钱投资</td><td>杠杆在市场下跌时会放大损失</td></tr>
+<tr><td>4</td><td>写投资日记，记录每笔交易的理由</td><td>避免事后合理化，建立自我问责</td></tr>
+<tr><td>5</td><td>每年审视一次投资组合</td><td>减少频繁交易带来的成本和错误</td></tr>
+<tr><td>6</td><td>关注公司基本面而非股价波动</td><td>股价是市场情绪的结果，不是价值的指标</td></tr>
+<tr><td>7</td><td>在市场恐慌时保持冷静（甚至加仓）</td><td>恐慌创造了最大的安全边际</td></tr>
+<tr><td>8</td><td>在市场狂热时保持谨慎</td><td>高估值是最小安全边际的时期</td></tr>
+<tr><td>9</td><td>永远不要投资你不懂的东西</td><td>不懂就是最大的风险</td></tr>
+<tr><td>10</td><td>记住投资的目标是财务自由，不是击败市场</td><td>避免为虚荣心支付过高代价</td></tr>
+</table>
+</div>
+
+<div class="golden">投资中最重要的不是智商，而是性情。一个聪明但情绪化的投资者，可能不如一个普通但冷静的投资者做得好。</div>
+
+<h3>最终感悟</h3>
+<p>读完《聪明的投资者》，最深的感悟或许可以归结为一句话：<strong>投资的智慧，本质上是生活的智慧。</strong></p>
+<p>格雷厄姆教给我们的不仅是如何选股、如何估值，更是如何面对不确定性、如何管理自己的情绪、如何在喧嚣中保持清醒。这些道理，适用于投资，也适用于人生的方方面面。</p>
+<p>用巴菲特的话说："投资不需要高智商。你需要的是正确的性情——能够控制那些让别人在投资中陷入麻烦的冲动。"</p>
+<p>做一个聪明的投资者，归根结底，是做一个<strong>理性、谦逊、有纪律</strong>的人。</p>
+</section>
+
+</div>
+
+<footer>
+<p>《聪明的投资者》读书笔记 · 基于本杰明·格雷厄姆原著及杰森·兹威格注疏版</p>
+<p>生成时间：2026年4月</p>
+</footer>
+
+<script>
+const M=Math;
+
+// Chart 1: Value investing vs Market following long-term returns
+(function(){
+var c=document.getElementById('chart1');if(!c)return;
+var ctx=c.getContext('2d');
+var W=c.width,H=c.height;
+var pad={t:40,r:30,b:50,l:60};
+var pw=W-pad.l-pad.r,ph=H-pad.t-pad.b;
+
+// Data: simulated 30-year comparison
+var years=[];for(var i=0;i<=30;i++)years.push(i);
+var market=[100],value=[100];
+for(var i=1;i<=30;i++){
+market.push(market[i-1]*(1+0.07+0.12*M.sin(i*0.5)*M.exp(-i*0.02)));
+value.push(value[i-1]*(1+0.10+0.03*M.sin(i*0.3+2)));
+}
+var allV=market.concat(value);
+var mn=0,mx=M.max.apply(null,allV)*1.1;
+
+function x(i){return pad.l+(i/30)*pw}
+function y(v){return pad.t+ph-(v-mn)/(mx-mn)*ph}
+
+// Grid
+ctx.strokeStyle='#e5e2de';ctx.lineWidth=1;
+for(var i=0;i<=5;i++){
+var yy=pad.t+ph*i/5;
+ctx.beginPath();ctx.moveTo(pad.l,yy);ctx.lineTo(pad.l+pw,yy);ctx.stroke();
+ctx.fillStyle='#6b6b6b';ctx.font='11px sans-serif';ctx.textAlign='right';
+ctx.fillText((mx*(1-i/5)).toFixed(0),pad.l-8,yy+4);
+}
+for(var i=0;i<=6;i++){
+var xx=pad.l+pw*i/6;
+ctx.beginPath();ctx.moveTo(xx,pad.t);ctx.lineTo(xx,pad.t+ph);ctx.stroke();
+ctx.fillStyle='#6b6b6b';ctx.font='11px sans-serif';ctx.textAlign='center';
+ctx.fillText((i*5)+'年',xx,pad.t+ph+20);
+}
+
+// Market line
+ctx.strokeStyle='#a63d40';ctx.lineWidth=2.5;ctx.beginPath();
+for(var i=0;i<=30;i++){i===0?ctx.moveTo(x(i),y(market[i])):ctx.lineTo(x(i),y(market[i]))}
+ctx.stroke();
+
+// Value line
+ctx.strokeStyle='#3a6b4f';ctx.lineWidth=2.5;ctx.beginPath();
+for(var i=0;i<=30;i++){i===0?ctx.moveTo(x(i),y(value[i])):ctx.lineTo(x(i),y(value[i]))}
+ctx.stroke();
+
+// Legend
+ctx.fillStyle='#a63d40';ctx.fillRect(pad.l+10,pad.t+10,20,3);
+ctx.fillStyle='#3a6b4f';ctx.fillRect(pad.l+10,pad.t+26,20,3);
+ctx.fillStyle='#2c2c2c';ctx.font='12px sans-serif';ctx.textAlign='left';
+ctx.fillText('市场随大流',pad.l+36,pad.t+15);
+ctx.fillText('价值投资（安全边际）',pad.l+36,pad.t+31);
+
+// Title
+ctx.fillStyle='#0d3350';ctx.font='bold 14px sans-serif';ctx.textAlign='center';
+ctx.fillText('价值投资 vs 市场随大流 · 30年回报模拟',W/2,25);
+})();
+
+// Chart 2: Safety Margin concept
+(function(){
+var c=document.getElementById('chart2');if(!c)return;
+var ctx=c.getContext('2d');
+var W=c.width,H=c.height;
+var pad={t:40,r:30,b:50,l:60};
+var pw=W-pad.l-pad.r,ph=H-pad.t-pad.b;
+
+var years=[];for(var i=0;i<=20;i++)years.push(i);
+var intrinsic=[100];for(var i=1;i<=20;i++)intrinsic.push(intrinsic[i-1]*1.06);
+var price=[];
+for(var i=0;i<=20;i++){
+var noise=20*M.sin(i*1.2)+10*M.cos(i*0.7);
+price.push(intrinsic[i]+noise);
+}
+
+var allV=intrinsic.concat(price);
+var mn=M.min.apply(null,allV)*0.9,mx=M.max.apply(null,allV)*1.1;
+
+function x(i){return pad.l+(i/20)*pw}
+function y(v){return pad.t+ph-(v-mn)/(mx-mn)*ph}
+
+// Grid
+ctx.strokeStyle='#e5e2de';ctx.lineWidth=1;
+for(var i=0;i<=5;i++){
+var yy=pad.t+ph*i/5;
+ctx.beginPath();ctx.moveTo(pad.l,yy);ctx.lineTo(pad.l+pw,yy);ctx.stroke();
+}
+
+// Shade safety margin areas
+ctx.beginPath();
+for(var i=0;i<=20;i++){i===0?ctx.moveTo(x(i),y(intrinsic[i])):ctx.lineTo(x(i),y(intrinsic[i]))}
+for(var i=20;i>=0;i--){ctx.lineTo(x(i),y(price[i]))}
+ctx.closePath();
+ctx.fillStyle='rgba(58,107,79,0.1)';ctx.fill();
+
+// Intrinsic value line
+ctx.strokeStyle='#3a6b4f';ctx.lineWidth=2.5;ctx.setLineDash([8,4]);ctx.beginPath();
+for(var i=0;i<=20;i++){i===0?ctx.moveTo(x(i),y(intrinsic[i])):ctx.lineTo(x(i),y(intrinsic[i]))}
+ctx.stroke();ctx.setLineDash([]);
+
+// Market price line
+ctx.strokeStyle='#b5651d';ctx.lineWidth=2.5;ctx.beginPath();
+for(var i=0;i<=20;i++){i===0?ctx.moveTo(x(i),y(price[i])):ctx.lineTo(x(i),y(price[i]))}
+ctx.stroke();
+
+// Annotations
+var buyIdx=5;
+ctx.fillStyle='#3a6b4f';ctx.beginPath();
+ctx.arc(x(buyIdx),y(price[buyIdx]),6,0,M.PI*2);ctx.fill();
+ctx.fillStyle='#0d3350';ctx.font='bold 12px sans-serif';ctx.textAlign='center';
+ctx.fillText('买入点（价格<价值）',x(buyIdx),y(price[buyIdx])-14);
+
+var sellIdx=14;
+ctx.fillStyle='#a63d40';ctx.beginPath();
+ctx.arc(x(sellIdx),y(price[sellIdx]),6,0,M.PI*2);ctx.fill();
+ctx.fillText('卖出点（价格>价值）',x(sellIdx),y(price[sellIdx])-14);
+
+// Legend
+ctx.setLineDash([8,4]);ctx.strokeStyle='#3a6b4f';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(pad.l+10,pad.t+12);ctx.lineTo(pad.l+30,pad.t+12);ctx.stroke();
+ctx.setLineDash([]);
+ctx.strokeStyle='#b5651d';ctx.beginPath();ctx.moveTo(pad.l+10,pad.t+28);ctx.lineTo(pad.l+30,pad.t+28);ctx.stroke();
+ctx.fillStyle='#2c2c2c';ctx.font='12px sans-serif';ctx.textAlign='left';
+ctx.fillText('内在价值',pad.l+36,pad.t+16);
+ctx.fillText('市场价格',pad.l+36,pad.t+32);
+
+ctx.fillStyle='#0d3350';ctx.font='bold 14px sans-serif';ctx.textAlign='center';
+ctx.fillText('安全边际：价格与内在价值的关系',W/2,25);
+})();
+
+// Chart 3: Mr. Market emotional cycle
+(function(){
+var c=document.getElementById('chart3');if(!c)return;
+var ctx=c.getContext('2d');
+var W=c.width,H=c.height;
+var pad={t:50,r:30,b:50,l:60};
+var pw=W-pad.l-pad.r,ph=H-pad.t-pad.b;
+
+// Sine wave for market emotion
+var pts=200;
+var cx=pad.l+pw/2,cy=pad.t+ph/2;
+var amp=ph*0.38;
+
+ctx.strokeStyle='#e5e2de';ctx.lineWidth=1;
+ctx.beginPath();ctx.moveTo(pad.l,cy);ctx.lineTo(pad.l+pw,cy);ctx.stroke();
+
+// Sine wave
+ctx.strokeStyle='#b5651d';ctx.lineWidth=2.5;ctx.beginPath();
+for(var i=0;i<=pts;i++){
+var t=i/pts;
+var xx=pad.l+t*pw;
+var yy=cy-amp*M.sin(t*M.PI*2);
+i===0?ctx.moveTo(xx,yy):ctx.lineTo(xx,yy);
+}
+ctx.stroke();
+
+// Phase labels
+var phases=[
+{x:0.125,label:'悲观',sub:'恐惧',color:'#a63d40'},
+{x:0.375,label:'兴奋',sub:'贪婪萌芽',color:'#b5651d'},
+{x:0.625,label:'狂热',sub:'极度乐观',color:'#b08d3a'},
+{x:0.875,label:'恐慌',sub:'绝望抛售',color:'#a63d40'}
+];
+for(var p=0;p<phases.length;p++){
+var ph2=phases[p];
+var xx=pad.l+ph2.x*pw;
+var yy=cy-amp*M.sin(ph2.x*M.PI*2);
+ctx.fillStyle=ph2.color;ctx.beginPath();
+ctx.arc(xx,yy,5,0,M.PI*2);ctx.fill();
+ctx.font='bold 12px sans-serif';ctx.textAlign='center';
+ctx.fillText(ph2.label,xx,yy-14);
+ctx.font='11px sans-serif';ctx.fillText(ph2.sub,xx,yy-2);
+}
+
+// Rational investor line
+ctx.strokeStyle='#3a6b4f';ctx.lineWidth=2;ctx.setLineDash([6,4]);
+ctx.beginPath();ctx.moveTo(pad.l,cy);ctx.lineTo(pad.l+pw,cy);ctx.stroke();
+ctx.setLineDash([]);
+
+// Arrow labels
+ctx.fillStyle='#3a6b4f';ctx.font='bold 12px sans-serif';ctx.textAlign='center';
+ctx.fillText('← 买入机会',pad.l+pw*0.08,cy+35);
+ctx.fillText('卖出机会 →',pad.l+pw*0.65,cy+35);
+
+// Bottom labels
+ctx.fillStyle='#6b6b6b';ctx.font='11px sans-serif';
+ctx.fillText('时间 →',pad.l+pw/2,pad.t+ph+35);
+
+// Legend
+ctx.fillStyle='#b5651d';ctx.fillRect(pad.l+10,pad.t+8,20,3);
+ctx.setLineDash([6,4]);ctx.strokeStyle='#3a6b4f';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(pad.l+10,pad.t+22);ctx.lineTo(pad.l+30,pad.t+22);ctx.stroke();
+ctx.setLineDash([]);
+ctx.fillStyle='#2c2c2c';ctx.font='12px sans-serif';ctx.textAlign='left';
+ctx.fillText('市场情绪',pad.l+36,pad.t+13);
+ctx.fillText('理性价值中枢',pad.l+36,pad.t+26);
+
+ctx.fillStyle='#0d3350';ctx.font='bold 14px sans-serif';ctx.textAlign='center';
+ctx.fillText('市场先生的情绪周期与理性投资者的应对',W/2,25);
+})();
+
+// Chart 4: Graham's Investment Decision Flow
+(function(){
+var c=document.getElementById('chart4');if(!c)return;
+var ctx=c.getContext('2d');
+var W=c.width,H=c.height;
+
+ctx.fillStyle='#0d3350';ctx.font='bold 14px sans-serif';ctx.textAlign='center';
+ctx.fillText('格雷厄姆投资决策流程图',W/2,25);
+
+var boxes=[
+{x:W/2,y:60,w:180,h:36,text:'第一步：我是哪种投资者？',fill:'#1a4a6b',textColor:'#fff'},
+{x:W/4,y:130,w:150,h:36,text:'防御型投资者',fill:'#3a6b4f',textColor:'#fff'},
+{x:W*3/4,y:130,w:150,h:36,text:'积极型投资者',fill:'#b5651d',textColor:'#fff'},
+{x:W/4,y:200,w:150,h:36,text:'→ 指数基金 + 债券',fill:'#e8f2ec',textColor:'#3a6b4f'},
+{x:W/4-90,y:265,w:120,h:36,text:'50/50配置',fill:'#e8f2ec',textColor:'#3a6b4f'},
+{x:W/4+90,y:265,w:120,h:36,text:'定期再平衡',fill:'#e8f2ec',textColor:'#3a6b4f'},
+{x:W*3/4-60,y:200,w:140,h:36,text:'→ 便宜货策略',fill:'#fdf3ec',textColor:'#b5651d'},
+{x:W*3/4+80,y:200,w:140,h:36,text:'特殊情况套利',fill:'#fdf3ec',textColor:'#b5651d'},
+{x:W*3/4,y:270,w:180,h:36,text:'→ 安全边际 > 一切',fill:'#fdf8ec',textColor:'#6b5520'},
+{x:W/2,y:340,w:200,h:40,text:'共同原则：理性·纪律·耐心',fill:'#0d3350',textColor:'#fff'}
+];
+
+for(var i=0;i<boxes.length;i++){
+var b=boxes[i];
+ctx.fillStyle=b.fill;
+var r=6;
+ctx.beginPath();
+ctx.moveTo(b.x-b.w/2+r,b.y-b.h/2);
+ctx.lineTo(b.x+b.w/2-r,b.y-b.h/2);
+ctx.quadraticCurveTo(b.x+b.w/2,b.y-b.h/2,b.x+b.w/2,b.y-b.h/2+r);
+ctx.lineTo(b.x+b.w/2,b.y+b.h/2-r);
+ctx.quadraticCurveTo(b.x+b.w/2,b.y+b.h/2,b.x+b.w/2-r,b.y+b.h/2);
+ctx.lineTo(b.x-b.w/2+r,b.y+b.h/2);
+ctx.quadraticCurveTo(b.x-b.w/2,b.y+b.h/2,b.x-b.w/2,b.y+b.h/2-r);
+ctx.lineTo(b.x-b.w/2,b.y-b.h/2+r);
+ctx.quadraticCurveTo(b.x-b.w/2,b.y-b.h/2,b.x-b.w/2+r,b.y-b.h/2);
+ctx.closePath();ctx.fill();
+
+ctx.fillStyle=b.textColor;ctx.font='bold 12px sans-serif';ctx.textAlign='center';
+ctx.fillText(b.text,b.x,b.y+4);
+}
+
+// Arrows
+ctx.strokeStyle='#aaa';ctx.lineWidth=1.5;
+var arrows=[
+[boxes[0],boxes[1]],[boxes[0],boxes[2]],
+[boxes[1],boxes[3]],[boxes[3],boxes[4]],[boxes[3],boxes[5]],
+[boxes[2],boxes[6]],[boxes[2],boxes[7]],
+[boxes[6],boxes[8]],[boxes[7],boxes[8]],
+[boxes[5],boxes[9]],[boxes[8],boxes[9]]
+];
+for(var a=0;a<arrows.length;a++){
+var from=arrows[a][0],to=arrows[a][1];
+ctx.beginPath();ctx.moveTo(from.x,from.y+from.h/2);ctx.lineTo(to.x,to.y-to.h/2);ctx.stroke();
+// Arrowhead
+var angle=M.atan2(to.y-to.h/2-(from.y+from.h/2),to.x-from.x);
+ctx.beginPath();
+ctx.moveTo(to.x,to.y-to.h/2);
+ctx.lineTo(to.x-8*M.cos(angle-0.4),to.y-to.h/2-8*M.sin(angle-0.4));
+ctx.lineTo(to.x-8*M.cos(angle+0.4),to.y-to.h/2-8*M.sin(angle+0.4));
+ctx.closePath();ctx.fillStyle='#aaa';ctx.fill();
+}
+})();
+</script>
+
+</body>
+</html>

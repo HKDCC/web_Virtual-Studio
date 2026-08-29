@@ -1,0 +1,2559 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>$100M OFFERS — 原子朋克知识库 | Alex Hormozi</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Playfair+Display:wght@700;900&display=swap');
+/* ============================================
+   $100M OFFERS — 原子朋克极繁主义知识库
+   单文件 HTML / 离线可用
+   ============================================ */
+
+/* ---------- 1. 设计令牌 ---------- */
+:root[data-theme="dark"]{
+  --bg:#0a0e1a;
+  --bg-2:#111728;
+  --bg-3:#1a2138;
+  --fg:#f4e8d0;
+  --fg-2:#c9bea8;
+  --fg-3:#8a8270;
+  --accent:#ff6b35;
+  --accent-2:#00d9ff;
+  --accent-3:#ffd23f;
+  --danger:#e63946;
+  --green:#3dd68c;
+  --border:rgba(244,232,208,.14);
+  --border-2:rgba(244,232,208,.08);
+  --shadow:0 8px 32px rgba(0,0,0,.5);
+  --grid-line:rgba(244,232,208,.04);
+  --card-glow:0 0 0 1px var(--border), 0 20px 60px -20px rgba(255,107,53,.15);
+}
+:root[data-theme="light"]{
+  --bg:#f0e6d0;
+  --bg-2:#e8dcc2;
+  --bg-3:#ddd0b4;
+  --fg:#1a1a2e;
+  --fg-2:#3a3a4e;
+  --fg-3:#6a6a7a;
+  --accent:#c44d18;
+  --accent-2:#006d77;
+  --accent-3:#a67c00;
+  --danger:#a4161a;
+  --green:#2a9d5c;
+  --border:rgba(26,26,46,.16);
+  --border-2:rgba(26,26,46,.08);
+  --shadow:0 8px 32px rgba(26,26,46,.12);
+  --grid-line:rgba(26,26,46,.05);
+  --card-glow:0 0 0 1px var(--border), 0 20px 60px -20px rgba(196,77,24,.12);
+}
+
+/* ---------- 2. 重置与基础 ---------- */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{
+  font-family:'Noto Serif SC',Georgia,'Times New Roman',serif;
+  background:var(--bg);
+  color:var(--fg);
+  line-height:1.7;
+  font-size:16px;
+  overflow-x:hidden;
+  background-image:
+    linear-gradient(var(--grid-line) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+::selection{background:var(--accent);color:var(--bg)}
+
+/* ---------- 3. 字体类 ---------- */
+.display{
+  font-family:'Playfair Display','Impact',sans-serif;
+  font-weight:400;
+  letter-spacing:.02em;
+  text-transform:uppercase;
+  line-height:.95;
+}
+.mono{font-family:'Courier New','Courier',monospace;letter-spacing:-.01em}
+.serif{font-family:'Noto Serif SC',Georgia,serif}
+
+/* ---------- 4. 预加载屏 ---------- */
+#preloader{
+  position:fixed;inset:0;z-index:99999;
+  background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity .8s ease,visibility .8s ease;
+}
+#preloader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.pre-orb{
+  width:80px;height:80px;border-radius:50%;
+  border:2px solid var(--border);
+  border-top-color:var(--accent);
+  border-right-color:var(--accent-2);
+  animation:spin 1s linear infinite;
+  position:relative;
+}
+.pre-orb::after{
+  content:'';position:absolute;inset:14px;border-radius:50%;
+  border:1px solid var(--border);
+  border-bottom-color:var(--accent-3);
+  animation:spin 1.6s linear infinite reverse;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pre-bar-wrap{
+  width:260px;height:3px;background:var(--bg-3);border-radius:2px;
+  margin-top:32px;overflow:hidden;position:relative;
+}
+.pre-bar{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--accent),var(--accent-2),var(--accent-3));
+  border-radius:2px;
+  transition:width .3s ease;
+  box-shadow:0 0 12px var(--accent);
+}
+.pre-text{
+  margin-top:16px;font-size:11px;letter-spacing:.3em;
+  color:var(--fg-3);text-transform:uppercase;
+  font-family:'Courier New',monospace;
+}
+
+/* ---------- 5. 顶部导航 ---------- */
+#topbar{
+  position:fixed;top:0;left:0;right:0;z-index:9000;
+  height:56px;
+  background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+  padding:0 24px;
+  gap:24px;
+}
+.brand{
+  display:flex;align-items:center;gap:10px;
+  font-family:'Playfair Display','Impact',sans-serif;
+  font-size:18px;letter-spacing:.04em;
+  text-transform:uppercase;
+  color:var(--fg);
+  white-space:nowrap;
+}
+.brand-mark{
+  width:28px;height:28px;position:relative;flex-shrink:0;
+}
+.brand-mark svg{width:100%;height:100%}
+#toc-scroll{
+  flex:1;overflow-x:auto;overflow-y:hidden;
+  scrollbar-width:none;
+}
+#toc-scroll::-webkit-scrollbar{display:none}
+#toc-bar{
+  display:flex;gap:4px;align-items:center;
+  height:56px;min-width:max-content;padding-right:24px;
+}
+.toc-link{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;
+  font-family:'Courier New',monospace;
+  font-size:11px;letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--fg-3);
+  text-decoration:none;
+  border:1px solid transparent;
+  border-radius:4px;
+  white-space:nowrap;
+  transition:all .25s ease;
+  cursor:pointer;
+  position:relative;
+}
+.toc-link:hover{color:var(--fg);border-color:var(--border)}
+.toc-link.active{
+  color:var(--accent);
+  border-color:var(--accent);
+  background:color-mix(in srgb,var(--accent) 10%,transparent);
+}
+.toc-num{
+  font-size:9px;opacity:.6;
+}
+#theme-toggle{
+  width:40px;height:40px;
+  border:1px solid var(--border);
+  background:var(--bg-2);
+  border-radius:50%;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--fg);
+  transition:all .3s ease;
+  flex-shrink:0;
+  position:relative;
+  overflow:hidden;
+}
+#theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
+#theme-toggle svg{width:18px;height:18px}
+#mobile-menu-btn{
+  display:none;
+  width:40px;height:40px;
+  border:1px solid var(--border);
+  background:var(--bg-2);
+  border-radius:6px;
+  cursor:pointer;
+  align-items:center;justify-content:center;
+  color:var(--fg);
+}
+
+/* ---------- 6. 移动端抽屉 ---------- */
+#drawer{
+  position:fixed;top:0;left:0;bottom:0;width:300px;z-index:9500;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-right:1px solid var(--border);
+  transform:translateX(-100%);
+  transition:transform .4s cubic-bezier(.4,0,.2,1);
+  overflow-y:auto;
+  padding:80px 20px 40px;
+}
+#drawer.open{transform:translateX(0)}
+#drawer-overlay{
+  position:fixed;inset:0;z-index:9400;
+  background:rgba(0,0,0,.5);
+  backdrop-filter:blur(4px);
+  opacity:0;visibility:hidden;
+  transition:opacity .3s ease,visibility .3s ease;
+}
+#drawer-overlay.show{opacity:1;visibility:visible}
+.drawer-link{
+  display:block;
+  padding:12px 16px;
+  font-family:'Courier New',monospace;
+  font-size:12px;letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--fg-2);
+  text-decoration:none;
+  border-left:2px solid transparent;
+  transition:all .2s ease;
+  margin-bottom:2px;
+}
+.drawer-link:hover,.drawer-link.active{
+  color:var(--accent);
+  border-left-color:var(--accent);
+  background:color-mix(in srgb,var(--accent) 6%,transparent);
+}
+.drawer-close{
+  position:absolute;top:20px;right:20px;
+  width:36px;height:36px;
+  border:1px solid var(--border);
+  background:transparent;
+  border-radius:50%;
+  color:var(--fg);
+  cursor:pointer;
+  font-size:18px;
+}
+
+/* ---------- 7. 主布局 ---------- */
+main{
+  max-width:1600px;
+  margin:0 auto;
+  padding:56px 0 0;
+}
+.container{
+  padding:0 32px;
+}
+@media(max-width:768px){
+  .container{padding:0 20px}
+  #toc-scroll{display:none}
+  #mobile-menu-btn{display:flex}
+  .brand{font-size:15px}
+}
+
+/* ---------- 8. 通用组件 ---------- */
+.section{
+  padding:80px 0;
+  position:relative;
+  border-bottom:1px solid var(--border-2);
+}
+.section-label{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:'Courier New',monospace;
+  font-size:11px;letter-spacing:.25em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:20px;
+}
+.section-label::before{
+  content:'';width:32px;height:1px;background:var(--accent);
+}
+.section-title{
+  font-family:'Playfair Display','Impact',sans-serif;
+  font-size:clamp(36px,5vw,72px);
+  line-height:.95;
+  text-transform:uppercase;
+  letter-spacing:-.01em;
+  margin-bottom:24px;
+  color:var(--fg);
+}
+.section-sub{
+  font-size:18px;
+  color:var(--fg-2);
+  max-width:720px;
+  line-height:1.6;
+  margin-bottom:48px;
+}
+.eyebrow{
+  font-family:'Courier New',monospace;
+  font-size:10px;letter-spacing:.3em;
+  text-transform:uppercase;
+  color:var(--accent-2);
+}
+
+/* 卡片 */
+.card{
+  background:var(--bg-2);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:32px;
+  position:relative;
+  transition:transform .3s ease,border-color .3s ease;
+}
+.card:hover{border-color:color-mix(in srgb,var(--accent) 40%,var(--border))}
+.card-corner{
+  position:absolute;width:12px;height:12px;
+  border:1px solid var(--accent);
+}
+.card-corner.tl{top:-1px;left:-1px;border-right:none;border-bottom:none}
+.card-corner.tr{top:-1px;right:-1px;border-left:none;border-bottom:none}
+.card-corner.bl{bottom:-1px;left:-1px;border-right:none;border-top:none}
+.card-corner.br{bottom:-1px;right:-1px;border-left:none;border-top:none}
+
+/* 引文 */
+.quote-block{
+  border-left:3px solid var(--accent);
+  padding:16px 0 16px 28px;
+  margin:24px 0;
+  font-style:italic;
+  font-size:17px;
+  color:var(--fg-2);
+  position:relative;
+}
+.quote-block::before{
+  content:'"';
+  position:absolute;left:8px;top:-8px;
+  font-size:48px;color:var(--accent);
+  opacity:.3;font-family:'Noto Serif SC',Georgia,serif;
+  line-height:1;
+}
+.quote-author{
+  display:block;
+  font-style:normal;
+  font-size:12px;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+  color:var(--fg-3);
+  margin-top:8px;
+  font-family:'Courier New',monospace;
+}
+
+/* 标签 */
+.tag{
+  display:inline-block;
+  padding:3px 10px;
+  font-family:'Courier New',monospace;
+  font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;
+  border:1px solid var(--border);
+  border-radius:3px;
+  color:var(--fg-2);
+  margin:2px;
+}
+.tag.accent{color:var(--accent);border-color:var(--accent)}
+.tag.cyan{color:var(--accent-2);border-color:var(--accent-2)}
+.tag.yellow{color:var(--accent-3);border-color:var(--accent-3)}
+
+/* 渐入动画 */
+.reveal{
+  opacity:0;transform:translateY(30px);
+  transition:opacity .7s ease,transform .7s ease;
+}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* 渐显文字 */
+.fade-text{
+  opacity:0;
+  transition:opacity .6s ease;
+}
+.fade-text.in{opacity:1}
+
+/* 网格 */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+@media(max-width:900px){
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+}
+
+/* ---------- 9. HERO区 ---------- */
+#hero{
+  min-height:calc(100vh - 56px);
+  display:flex;align-items:center;
+  position:relative;
+  overflow:hidden;
+  padding:60px 0;
+}
+.hero-bg{
+  position:absolute;inset:0;z-index:0;
+  opacity:.5;
+}
+.hero-content{
+  position:relative;z-index:2;
+  width:100%;
+}
+.hero-pretitle{
+  font-family:'Courier New',monospace;
+  font-size:12px;letter-spacing:.4em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:24px;
+  display:flex;align-items:center;gap:16px;
+}
+.hero-pretitle::before,.hero-pretitle::after{
+  content:'';flex:0 0 40px;height:1px;background:var(--accent);
+}
+.hero-title{
+  font-family:'Playfair Display','Impact',sans-serif;
+  font-size:clamp(60px,11vw,180px);
+  line-height:.85;
+  text-transform:uppercase;
+  letter-spacing:-.02em;
+  margin-bottom:8px;
+  background:linear-gradient(135deg,var(--fg) 0%,var(--fg) 50%,var(--accent) 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.hero-title-2{
+  font-family:'Playfair Display','Impact',sans-serif;
+  font-size:clamp(28px,4vw,56px);
+  line-height:1;
+  text-transform:uppercase;
+  color:var(--accent);
+  letter-spacing:.02em;
+  margin-bottom:32px;
+}
+.hero-desc{
+  font-size:clamp(16px,1.4vw,20px);
+  color:var(--fg-2);
+  max-width:640px;
+  line-height:1.6;
+  margin-bottom:48px;
+}
+.hero-meta{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:24px;
+  max-width:700px;
+  border-top:1px solid var(--border);
+  padding-top:32px;
+}
+@media(max-width:600px){
+  .hero-meta{grid-template-columns:1fr;gap:16px}
+}
+.meta-block{display:flex;flex-direction:column;gap:4px}
+.meta-label{
+  font-family:'Courier New',monospace;
+  font-size:10px;letter-spacing:.25em;
+  text-transform:uppercase;
+  color:var(--fg-3);
+}
+.meta-value{
+  font-size:14px;color:var(--fg);
+  line-height:1.4;
+}
+.meta-value strong{color:var(--accent);font-weight:normal}
+
+/* 原子轨道动画 */
+.atom-deco{
+  position:absolute;
+  width:500px;height:500px;
+  right:-100px;top:50%;transform:translateY(-50%);
+  z-index:1;opacity:.15;
+  pointer-events:none;
+}
+.atom-deco svg{width:100%;height:100%}
+@keyframes orbit-1{to{transform:rotate(360deg)}}
+@keyframes orbit-2{to{transform:rotate(-360deg)}}
+@keyframes orbit-3{to{transform:rotate(360deg)}}
+.orbit-1{animation:orbit-1 12s linear infinite;transform-origin:center}
+.orbit-2{animation:orbit-2 18s linear infinite;transform-origin:center}
+.orbit-3{animation:orbit-3 24s linear infinite;transform-origin:center}
+
+/* ---------- 10. 价值方程式 ---------- */
+.value-eq{
+  background:var(--bg-2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:48px 32px;
+  position:relative;
+  overflow:hidden;
+}
+.value-eq-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:24px;
+  align-items:stretch;
+}
+@media(max-width:700px){.value-eq-grid{grid-template-columns:1fr}}
+.ve-cell{
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:24px;
+  display:flex;flex-direction:column;justify-content:center;
+  position:relative;
+  min-height:120px;
+}
+.ve-cell.top{
+  background:linear-gradient(135deg,color-mix(in srgb,var(--green) 8%,transparent),transparent);
+  border-color:color-mix(in srgb,var(--green) 30%,var(--border));
+}
+.ve-cell.bot{
+  background:linear-gradient(135deg,color-mix(in srgb,var(--danger) 8%,transparent),transparent);
+  border-color:color-mix(in srgb,var(--danger) 30%,var(--border));
+}
+.ve-goal{
+  position:absolute;top:8px;right:12px;
+  font-family:'Courier New',monospace;
+  font-size:9px;letter-spacing:.15em;
+  text-transform:uppercase;
+}
+.ve-goal.up{color:var(--green)}
+.ve-goal.dn{color:var(--danger)}
+.ve-title{
+  font-family:'Playfair Display','Impact',sans-serif;
+  font-size:20px;text-transform:uppercase;
+  margin-bottom:8px;letter-spacing:.02em;
+}
+.ve-desc{font-size:13px;color:var(--fg-2);line-height:1.5}
+.ve-divider{
+  grid-column:1/-1;
+  text-align:center;
+  font-family:'Playfair Display','Impact',sans-serif;
+  font-size:48px;
+  color:var(--accent);
+  line-height:1;
+  margin:-8px 0;
+}
+
+/* ---------- 11. 对比表 ---------- */
+.compare-table{
+  width:100%;border-collapse:collapse;
+  font-size:14px;
+}
+.compare-table th{
+  font-family:'Courier New',monospace;
+  font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;
+  text-align:left;
+  padding:16px;
+  border-bottom:2px solid var(--accent);
+  color:var(--accent);
+}
+.compare-table td{
+  padding:16px;
+  border-bottom:1px solid var(--border);
+  color:var(--fg-2);
+}
+.compare-table tr:hover td{background:color-mix(in srgb,var(--accent) 4%,transparent)}
+
+/* ---------- 12. 步骤流程 ---------- */
+.steps{display:flex;flex-direction:column;gap:0;position:relative}
+.step{
+  display:grid;
+  grid-template-columns:60px 1fr;
+  gap:24px;
+  padding:24px 0;
+  border-bottom:1px solid var(--border-2);
+  position:relative;
+}
+.step:last-child{border-bottom:none}
+.step-num{
+  font-family:'Playfair Display','Impact',sans-serif;
+  font-size:36px;
+  color:var(--accent);
+  line-height:1;
+  width:60px;height:60px;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--accent);
+  border-radius:50%;
+  flex-shrink:0;
+}
+.step-content h4{
+  font-family:'Playfair Display','Impact',sans-serif;
+  font-size:20px;text-transform:uppercase;
+  margin-bottom:8px;letter-spacing:.02em;
+}
+.step-content p{color:var(--fg-2);font-size:15px}
+
+/* ---------- 13. 交互计算器 ---------- */
+.calculator{
+  background:var(--bg-2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:32px;
+}
+.calc-row{
+  display:grid;
+  grid-template-columns:1fr 120px 80px;
+  gap:16px;align-items:center;
+  padding:12px 0;
+  border-bottom:1px solid var(--border-2);
+}
+.calc-row:last-of-type{border-bottom:none}
+.calc-label{font-size:14px;color:var(--fg-2)}
+.calc-slider{
+  width:100%;height:4px;
+  -webkit-appearance:none;appearance:none;
+  background:var(--bg-3);border-radius:2px;
+  outline:none;
+}
+.calc-slider::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;
+  width:16px;height:16px;border-radius:50%;
+  background:var(--accent);cursor:pointer;
+  box-shadow:0 0 8px var(--accent);
+}
+.calc-slider::-moz-range-thumb{
+  width:16px;height:16px;border-radius:50%;
+  background:var(--accent);cursor:pointer;border:none;
+  box-shadow:0 0 8px var(--accent);
+}
+.calc-val{
+  font-family:'Courier New',monospace;
+  font-size:16px;color:var(--accent);
+  text-align:right;
+}
+.calc-result{
+  margin-top:24px;padding:24px;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 12%,transparent),color-mix(in srgb,var(--accent-2) 8%,transparent));
+  border:1px solid var(--accent);
+  border-radius:8px;
+  text-align:center;
+}
+.calc-result-num{
+  font-family:'Playfair Display','Impact',sans-serif;
+  font-size:48px;
+  color:var(--accent);
+  line-height:1;
+}
+.calc-result-label{
+  font-family:'Courier New',monospace;
+  font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--fg-2);
+  margin-top:8px;
+}
+
+/* ---------- 14. MAGIC公式 ---------- */
+.magic-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:16px;
+}
+@media(max-width:900px){.magic-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.magic-grid{grid-template-columns:1fr}}
+.magic-cell{
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:24px 16px;
+  text-align:center;
+  position:relative;
+  background:var(--bg-2);
+  transition:transform .3s ease,border-color .3s ease;
+}
+.magic-cell:hover{transform:translateY(-4px);border-color:var(--accent)}
+.magic-letter{
+  font-family:'Playfair Display','Impact',sans-serif;
+  font-size:64px;
+  line-height:1;
+  color:var(--accent);
+  margin-bottom:8px;
+}
+.magic-name{
+  font-family:'Courier New',monospace;
+  font-size:10px;letter-spacing:.15em;
+  text-transform:uppercase;
+  color:var(--accent-2);
+  margin-bottom:12px;
+}
+.magic-desc{font-size:12px;color:var(--fg-2);line-height:1.5}
+
+/* ---------- 15. 保证类型卡 ---------- */
+.guarantee-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:20px;
+}
+.g-card{
+  background:var(--bg-2);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:24px;
+  position:relative;
+  transition:border-color .3s ease;
+}
+.g-card:hover{border-color:var(--accent)}
+.g-type{
+  font-family:'Courier New',monospace;
+  font-size:10px;letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--accent-2);
+  margin-bottom:8px;
+}
+.g-title{
+  font-family:'Playfair Display','Impact',sans-serif;
+  font-size:18px;text-transform:uppercase;
+  margin-bottom:12px;letter-spacing:.02em;
+}
+.g-body{font-size:13px;color:var(--fg-2);line-height:1.6}
+
+/* ---------- 16. 时间线 ---------- */
+.timeline{
+  position:relative;
+  padding-left:40px;
+}
+.timeline::before{
+  content:'';position:absolute;
+  left:12px;top:0;bottom:0;
+  width:2px;background:var(--border);
+}
+.tl-item{
+  position:relative;
+  padding:0 0 40px 0;
+}
+.tl-item::before{
+  content:'';position:absolute;
+  left:-34px;top:4px;
+  width:14px;height:14px;border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 0 4px var(--bg),0 0 12px var(--accent);
+}
+.tl-date{
+  font-family:'Courier New',monospace;
+  font-size:11px;letter-spacing:.15em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:8px;
+}
+.tl-title{
+  font-family:'Playfair Display','Impact',sans-serif;
+  font-size:20px;text-transform:uppercase;
+  margin-bottom:8px;
+}
+.tl-body{font-size:14px;color:var(--fg-2)}
+
+/* ---------- 17. SVG容器 ---------- */
+.svg-wrap{
+  background:var(--bg-2);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:24px;
+  position:relative;
+}
+.svg-wrap svg{width:100%;height:auto;display:block}
+.svg-caption{
+  font-family:'Courier New',monospace;
+  font-size:11px;letter-spacing:.15em;
+  text-transform:uppercase;
+  color:var(--fg-3);
+  text-align:center;
+  margin-top:16px;
+}
+
+/* ---------- 18. 大数字 ---------- */
+.big-stat{
+  text-align:center;
+  padding:32px 16px;
+}
+.big-num{
+  font-family:'Playfair Display','Impact',sans-serif;
+  font-size:clamp(48px,8vw,96px);
+  line-height:1;
+  color:var(--accent);
+  letter-spacing:-.02em;
+}
+.big-label{
+  font-family:'Courier New',monospace;
+  font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--fg-2);
+  margin-top:12px;
+}
+
+/* ---------- 19. 页脚 ---------- */
+footer{
+  padding:60px 0 40px;
+  border-top:1px solid var(--border);
+  background:var(--bg-2);
+}
+.footer-grid{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  gap:48px;
+  margin-bottom:40px;
+}
+@media(max-width:700px){.footer-grid{grid-template-columns:1fr}}
+.footer-title{
+  font-family:'Playfair Display','Impact',sans-serif;
+  font-size:20px;text-transform:uppercase;
+  margin-bottom:16px;
+}
+.footer-text{font-size:13px;color:var(--fg-2);line-height:1.7}
+.footer-bottom{
+  padding-top:24px;
+  border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:'Courier New',monospace;
+  font-size:11px;letter-spacing:.1em;
+  color:var(--fg-3);
+  text-transform:uppercase;
+  flex-wrap:wrap;gap:12px;
+}
+
+/* ---------- 20. 装饰元素 ---------- */
+.deco-line{
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  margin:48px 0;
+  position:relative;
+}
+.deco-line::before{
+  content:'◆';position:absolute;
+  left:50%;top:50%;transform:translate(-50%,-50%);
+  background:var(--bg);padding:0 12px;
+  color:var(--accent);font-size:12px;
+}
+.deco-bracket{
+  position:relative;
+  padding:24px;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.deco-bracket::before,.deco-bracket::after{
+  content:'';position:absolute;
+  width:20px;height:20px;
+  border:1px solid var(--accent);
+}
+.deco-bracket::before{top:-1px;left:-1px;border-right:none;border-bottom:none}
+.deco-bracket::after{bottom:-1px;right:-1px;border-left:none;border-top:none}
+
+/* ---------- 21. 视图过渡 ---------- */
+::view-transition-old(root){animation:none}
+::view-transition-new(root){animation:none}
+
+/* ---------- 22. 滚动条 ---------- */
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--bg-3);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+/* ---------- 23. 杂项 ---------- */
+.highlight{color:var(--accent);font-weight:bold}
+.highlight-cyan{color:var(--accent-2);font-weight:bold}
+.highlight-yellow{color:var(--accent-3);font-weight:bold}
+.strike{text-decoration:line-through;color:var(--fg-3)}
+.callout{
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 8%,var(--bg-2)),var(--bg-2));
+  border-left:3px solid var(--accent);
+  padding:20px 24px;
+  border-radius:0 8px 8px 0;
+  margin:24px 0;
+}
+.callout-title{
+  font-family:'Courier New',monospace;
+  font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:8px;
+}
+.pro-tip{
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent-2) 8%,var(--bg-2)),var(--bg-2));
+  border-left:3px solid var(--accent-2);
+  padding:16px 20px;
+  border-radius:0 6px 6px 0;
+  margin:20px 0;
+  font-size:14px;
+}
+.pro-tip::before{
+  content:'PRO TIP ';
+  font-family:'Courier New',monospace;
+  font-size:10px;letter-spacing:.2em;
+  color:var(--accent-2);
+  font-weight:bold;
+}
+
+</style>
+</head>
+<body>
+
+<!-- ============ 预加载屏 ============ -->
+<div id="preloader">
+  <div class="pre-orb"></div>
+  <div class="pre-bar-wrap"><div class="pre-bar" id="pre-bar"></div></div>
+  <div class="pre-text" id="pre-text">INITIALIZING OFFER MATRIX…</div>
+</div>
+
+<!-- ============ 顶部导航 ============ -->
+<nav id="topbar">
+  <button id="mobile-menu-btn" aria-label="菜单">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
+  <div class="brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 32 32" fill="none">
+        <circle cx="16" cy="16" r="3" fill="currentColor"/>
+        <ellipse cx="16" cy="16" rx="14" ry="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        <ellipse cx="16" cy="16" rx="14" ry="6" stroke="currentColor" stroke-width="1.5" fill="none" transform="rotate(60 16 16)"/>
+        <ellipse cx="16" cy="16" rx="14" ry="6" stroke="currentColor" stroke-width="1.5" fill="none" transform="rotate(120 16 16)"/>
+      </svg>
+    </div>
+    <span>$100M OFFERS</span>
+  </div>
+  <div id="toc-scroll">
+    <div id="toc-bar"></div>
+  </div>
+  <button id="theme-toggle" aria-label="切换主题">
+    <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </svg>
+  </button>
+</nav>
+
+<!-- ============ 移动端抽屉 ============ -->
+<div id="drawer-overlay"></div>
+<aside id="drawer">
+  <button class="drawer-close" id="drawer-close">✕</button>
+  <div id="drawer-links"></div>
+</aside>
+
+<!-- ============ 主内容 ============ -->
+<main>
+
+<!-- ============================================
+     HERO 封面
+     ============================================ -->
+<section id="hero" class="section" style="border-bottom:1px solid var(--border)">
+  <div class="hero-bg">
+    <div class="atom-deco">
+      <svg viewBox="0 0 500 500" fill="none">
+        <g class="orbit-1" style="transform-origin:250px 250px">
+          <ellipse cx="250" cy="250" rx="220" ry="80" stroke="var(--accent)" stroke-width="1" fill="none"/>
+          <circle cx="470" cy="250" r="6" fill="var(--accent)"/>
+        </g>
+        <g class="orbit-2" style="transform-origin:250px 250px">
+          <ellipse cx="250" cy="250" rx="200" ry="200" stroke="var(--accent-2)" stroke-width="1" fill="none" transform="rotate(60 250 250)"/>
+          <circle cx="250" cy="50" r="5" fill="var(--accent-2)" transform="rotate(60 250 250)"/>
+        </g>
+        <g class="orbit-3" style="transform-origin:250px 250px">
+          <ellipse cx="250" cy="250" rx="180" ry="180" stroke="var(--accent-3)" stroke-width="1" fill="none" transform="rotate(120 250 250)"/>
+          <circle cx="250" cy="430" r="5" fill="var(--accent-3)" transform="rotate(120 250 250)"/>
+        </g>
+        <circle cx="250" cy="250" r="12" fill="var(--accent)"/>
+        <circle cx="250" cy="250" r="24" stroke="var(--accent)" stroke-width="1" fill="none" opacity=".4"/>
+      </svg>
+    </div>
+  </div>
+  <div class="container hero-content">
+    <div class="hero-pretitle">ACQUISITION.COM · VOLUME I · 知识库</div>
+    <h1 class="hero-title">$100M<br>OFFERS</h1>
+    <div class="hero-title-2">如何打造让人「拒绝就觉得自己蠢」的报价</div>
+    <p class="hero-desc">
+      亚历克斯·霍莫齐（Alex Hormozi）的实战手册——从破产边缘到年入过亿，核心武器只有一个：<strong style="color:var(--accent)">Grand Slam Offer（大满贯报价）</strong>。本知识库以原子朋克视觉重构全书框架、模型与工具箱。
+    </p>
+    <div class="hero-meta">
+      <div class="meta-block">
+        <span class="meta-label">Author</span>
+        <span class="meta-value"><strong>Alex Hormozi</strong><br>亚历克斯·霍莫齐</span>
+      </div>
+      <div class="meta-block">
+        <span class="meta-label">Designed By</span>
+        <span class="meta-value">知识库重构<br>AI 辅助编辑</span>
+      </div>
+      <div class="meta-block">
+        <span class="meta-label">Powered By</span>
+        <span class="meta-value">Z.ai GLM-5.2<br>智谱 AI 大语言模型</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     START HERE — 引言
+     ============================================ -->
+<section id="sec-start" class="section">
+  <div class="container">
+    <div class="section-label">START HERE · 起点</div>
+    <h2 class="section-title">不对称回报<br>与「大满贯」</h2>
+    <p class="section-sub">
+      Jeff Bezos 说：超大回报往往来自与常理对赌。在商业中，你只需击中一次「大满贯报价」就足以改变命运。霍莫齐职业生涯广告投入回报比为 <strong style="color:var(--accent)">36:1</strong>——每花 1 美元广告费赚回 36 美元。
+    </p>
+
+    <div class="grid-2">
+      <div class="card reveal">
+        <span class="card-corner tl"></span><span class="card-corner tr"></span>
+        <span class="card-corner bl"></span><span class="card-corner br"></span>
+        <div class="eyebrow" style="margin-bottom:12px">CASINO VS BUSINESS</div>
+        <h3 style="font-family:'Playfair Display',Impact,sans-serif;font-size:24px;text-transform:uppercase;margin-bottom:12px">赌场 vs 商业</h3>
+        <p style="color:var(--fg-2);font-size:15px;line-height:1.7">
+          在赌场，赔率永远不利于你；技能只能改善赔率，永远无法战胜它。但在商业中，你可以通过提升技能把赔率扭转到对你有利——<strong style="color:var(--accent)">你成为「庄家」</strong>。
+        </p>
+        <div class="deco-line"></div>
+        <p style="color:var(--fg-2);font-size:15px;line-height:1.7">
+          棒球中全垒打最多得 4 分，但商业中的「全垒打」可以让你赢 1000 倍回报——赢得未来 100 年的每一场世界大赛。
+        </p>
+      </div>
+
+      <div class="card reveal">
+        <span class="card-corner tl"></span><span class="card-corner tr"></span>
+        <span class="card-corner bl"></span><span class="card-corner br"></span>
+        <div class="eyebrow" style="margin-bottom:12px">GRAND SLAM OFFER</div>
+        <h3 style="font-family:'Playfair Display',Impact,sans-serif;font-size:24px;text-transform:uppercase;margin-bottom:12px">大满贯报价定义</h3>
+        <p style="color:var(--fg-2);font-size:15px;line-height:1.7">
+          一种你呈现给市场的报价，<strong style="color:var(--accent)">无法与任何其他产品或服务相比较</strong>——它结合了有吸引力的促销、不可匹敌的价值主张、溢价定价、不可击败的保证，以及一种让你获得新客户时还能赚钱的「金钱模型」。
+        </p>
+        <div style="margin-top:20px;display:flex;flex-wrap:wrap;gap:4px">
+          <span class="tag accent">不可比较</span>
+          <span class="tag accent">品类独占</span>
+          <span class="tag accent">溢价定价</span>
+          <span class="tag accent">风险逆转</span>
+          <span class="tag accent">获客即盈利</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="quote-block reveal fade-text" style="margin-top:48px">
+      给人们一个好处，好到他们觉得拒绝你就是愚蠢。
+      <span class="quote-author">— Travis Jones</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION I — 起源故事
+     ============================================ -->
+<section id="sec-origin" class="section">
+  <div class="container">
+    <div class="section-label">SECTION I · HOW WE GOT HERE</div>
+    <h2 class="section-title">起源：从 -$3,300/天<br>到 $1 亿</h2>
+    <p class="section-sub">
+      2016 年圣诞夜，霍莫齐的账户余额仅剩 $1,036。合伙人卷走了他卖掉六家健身房的全部积蓄，支付处理器冻结了 $120,000 货款，他仍然咬牙付给销售员 $22,000 佣金。唯一剩下的武器：一张 Grand Slam Offer 和一张额度 $100,000 的旧信用卡。
+    </p>
+
+    <div class="timeline reveal">
+      <div class="tl-item">
+        <div class="tl-date">2016.12.24 · 圣诞夜</div>
+        <div class="tl-title">谷底：$1,036</div>
+        <div class="tl-body">
+          合伙人卷走 $46,000 全部积蓄；支付处理器冻结 $120,000 货款 6 个月；母亲车祸重伤；自己 60mph 追尾+DUI。仍将最后 $22,000 付给销售员佣金。余额：<strong style="color:var(--danger)">$1,036</strong>。
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2016.12.26 · 背水一战</div>
+        <div class="tl-title">同时启动 6 家健身房</div>
+        <div class="tl-body">
+          每天 <strong style="color:var(--danger)">-$3,300</strong>（机票+酒店+租车+广告费 ×6），按工作小时算每小时亏损 $412。信用卡快速燃烧。手上唯一的武器：Gym Launch 的 Grand Slam Offer。
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2017.01 · 第一个月</div>
+        <div class="tl-title">首月 $100,117</div>
+        <div class="tl-body">
+          刚好覆盖每天 $3,300 的燃烧速度。绝地逢生。从找破产律师变成了思考怎么处理 $3,000,000 利润。
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">12 个月后</div>
+        <div class="tl-title">$1,500,000+/月</div>
+        <div class="tl-body">
+          年化超过 $4,400,000/月。与 Arnold Schwarzenegger 结缘，成为 After School All Stars 慈善董事。
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">24 个月后</div>
+        <div class="tl-title">累计 $120,000,000 销售额</div>
+        <div class="tl-body">
+          捐赠 $2,000,000 给低收入社区平等机会基金。投资组合拥有 7 家八位数公司，横跨摄影、出版、健身、咨询、美业等行业。每周营收约 $1,600,000。
+        </div>
+      </div>
+    </div>
+
+    <div class="callout reveal" style="margin-top:48px">
+      <div class="callout-title">CORE INSIGHT · 核心洞察</div>
+      <p style="font-size:16px;color:var(--fg)">
+        这一切源于三样东西：一个相信他的女孩、一张信用卡、和一个 <strong style="color:var(--accent)">Grand Slam Offer</strong>。<br>
+        报价的技能救了他免于破产，也救了他的命。你只需要击中一次大满贯，就永远不需要再工作。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION II — 定价
+     ============================================ -->
+<section id="sec-pricing" class="section">
+  <div class="container">
+    <div class="section-label">SECTION II · PRICING · 定价</div>
+    <h2 class="section-title">如何收<br>很多钱</h2>
+    <p class="section-sub">
+      增长只有三种方式：获取更多客户、提高客单价、让他们买更多次。商品化让你在价格战中坠入死亡螺旋；Grand Slam Offer 让你进入「品类独占」的真空，以价值而非价格成交。
+    </p>
+
+    <!-- 三种增长方式 SVG -->
+    <div class="svg-wrap reveal" style="margin-bottom:48px">
+      <svg viewBox="0 0 800 280" fill="none">
+        <defs>
+          <linearGradient id="grad1" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="var(--accent)" stop-opacity=".3"/>
+            <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <!-- 标题 -->
+        <text x="400" y="30" text-anchor="middle" font-family="Playfair Display,Impact,sans-serif" font-size="20" fill="var(--fg)" letter-spacing="2">只有三种增长杠杆</text>
+        
+        <!-- 三个圆 -->
+        <g>
+          <circle cx="160" cy="150" r="70" stroke="var(--accent)" stroke-width="2" fill="url(#grad1)"/>
+          <text x="160" y="145" text-anchor="middle" font-family="Playfair Display,Impact,sans-serif" font-size="16" fill="var(--accent)">杠杆 ①</text>
+          <text x="160" y="168" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="13" fill="var(--fg)">获取更多客户</text>
+          <text x="160" y="245" text-anchor="middle" font-family="Courier New,monospace" font-size="10" fill="var(--fg-3)" letter-spacing="1">MORE CUSTOMERS</text>
+        </g>
+        <g>
+          <circle cx="400" cy="150" r="70" stroke="var(--accent-2)" stroke-width="2" fill="url(#grad1)"/>
+          <text x="400" y="145" text-anchor="middle" font-family="Playfair Display,Impact,sans-serif" font-size="16" fill="var(--accent-2)">杠杆 ②</text>
+          <text x="400" y="168" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="13" fill="var(--fg)">提高客单价</text>
+          <text x="400" y="245" text-anchor="middle" font-family="Courier New,monospace" font-size="10" fill="var(--fg-3)" letter-spacing="1">HIGHER TICKET</text>
+        </g>
+        <g>
+          <circle cx="640" cy="150" r="70" stroke="var(--accent-3)" stroke-width="2" fill="url(#grad1)"/>
+          <text x="640" y="145" text-anchor="middle" font-family="Playfair Display,Impact,sans-serif" font-size="16" fill="var(--accent-3)">杠杆 ③</text>
+          <text x="640" y="168" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="13" fill="var(--fg)">更多购买频次</text>
+          <text x="640" y="245" text-anchor="middle" font-family="Courier New,monospace" font-size="10" fill="var(--fg-3)" letter-spacing="1">MORE FREQUENCY</text>
+        </g>
+        
+        <!-- 连接线 -->
+        <line x1="230" y1="150" x2="330" y2="150" stroke="var(--border)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="470" y1="150" x2="570" y2="150" stroke="var(--border)" stroke-width="1" stroke-dasharray="4,4"/>
+        
+        <!-- 装饰原子轨道 -->
+        <ellipse cx="400" cy="150" rx="280" ry="100" stroke="var(--border)" stroke-width="1" fill="none" stroke-dasharray="2,6"/>
+      </svg>
+      <div class="svg-caption">FIG. 01 — 三种增长杠杆</div>
+    </div>
+
+    <!-- 商品化 vs GSO 对比 -->
+    <div class="grid-2 reveal" style="margin-bottom:48px">
+      <div class="card" style="border-color:color-mix(in srgb,var(--danger) 30%,var(--border))">
+        <span class="card-corner tl" style="border-color:var(--danger)"></span>
+        <span class="card-corner tr" style="border-color:var(--danger)"></span>
+        <span class="card-corner bl" style="border-color:var(--danger)"></span>
+        <span class="card-corner br" style="border-color:var(--danger)"></span>
+        <div class="eyebrow" style="color:var(--danger);margin-bottom:12px">COMMODITIZED · 商品化</div>
+        <h3 style="font-family:'Playfair Display',Impact,sans-serif;font-size:22px;text-transform:uppercase;margin-bottom:16px">价格驱动 · 向下竞争</h3>
+        <ul style="list-style:none;color:var(--fg-2);font-size:14px;line-height:2">
+          <li>✗ 产品可从多处购买</li>
+          <li>✗ 客户比较后选最便宜的</li>
+          <li>✗ 利润被市场效率挤压至零</li>
+          <li>✗ 只够「维持灯亮」</li>
+          <li>✗ 沦为自己生意的奴隶</li>
+        </ul>
+      </div>
+      <div class="card" style="border-color:color-mix(in srgb,var(--green) 30%,var(--border))">
+        <span class="card-corner tl" style="border-color:var(--green)"></span>
+        <span class="card-corner tr" style="border-color:var(--green)"></span>
+        <span class="card-corner bl" style="border-color:var(--green)"></span>
+        <span class="card-corner br" style="border-color:var(--green)"></span>
+        <div class="eyebrow" style="color:var(--green);margin-bottom:12px">GRAND SLAM OFFER · 大满贯</div>
+        <h3 style="font-family:'Playfair Display',Impact,sans-serif;font-size:22px;text-transform:uppercase;margin-bottom:16px">价值驱动 · 品类独占</h3>
+        <ul style="list-style:none;color:var(--fg-2);font-size:14px;line-height:2">
+          <li>✓ 无法与任何替代品比较</li>
+          <li>✓ 在「真空」中销售</li>
+          <li>✓ 客户在「你的产品 vs 虚无」间选择</li>
+          <li>✓ 更高响应率 × 更高转化 × 溢价定价</li>
+          <li>✓ 获客即盈利，永不缺现金流</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 真实数字对比 -->
+    <div class="card reveal" style="margin-bottom:48px">
+      <span class="card-corner tl"></span><span class="card-corner tr"></span>
+      <span class="card-corner bl"></span><span class="card-corner br"></span>
+      <div class="eyebrow" style="margin-bottom:16px">REAL MONEY MATH · 真实数字对比</div>
+      <h3 style="font-family:'Playfair Display',Impact,sans-serif;font-size:22px;text-transform:uppercase;margin-bottom:24px">代理商案例：改造前后</h3>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>指标</th>
+            <th>旧方式（商品化）</th>
+            <th>Grand Slam Offer</th>
+            <th>倍数</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>广告响应率</td>
+            <td>1×</td>
+            <td>2.5×</td>
+            <td style="color:var(--accent)">2.5×</td>
+          </tr>
+          <tr>
+            <td>转化率</td>
+            <td>1×</td>
+            <td>2.5×</td>
+            <td style="color:var(--accent)">2.5×</td>
+          </tr>
+          <tr>
+            <td>前期单价</td>
+            <td>$1,000</td>
+            <td>$4,000</td>
+            <td style="color:var(--accent)">4×</td>
+          </tr>
+          <tr style="background:color-mix(in srgb,var(--accent) 6%,transparent)">
+            <td style="font-weight:bold">前期回款</td>
+            <td>$5,000（亏 $5,000 广告）</td>
+            <td>$112,000（赚 $102,000）</td>
+            <td style="font-weight:bold;color:var(--accent)">22.4×</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="margin-top:16px;font-size:13px;color:var(--fg-3)">
+        同样的广告费，同样的眼球。2.5 × 2.5 × 4 = 22.4 倍的前期现金回报。你花钱获客的同时还在赚钱。
+      </p>
+    </div>
+
+    <!-- 饥饿人群 -->
+    <div class="deco-line"></div>
+
+    <h3 class="display" style="font-size:32px;margin-bottom:20px;color:var(--accent-2)">饥饿人群</h3>
+    <p style="color:var(--fg-2);max-width:760px;margin-bottom:32px;font-size:16px">
+      营销学教授问学生：「如果你只能有一个优势，开热狗摊你最想要什么？」学生喊出位置、品质、低价、口味。教授微笑：「<strong style="color:var(--accent)">一个饥饿的人群</strong>。」
+    </p>
+
+    <div class="grid-4 reveal" style="margin-bottom:48px">
+      <div class="card" style="text-align:center;padding:24px">
+        <div style="font-family:'Playfair Display',Impact,sans-serif;font-size:42px;color:var(--accent);line-height:1">01</div>
+        <h4 style="font-family:'Playfair Display',Impact,sans-serif;font-size:16px;text-transform:uppercase;margin:12px 0 8px">巨大痛苦</h4>
+        <p style="font-size:12px;color:var(--fg-2)">不是「想要」，而是「绝望地需要」。痛苦程度决定你可收的价格。</p>
+      </div>
+      <div class="card" style="text-align:center;padding:24px">
+        <div style="font-family:'Playfair Display',Impact,sans-serif;font-size:42px;color:var(--accent);line-height:1">02</div>
+        <h4 style="font-family:'Playfair Display',Impact,sans-serif;font-size:16px;text-transform:uppercase;margin:12px 0 8px">购买力</h4>
+        <p style="font-size:12px;color:var(--fg-2)">你的目标人群必须有（或能借到）你要求的钱。卖简历服务给失业者是灾难。</p>
+      </div>
+      <div class="card" style="text-align:center;padding:24px">
+        <div style="font-family:'Playfair Display',Impact,sans-serif;font-size:42px;color:var(--accent);line-height:1">03</div>
+        <h4 style="font-family:'Playfair Display',Impact,sans-serif;font-size:16px;text-transform:uppercase;margin:12px 0 8px">容易触达</h4>
+        <p style="font-size:12px;color:var(--fg-2)">他们聚集在哪里？协会、邮件列表、社交媒体群组、行业频道。找不到人就无法投放。</p>
+      </div>
+      <div class="card" style="text-align:center;padding:24px">
+        <div style="font-family:'Playfair Display',Impact,sans-serif;font-size:42px;color:var(--accent);line-height:1">04</div>
+        <h4 style="font-family:'Playfair Display',Impact,sans-serif;font-size:16px;text-transform:uppercase;margin:12px 0 8px">在增长</h4>
+        <p style="font-size:12px;color:var(--fg-2)">增长市场是顺风，萎缩市场是逆风。报纸每年萎缩 25%——天才也救不回。</p>
+      </div>
+    </div>
+
+    <div class="callout reveal">
+      <div class="callout-title">优先级排序 · ORDER OF IMPORTANCE</div>
+      <p style="font-size:18px;color:var(--fg);font-family:'Playfair Display',Impact,sans-serif;letter-spacing:.04em">
+        饥饿人群（市场） &gt; 报价强度 &gt; 说服技巧
+      </p>
+      <p style="font-size:14px;color:var(--fg-2);margin-top:8px">
+        高优先级的「好」可以覆盖低优先级的「差」。好市场+差报价+差说服 = 赚钱。正常市场+好报价+差说服 = 大赚。正常市场+正常报价+极好说服 = 最辛苦的路。
+      </p>
+    </div>
+
+    <!-- 利基定价 -->
+    <div class="card reveal" style="margin-top:48px">
+      <span class="card-corner tl"></span><span class="card-corner tr"></span>
+      <span class="card-corner bl"></span><span class="card-corner br"></span>
+      <div class="eyebrow" style="margin-bottom:12px">RICHES ARE IN THE NICHES · 利基即财富</div>
+      <h3 style="font-family:'Playfair Display',Impact,sans-serif;font-size:22px;text-transform:uppercase;margin-bottom:20px">同一产品，利基越深价格越高</h3>
+      <p style="color:var(--fg-2);font-size:14px;margin-bottom:24px">Dan Kennedy 的经典案例：同一套时间管理课程，随着利基缩小，价格从 $19 涨到 $2,000——<strong style="color:var(--accent)">100 倍</strong>。</p>
+      <table class="compare-table">
+        <thead>
+          <tr><th>课程名称</th><th>目标人群</th><th>价格</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>时间管理</td><td>任何人</td><td>$19</td></tr>
+          <tr><td>销售人员的时间管理</td><td>所有销售</td><td>$99</td></tr>
+          <tr><td>B2B 外呼销售代表的时间管理</td><td>B2B 外呼销售</td><td>$499</td></tr>
+          <tr style="background:color-mix(in srgb,var(--accent) 6%,transparent)">
+            <td style="font-weight:bold">B2B 电动工具&园艺外呼销售代表的时间管理</td>
+            <td>极窄利基</td>
+            <td style="font-weight:bold;color:var(--accent)">$1,000–$2,000</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="margin-top:16px;font-size:13px;color:var(--fg-3)">核心课程内容几乎相同。但越窄的利基越能精准对话，「这就是为我量身定制的」→ 客户心甘情愿付 100 倍价格。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     收取溢价
+     ============================================ -->
+<section id="sec-premium" class="section">
+  <div class="container">
+    <div class="section-label">PRICING · CHARGE WHAT IT'S WORTH</div>
+    <h2 class="section-title">收贵到<br>让你自己都怕</h2>
+    <p class="section-sub">
+      Dan Kennedy 说：「你能大声说出来而不笑场的最高价格，就是你的定价。」溢价定价不仅是商业策略，更是道德选择——它让你有能力真正服务客户。
+    </p>
+
+    <!-- 价格的良性循环 SVG -->
+    <div class="svg-wrap reveal" style="margin-bottom:48px">
+      <svg viewBox="0 0 800 400" fill="none">
+        <text x="400" y="30" text-anchor="middle" font-family="Playfair Display,Impact,sans-serif" font-size="20" fill="var(--fg)" letter-spacing="2">价格的良性循环 / 恶性循环</text>
+        
+        <!-- 中心 -->
+        <circle cx="400" cy="210" r="60" stroke="var(--accent)" stroke-width="2" fill="color-mix(in srgb,var(--accent) 10%,transparent)"/>
+        <text x="400" y="205" text-anchor="middle" font-family="Playfair Display,Impact,sans-serif" font-size="16" fill="var(--accent)">价格</text>
+        <text x="400" y="225" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="11" fill="var(--fg)">PRICE</text>
+        
+        <!-- 左侧：降价（红） -->
+        <g>
+          <circle cx="140" cy="100" r="45" stroke="var(--danger)" stroke-width="1.5" fill="color-mix(in srgb,var(--danger) 8%,transparent)"/>
+          <text x="140" y="98" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="11" fill="var(--danger)">客户情感</text>
+          <text x="140" y="112" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="11" fill="var(--danger)">投入降低</text>
+        </g>
+        <g>
+          <circle cx="80" cy="210" r="45" stroke="var(--danger)" stroke-width="1.5" fill="color-mix(in srgb,var(--danger) 8%,transparent)"/>
+          <text x="80" y="208" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="11" fill="var(--danger)">感知价值</text>
+          <text x="80" y="222" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="11" fill="var(--danger)">下降</text>
+        </g>
+        <g>
+          <circle cx="140" cy="320" r="45" stroke="var(--danger)" stroke-width="1.5" fill="color-mix(in srgb,var(--danger) 8%,transparent)"/>
+          <text x="140" y="318" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="11" fill="var(--danger)">客户结果</text>
+          <text x="140" y="332" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="11" fill="var(--danger)">变差</text>
+        </g>
+        <g>
+          <circle cx="280" cy="350" r="45" stroke="var(--danger)" stroke-width="1.5" fill="color-mix(in srgb,var(--danger) 8%,transparent)"/>
+          <text x="280" y="348" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="11" fill="var(--danger)">吸引最差</text>
+          <text x="280" y="362" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="11" fill="var(--danger)">客户</text>
+        </g>
+        
+        <!-- 左侧箭头 -->
+        <path d="M 320 170 Q 220 140 180 110" stroke="var(--danger)" stroke-width="1" fill="none" marker-end="url(#arrowR)"/>
+        <path d="M 140 145 Q 100 170 95 170" stroke="var(--danger)" stroke-width="1" fill="none" marker-end="url(#arrowR)"/>
+        <path d="M 95 255 Q 110 290 130 300" stroke="var(--danger)" stroke-width="1" fill="none" marker-end="url(#arrowR)"/>
+        <path d="M 185 340 Q 230 355 240 350" stroke="var(--danger)" stroke-width="1" fill="none" marker-end="url(#arrowR)"/>
+        <path d="M 320 320 Q 350 280 345 260" stroke="var(--danger)" stroke-width="1" fill="none" marker-end="url(#arrowR)" opacity=".5"/>
+        
+        <text x="170" y="50" font-family="Courier New,monospace" font-size="11" fill="var(--danger)" letter-spacing="2">↓ 降价 = 恶性循环</text>
+        
+        <!-- 右侧：涨价（绿） -->
+        <g>
+          <circle cx="660" cy="100" r="45" stroke="var(--green)" stroke-width="1.5" fill="color-mix(in srgb,var(--green) 8%,transparent)"/>
+          <text x="660" y="98" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="11" fill="var(--green)">客户情感</text>
+          <text x="660" y="112" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="11" fill="var(--green)">投入增加</text>
+        </g>
+        <g>
+          <circle cx="720" cy="210" r="45" stroke="var(--green)" stroke-width="1.5" fill="color-mix(in srgb,var(--green) 8%,transparent)"/>
+          <text x="720" y="208" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="11" fill="var(--green)">感知价值</text>
+          <text x="720" y="222" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="11" fill="var(--green)">上升</text>
+        </g>
+        <g>
+          <circle cx="660" cy="320" r="45" stroke="var(--green)" stroke-width="1.5" fill="color-mix(in srgb,var(--green) 8%,transparent)"/>
+          <text x="660" y="318" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="11" fill="var(--green)">客户结果</text>
+          <text x="660" y="332" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="11" fill="var(--green)">变好</text>
+        </g>
+        <g>
+          <circle cx="520" cy="350" r="45" stroke="var(--green)" stroke-width="1.5" fill="color-mix(in srgb,var(--green) 8%,transparent)"/>
+          <text x="520" y="348" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="11" fill="var(--green)">吸引最好</text>
+          <text x="520" y="362" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="11" fill="var(--green)">客户</text>
+        </g>
+        
+        <!-- 右侧箭头 -->
+        <path d="M 480 170 Q 580 140 620 110" stroke="var(--green)" stroke-width="1" fill="none" marker-end="url(#arrowG)"/>
+        <path d="M 660 145 Q 700 170 705 170" stroke="var(--green)" stroke-width="1" fill="none" marker-end="url(#arrowG)"/>
+        <path d="M 705 255 Q 690 290 670 300" stroke="var(--green)" stroke-width="1" fill="none" marker-end="url(#arrowG)"/>
+        <path d="M 615 340 Q 570 355 560 350" stroke="var(--green)" stroke-width="1" fill="none" marker-end="url(#arrowG)"/>
+        <path d="M 480 320 Q 450 280 455 260" stroke="var(--green)" stroke-width="1" fill="none" marker-end="url(#arrowG)" opacity=".5"/>
+        
+        <text x="560" y="50" font-family="Courier New,monospace" font-size="11" fill="var(--green)" letter-spacing="2">↑ 涨价 = 良性循环</text>
+        
+        <!-- 箭头定义 -->
+        <defs>
+          <marker id="arrowR" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="var(--danger)"/>
+          </marker>
+          <marker id="arrowG" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="var(--green)"/>
+          </marker>
+        </defs>
+      </svg>
+      <div class="svg-caption">FIG. 02 — 价格的良性循环 vs 恶性循环</div>
+    </div>
+
+    <!-- 盲品测试 -->
+    <div class="card reveal" style="margin-bottom:32px">
+      <span class="card-corner tl"></span><span class="card-corner tr"></span>
+      <span class="card-corner bl"></span><span class="card-corner br"></span>
+      <div class="eyebrow" style="margin-bottom:12px">BLIND TASTE TEST · 盲品实验</div>
+      <h3 style="font-family:'Playfair Display',Impact,sans-serif;font-size:22px;text-transform:uppercase;margin-bottom:16px">高价 = 高价值（字面意义上）</h3>
+      <p style="color:var(--fg-2);font-size:15px;line-height:1.7">
+        研究者让消费者品评三种价位的葡萄酒：低价、中价、高价。参与者按价格排序打分——最贵的「最好」，最便宜的「最差」。<br><br>
+        <strong style="color:var(--accent)">但他们不知道：三种酒其实是同一款酒。</strong>
+      </p>
+      <div class="callout" style="margin-top:20px;margin-bottom:0">
+        <p style="font-size:15px;color:var(--fg);margin:0">
+          涨价可以直接提升你提供的价值——不需要改变产品本身。价格越高，产品的「光环」越强。人们想买贵的东西，他们只需要一个理由。
+        </p>
+      </div>
+    </div>
+
+    <!-- Gym Launch 真实数据 -->
+    <div class="card reveal">
+      <span class="card-corner tl"></span><span class="card-corner tr"></span>
+      <span class="card-corner bl"></span><span class="card-corner br"></span>
+      <div class="eyebrow" style="margin-bottom:12px">GYM LAUNCH · 真实数据</div>
+      <h3 style="font-family:'Playfair Display',Impact,sans-serif;font-size:22px;text-transform:uppercase;margin-bottom:20px">$42,000/年 的定价底气</h3>
+      <div class="grid-4" style="margin-bottom:16px">
+        <div class="big-stat" style="padding:16px">
+          <div class="big-num" data-count="239" style="font-size:36px">0</div>
+          <div class="big-label" style="font-size:10px">年均营收增长 K</div>
+        </div>
+        <div class="big-stat" style="padding:16px">
+          <div class="big-num" data-count="3" style="font-size:36px">0</div>
+          <div class="big-label" style="font-size:10px">利润倍数</div>
+        </div>
+        <div class="big-stat" style="padding:16px">
+          <div class="big-num" data-count="67" style="font-size:36px">0</div>
+          <div class="big-label" style="font-size:10px">新增客户数</div>
+        </div>
+        <div class="big-stat" style="padding:16px">
+          <div class="big-num" data-count="38" style="font-size:36px">0</div>
+          <div class="big-label" style="font-size:10px">流失率降幅 %</div>
+        </div>
+      </div>
+      <p style="font-size:13px;color:var(--fg-3);text-align:center">
+        158 家 Gym Launch 客户使用系统 11 个月后的平均改进。Top Line +$19,932/月，利润从 $2,943 → $8,940/月。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION III — 价值
+     ============================================ -->
+<section id="sec-value" class="section">
+  <div class="container">
+    <div class="section-label">SECTION III · VALUE · 创造你的报价</div>
+    <h2 class="section-title">价值方程式<br><span style="color:var(--accent)">核心引擎</span></h2>
+    <p class="section-sub">
+      霍莫齐独创的价值方程式——全书最核心的模型。理解它，你就拥有了无限定价与利润的钥匙。价值不是模糊的概念，而是四个可量化变量的函数。
+    </p>
+
+    <!-- 价值方程式 SVG -->
+    <div class="value-eq reveal" style="margin-bottom:48px">
+      <div class="value-eq-grid">
+        <div class="ve-cell top">
+          <div class="ve-goal up">↑ 增加</div>
+          <div class="ve-title">Dream Outcome</div>
+          <div class="ve-desc">梦想结果——客户脑海中 envision 的感受与体验。美丽、被尊重、有权、被爱、地位提升。不是创造欲望，而是<strong>引导欲望</strong>通过你的载体。</div>
+        </div>
+        <div class="ve-cell top">
+          <div class="ve-goal up">↑ 增加</div>
+          <div class="ve-title">Perceived Likelihood of Achievement</div>
+          <div class="ve-desc">感知达成可能性——「我多确信买了这东西就能得到想要的结果？」第 10,000 个病人 vs 第 1 个病人。人们为<strong>确定性</strong>付费。</div>
+        </div>
+        <div class="ve-divider">────────</div>
+        <div class="ve-cell bot">
+          <div class="ve-goal dn">↓ 减少</div>
+          <div class="ve-title">Perceived Time Delay</div>
+          <div class="ve-desc">感知时间延迟——购买到收到承诺收益之间的时间。越短越值钱。抽脂一下午 vs 健身 12 个月。短期体验（快速小胜利）让人留在路上。<strong>快胜过免费</strong>。</div>
+        </div>
+        <div class="ve-cell bot">
+          <div class="ve-goal dn">↓ 减少</div>
+          <div class="ve-title">Perceived Effort &amp; Sacrifice</div>
+          <div class="ve-desc">感知努力与牺牲——沿途的「其他成本」。有形与无形。抽脂 vs 每天健身房。Done-for-you 比 DIY 贵得多。<strong>让底部归零 = 无限价值</strong>。</div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:24px;padding:16px;background:color-mix(in srgb,var(--accent) 6%,transparent);border-radius:8px">
+        <p style="font-family:'Playfair Display',Impact,sans-serif;font-size:18px;color:var(--accent);letter-spacing:.04em">
+          VALUE = (梦想结果 × 达成可能性) ÷ (时间延迟 × 努力牺牲)
+        </p>
+        <p style="font-size:12px;color:var(--fg-3);margin-top:8px;font-family:'Courier New',monospace">
+          底部归零 → 无论顶部多小 → 价值 = 无穷大
+        </p>
+      </div>
+    </div>
+
+    <!-- 感知即现实 -->
+    <div class="callout reveal" style="margin-bottom:48px">
+      <div class="callout-title">PERCEPTION IS REALITY · 感知即现实</div>
+      <p style="font-size:15px;color:var(--fg)">
+        价值不在于你实际增加了多少成功概率、缩短了多少时间、减少了多少努力——而在于<strong style="color:var(--accent)">客户感知到</strong>你增加了多少、缩短了多少、减少了多少。
+      </p>
+      <p style="font-size:14px;color:var(--fg-2);margin-top:12px">
+        伦敦地铁案例：乘客满意度提升最大的不是花数十亿让列车更快，而是花几百万安装一个显示下班车到达时间的<strong>虚线地图</strong>——它减少了「等待的感知痛苦」。
+      </p>
+    </div>
+
+    <!-- 心理解决方案 -->
+    <div class="pro-tip reveal" style="margin-bottom:48px">
+      多数人本能地用<strong>逻辑方案</strong>解决问题。但逻辑方案通常已经被试过（因为它们是逻辑的，所有人都会想到）。作为企业家，越来越多地寻找<strong>心理方案</strong>。逻辑：让电梯更快。心理：装满墙镜，人们盯着自己忘了等了多久。
+    </div>
+
+    <!-- Xanax vs 冥想 对比 -->
+    <div class="card reveal" style="margin-bottom:48px">
+      <span class="card-corner tl"></span><span class="card-corner tr"></span>
+      <span class="card-corner bl"></span><span class="card-corner br"></span>
+      <div class="eyebrow" style="margin-bottom:12px">CASE STUDY · 案例分析</div>
+      <h3 style="font-family:'Playfair Display',Impact,sans-serif;font-size:22px;text-transform:uppercase;margin-bottom:20px">Xanax vs 冥想：同一梦想结果，天壤之别</h3>
+      <p style="color:var(--fg-2);font-size:14px;margin-bottom:20px">梦想结果相同：放松、减轻焦虑、幸福感。但其他三个变量让价值天差地别。</p>
+      <table class="compare-table">
+        <thead>
+          <tr><th>价值变量</th><th>冥想</th><th>Xanax</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>梦想结果</td><td>放松 / 减焦虑</td><td>放松 / 减焦虑</td></tr>
+          <tr><td>达成可能性</td><td style="color:var(--danger)">低——需要多年练习</td><td style="color:var(--green)">高——药片必然起效</td></tr>
+          <tr><td>时间延迟</td><td style="color:var(--danger)">数月~数年</td><td style="color:var(--green)">20 分钟</td></tr>
+          <tr><td>努力 &amp; 牺牲</td><td style="color:var(--danger)">每日 20-60 分钟 + 自律</td><td style="color:var(--green)">吞一颗药</td></tr>
+          <tr style="background:color-mix(in srgb,var(--accent) 6%,transparent)">
+            <td style="font-weight:bold">市场结果</td><td>几乎无十亿级冥想公司</td><td style="font-weight:bold;color:var(--accent)">数十亿美元级产品</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="margin-top:16px;font-size:13px;color:var(--fg-3)">
+        同理：保健品行业（$123B）是健身俱乐部行业（$62B）的两倍。因为吞药片比去健身房快得多、容易得多。<strong>你可以选择「正确」，也可以选择「富有」。</strong>
+      </p>
+    </div>
+
+    <!-- 发散思维 -->
+    <div class="deco-line"></div>
+    
+    <h3 class="display" style="font-size:32px;margin-bottom:20px;color:var(--accent-2)">发散思维 · 砖块练习</h3>
+    <p style="color:var(--fg-2);max-width:760px;margin-bottom:32px;font-size:16px">
+      学校教的是<strong>收敛思维</strong>（多个已知变量 → 单一答案，如数学题）。但生活为你<strong>发散思维</strong>的能力付钱（一个问题 → 无数种解法，其中一些远比其他的更好）。
+    </p>
+
+    <div class="grid-2 reveal" style="margin-bottom:48px">
+      <div class="card">
+        <span class="card-corner tl"></span><span class="card-corner tr"></span>
+        <span class="card-corner bl"></span><span class="card-corner br"></span>
+        <div class="eyebrow" style="margin-bottom:12px">CONVERGENT · 收敛</div>
+        <h4 style="font-family:'Playfair Display',Impact,sans-serif;font-size:18px;text-transform:uppercase;margin-bottom:12px">数学题式</h4>
+        <p style="font-size:14px;color:var(--fg-2);line-height:1.7">
+          已知变量、不变条件、唯一答案。对就是对，错就是错。学校教这个，因为好打分。
+        </p>
+      </div>
+      <div class="card" style="border-color:color-mix(in srgb,var(--accent) 30%,var(--border))">
+        <span class="card-corner tl"></span><span class="card-corner tr"></span>
+        <span class="card-corner bl"></span><span class="card-corner br"></span>
+        <div class="eyebrow" style="margin-bottom:12px">DIVERGENT · 发散</div>
+        <h4 style="font-family:'Playfair Display',Impact,sans-serif;font-size:18px;text-transform:uppercase;margin-bottom:12px">砖块式</h4>
+        <p style="font-size:14px;color:var(--fg-2);line-height:1.7">
+          多变量（已知&未知）、动态条件、多个正确答案。其中一个答案可能比其他的好<strong style="color:var(--accent)">100 倍</strong>。<br>
+          <em>砖可以是：纸镇、门挡、鱼缸装饰、奖杯、砝码、楔子、笔筒、乐高、浮力装置、黄金储值物……</em>
+        </p>
+      </div>
+    </div>
+
+    <!-- 创建GSO五步 -->
+    <div class="deco-line"></div>
+    
+    <h3 class="display" style="font-size:32px;margin-bottom:20px;color:var(--accent)">创建 Grand Slam Offer · 五步</h3>
+    <p style="color:var(--fg-2);max-width:760px;margin-bottom:32px;font-size:16px">
+      从梦想结果出发，列出所有问题，转化为解决方案，设计交付载体，裁剪与堆叠——最终打包成一个无法比较的价值束。
+    </p>
+
+    <div class="steps reveal" style="margin-bottom:48px">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>确定梦想结果</h4>
+          <p>不是卖会员卡——是卖「6 周瘦 20 磅」。不是卖飞行——是卖度假目的地体验。客户买的不是你的工具，是到达终点后的感受。缩短时间维度：6 周，不是「长期改变」。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>列出所有问题</h4>
+          <p>客户从「现在」到「梦想结果」之间遇到的每一个障碍。按时间顺序：买健康食品 → 烹饪 → 吃 → 运动。每个环节再按价值方程四维度拆解：梦想结果、达成可能性、时间、努力。一个减脂项目能列出 32-64 个子问题。<strong style="color:var(--accent)">问题越多越好——因为每个问题都是你创造价值的机会。</strong></p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>转化为解决方案</h4>
+          <p>将每个问题反转为解决方案陈述。「买健康食品很难很困惑」→「如何让任何人轻松愉快地买健康食品」。加入「如何」前缀，反转问题语言。这是文案写作 101。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>设计交付载体（The How）</h4>
+          <p>发散思维爆发——同一个问题，用多少种方式解决？按服务模式分类：<br>
+          <span class="tag cyan">1对1</span> 亲自陪同购物、个性化清单、全代办<br>
+          <span class="tag cyan">小组</span> 团购教学、群烹饪课<br>
+          <span class="tag cyan">1对多</span> 直播逛超市、录制视频、DIY计算器、预设清单、伙伴制<br>
+          <strong> Cheat Codes：</strong>个人关注度？DIY/DWY/DFY？现场/录制？响应速度？10倍/十分之一测试。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h4>裁剪与堆叠</h4>
+          <p>删去高成本低价值、低成本低价值。保留<strong>低成本高价值</strong>和<strong>高成本高价值</strong>。重点投资「一次创建、无限使用」的资产（软件、模板、工具）。将所有保留项打包成一个「终极高价值交付物」——价值 $4,351，售价 $599。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 销售-履约连续体 SVG -->
+    <div class="svg-wrap reveal" style="margin-bottom:48px">
+      <svg viewBox="0 0 800 260" fill="none">
+        <text x="400" y="30" text-anchor="middle" font-family="Playfair Display,Impact,sans-serif" font-size="18" fill="var(--fg)" letter-spacing="2">销售-履约连续体</text>
+        
+        <!-- 连续体条 -->
+        <rect x="80" y="110" width="640" height="40" rx="20" fill="color-mix(in srgb,var(--bg-3) 50%,transparent)" stroke="var(--border)" stroke-width="1"/>
+        
+        <!-- 渐变填充 -->
+        <defs>
+          <linearGradient id="saleFill" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="var(--green)" stop-opacity=".6"/>
+            <stop offset="50%" stop-color="var(--accent-3)" stop-opacity=".4"/>
+            <stop offset="100%" stop-color="var(--danger)" stop-opacity=".3"/>
+          </linearGradient>
+        </defs>
+        <rect x="80" y="110" width="640" height="40" rx="20" fill="url(#saleFill)" opacity=".5"/>
+        
+        <!-- 左端 -->
+        <text x="80" y="90" font-family="Playfair Display,Impact,sans-serif" font-size="14" fill="var(--green)" letter-spacing="1">易销售</text>
+        <text x="80" y="180" font-family="Courier New,monospace" font-size="10" fill="var(--fg-3)">你做很多 → 客户轻松说YES</text>
+        <text x="80" y="195" font-family="Courier New,monospace" font-size="10" fill="var(--fg-3)">但履约极重 / 不可规模化</text>
+        
+        <!-- 右端 -->
+        <text x="720" y="90" text-anchor="end" font-family="Playfair Display,Impact,sans-serif" font-size="14" fill="var(--danger)" letter-spacing="1">易履约</text>
+        <text x="720" y="180" text-anchor="end" font-family="Courier New,monospace" font-size="10" fill="var(--fg-3)">你做很少 → 履约轻松</text>
+        <text x="720" y="195" text-anchor="end" font-family="Courier New,monospace" font-size="10" fill="var(--fg-3)">但极难卖出去</text>
+        
+        <!-- 甜点区 -->
+        <circle cx="400" cy="130" r="30" stroke="var(--accent)" stroke-width="2" fill="color-mix(in srgb,var(--accent) 15%,transparent)"/>
+        <text x="400" y="128" text-anchor="middle" font-family="Playfair Display,Impact,sans-serif" font-size="12" fill="var(--accent)">SWEET</text>
+        <text x="400" y="142" text-anchor="middle" font-family="Playfair Display,Impact,sans-serif" font-size="12" fill="var(--accent)">SPOT</text>
+        <line x1="400" y1="160" x2="400" y2="220" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3,3"/>
+        <text x="400" y="240" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="12" fill="var(--accent)">卖得好 + 履约轻</text>
+        
+        <!-- 刻度 -->
+        <line x1="80" y1="155" x2="80" y2="165" stroke="var(--fg-3)" stroke-width="1"/>
+        <line x1="720" y1="155" x2="720" y2="165" stroke="var(--fg-3)" stroke-width="1"/>
+        <line x1="400" y1="155" x2="400" y2="165" stroke="var(--accent)" stroke-width="1"/>
+      </svg>
+      <div class="svg-caption">FIG. 03 — 销售-履约连续体：先创造流量（超量交付），再增加摩擦（优化效率）</div>
+    </div>
+
+    <div class="callout reveal">
+      <div class="callout-title">MANTRA · 心法</div>
+      <p style="font-family:'Playfair Display',Impact,sans-serif;font-size:20px;color:var(--accent);letter-spacing:.04em">
+        创造流量 → 变现流量 → 然后增加摩擦
+      </p>
+      <p style="font-size:14px;color:var(--fg-2);margin-top:8px">
+        先超量交付让现金流涌入，再用现金流修复运营效率。不要在没有现金流的时候优化——你不知道该调整什么。Gym Launch 最初：飞到健身房 21 天，亲自打广告、跟线索、做销售、做入场。后来：教他们自己做（done-with-you），帮助 100 倍的客户。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION IV — 增强报价
+     ============================================ -->
+<section id="sec-enhance" class="section">
+  <div class="container">
+    <div class="section-label">SECTION IV · ENHANCING YOUR OFFER · 增强报价</div>
+    <h2 class="section-title">稀缺 · 紧迫<br>赠品 · 保证 · 命名</h2>
+    <p class="section-sub">
+      核心报价就绪后，五种心理杠杆可以在不改变产品的前提下进一步推高需求、降低感知供给、逆转风险——让同一个报价变得不可抗拒。Arnold 慈善晚宴案例：100 张 $25,000 门票，一晚筹款 $5,400,000（人均 $54,000）。
+    </p>
+
+    <!-- 五大增强器 SVG -->
+    <div class="svg-wrap reveal" style="margin-bottom:48px">
+      <svg viewBox="0 0 800 400" fill="none">
+        <text x="400" y="30" text-anchor="middle" font-family="Playfair Display,Impact,sans-serif" font-size="20" fill="var(--fg)" letter-spacing="2">五大报价增强器</text>
+
+        <!-- 装饰轨道 -->
+        <ellipse cx="400" cy="220" rx="220" ry="130" stroke="var(--border)" stroke-width="1" fill="none" stroke-dasharray="2,6" opacity=".5"/>
+
+        <!-- 中心 Grand Slam Offer -->
+        <circle cx="400" cy="220" r="60" stroke="var(--accent)" stroke-width="2" fill="color-mix(in srgb,var(--accent) 12%,transparent)"/>
+        <text x="400" y="215" text-anchor="middle" font-family="Playfair Display,Impact,sans-serif" font-size="14" fill="var(--accent)">GRAND SLAM</text>
+        <text x="400" y="233" text-anchor="middle" font-family="Playfair Display,Impact,sans-serif" font-size="14" fill="var(--accent)">OFFER</text>
+
+        <!-- 五个增强器 -->
+        <!-- 稀缺 -->
+        <g>
+          <path d="M 400 160 L 180 100" stroke="var(--border)" stroke-width="1" stroke-dasharray="3,3"/>
+          <circle cx="180" cy="100" r="50" stroke="var(--accent-2)" stroke-width="1.5" fill="color-mix(in srgb,var(--accent-2) 8%,transparent)"/>
+          <text x="180" y="96" text-anchor="middle" font-family="Playfair Display,Impact,sans-serif" font-size="14" fill="var(--accent-2)">SCARCITY</text>
+          <text x="180" y="115" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="11" fill="var(--fg)">稀缺 · 限量</text>
+          <text x="180" y="172" text-anchor="middle" font-family="Courier New,monospace" font-size="9" fill="var(--fg-3)">↓供给 → ↑价格</text>
+        </g>
+
+        <!-- 紧迫 -->
+        <g>
+          <path d="M 400 160 L 400 85" stroke="var(--border)" stroke-width="1" stroke-dasharray="3,3"/>
+          <circle cx="400" cy="85" r="50" stroke="var(--accent-3)" stroke-width="1.5" fill="color-mix(in srgb,var(--accent-3) 8%,transparent)"/>
+          <text x="400" y="81" text-anchor="middle" font-family="Playfair Display,Impact,sans-serif" font-size="14" fill="var(--accent-3)">URGENCY</text>
+          <text x="400" y="100" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="11" fill="var(--fg)">紧迫 · 限时</text>
+          <text x="400" y="155" text-anchor="middle" font-family="Courier New,monospace" font-size="9" fill="var(--fg-3)">↓时间 → ↑行动</text>
+        </g>
+
+        <!-- 赠品 -->
+        <g>
+          <path d="M 400 160 L 620 100" stroke="var(--border)" stroke-width="1" stroke-dasharray="3,3"/>
+          <circle cx="620" cy="100" r="50" stroke="var(--green)" stroke-width="1.5" fill="color-mix(in srgb,var(--green) 8%,transparent)"/>
+          <text x="620" y="96" text-anchor="middle" font-family="Playfair Display,Impact,sans-serif" font-size="14" fill="var(--green)">BONUSES</text>
+          <text x="620" y="115" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="11" fill="var(--fg)">赠品 · 加码</text>
+          <text x="620" y="172" text-anchor="middle" font-family="Courier New,monospace" font-size="9" fill="var(--fg-3)">↑价值 → ↑需求</text>
+        </g>
+
+        <!-- 保证 -->
+        <g>
+          <path d="M 400 280 L 280 340" stroke="var(--border)" stroke-width="1" stroke-dasharray="3,3"/>
+          <circle cx="280" cy="340" r="50" stroke="var(--accent)" stroke-width="1.5" fill="color-mix(in srgb,var(--accent) 8%,transparent)"/>
+          <text x="280" y="336" text-anchor="middle" font-family="Playfair Display,Impact,sans-serif" font-size="13" fill="var(--accent)">GUARANTEES</text>
+          <text x="280" y="355" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="11" fill="var(--fg)">保证 · 逆转风险</text>
+          <text x="280" y="298" text-anchor="middle" font-family="Courier New,monospace" font-size="9" fill="var(--fg-3)">↓风险 → ↑转化</text>
+        </g>
+
+        <!-- 命名 -->
+        <g>
+          <path d="M 400 280 L 520 340" stroke="var(--border)" stroke-width="1" stroke-dasharray="3,3"/>
+          <circle cx="520" cy="340" r="50" stroke="var(--danger)" stroke-width="1.5" fill="color-mix(in srgb,var(--danger) 8%,transparent)"/>
+          <text x="520" y="336" text-anchor="middle" font-family="Playfair Display,Impact,sans-serif" font-size="14" fill="var(--danger)">NAMING</text>
+          <text x="520" y="355" text-anchor="middle" font-family="Noto Serif SC,Georgia,serif" font-size="11" fill="var(--fg)">命名 · 吸引</text>
+          <text x="520" y="298" text-anchor="middle" font-family="Courier New,monospace" font-size="9" fill="var(--fg-3)">↑匹配 → ↑响应</text>
+        </g>
+      </svg>
+      <div class="svg-caption">FIG. 04 — 五大增强器环绕 Grand Slam Offer</div>
+    </div>
+
+    <!-- 需求的精妙舞蹈 -->
+    <div class="callout reveal" style="margin-bottom:48px">
+      <div class="callout-title">HORMOZI LAW · 霍莫齐定律</div>
+      <p style="font-family:'Playfair Display',Impact,sans-serif;font-size:18px;color:var(--accent);letter-spacing:.04em">
+        你推迟「请求」的时间越长，你能提出的请求就越大。
+      </p>
+      <p style="font-size:14px;color:var(--fg-2);margin-top:8px">
+        「跑道越长，能起飞的飞机越大。」需求是非线性而是分形的（80/20）：1/5 的客户愿意付 5 倍价格。永远留一部分需求未被满足——这保持渴望的饥饿感。
+      </p>
+    </div>
+
+    <!-- 稀缺 -->
+    <div class="deco-line"></div>
+    <h3 class="display" style="font-size:28px;margin-bottom:16px;color:var(--accent-2)">① 稀缺 · SCARCITY</h3>
+    <p style="color:var(--fg-2);max-width:760px;margin-bottom:32px;font-size:15px">
+      稀缺是数量的函数。<strong style="color:var(--accent)">人们想要他们得不到的东西。</strong>人们想要别人想要的东西。人们想要只有少数人能获得的东西。Chanel 每款只发 1-2 件到每家店——每一件都是「最后一件」或「倒数第二件」。
+    </p>
+
+    <div class="grid-3 reveal" style="margin-bottom:48px">
+      <div class="card">
+        <span class="card-corner tl"></span><span class="card-corner tr"></span>
+        <span class="card-corner bl"></span><span class="card-corner br"></span>
+        <div class="eyebrow" style="margin-bottom:8px">TYPE 01</div>
+        <h4 style="font-family:'Playfair Display',Impact,sans-serif;font-size:18px;text-transform:uppercase;margin-bottom:12px">总量上限</h4>
+        <p style="font-size:13px;color:var(--fg-2)">「我的代理商总共只服务 25 个客户。」可定期开放 10-20% 新名额，再关闭。提价、淘汰低效客户、引入更优质客户。</p>
+      </div>
+      <div class="card">
+        <span class="card-corner tl"></span><span class="card-corner tr"></span>
+        <span class="card-corner bl"></span><span class="card-corner br"></span>
+        <div class="eyebrow" style="margin-bottom:8px">TYPE 02</div>
+        <h4 style="font-family:'Playfair Display',Impact,sans-serif;font-size:18px;text-transform:uppercase;margin-bottom:12px">增长率上限</h4>
+        <p style="font-size:13px;color:var(--fg-2)">「我们每周只接收 5 位新客户，前 3 个名额已被占。本周还有 6 个电话，你可以占剩余名额或等下周。」——从第一天就可用。</p>
+      </div>
+      <div class="card">
+        <span class="card-corner tl"></span><span class="card-corner tr"></span>
+        <span class="card-corner bl"></span><span class="card-corner br"></span>
+        <div class="eyebrow" style="margin-bottom:8px">TYPE 03</div>
+        <h4 style="font-family:'Playfair Display',Impact,sans-serif;font-size:18px;text-transform:uppercase;margin-bottom:12px">队列上限</h4>
+        <p style="font-size:13px;color:var(--fg-2)">每年/每季度只开 X 个名额。开门 → 关门。「我们一年开放 4 次，每次 100 人。」便于运营编排 + 合法稀缺感。</p>
+      </div>
+    </div>
+
+    <div class="pro-tip reveal" style="margin-bottom:48px">
+      <strong>诚实稀缺：</strong>你现在大概无法明天就服务 1000 个客户吧？但你能服务几个？5？10？25？那就定一个数字并公开。让别人知道你「本周已达容量的 81%」。稀缺自带社交证明——「其他人已经做了决定」。永远保留少于你认为能卖完的名额——让「售罄」成为复利资产。
+    </div>
+
+    <!-- 紧迫 -->
+    <div class="deco-line"></div>
+    <h3 class="display" style="font-size:28px;margin-bottom:16px;color:var(--accent-3)">② 紧迫 · URGENCY</h3>
+    <p style="color:var(--fg-2);max-width:760px;margin-bottom:32px;font-size:15px">
+      紧迫是时间的函数。不限制「多少人能买」，而是限制「什么时候能买」。截止日期驱动决策。<strong style="color:var(--accent)">一周活动的最后 4 小时产生 50-60% 的销售——最后 3% 的时间创造过半业绩。</strong>
+    </p>
+
+    <div class="grid-2 reveal" style="margin-bottom:48px">
+      <div class="card">
+        <span class="card-corner tl"></span><span class="card-corner tr"></span>
+        <span class="card-corner bl"></span><span class="card-corner br"></span>
+        <h4 style="font-family:'Playfair Display',Impact,sans-serif;font-size:18px;text-transform:uppercase;margin-bottom:12px;color:var(--accent-3)">滚动队列紧迫</h4>
+        <p style="font-size:14px;color:var(--fg-2)">每周一开新班。「如果今天报名，我可以让你进周一开课的小组；否则要等下一期。」启动频率越低，紧迫感越强。</p>
+      </div>
+      <div class="card">
+        <span class="card-corner tl"></span><span class="card-corner tr"></span>
+        <span class="card-corner bl"></span><span class="card-corner br"></span>
+        <h4 style="font-family:'Playfair Display',Impact,sans-serif;font-size:18px;text-transform:uppercase;margin-bottom:12px;color:var(--accent-3)">滚动季节紧迫</h4>
+        <p style="font-size:14px;color:var(--fg-2)">同一核心服务换季节性包装+截止日期。新年促销 1/30 结束 → 情人节促销 2/28 结束 → 春季瘦身 3/31 结束。每次换名字，永远有真实截止日期。</p>
+      </div>
+      <div class="card">
+        <span class="card-corner tl"></span><span class="card-corner tr"></span>
+        <span class="card-corner bl"></span><span class="card-corner br"></span>
+        <h4 style="font-family:'Playfair Display',Impact,sans-serif;font-size:18px;text-transform:uppercase;margin-bottom:12px;color:var(--accent-3)">定价/赠品紧迫</h4>
+        <p style="font-size:14px;color:var(--fg-2)">不是服务本身有截止，而是<strong>促销</strong>有截止。「我们每 4 周换一次促销，这是最近最好的一次。」不降价核心报价，只让促销/赠品有期限。</p>
+      </div>
+      <div class="card">
+        <span class="card-corner tl"></span><span class="card-corner tr"></span>
+        <span class="card-corner bl"></span><span class="card-corner br"></span>
+        <h4 style="font-family:'Playfair Display',Impact,sans-serif;font-size:18px;text-transform:uppercase;margin-bottom:12px;color:var(--accent-3)">爆炸性机会</h4>
+        <p style="font-size:14px;color:var(--fg-2)">机会本身随时间衰减。套利窗口、新平台先发优势、招聘爆炸性 Offer（每天等 = 薪资/奖金减少）。强调时间成本，让犹豫 = 损失。</p>
+      </div>
+    </div>
+
+    <!-- 赠品 -->
+    <div class="deco-line"></div>
+    <h3 class="display" style="font-size:28px;margin-bottom:16px;color:var(--green)">③ 赠品 · BONUSES</h3>
+    <p style="color:var(--fg-2);max-width:760px;margin-bottom:32px;font-size:15px">
+      一个单独的报价不如被拆成组件再堆叠的报价有价值。<strong style="color:var(--accent)">每次「但等等……还有更多！」都在拉大价格-价值差距。</strong>赠品的价值应超过核心报价——让客户潜意识推断核心报价必然更值钱。
+    </p>
+
+    <div class="card reveal" style="margin-bottom:32px">
+      <span class="card-corner tl"></span><span class="card-corner tr"></span>
+      <span class="card-corner bl"></span><span class="card-corner br"></span>
+      <div class="eyebrow" style="margin-bottom:12px">BONUS BEST PRACTICES · 赠品最佳实践</div>
+      <div class="grid-2" style="gap:16px">
+        <ol style="padding-left:20px;font-size:13px;color:var(--fg-2);line-height:2">
+          <li>总是提供赠品（用裁剪堆叠后的清单）</li>
+          <li>给每个赠品起一个含<strong>利益</strong>的名字</li>
+          <li>说明它与客户顾虑的关系</li>
+          <li>讲它是怎么被创造/发现的</li>
+          <li>它如何具体改善客户生活</li>
+          <li>提供证明（数据/案例/个人经验）</li>
+        </ol>
+        <ol start="7" style="padding-left:20px;font-size:13px;color:var(--fg-2);line-height:2">
+          <li>描绘使用后的<strong>生动画面</strong></li>
+          <li>给每个赠品标价并论证</li>
+          <li>工具&清单 &gt; 额外培训（低时间成本）</li>
+          <li>每个赠品击碎一个具体顾虑</li>
+          <li>赠品总价值 &gt; 核心报价价值</li>
+          <li>给赠品叠加稀缺/紧迫 = 类固醇</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="pro-tip reveal" style="margin-bottom:48px">
+      <strong>他人产品做赠品：</strong>找非竞争对手的相邻商家提供免费产品/服务作为你的赠品。对他们=免费曝光给你的高质量客户。对你=零成本高价值。再谈团体折扣+推荐佣金——你的 $400 报价可能额外赚 $350 纯利润。你的健身房客户需要按摩？按摩师给免费券。需要正骨？正骨师给免费调整。每个人都是赢家。
+    </div>
+
+    <!-- 保证 -->
+    <div class="deco-line"></div>
+    <h3 class="display" style="font-size:28px;margin-bottom:16px;color:var(--accent)">④ 保证 · GUARANTEES</h3>
+    <p style="color:var(--fg-2);max-width:760px;margin-bottom:32px;font-size:15px">
+      风险是任何产品/服务最大的反对理由。逆转风险 = 立即让报价更有吸引力。Jason Fladlien 见证：仅改变保证质量就让转化率提升 <strong style="color:var(--accent)">2-4 倍</strong>。算账：关闭率 +30%，退款率从 5%→10%，净销售仍 +23%。
+    </p>
+
+    <div class="guarantee-grid reveal" style="margin-bottom:48px">
+      <div class="g-card">
+        <div class="g-type">UNCONDITIONAL · 无条件</div>
+        <div class="g-title">无理由退款</div>
+        <div class="g-body">最简单也最危险。30天/60天无理由全额退。适合低客单 B2C。风险高但转化补偿退款。Jason Fladlien 措辞：「我不是让你今天决定 yes 或 no，而是让你做一个<strong>充分知情</strong>的决定……如果 29 分钟或 29 天后你不开心，我就不开心。」</div>
+      </div>
+      <div class="g-card">
+        <div class="g-type">CONDITIONAL · 条件</div>
+        <div class="g-title">超额退款</div>
+        <div class="g-body">双倍/三倍退款或固定额外赔付。Jason Fladlien 的课程：「如果你买了课程、花了 $X 投广告、没赚钱，我以 $25,000 无条件买下你的店铺。」$2997 课程 → 额外 $3M 销售，只退款 10 笔 = 净赚 $2.75M。</div>
+      </div>
+      <div class="g-card">
+        <div class="g-type">CONDITIONAL · 条件</div>
+        <div class="g-title">服务保证</div>
+        <div class="g-body">免费继续服务直到达成 X。「你没达到结果，我们就继续做直到你达到。」消除时间元素，永远不亏钱。加条件：必须完成指定动作（建网页、参加电话、称重、报数据）。霍莫齐最爱——从未有人真正使用过。</div>
+      </div>
+      <div class="g-card">
+        <div class="g-type">CONDITIONAL · 条件</div>
+        <div class="g-title">修改版服务保证</div>
+        <div class="g-body">额外免费 Y 时长的服务/产品访问。比无限版服务保证多了时间上限——「再给你 90 天免费。」更容易起步，也有魔法效果。</div>
+      </div>
+      <div class="g-card">
+        <div class="g-type">CONDITIONAL · 条件</div>
+        <div class="g-title">信用退款</div>
+        <div class="g-body">退款以信用额度形式返还，可用于你任何服务。适合追加销售场景——客户已有喜欢的东西，你在卖更多。最坏情况：信用用在已有的东西上。维持客户好感。</div>
+      </div>
+      <div class="g-card">
+        <div class="g-type">CONDITIONAL · 条件</div>
+        <div class="g-title">个人服务保证</div>
+        <div class="g-body">你个人 1 对 1 免费服务直到达成 X 目标。最强保证之一——尤其当你已成名。必须加条件：24 小时内回复、使用你指定的产品、完成你指定的动作。「Alex 会亲自跟你合作直到你的报价转化。」</div>
+      </div>
+      <div class="g-card">
+        <div class="g-type">CONDITIONAL · 条件</div>
+        <div class="g-title">机票+酒店保证</div>
+        <div class="g-body">如果你没获得价值，退产品费 + 机票 + 酒店。完美用于工作坊/线下体验。通常机票+酒店 &lt; 活动票价，相当于额外 $1,000 保证但更具体可感。</div>
+      </div>
+      <div class="g-card">
+        <div class="g-type">CONDITIONAL · 条件</div>
+        <div class="g-title">延期二次付款</div>
+        <div class="g-body">「直到你达成第一个结果前，我们不收第二笔款。」瘦 5 磅 / 做第一笔销售 / 网站上线。让客户用「快速行动」思维思考。聚焦团队于客户激活。霍莫齐成功使用多次。</div>
+      </div>
+      <div class="g-card">
+        <div class="g-type">ANTI · 反保证</div>
+        <div class="g-title">所有销售最终</div>
+        <div class="g-body">「所有销售最终。」需要一个强有力的「理由」——产品一经查看不可撤销（代码、话术、内部流程）。「我们要展示我们正在使用的专有流程……一旦看过就不可不看，因此所有销售最终。」<strong> damaging admission</strong> 反而增强说服力。适合高客单+高定制。</div>
+      </div>
+      <div class="g-card">
+        <div class="g-type">IMPLIED · 隐含</div>
+        <div class="g-title">绩效/分润模型</div>
+        <div class="g-body">按效果付费、收入分成、利润分成、阶梯触发、奖金触发。「我不表演，你就不用付。」最理想的设置——完全对齐利益。缺点：追踪与收款。代理商从 retainer → performance 模型：$20K/月 → $200K+/月。</div>
+      </div>
+    </div>
+
+    <div class="pro-tip reveal" style="margin-bottom:48px">
+      <strong>命名你的保证：</strong>别用「满意保证」这种无聊词。「30 天无理由退款」→ <strong>「30 天后，如果你不会冒着鲨鱼出没的海水游回去抢回我们的产品，我们退还每一分钱。」</strong>或<strong>「海豹宝宝棒保证」</strong>——用 30 天后，如果你不会为了留下客户而棒杀一只海豹宝宝，你一分钱不用付。画面感 = 记忆度。
+    </div>
+
+    <!-- 命名 MAGIC -->
+    <div class="deco-line"></div>
+    <h3 class="display" style="font-size:28px;margin-bottom:16px;color:var(--danger)">⑤ 命名 · NAMING · MAGIC</h3>
+    <p style="color:var(--fg-2);max-width:760px;margin-bottom:32px;font-size:15px">
+      同一个浮动中心，叫「免费六周减压挑战」vs「漂浮罐中心体验」——转化率天壤之别。报价会疲劳，尤其本地市场。你不需要改核心报价，只需换包装纸。<strong style="color:var(--accent)">M-A-G-I-C 公式：</strong>
+    </p>
+
+    <div class="magic-grid reveal" style="margin-bottom:32px">
+      <div class="magic-cell">
+        <div class="magic-letter">M</div>
+        <div class="magic-name">Magnet</div>
+        <div class="magic-desc">磁力「理由」——为什么做这个促销？可以是任何事：新店开业、周年庆、万圣节、新管理层。「兄弟会因为有人拔了智齿而办派对」——理由可以是任何东西。</div>
+      </div>
+      <div class="magic-cell">
+        <div class="magic-letter">A</div>
+        <div class="magic-name">Avatar</div>
+        <div class="magic-desc">宣布你的头像——你在找谁？越具体越好。本地化到子区域：不是「巴尔的摩」而是「Towson 妈妈」。不是「芝加哥」而是「Hinsdale 企业家」。</div>
+      </div>
+      <div class="magic-cell">
+        <div class="magic-letter">G</div>
+        <div class="magic-name">Goal</div>
+        <div class="magic-desc">给他们一个目标——梦想结果。可以是一个词或短语。无痛、明星微笑、第一名、小黑裙、利润翻倍、7 位数、$100K。越具体越有形越好。</div>
+      </div>
+      <div class="magic-cell">
+        <div class="magic-letter">I</div>
+        <div class="magic-name">Interval</div>
+        <div class="magic-desc">标明时间间隔——多久能达成？4 小时、21 天、6 周、3 个月。注意：平台合规可能不允许「$10,000 in 10 days」类量化承诺+时限。非量化目标可自由使用。</div>
+      </div>
+      <div class="magic-cell">
+        <div class="magic-letter">C</div>
+        <div class="magic-name">Container</div>
+        <div class="magic-desc">完成于容器词——表明这是一个系统/打包。挑战、蓝图、训练营、强化营、孵化器、大师课、冲刺、发射、弹射、重置、黑客、捷径、系统、蜕变……</div>
+      </div>
+    </div>
+
+    <div class="card reveal" style="margin-bottom:32px">
+      <span class="card-corner tl"></span><span class="card-corner tr"></span>
+      <span class="card-corner bl"></span><span class="card-corner br"></span>
+      <div class="eyebrow" style="margin-bottom:12px">NAMING EXAMPLES · 命名示例</div>
+      <h4 style="font-family:'Playfair Display',Impact,sans-serif;font-size:18px;text-transform:uppercase;margin-bottom:20px">跨行业命名案例</h4>
+      <div class="grid-3" style="gap:16px">
+        <div>
+          <div style="font-family:'Courier New',monospace;font-size:10px;color:var(--accent);letter-spacing:.15em;margin-bottom:8px">健康</div>
+          <p style="font-size:13px;color:var(--fg-2);line-height:1.8">
+            • 免费 6 周「万圣节前变瘦」挑战<br>
+            • 88% off 12 周比基尼蓝图<br>
+            • 免费 21 天妈妈改造计划<br>
+            • 6 周减压挑战
+          </p>
+        </div>
+        <div>
+          <div style="font-family:'Courier New',monospace;font-size:10px;color:var(--accent);letter-spacing:.15em;margin-bottom:8px">医生/牙科</div>
+          <p style="font-size:13px;color:var(--fg-2);line-height:1.8">
+            • $2,000 off 明星微笑蜕变<br>
+            • Lakeway 妈妈 — $1,500 off 孩子牙套<br>
+            • 开学季免费牙套赠送<br>
+            • 90 天快速愈合强化营
+          </p>
+        </div>
+        <div>
+          <div style="font-family:'Courier New',monospace;font-size:10px;color:var(--accent);letter-spacing:.15em;margin-bottom:8px">教练/咨询</div>
+          <p style="font-size:13px;color:var(--fg-2);line-height:1.8">
+            • 5 天 5 客户蓝图<br>
+            • 7F 代理 12 周强化营<br>
+            • 14 天找到完美产品发射<br>
+            • 30 天填满你的健身房（免费！）
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pro-tip reveal" style="margin-bottom:16px">
+      <strong>报价疲劳时的变更顺序：</strong>① 换创意（图片/视频）→ ② 换文案 → ③ 换标题/包装纸 → ④ 换时长 → ⑤ 换促销组件 → ⑥ 换变现结构。从轻到重，先穷尽上层再做下层。绝不在有牵引力时改核心机器——企业家的 ADD 用在包装上，不是引擎上。
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     交互式价值计算器
+     ============================================ -->
+<section id="sec-calculator" class="section">
+  <div class="container">
+    <div class="section-label">INTERACTIVE WIDGET · 交互挂件</div>
+    <h2 class="section-title">价值方程式<br>实时模拟器</h2>
+    <p class="section-sub">
+      拖动滑块调整四个价值变量，实时感知价值分数的变化。底部归零时价值趋于无穷——这就是 Grand Slam Offer 的终极追求。
+    </p>
+
+    <div class="calculator reveal">
+      <div class="calc-row">
+        <div class="calc-label">
+          <strong>梦想结果</strong>（Dream Outcome）<br>
+          <span style="font-size:12px;color:var(--fg-3)">客户渴望的结果有多强烈？</span>
+        </div>
+        <input type="range" class="calc-slider" id="calc-do" min="1" max="10" value="7">
+        <div class="calc-val" id="val-do">7</div>
+      </div>
+      <div class="calc-row">
+        <div class="calc-label">
+          <strong>达成可能性</strong>（Likelihood）<br>
+          <span style="font-size:12px;color:var(--fg-3)">客户多确信能达成结果？</span>
+        </div>
+        <input type="range" class="calc-slider" id="calc-la" min="1" max="10" value="6">
+        <div class="calc-val" id="val-la">6</div>
+      </div>
+      <div class="calc-row">
+        <div class="calc-label">
+          <strong>时间延迟</strong>（Time Delay）<br>
+          <span style="font-size:12px;color:var(--fg-3)">购买到结果之间的感知时间？</span>
+        </div>
+        <input type="range" class="calc-slider" id="calc-td" min="1" max="10" value="5">
+        <div class="calc-val" id="val-td">5</div>
+      </div>
+      <div class="calc-row">
+        <div class="calc-label">
+          <strong>努力与牺牲</strong>（Effort & Sacrifice）<br>
+          <span style="font-size:12px;color:var(--fg-3)">客户需要付出多少？</span>
+        </div>
+        <input type="range" class="calc-slider" id="calc-es" min="1" max="10" value="5">
+        <div class="calc-val" id="val-es">5</div>
+      </div>
+
+      <div class="calc-result">
+        <div class="calc-result-num" id="calc-result">1.68</div>
+        <div class="calc-result-label">VALUE SCORE · 价值分数</div>
+        <div id="calc-insight" style="margin-top:16px;font-size:13px;color:var(--fg-2);max-width:500px;margin-left:auto;margin-right:auto">
+          调整滑块查看价值变化。降低底部变量比增加顶部变量更有效——让底部趋近于零是终极策略。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION V — 执行
+     ============================================ -->
+<section id="sec-execution" class="section">
+  <div class="container">
+    <div class="section-label">SECTION V · EXECUTION · 执行</div>
+    <h2 class="section-title">你的第一个<br>$100,000</h2>
+    <p class="section-sub">
+      Charlie Munger 说：「第一个 $100,000 是个婊子，但你必须做到。」2017 年 3 月，霍莫齐的个人银行账户突破 $101,018——不是营收，不是利润，是实实在在可以花的钱。那是他人生中最「富有」的时刻。后来数千万在银行，那种感觉仍无法超越。
+    </p>
+
+    <div class="quote-block reveal fade-text" style="margin-bottom:48px">
+      我能搞砸连续三年不赚一分钱，我们也撑得住。
+      <span class="quote-author">— Alex Hormozi, 2017年3月，余额 $101,018</span>
+    </div>
+
+    <!-- 全书总结 -->
+    <div class="card reveal" style="margin-bottom:48px">
+      <span class="card-corner tl"></span><span class="card-corner tr"></span>
+      <span class="card-corner bl"></span><span class="card-corner br"></span>
+      <div class="eyebrow" style="margin-bottom:12px">IN A NUTSHELL · 全书浓缩</div>
+      <h3 style="font-family:'Playfair Display',Impact,sans-serif;font-size:24px;text-transform:uppercase;margin-bottom:24px">餐巾纸背的清单</h3>
+      <div class="grid-2" style="gap:12px">
+        <ol style="padding-left:20px;font-size:14px;color:var(--fg-2);line-height:2.2">
+          <li>为什么你<strong>不能</strong>成为市场中的商品</li>
+          <li>为什么选择正常/增长市场，利基即财富</li>
+          <li>为什么你<strong>应该</strong>收很多钱</li>
+          <li>如何用四个价值驱动因子收很多钱</li>
+          <li>如何用五步创建你的价值报价</li>
+          <li>如何堆叠价值、交付并保持盈利</li>
+        </ol>
+        <ol start="7" style="padding-left:20px;font-size:14px;color:var(--fg-2);line-height:2.2">
+          <li>如何用<strong>稀缺</strong>把需求曲线推向你</li>
+          <li>如何用<strong>紧迫</strong>降低买家行动门槛</li>
+          <li>如何策略性用<strong>赠品</strong>增加需求</li>
+          <li>如何用创意<strong>保证</strong>完全逆转买家风险</li>
+          <li>如何<strong>命名</strong>以精准吸引你的头像</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="callout reveal" style="margin-bottom:48px">
+      <div class="callout-title">FINAL THOUGHT · 终极思考</div>
+      <p style="font-size:16px;color:var(--fg);line-height:1.7">
+        没有人会来拯救我们。作为企业家，我们要通过创新让世界变好。这本书是一个工具——<strong style="color:var(--accent)">你有了一个高价值、高利润、去商品化的大满贯报价</strong>。对许多人来说，这足以让你做出远超以往的销售、更高的价格、更多的利润。你的第一个真正的大满贯报价应该能带你达到你的第一个 $100,000。
+      </p>
+    </div>
+
+    <!-- 金句墙 -->
+    <div class="deco-line"></div>
+    <h3 class="display" style="font-size:28px;margin-bottom:24px;color:var(--accent)">原书金句墙</h3>
+    <div class="grid-2 reveal" style="margin-bottom:48px">
+      <div class="quote-block" style="margin:0">
+        给人们一个好处，好到他们觉得拒绝你就是愚蠢。
+        <span class="quote-author">— Travis Jones</span>
+      </div>
+      <div class="quote-block" style="margin:0">
+        价格是你付出的。价值是你得到的。
+        <span class="quote-author">— Warren Buffett</span>
+      </div>
+      <div class="quote-block" style="margin:0">
+        你能大声说出来而不笑场的最高价格，就是你的定价。
+        <span class="quote-author">— Dan Kennedy</span>
+      </div>
+      <div class="quote-block" style="margin:0">
+        痛苦就是推介。如果你能准确描绘前景感受到的痛苦，他们几乎总是会买你提供的东西。
+        <span class="quote-author">— Alex Hormozi</span>
+      </div>
+      <div class="quote-block" style="margin:0">
+        欲望是你与自己签的合同：在得到想要的东西之前，你一直不开心。
+        <span class="quote-author">— Naval Ravikant</span>
+      </div>
+      <div class="quote-block" style="margin:0">
+        第一个 $100,000 是个婊子，但你必须做到。我不在乎你必须做什么——如果意味着走路去任何地方、不吃任何非优惠券买来的东西，想办法搞到 $100,000。之后你可以稍微松油门。
+        <span class="quote-author">— Charlie Munger</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     页脚
+     ============================================ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-title">$100M OFFERS · 知识库</div>
+        <p class="footer-text">
+          本知识库基于 Alex Hormozi 所著《$100M Offers: How To Make Offers So Good People Feel Stupid Saying No》（Acquisition.com Volume I, 2021）重构。以原子朋克 / 极繁主义视觉语言重新编排全书核心框架、模型、方法论与案例，用于学习与知识管理。
+        </p>
+      </div>
+      <div>
+        <div class="footer-title">导航</div>
+        <p class="footer-text">
+          <a href="#sec-start" style="color:var(--fg-2);text-decoration:none;display:block;padding:4px 0">起点</a>
+          <a href="#sec-origin" style="color:var(--fg-2);text-decoration:none;display:block;padding:4px 0">起源故事</a>
+          <a href="#sec-pricing" style="color:var(--fg-2);text-decoration:none;display:block;padding:4px 0">定价</a>
+          <a href="#sec-value" style="color:var(--fg-2);text-decoration:none;display:block;padding:4px 0">价值</a>
+          <a href="#sec-enhance" style="color:var(--fg-2);text-decoration:none;display:block;padding:4px 0">增强</a>
+          <a href="#sec-execution" style="color:var(--fg-2);text-decoration:none;display:block;padding:4px 0">执行</a>
+        </p>
+      </div>
+      <div>
+        <div class="footer-title">出处</div>
+        <p class="footer-text">
+          原著：Alex Hormozi<br>
+          出版：Acquisition.com, LLC<br>
+          ISBN: 978-1-7374757-0-5<br>
+          封面设计：Charlotte Chan Mikkelsen<br>
+          知识库重构：AI 辅助编辑
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2021 Alex Hormozi · All Rights Reserved</span>
+      <span>Knowledge Base · For Educational Use</span>
+      <span>Powered By Z.ai GLM-5.2</span>
+    </div>
+  </div>
+</footer>
+
+</main>
+
+<script>
+/* ============================================
+   $100M OFFERS — 交互逻辑
+   ============================================ */
+
+(function(){
+  'use strict';
+
+  /* ---------- A. 预加载屏（双重兜底） ---------- */
+  const preloader = document.getElementById('preloader');
+  const preBar = document.getElementById('pre-bar');
+  const preText = document.getElementById('pre-text');
+  let progress = 0;
+  const preMessages = [
+    'INITIALIZING OFFER MATRIX…',
+    'CALIBRATING VALUE EQUATION…',
+    'LOADING GRAND SLAM FRAMEWORK…',
+    'SYNCING SCARCITY ENGINE…',
+    'READY.'
+  ];
+  
+  const preInterval = setInterval(()=>{
+    progress += Math.random() * 18 + 7;
+    if(progress > 100) progress = 100;
+    preBar.style.width = progress + '%';
+    const idx = Math.min(Math.floor(progress / 22), preMessages.length - 1);
+    preText.textContent = preMessages[idx];
+    if(progress >= 100){
+      clearInterval(preInterval);
+      setTimeout(hidePreloader, 300);
+    }
+  }, 120);
+
+  function hidePreloader(){
+    preloader.classList.add('hidden');
+    setTimeout(()=>{ preloader.style.display = 'none'; }, 900);
+  }
+  // 超时强制淡出（2秒兜底）
+  setTimeout(()=>{
+    if(!preloader.classList.contains('hidden')){
+      clearInterval(preInterval);
+      preBar.style.width = '100%';
+      preText.textContent = 'READY.';
+      setTimeout(hidePreloader, 200);
+    }
+  }, 2000);
+  // 加载状态即时检查
+  if(document.readyState === 'complete'){
+    setTimeout(()=>{
+      if(!preloader.classList.contains('hidden')){
+        progress = 100;
+        preBar.style.width = '100%';
+        setTimeout(hidePreloader, 200);
+      }
+    }, 800);
+  } else {
+    window.addEventListener('load', ()=>{
+      setTimeout(()=>{
+        if(!preloader.classList.contains('hidden')){
+          progress = 100;
+          preBar.style.width = '100%';
+          preText.textContent = 'READY.';
+          setTimeout(hidePreloader, 300);
+        }
+      }, 500);
+    });
+  }
+
+  /* ---------- B. TOC 构建 ---------- */
+  const tocData = [
+    {id:'hero', label:'封面', num:'00'},
+    {id:'sec-start', label:'起点', num:'01'},
+    {id:'sec-origin', label:'起源', num:'02'},
+    {id:'sec-pricing', label:'定价', num:'03'},
+    {id:'sec-premium', label:'溢价', num:'04'},
+    {id:'sec-value', label:'价值', num:'05'},
+    {id:'sec-enhance', label:'增强', num:'06'},
+    {id:'sec-calculator', label:'模拟器', num:'07'},
+    {id:'sec-execution', label:'执行', num:'08'}
+  ];
+
+  const tocBar = document.getElementById('toc-bar');
+  const drawerLinks = document.getElementById('drawer-links');
+  
+  tocData.forEach(item=>{
+    // 顶部 TOC
+    const a = document.createElement('a');
+    a.href = '#' + item.id;
+    a.className = 'toc-link';
+    a.dataset.toc = item.id;
+    a.innerHTML = '<span class="toc-num">' + item.num + '</span>' + item.label;
+    tocBar.appendChild(a);
+    
+    // 抽屉链接
+    const d = document.createElement('a');
+    d.href = '#' + item.id;
+    d.className = 'drawer-link';
+    d.dataset.toc = item.id;
+    d.innerHTML = '<span style="opacity:.5;margin-right:8px">' + item.num + '</span>' + item.label;
+    drawerLinks.appendChild(d);
+  });
+
+  /* ---------- C. 移动端抽屉 ---------- */
+  const drawer = document.getElementById('drawer');
+  const drawerOverlay = document.getElementById('drawer-overlay');
+  const mobileBtn = document.getElementById('mobile-menu-btn');
+  const drawerClose = document.getElementById('drawer-close');
+  
+  function openDrawer(){
+    drawer.classList.add('open');
+    drawerOverlay.classList.add('show');
+  }
+  function closeDrawer(){
+    drawer.classList.remove('open');
+    drawerOverlay.classList.remove('show');
+  }
+  if(mobileBtn) mobileBtn.addEventListener('click', openDrawer);
+  if(drawerClose) drawerClose.addEventListener('click', closeDrawer);
+  if(drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
+
+  /* ---------- D. 暗黑模式切换 ---------- */
+  const themeToggle = document.getElementById('theme-toggle');
+  const themeIcon = document.getElementById('theme-icon');
+  const root = document.documentElement;
+  
+  const sunIcon = '<circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2"/><line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2"/><line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2"/><line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2"/>';
+  const moonIcon = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="none" stroke="currentColor" stroke-width="2"/>';
+
+  function updateThemeIcon(){
+    themeIcon.innerHTML = root.dataset.theme === 'dark' ? sunIcon : moonIcon;
+  }
+  updateThemeIcon();
+
+  themeToggle.addEventListener('click', function(e){
+    const newTheme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    
+    if(document.startViewTransition){
+      document.startViewTransition(()=>{
+        root.dataset.theme = newTheme;
+        updateThemeIcon();
+      });
+    } else {
+      root.dataset.theme = newTheme;
+      updateThemeIcon();
+    }
+  });
+
+  /* ---------- E. ScrollSpy（精准限定 TOC 项） ---------- */
+  const sections = tocData.map(d => document.getElementById(d.id));
+  const tocLinks = document.querySelectorAll('#toc-bar .toc-link');
+  const drawerLinksAll = document.querySelectorAll('#drawer .drawer-link');
+  
+  function updateScrollSpy(){
+    const scrollY = window.scrollY + 120;
+    let currentIdx = 0;
+    for(let i = 0; i < sections.length; i++){
+      if(sections[i] && sections[i].offsetTop <= scrollY){
+        currentIdx = i;
+      }
+    }
+    const currentId = tocData[currentIdx].id;
+    
+    // 只操作顶部 TOC bar 和抽屉中的链接
+    tocLinks.forEach(link=>{
+      if(link.dataset.toc === currentId){
+        link.classList.add('active');
+        // 自动滚动 TOC bar 让 active 项可见
+        const linkRect = link.getBoundingClientRect();
+        const barRect = tocBar.parentElement.getBoundingClientRect();
+        if(linkRect.left < barRect.left || linkRect.right > barRect.right){
+          tocBar.parentElement.scrollTo({
+            left: link.offsetLeft - 40,
+            behavior: 'smooth'
+          });
+        }
+      } else {
+        link.classList.remove('active');
+      }
+    });
+    drawerLinksAll.forEach(link=>{
+      if(link.dataset.toc === currentId){
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  }
+  
+  let scrollTicking = false;
+  window.addEventListener('scroll', ()=>{
+    if(!scrollTicking){
+      requestAnimationFrame(()=>{
+        updateScrollSpy();
+        scrollTicking = false;
+      });
+      scrollTicking = true;
+    }
+  });
+
+  /* ---------- F. 卡片渐入 (IntersectionObserver) ---------- */
+  const revealObserver = new IntersectionObserver((entries)=>{
+    entries.forEach((entry, idx)=>{
+      if(entry.isIntersecting){
+        // 错开渐入
+        const delay = entry.target.dataset.stagger || 0;
+        setTimeout(()=>{
+          entry.target.classList.add('in');
+        }, delay);
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+  // 为 grid 内的 reveal 设置 stagger
+  document.querySelectorAll('.grid-2, .grid-3, .grid-4, .guarantee-grid, .magic-grid, .steps, .timeline').forEach(grid=>{
+    const items = grid.querySelectorAll('.reveal, .card, .g-card, .magic-cell, .step, .tl-item');
+    items.forEach((item, idx)=>{
+      item.classList.add('reveal');
+      item.dataset.stagger = idx * 80;
+    });
+  });
+  
+  document.querySelectorAll('.reveal').forEach(el=> revealObserver.observe(el));
+
+  /* ---------- G. 文字渐进淡显 ---------- */
+  const fadeObserver = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+        fadeObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.fade-text').forEach(el=> fadeObserver.observe(el));
+
+  /* ---------- H. SVG 滚动绘制 ---------- */
+  const svgPaths = document.querySelectorAll('.svg-wrap svg path, .svg-wrap svg ellipse, .svg-wrap svg circle, .svg-wrap svg line');
+  // 注意：不实际改变 path 的绘制（因为很多是装饰），而是让 SVG 容器有渐入效果
+  document.querySelectorAll('.svg-wrap').forEach(wrap=>{
+    wrap.style.opacity = '0';
+    wrap.style.transition = 'opacity .8s ease';
+    const svgObs = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.style.opacity = '1';
+          svgObs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    svgObs.observe(wrap);
+  });
+
+  /* ---------- I. 磁吸 hover ---------- */
+  function addMagnetic(el, strength){
+    strength = strength || 0.3;
+    el.style.transition = 'transform .3s cubic-bezier(.4,0,.2,1)';
+    el.addEventListener('mousemove', function(e){
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      el.style.transform = `translate(${x * strength}px, ${y * strength}px)`;
+    });
+    el.addEventListener('mouseleave', function(){
+      el.style.transform = 'translate(0,0)';
+    });
+  }
+  document.querySelectorAll('.toc-link, #theme-toggle, .magic-cell, .drawer-link').forEach(el=>{
+    addMagnetic(el, 0.25);
+  });
+
+  /* ---------- J. 数字计数器动画 ---------- */
+  const countObserver = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const el = entry.target;
+        const target = parseInt(el.dataset.count);
+        const suffix = el.textContent.replace(/[\d.]/g,'') || '';
+        let current = 0;
+        const duration = 1500;
+        const steps = 60;
+        const increment = target / steps;
+        const stepTime = duration / steps;
+        
+        const counter = setInterval(()=>{
+          current += increment;
+          if(current >= target){
+            current = target;
+            clearInterval(counter);
+          }
+          el.textContent = Math.floor(current) + (suffix.includes('K') ? 'K' : '');
+        }, stepTime);
+        
+        countObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('[data-count]').forEach(el=> countObserver.observe(el));
+
+  /* ---------- K. 价值方程式计算器 ---------- */
+  const calcDO = document.getElementById('calc-do');
+  const calcLA = document.getElementById('calc-la');
+  const calcTD = document.getElementById('calc-td');
+  const calcES = document.getElementById('calc-es');
+  const valDO = document.getElementById('val-do');
+  const valLA = document.getElementById('val-la');
+  const valTD = document.getElementById('val-td');
+  const valES = document.getElementById('val-es');
+  const calcResult = document.getElementById('calc-result');
+  const calcInsight = document.getElementById('calc-insight');
+
+  function updateCalculator(){
+    const do_val = parseInt(calcDO.value);
+    const la_val = parseInt(calcLA.value);
+    const td_val = parseInt(calcTD.value);
+    const es_val = parseInt(calcES.value);
+    
+    valDO.textContent = do_val;
+    valLA.textContent = la_val;
+    valTD.textContent = td_val;
+    valES.textContent = es_val;
+    
+    const numerator = do_val * la_val;
+    const denominator = td_val * es_val;
+    const score = numerator / denominator;
+    
+    // 平滑过渡数字
+    animateNumber(calcResult, parseFloat(calcResult.textContent), score, 400);
+    
+    // 洞察文字
+    let insight = '';
+    if(denominator <= 2){
+      insight = '⚡ 底部接近零——你的报价理论上拥有<strong style="color:var(--accent)">接近无限的价值</strong>。这是 Grand Slam Offer 的终极形态：即时、无努力、必然达成。';
+    } else if(score >= 3){
+      insight = '🔥 高价值区间。顶部强、底部弱——继续压低时间延迟和努力牺牲，把「done-for-you」和「即时结果」做到极致。';
+    } else if(score >= 1.5){
+      insight = '✅ 正常价值区间。多数成功报价在此起步。现在选择一个方向突破：要么增强梦想结果的吸引力，要么削减客户需要付出的努力。';
+    } else if(score >= 0.5){
+      insight = '⚠️ 价值偏低。客户感知到的时间/努力成本太高，或达成可能性太低。优先降低底部——这是回报最高的方向。';
+    } else {
+      insight = '🚨 危险区。如果这是你的报价，你正在与商品化对手打价格战。立即重新设计：降低客户努力、加速结果交付、增加确定性证明。';
+    }
+    calcInsight.innerHTML = insight;
+  }
+  
+  function animateNumber(el, from, to, duration){
+    const start = performance.now();
+    function step(now){
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = from + (to - from) * eased;
+      el.textContent = current.toFixed(2);
+      if(progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  
+  [calcDO, calcLA, calcTD, calcES].forEach(slider=>{
+    slider.addEventListener('input', updateCalculator);
+  });
+  // 初始化
+  updateCalculator();
+
+  /* ---------- L. 平滑滚动（TOC 点击） ---------- */
+  // 使用 CSS scroll-behavior: smooth，不拦截 wheel 事件
+  // TOC 链接点击时关闭抽屉
+  document.querySelectorAll('.drawer-link').forEach(link=>{
+    link.addEventListener('click', ()=>{
+      closeDrawer();
+    });
+  });
+
+  /* ---------- M. 防止滚动锁定 ---------- */
+  // 确保 wheel 事件不被拦截，原生滚动优先
+  // 不添加任何自定义惯性滚动
+
+  console.log('%c$100M OFFERS · Knowledge Base','color:#ff6b35;font-size:20px;font-weight:bold');
+  console.log('%cPowered by Z.ai GLM-5.2','color:#00d9ff;font-size:12px');
+
+})();
+</script>
+
+</body>
+</html>

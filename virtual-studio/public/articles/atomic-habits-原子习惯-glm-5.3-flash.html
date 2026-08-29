@@ -1,0 +1,2215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>原子习惯 · ATOMIC HABITS ｜ 数据化读书笔记</title>
+<meta name="description" content="《原子习惯》（Atomic Habits / 简体中文版《掌控习惯》）数据解构×瑞士主义读书笔记：核心观点、四大定律、模型重绘、交互仿真工具箱。">
+<style>
+/* ============================================================
+   ATOMIC HABITS · READING NOTES ENGINE
+   DESIGN SYSTEM : DATA-DECONSTRUCTIVISM × SWISS MODERNISM
+   v1.0 — single-file build, zero external dependency
+   ============================================================ */
+
+/* ---------- 01 / DESIGN TOKENS ---------- */
+:root{
+  --bg:#F3F1EA;
+  --bg-deep:#ECE9E0;
+  --card:#FAF9F4;
+  --ink:#141519;
+  --ink-2:#55565E;
+  --ink-3:#8B8C94;
+  --line:rgba(20,21,25,.16);
+  --line-strong:rgba(20,21,25,.32);
+  --red:#D92B21;
+  --red-soft:rgba(217,43,33,.08);
+  --blue:#2039DE;
+  --blue-soft:rgba(32,57,222,.07);
+  --gold:#9A6B15;
+  --green:#1D7A53;
+  --ok:#1D7A53;
+  --warn:#9A6B15;
+  --shadow:0 24px 60px -30px rgba(20,21,25,.28);
+  --gridc:rgba(20,21,25,.05);
+  --mono:ui-monospace,"SF Mono","Cascadia Mono","JetBrains Mono","Roboto Mono",Menlo,Consolas,"PingFang SC","Noto Sans SC","Microsoft YaHei",monospace;
+  --sans:"Helvetica Neue",Helvetica,"Segoe UI","PingFang SC","Hiragino Sans GB","Source Han Sans SC","Noto Sans SC","Microsoft YaHei",sans-serif;
+}
+[data-theme="dark"]{
+  --bg:#131417;
+  --bg-deep:#0C0D10;
+  --card:#1A1C20;
+  --ink:#ECE9E0;
+  --ink-2:#ADABA2;
+  --ink-3:#787871;
+  --line:rgba(236,233,224,.17);
+  --line-strong:rgba(236,233,224,.36);
+  --red:#FF5648;
+  --red-soft:rgba(255,86,72,.11);
+  --blue:#97A7FF;
+  --blue-soft:rgba(151,167,255,.09);
+  --gold:#D9A441;
+  --green:#5BC18F;
+  --ok:#5BC18F;
+  --warn:#D9A441;
+  --shadow:0 28px 70px -32px rgba(0,0,0,.75);
+  --gridc:rgba(236,233,224,.05);
+}
+
+/* ---------- 02 / RESET & BASE ---------- */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.85;
+  font-size:16px;
+  overflow-x:hidden;
+  transition:background-color .45s ease,color .45s ease;
+}
+::selection{background:var(--red);color:#fff}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+hr{border:none;border-top:1px solid var(--line)}
+strong{font-weight:700;color:var(--ink)}
+
+/* ---------- 03 / GLOBAL DECOR LAYERS ---------- */
+#bgGrid{
+  position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background-image:
+    linear-gradient(to right,var(--gridc) 1px,transparent 1px),
+    linear-gradient(to bottom,var(--gridc) 1px,transparent 1px);
+  background-size:64px 64px;
+  transition:background-image .45s ease;
+}
+.wrap{width:min(94vw,2400px);margin-inline:auto;position:relative}
+
+/* corner registration marks (crosshair deco) */
+.reg{position:absolute;width:18px;height:18px;pointer-events:none;color:var(--ink-3)}
+.reg::before,.reg::after{content:"";position:absolute;background:currentColor}
+.reg::before{left:50%;top:0;width:1px;height:100%}
+.reg::after{top:50%;left:0;height:1px;width:100%}
+.reg.tl{top:-9px;left:-9px}.reg.tr{top:-9px;right:-9px}
+.reg.bl{bottom:-9px;left:-9px}.reg.br{bottom:-9px;right:-9px}
+
+/* ---------- 04 / PROGRESS BAR & TOP NAV ---------- */
+#progressBar{
+  position:fixed;top:0;left:0;height:3px;width:0%;
+  background:var(--red);z-index:120;
+  transition:background-color .45s ease;
+}
+nav#topNav{
+  position:fixed;top:0;left:0;right:0;z-index:110;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  background:color-mix(in srgb,var(--bg) 80%,transparent);
+  border-bottom:1px solid var(--line);
+  transition:background-color .45s ease,border-color .45s ease;
+}
+.navInner{
+  width:min(94vw,2400px);margin-inline:auto;
+  display:flex;align-items:center;gap:22px;height:58px;
+}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;letter-spacing:.14em;font-weight:700;white-space:nowrap}
+.brandDot{width:11px;height:11px;background:var(--red);flex:none}
+.brand b{font-size:13px}
+.brand span{color:var(--ink-3);font-weight:400}
+.navLinks{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.navLinks::-webkit-scrollbar{display:none}
+.navLinks a{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;
+  padding:7px 11px;color:var(--ink-2);white-space:nowrap;border:1px solid transparent;
+  transition:color .2s,border-color .2s;
+}
+.navLinks a:hover,.navLinks a.on{color:var(--ink);border-color:var(--line-strong)}
+.navLinks a i{font-style:normal;color:var(--red);margin-right:5px}
+#themeBtn{
+  flex:none;display:flex;align-items:center;justify-content:center;
+  width:38px;height:38px;border:1px solid var(--line-strong);
+  transition:border-color .2s,transform .2s;background:transparent;
+}
+#themeBtn:hover{border-color:var(--red);transform:rotate(15deg)}
+#themeBtn svg{width:17px;height:17px;stroke:var(--ink);fill:none;stroke-width:1.6}
+#themeBtn .icoMoon{display:block}#themeBtn .icoSun{display:none}
+[data-theme="dark"] #themeBtn .icoMoon{display:none}
+[data-theme="dark"] #themeBtn .icoSun{display:block}
+
+/* ---------- 05 / HERO ---------- */
+header.hero{padding-top:58px;position:relative;overflow:hidden}
+.heroTop{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  padding-top:26px;font-family:var(--mono);font-size:11.5px;color:var(--ink-3);
+  letter-spacing:.12em;gap:14px;flex-wrap:wrap;
+}
+.heroRule{height:2px;background:var(--ink);margin-top:10px;transition:background-color .45s ease}
+.heroMain{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,430px);gap:40px;padding:52px 0 30px;align-items:end}
+.zhTitle{
+  font-size:clamp(64px,11.5vw,210px);
+  font-weight:800;line-height:.98;letter-spacing:-.015em;
+}
+.zhTitle em{font-style:normal;color:var(--red)}
+.zhTitle .thin{font-weight:300}
+.enTitleRow{display:flex;align-items:center;gap:16px;margin-top:22px;flex-wrap:wrap}
+.enTitle{
+  font-family:var(--mono);font-weight:800;letter-spacing:.3em;
+  font-size:clamp(13px,1.5vw,20px);text-transform:uppercase;white-space:nowrap;
+}
+.enTitleMark{font-family:var(--mono);font-size:11px;color:var(--red);letter-spacing:.12em;white-space:nowrap}
+.heroSub{
+  margin-top:26px;max-width:60ch;color:var(--ink-2);font-size:clamp(14.5px,1.15vw,17px)
+}
+.heroSub b{color:var(--ink)}
+.heroDecoBox{border:1px solid var(--line-strong);padding:22px;position:relative;background:var(--card);box-shadow:var(--shadow)}
+.heroDecoBox h4{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--ink-3);font-weight:600;margin-bottom:14px}
+.bars{display:flex;align-items:flex-end;gap:6px;height:118px;margin-bottom:14px}
+.bars i{flex:1;align-self:stretch;height:100%;background:linear-gradient(to top,var(--red) 0%,var(--red) var(--h,40%),color-mix(in srgb,var(--ink) 12%,transparent) var(--h,40%),color-mix(in srgb,var(--ink) 12%,transparent) 100%);opacity:.92}
+.bars i:nth-child(even){filter:brightness(.82)}
+.heroMetaTable{width:100%;font-family:var(--mono);font-size:11.5px;border-collapse:collapse}
+.heroMetaTable td{border-top:1px dashed var(--line);padding:6.5px 2px;vertical-align:top}
+.heroMetaTable td:first-child{color:var(--ink-3);white-space:nowrap;width:5.6em}
+.heroMetaTable td:last-child{text-align:right;color:var(--ink)}
+.kpiBand{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));border-block:1px solid var(--line-strong)}
+.kpi{padding:24px 22px;border-right:1px solid var(--line);position:relative;overflow:hidden}
+.kpi:last-child{border-right:none}
+.kpi .n{font-family:var(--mono);formatnum;font-weight:800;font-size:clamp(30px,3.3vw,52px);letter-spacing:-.03em;line-height:1.05}
+.kpi .n small{font-size:.42em;letter-spacing:0;font-weight:600;color:var(--red)}
+.kpi .l{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--ink-3);margin-top:8px;text-transform:uppercase}
+.kpi::after{content:"";position:absolute;right:-14px;bottom:-16px;font-family:var(--mono);font-size:74px;font-weight:800;color:transparent;-webkit-text-stroke:1px var(--line);pointer-events:none;line-height:1}
+
+/* ---------- 06 / SECTION SCAFFOLD ---------- */
+section.sec{padding:clamp(60px,7vh,110px) 0 30px;scroll-margin-top:66px}
+.secHead{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:clamp(16px,2.4vw,42px);align-items:start;border-top:2px solid var(--ink);padding-top:18px;transition:border-color .45s ease}
+.secNum{
+  font-family:var(--mono);font-weight:800;line-height:.82;
+  font-size:clamp(58px,7.5vw,124px);letter-spacing:-.04em;
+  color:transparent;-webkit-text-stroke:1.6px var(--red);
+}
+.secIdBlock{min-width:0}
+.secKicker{font-family:var(--mono);font-size:11px;letter-spacing:.26em;color:var(--ink-3);margin-bottom:10px;text-transform:uppercase;display:flex;gap:14px;flex-wrap:wrap}
+.secKicker i{font-style:normal;color:var(--red)}
+.secTitleZh{font-size:clamp(27px,3.4vw,50px);font-weight:800;letter-spacing:-.01em;line-height:1.16}
+.secTitleEn{font-family:var(--mono);font-size:clamp(11px,1vw,13.5px);letter-spacing:.2em;color:var(--ink-2);margin-top:8px;text-transform:uppercase}
+.secPunch{
+  font-family:var(--mono);font-size:12px;color:var(--ink-2);max-width:270px;
+  border-left:2px solid var(--red);padding-left:14px;line-height:1.75;letter-spacing:.02em;
+  align-self:center;
+}
+.secBody{margin-top:clamp(30px,4vh,54px)}
+
+/* swiss 12-col */
+.cols{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:26px}
+.c2{grid-column:span 2}.c3{grid-column:span 3}.c4{grid-column:span 4}
+.c5{grid-column:span 5}.c6{grid-column:span 6}.c7{grid-column:span 7}
+.c8{grid-column:span 8}.c9{grid-column:span 9}.c10{grid-column:span 10}
+.c12{grid-column:span 12}
+.colStart4{grid-column-start:4}
+
+/* kicker label chip above blocks */
+.kick{
+  display:inline-flex;align-items:center;gap:9px;
+  font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.22em;
+  color:var(--red);margin-bottom:14px;text-transform:uppercase;
+}
+.kick::before{content:"";width:9px;height:9px;background:var(--red);flex:none}
+.kick.blue{color:var(--blue)}.kick.blue::before{background:var(--blue)}
+.kick.plain{color:var(--ink-3)}.kick.plain::before{background:var(--ink-3)}
+
+h3.sub{font-size:clamp(19px,1.85vw,27px);font-weight:750;letter-spacing:-.005em;line-height:1.35;margin-bottom:14px}
+p.body{color:var(--ink-2);margin-bottom:16px;font-size:15.5px}
+p.body strong,p.body b{color:var(--ink);font-weight:700}
+p.note{font-family:var(--mono);font-size:12px;color:var(--ink-3);line-height:1.8}
+mark{background:linear-gradient(transparent 58%,var(--red-soft) 0);color:inherit;padding:0 .1em}
+
+/* ---------- 07 / CARDS ---------- */
+.card{
+  background:var(--card);border:1px solid var(--line);padding:24px 24px 22px;position:relative;
+  transition:background-color .45s ease,border-color .45s ease,transform .25s ease,box-shadow .25s ease;
+}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--line-strong)}
+.card .idxTag{
+  position:absolute;top:-10px;left:18px;background:var(--bg);padding:0 8px;
+  font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.2em;color:var(--ink-3);
+  transition:background-color .45s ease;
+}
+.card h4{font-size:16.5px;font-weight:750;margin-bottom:8px}
+.card p{font-size:13.8px;color:var(--ink-2);line-height:1.8}
+.caseNum{font-family:var(--mono);font-size:34px;font-weight:800;color:var(--red);letter-spacing:-.03em;line-height:1}
+.caseNum small{font-size:13px;color:var(--ink-3);font-weight:500;letter-spacing:.06em;margin-left:4px}
+</style>
+<style>
+/* ---------- 08 / FIGURE FRAMES (SVG 重绘容器) ---------- */
+[data-theme="dark"] svg text[data-inv]{fill:#131417 !important}
+figure.fig{
+  border:1px solid var(--line-strong);background:var(--card);position:relative;
+  padding:20px 20px 0;transition:background-color .45s ease,border-color .45s ease;
+}
+figure.fig .figHead{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--ink-3);
+  margin-bottom:8px;text-transform:uppercase;flex-wrap:wrap;
+}
+figure.fig .figHead b{color:var(--red);font-weight:800}
+figure.fig figcaption{
+  border-top:1px dashed var(--line);margin-inline:-20px;margin-top:14px;
+  padding:11px 20px;font-size:12.3px;color:var(--ink-2);line-height:1.75;
+}
+figure.fig svg text{font-family:var(--mono)}
+.figSvgWrap{width:100%;overflow:hidden}
+
+/* ---------- 09 / FORMULA BLOCK ---------- */
+.formula{
+  border:1.5px dashed var(--line-strong);background:color-mix(in srgb,var(--bg) 55%,transparent);
+  padding:22px 24px;position:relative;
+}
+.formula .fLabel{position:absolute;top:-9px;left:16px;background:var(--bg);padding:0 8px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.2em;color:var(--ink-3);transition:background-color .45s ease}
+.formula .fLine{font-family:var(--mono);font-weight:700;font-size:clamp(15px,1.6vw,21px);line-height:1.7;letter-spacing:.01em}
+.formula .fLine var{font-style:normal;color:#fff;background:var(--red);padding:1px 7px;margin:0 2px;display:inline-block;line-height:1.5}
+[data-theme="dark"] .formula .fLine var{color:#131417}
+.formula .fEx{font-size:13px;color:var(--ink-2);margin-top:12px;border-top:1px dashed var(--line);padding-top:12px}
+.formula .fEx span{font-family:var(--mono);font-size:10.5px;color:var(--red);letter-spacing:.14em;display:block;margin-bottom:4px}
+
+/* ---------- 10 / QUOTES ---------- */
+.pullQuote{
+  border-left:3px solid var(--red);padding:6px 0 6px clamp(16px,2vw,28px);
+  margin:clamp(26px,4vh,44px) auto;max-width:1180px;
+}
+.pullQuote .qZh{font-size:clamp(19px,2.35vw,32px);font-weight:750;line-height:1.55;letter-spacing:-.005em}
+.pullQuote .qEn{font-family:var(--mono);font-size:12px;color:var(--ink-3);margin-top:10px;letter-spacing:.04em;line-height:1.7}
+.pullQuote .qSrc{font-family:var(--mono);font-size:11px;color:var(--red);margin-top:8px;letter-spacing:.18em}
+.quoteWall{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(340px,100%),1fr));gap:0;border:1px solid var(--line-strong)}
+.qCell{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:24px 22px 20px;background:var(--card);position:relative;display:flex;flex-direction:column;gap:12px;min-height:190px;transition:background-color .45s ease}
+.qCell:hover{background:var(--bg-deep)}
+.qCell:nth-child(3n){border-right:none}
+.qTagRow{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--ink-3)}
+.qTagRow b{color:var(--red);letter-spacing:.1em}
+.qCell .qText{font-size:16px;font-weight:650;line-height:1.75;flex:1}
+.qCell .qFrom{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+
+/* ---------- 11 / TABLES ---------- */
+.tblWrap{overflow-x:auto;border:1px solid var(--line-strong)}
+table.swiss{width:100%;border-collapse:collapse;background:var(--card);font-size:13.5px;min-width:640px}
+table.swiss th{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;color:var(--ink-3);
+  text-align:left;padding:13px 16px;border-bottom:1.5px solid var(--ink);
+  text-transform:uppercase;white-space:nowrap;font-weight:700;
+}
+table.swiss td{padding:13px 16px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink-2)}
+table.swiss tr:last-child td{border-bottom:none}
+table.swiss td.k{color:var(--ink);font-weight:700;white-space:nowrap}
+table.swiss .monoNo{font-family:var(--mono);color:var(--red);font-weight:800}
+table.swiss tbody tr:hover{background:color-mix(in srgb,var(--bg-deep) 72%,transparent)}
+
+/* ---------- 12 / LAW CARD STRIP ---------- */
+.lawGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line-strong)}
+.lawCell{border-right:1px solid var(--line);padding:22px 20px 18px;background:var(--card);position:relative;min-height:210px;display:flex;flex-direction:column;transition:background-color .45s ease}
+.lawCell:last-child{border-right:none}
+.lawCell:hover{background:var(--bg-deep)}
+.lawCell .lawNo{font-family:var(--mono);font-weight:800;font-size:12px;letter-spacing:.22em;color:#fff;background:var(--red);display:inline-block;padding:2px 8px;margin-bottom:14px;width:max-content}
+[data-theme="dark"] .lawCell .lawNo{color:#131417}
+.lawCell h4{font-size:19px;font-weight:800;letter-spacing:.02em}
+.lawCell .enLaw{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:.16em;margin-top:4px;text-transform:uppercase}
+.lawCell p{font-size:12.8px;color:var(--ink-2);margin-top:12px;flex:1}
+.lawCell .probe{border-top:1px dashed var(--line);margin-top:14px;padding-top:10px;font-family:var(--mono);font-size:10.5px;color:var(--ink-3);letter-spacing:.05em}
+.lawCell .probe b{color:var(--blue);font-weight:700}
+
+/* ---------- 13 / SIM WIDGETS ---------- */
+.sim{
+  border:1.5px solid var(--ink);background:var(--card);position:relative;
+  transition:background-color .45s ease,border-color .45s ease;
+}
+.simHead{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:13px 20px;border-bottom:1px solid var(--line);flex-wrap:wrap;
+  background:linear-gradient(to right,var(--red-soft),transparent 60%);
+}
+.simHead .simId{font-family:var(--mono);font-weight:800;font-size:12px;letter-spacing:.2em}
+.simHead .simId i{font-style:normal;color:var(--red);margin-right:8px}
+.simHead .simTitle{font-family:var(--mono);font-size:11px;color:var(--ink-2);letter-spacing:.08em}
+.simBody{padding:24px 20px}
+.simFoot{border-top:1px dashed var(--line);padding:12px 20px;font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.06em;line-height:1.8}
+
+/* sliders */
+.sldRow{display:grid;grid-template-columns:minmax(150px,220px) minmax(0,1fr) minmax(74px,max-content);align-items:center;gap:16px;padding:11px 0;border-bottom:1px dashed var(--line)}
+.sldRow label{font-family:var(--mono);font-size:12px;color:var(--ink-2);letter-spacing:.05em}
+.sldRow output{font-family:var(--mono);font-weight:800;font-size:17px;color:var(--red);text-align:right;white-space:nowrap}
+input[type=range]{-webkit-appearance:none;appearance:none;height:2px;background:var(--line-strong);outline:none;width:100%}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:17px;height:17px;background:var(--red);border:2.5px solid var(--card);box-shadow:0 0 0 1.5px var(--red);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:15px;height:15px;background:var(--red);border:2.5px solid var(--card);box-shadow:0 0 0 1.5px var(--red);cursor:pointer;border-radius:0}
+.statRow{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:18px}
+.statBox{background:var(--card);padding:15px 16px;transition:background-color .45s ease}
+.statBox .v{font-family:var(--mono);font-weight:800;font-size:clamp(19px,1.9vw,27px);letter-spacing:-.02em;line-height:1.15;word-break:break-all}
+.statBox .k{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:.16em;margin-top:6px;text-transform:uppercase}
+.statBox.hot .v{color:var(--red)}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--ink);
+  font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.14em;
+  padding:9px 16px;transition:all .2s;text-transform:uppercase;
+}
+.btn:hover{background:var(--red);border-color:var(--red);color:#fff}
+[data-theme="dark"] .btn:hover{color:#131417}
+.btn.sm{padding:6px 11px;font-size:10.5px}
+.chipSet{display:flex;flex-wrap:wrap;gap:8px}
+.presetChip{border:1px solid var(--line-strong);font-family:var(--mono);font-size:11px;padding:6px 11px;letter-spacing:.06em;color:var(--ink-2);transition:all .2s}
+.presetChip:hover,.presetChip.on{border-color:var(--red);color:var(--red);background:var(--red-soft)}
+
+/* sim widgets : generic select / input */
+.sel,input.txt{
+  width:100%;border:1.5px solid var(--line-strong);background:transparent;color:var(--ink);
+  font-family:var(--mono);font-size:14px;padding:10px 12px;outline:none;transition:border-color .2s;
+}
+.sel:focus,input.txt:focus{border-color:var(--red)}
+.sel option{background:var(--bg);color:var(--ink)}
+
+/* friction console */
+.frGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr));gap:14px}
+.frItem{border:1px solid var(--line);padding:14px 16px;cursor:pointer;user-select:none;transition:border-color .2s,background .2s}
+.frItem:hover{border-color:var(--line-strong)}
+.frItem.onGood{border-color:var(--green);background:color-mix(in srgb,var(--green) 7%,transparent)}
+.frItem.onBad{border-color:var(--red);background:var(--red-soft)}
+.frItem .t{font-weight:750;font-size:14px;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.frItem .t em{font-style:normal;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--ink-3)}
+.frItem .d{font-size:12.3px;color:var(--ink-2);margin-top:5px;line-height:1.65}
+.meter{height:15px;border:1px solid var(--line-strong);margin-top:6px;position:relative;overflow:hidden}
+.meter>i{position:absolute;inset:0 auto 0 0;background:repeating-linear-gradient(-45deg,var(--c,var(--red)) 0 7px,transparent 7px 13px);transition:width .5s cubic-bezier(.2,.8,.2,1)}
+
+/* reframer */
+.reframeCard{border:1px solid var(--line-strong);background:var(--card);padding:18px 20px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+.reframeCard:hover{border-color:var(--red)}
+.reframeCard.done{background:var(--red-soft);border-color:var(--red)}
+.reframeCard .oldTx{font-family:var(--mono);font-size:13px;color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:1.5px;transition:color .3s}
+.reframeCard .arrowSw{font-family:var(--mono);color:var(--red);font-weight:800;margin:6px 0}
+.reframeCard .newTx{font-size:15.5px;font-weight:750;color:var(--ink);opacity:.25;transform:translateX(-6px);transition:all .35s}
+.reframeCard.done .newTx{opacity:1;transform:none}
+.reframeCard .hint{position:absolute;top:12px;right:14px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--ink-3)}
+
+/* tracker */
+.trkGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:6px}
+.trkDay{
+  aspect-ratio:1;border:1.5px solid var(--line-strong);display:flex;align-direction:column;flex-direction:column;
+  align-items:center;justify-content:center;font-family:var(--mono);font-size:12.5px;font-weight:700;
+  cursor:pointer;transition:all .15s;position:relative;user-select:none;color:var(--ink-2);
+}
+.trkDay:hover{border-color:var(--red);transform:translateY(-2px)}
+.trkDay.done{background:var(--red);border-color:var(--red);color:#fff}
+[data-theme="dark"] .trkDay.done{color:#131417}
+.trkDay.today:not(.done){border-style:dashed;border-color:var(--red)}
+.trkDay.future{opacity:.35;pointer-events:none}
+.trkLegend{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:14px}
+.trkLegend i{display:inline-block;width:12px;height:12px;border:1.5px solid var(--line-strong);vertical-align:-1.5px;margin-right:6px}
+.trkLegend i.filled{background:var(--red);border-color:var(--red)}
+.alertBand{border:1.5px solid var(--warn);background:color-mix(in srgb,var(--warn) 8%,transparent);padding:13px 16px;font-size:13.5px;color:var(--ink-2);margin-top:16px;display:none}
+.alertBand.show{display:block}
+.alertBand b{color:var(--warn);font-family:var(--mono);font-size:12px;letter-spacing:.1em;margin-right:8px}
+
+/* stack builder output */
+.stackOut{
+  border:1.5px dashed var(--red);padding:18px 20px;font-family:var(--mono);
+  font-size:clamp(14px,1.35vw,18px);font-weight:700;line-height:1.9;letter-spacing:.01em;
+  background:var(--red-soft);
+}
+.stackOut var{font-style:normal;color:#fff;background:var(--ink);padding:1px 8px}
+[data-theme="dark"] .stackOut var{color:#131417;background:var(--ink)}
+.fieldLab{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;color:var(--ink-3);text-transform:uppercase;display:block;margin-bottom:7px}
+
+/* ---------- 14 / TIMELINE (AUTHOR STORY) ---------- */
+.tl{border-left:2px solid var(--line-strong);padding-left:26px;display:flex;flex-direction:column;gap:20px}
+.tlItem{position:relative}
+.tlItem::before{content:"";position:absolute;left:calc(-26px - 6px);top:9px;width:10px;height:10px;background:var(--bg);border:2px solid var(--red)}
+.tlItem .y{font-family:var(--mono);font-weight:800;font-size:13px;color:var(--red);letter-spacing:.1em}
+.tlItem h5{font-size:15px;font-weight:750;margin:3px 0 4px}
+.tlItem p{font-size:13.2px;color:var(--ink-2);line-height:1.75}
+
+/* ---------- 15 / REVEAL ANIM ---------- */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.65,.25,1),transform .7s cubic-bezier(.2,.65,.25,1)}
+.rv.on{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .rv{opacity:1;transform:none;transition:none}
+  *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.25}}
+.liveDot{display:inline-block;width:8px;height:8px;background:var(--red);border-radius:50%;animation:pulseDot 2.2s infinite;margin-right:8px}
+
+/* ---------- 16 / FOOTER ---------- */
+footer.colophon{border-top:2px solid var(--ink);margin-top:70px;padding:46px 0 60px;transition:border-color .45s ease}
+.footGrid{display:grid;grid-template-columns:2fr 1fr 1fr 1.4fr;gap:34px}
+footer h6{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--ink-3);margin-bottom:14px;text-transform:uppercase}
+footer p,footer li{font-size:12.8px;color:var(--ink-2);line-height:1.9}
+footer ul{list-style:none}
+footer .footBig{font-family:var(--mono);font-weight:800;font-size:clamp(22px,2.6vw,38px);letter-spacing:-.02em;line-height:1.2}
+footer .barMark{display:inline-block;width:22px;height:11px;background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px,var(--ink) 4px 5px,transparent 5px 8px);margin-right:10px;vertical-align:baseline}
+
+/* ---------- 17 / RESPONSIVE ---------- */
+@media (max-width:1180px){
+  .heroMain{grid-template-columns:1fr;align-items:start}
+  .secPunch{max-width:none;grid-column:1/-1}
+  .lawGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .lawCell:nth-child(2n){border-right:none}
+  .lawCell:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .footGrid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:900px){
+  .cols{grid-template-columns:repeat(12,minmax(0,1fr));row-gap:40px}
+  .c2,.c3,.c4,.c5,.c6,.c7,.c8,.c9,.c10{grid-column:span 12}
+  .colStart4{grid-column-start:auto}
+  .secHead{grid-template-columns:auto minmax(0,1fr)}
+  .qCell:nth-child(3n){border-right:1px solid var(--line)}
+  .qCell:nth-child(2n){border-right:none}
+}
+@media (max-width:640px){
+  body{font-size:15px}
+  .brand span{display:none}
+  .navInner{gap:10px}
+  .lawGrid{grid-template-columns:1fr}
+  .lawCell{border-right:none;border-bottom:1px solid var(--line)}
+  .lawCell:last-child{border-bottom:none}
+  .footGrid{grid-template-columns:1fr}
+  .kpi::after{display:none}
+  .sldRow{grid-template-columns:1fr;gap:8px}
+  .sldRow output{text-align:left}
+}
+</style>
+</head>
+<body data-theme="light">
+<div id="bgGrid" aria-hidden="true"></div>
+<div id="progressBar" aria-hidden="true"></div>
+
+<nav id="topNav" aria-label="页面导航">
+  <div class="navInner">
+    <a class="brand" href="#top"><span class="brandDot"></span><b>原子习惯</b><span>/ ATOMIC HABITS</span></a>
+    <div class="navLinks" role="navigation">
+      <a href="#sec01"><i>01</i>档案</a>
+      <a href="#sec02"><i>02</i>核心命题</a>
+      <a href="#sec03"><i>03</i>身份认同</a>
+      <a href="#sec04"><i>04</i>习惯回路</a>
+      <a href="#sec05"><i>05</i>第一定律</a>
+      <a href="#sec06"><i>06</i>第二定律</a>
+      <a href="#sec07"><i>07</i>第三定律</a>
+      <a href="#sec08"><i>08</i>第四定律</a>
+      <a href="#sec09"><i>09</i>进阶战术</a>
+      <a href="#sec10"><i>10</i>工具箱</a>
+    </div>
+    <button id="themeBtn" aria-label="切换明暗主题" title="切换明暗主题">
+      <svg class="icoMoon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="icoSun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M19.4 4.6l-1.8 1.8M6.4 17.6l-1.8 1.8"/></svg>
+    </button>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="heroTop">
+      <span>READING-NOTES.SYS // 单文件离线读本</span>
+      <span>LAT 31.2304° N — LNG 121.4737° E · 当前索引 EN/中文简体</span>
+    </div>
+    <div class="heroRule"></div>
+
+    <div class="heroMain">
+      <div>
+        <h1 class="zhTitle">原子<em>习惯</em></h1>
+        <div class="enTitleRow">
+          <span class="enTitle">Atomic&nbsp;Habits</span>
+          <span class="enTitleMark">[ 细微改变带来巨大成就的实证法则 ]</span>
+        </div>
+        <p class="heroSub">
+          美国习惯研究专家<b>詹姆斯·克利尔（James Clear）</b>的代表作，2018 年出版。
+          全书围绕一个朴素而锋利的命题展开：<b>你不会达到目标的高度，只会跌至体系的水平。</b>
+          每天进步 1%，一年后你将强大约 <b>37 倍</b>——本笔记以数据解构视角重绘原书全部核心模型，
+          并为每个可操作的方法配置交互仿真挂件。
+        </p>
+      </div>
+
+      <aside class="heroDecoBox">
+        <span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span>
+        <h4>// HABIT-COMPOUND.VIS — 日改进率 ×365 天</h4>
+        <div class="bars" aria-hidden="true">
+          <i style="--h:3%"></i><i style="--h:5%"></i><i style="--h:8%"></i><i style="--h:11%"></i>
+          <i style="--h:15%"></i><i style="--h:20%"></i><i style="--h:26%"></i><i style="--h:34%"></i>
+          <i style="--h:46%"></i><i style="--h:63%"></i><i style="--h:88%"></i><i style="--h:100%"></i>
+        </div>
+        <table class="heroMetaTable">
+          <tbody>
+            <tr><td>AUTHOR 作者</td><td>James Clear 詹姆斯·克利尔</td></tr>
+            <tr><td>PUBLISHED 出版</td><td>2018 / Avery·企鹅兰登</td></tr>
+            <tr><td>CN-EDITION 中文版</td><td>《掌控习惯》北京联合出版公司 2019</td></tr>
+            <tr><td>STRUCTURE 结构</td><td>基本原理 + 四大定律 + 高级战术，共 20 章</td></tr>
+            <tr><td>SOURCE 来源</td><td>依据原书全文提取重绘 · 个人学习笔记</td></tr>
+          </tbody>
+        </table>
+      </aside>
+    </div>
+
+    <div class="kpiBand rv">
+      <div class="kpi"><div class="n">37<small>×</small></div><div class="l">每天进步 1% 的年化增益</div></div>
+      <div class="kpi"><div class="n">≈0.03<small>×</small></div><div class="l">每天退步 1% 的年终残值</div></div>
+      <div class="kpi"><div class="n">4<small>步</small></div><div class="l">提示→渴求→反应→奖励</div></div>
+      <div class="kpi"><div class="n">32<small>℉</small></div><div class="l">冰块融化的临界突破点</div></div>
+      <div class="kpi"><div class="n">2<small>分钟</small></div><div class="l">新习惯的标准启动尺寸</div></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ============================ SEC 01 书籍档案 ============================ -->
+<section class="sec" id="sec01">
+  <div class="wrap-inner">
+  <div class="secHead rv">
+    <div class="secNum">01</div>
+    <div class="secIdBlock">
+      <div class="secKicker"><span>SEC.01 / BOOK-PROFILE</span><span><i>●</i> BOOK DATA LOADED</span></div>
+      <h2 class="secTitleZh">书籍档案 · 一本关于「如何改变」的操作手册</h2>
+      <div class="secTitleEn">Book Profile &amp; Reading Map</div>
+    </div>
+    <p class="secPunch">// 先看清这本书的结构，再让结构为你工作。全书 20 章 = 基本原理(3) + 四大定律(14) + 高级战术(3)。</p>
+  </div>
+
+  <div class="secBody cols">
+    <div class="c5 rv">
+      <span class="kick">作者与成书背景</span>
+      <h3 class="sub">从昏迷病床到 ESPN 学术全美队</h3>
+      <p class="body">高二最后一天，克利尔被脱手的棒球棒击中面部：鼻骨骨折、颅骨多处骨折、眼眶碎裂，随后陷入医学诱导昏迷。这场几乎终结生命的事故之后，他在丹尼森大学用一系列微小习惯重建了自己——固定睡眠时间、保持房间整洁、每周举重几次。六年后，他从被校队除名的高三学生，成为该校顶尖男运动员并入选全美仅 33 人的 ESPN 学术全美队。他后来把这套方法论写成通讯与本书：<b>jamesclear.com 订阅者近 50 万人</b>，其创办的习惯学院已培训超过一万名领导人、经理、教练和教师。</p>
+      <p class="note">// 本笔记所有引文与数据均逐条核对简体中文版《掌控习惯》（迩东晨译）原文；同时保留台版书名《原子习惯》作为主称谓。</p>
+    </div>
+
+    <div class="c7 rv">
+      <figure class="fig">
+        <span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span>
+        <div class="figHead"><span><b>FIG.00</b> — 作者轨迹 TIMELINE</span><span>DRAWN-FROM-PREFACE</span></div>
+        <div style="padding:18px 8px 16px">
+          <div class="tl">
+            <div class="tlItem"><div class="y">2002</div><h5>意外受伤</h5><p>棒球棒击中面部，送医后进入诱导昏迷抢救；此后八个月无法开车，重返球场后被校队除名。</p></div>
+            <div class="tlItem"><div class="y">2004–2008</div><h5>微小习惯的复利</h5><p>在丹尼森大学建立睡眠/整洁/力量训练习惯，大四入选 ESPN 学术全美队（全国仅 33 人），获校长奖章。</p></div>
+            <div class="tlItem"><div class="y">2012.11</div><h5>开始公开发表</h5><p>在 jamesclear.com 每周一、周四各发一篇文章，订户从上千增长到数十万。</p></div>
+            <div class="tlItem"><div class="y">2015–2018</div><h5>签约企鹅书屋并出版本书</h5><p>NFL/NBA/MLB 教练开始向球队分享他的文章；《时代》《福布斯》定期刊载。</p></div>
+          </div>
+        </div>
+        <figcaption>原始数据引自原书「前言 我的故事」。<code>INDUCED-COMA → ACADEMIC-ALL-AMERICA</code></figcaption>
+      </figure>
+    </div>
+
+    <div class="c12 rv">
+      <span class="kick blue">全书阅读地图</span>
+      <div class="tblWrap">
+        <table class="swiss">
+          <thead><tr><th>PART</th><th>篇章</th><th>章节范围</th><th>回答的问题</th><th>关键产出</th></tr></thead>
+          <tbody>
+            <tr><td class="monoNo">P1</td><td class="k">基本原理</td><td>第 1–3 章</td><td>为什么微小习惯会有巨大差异？</td><td>复利曲线 · 身份三层 · 四步模型</td></tr>
+            <tr><td class="monoNo">P2</td><td class="k">第一定律 让它显而易见</td><td>第 4–7 章</td><td>如何让好习惯自动触发？</td><td>记分卡 · 执行意图 · 习惯叠加 · 环境设计</td></tr>
+            <tr><td class="monoNo">P3</td><td class="k">第二定律 让它有吸引力</td><td>第 8–10 章</td><td>如何让大脑渴望去做？</td><td>多巴胺机制 · 绑定喜好 · 社会规范 · 重构心态</td></tr>
+            <tr><td class="monoNo">P4</td><td class="k">第三定律 让它简便易行</td><td>第 11–14 章</td><td>如何降低启动阻力？</td><td>最省力法则 · 两分钟规则 · 承诺机制</td></tr>
+            <tr><td class="monoNo">P5</td><td class="k">第四定律 让它令人愉悦</td><td>第 15–17 章</td><td>如何让它重复发生？</td><td>即时奖励 · 习惯追踪 · 问责契约</td></tr>
+            <tr><td class="monoNo">P6</td><td class="k">高级战术</td><td>第 18–20 章</td><td>如何从良好到真正伟大？</td><td>基因适配 · 金发女孩准则 · 反思回顾</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="c3 rv card"><span class="idxTag">INSIGHT.A</span>
+      <div class="caseNum">≈1000万<small>+ 册全球销量级</small></div>
+      <p style="margin-top:10px">现象级行为科学畅销书，与《高效能人士》《思考快与慢》并列各类年度榜单；NBC《今日秀》曾连续数周推介。</p>
+      <p class="note" style="margin-top:10px">// 注：销量为公开报道量级，非原书内文数据。</p>
+    </div>
+    <div class="c3 rv card"><span class="idxTag">INSIGHT.B</span>
+      <div class="caseNum">20<small>章</small></div>
+      <p style="margin-top:10px">结构极其工整：每条定律对应 3–4 个策略章节，先拆解原理再给出可执行清单。</p>
+    </div>
+    <div class="c3 rv card"><span class="idxTag">INSIGHT.C</span>
+      <div class="caseNum">50000<small>+ 人</small></div>
+      <p style="margin-top:10px">财富 500 强公司与初创企业选派领导人和员工参加其创办的「习惯学院」，累计毕业生逾万人。</p>
+    </div>
+    <div class="c3 rv card"><span class="idxTag">INSIGHT.D</span>
+      <div class="caseNum">2018<small>/AVERY</small></div>
+      <p style="margin-top:10px">英文版由 Avery（企鹅兰登旗下）出版；中文简体版次年上市，译笔严谨、案例完整。</p>
+    </div>
+  </div>
+  </div>
+</section>
+<!-- ============================ SEC 02 核心命题 ============================ -->
+<section class="sec" id="sec02">
+  <div class="secHead rv">
+    <div class="secNum">02</div>
+    <div class="secIdBlock">
+      <div class="secKicker"><span>SEC.02 / CORE THESIS</span><span><i>●</i> COMPOUNDING LOGIC</span></div>
+      <h2 class="secTitleZh">微习惯的惊人力量 · 自我提升的复利</h2>
+      <div class="secTitleEn">The Surprising Power Of Atomic Habits</div>
+    </div>
+    <p class="secPunch">// 习惯是自我提高的复利。一两天里你看不出任何不同，但数月数年后，它们会产生巨大影响。</p>
+  </div>
+
+  <blockquote class="pullQuote rv">
+    <p class="qZh">“成功是日常习惯累积的产物，而不是一生仅有一次的重大转变的结果。”</p>
+    <p class="qEn">Success is the product of daily habits—not once-in-a-lifetime transformations.</p>
+    <p class="qSrc">— 第1章 微习惯的惊人力量</p>
+  </blockquote>
+
+  <div class="secBody cols">
+    <!-- 边际收益聚合案例 -->
+    <div class="c5 rv">
+      <span class="kick">开篇案例 CASE.01</span>
+      <h3 class="sub">英国自行车队：把每个环节改进 1%</h3>
+      <p class="body">2003 年，绩效总监戴夫·布雷斯福德执掌百年平庸的英国自行车运动协会，提出<b>「边际收益的聚合」</b>战略：把骑行的整个环节分解，每一部分都改进 1%。他们重新设计车座、用酒精擦拭车胎增强抓地力、电热套鞋维持肌肉温度、风洞测试织物换更轻的赛车服；甚至测试按摩凝胶、教车手最佳洗手方式以减少感冒、为每个人选配枕头床垫，<b>把团队卡车内部漆成白色</b>以便发现影响调校精度的灰尘。</p>
+      <p class="body">收效快得出人意料：五年后的北京奥运会拿下公路与赛道自行车项目<b>60% 的金牌</b>；伦敦奥运打破 9 项奥运纪录、7 项世界纪录；威金斯成为首位夺得环法冠军的英国车手。<b>2007–2017 十年间：178 个世界锦标赛冠军、66 枚奥运/残奥金牌、五次环法胜利。</b></p>
+      <div class="chipSet" style="margin-top:18px">
+        <span class="presetChip">+1% × 好习惯 = 时间是盟友</span>
+        <span class="presetChip">−1% × 坏习惯 = 时间是敌人</span>
+      </div>
+      <p class="note" style="margin-top:14px">// 类比：从洛杉矶飞纽约，航向仅向南偏 3.5°，落地就成了华盛顿特区——起飞时无人察觉，放大到整个大陆就是数百英里的差距。</p>
+    </div>
+
+    <!-- FIG.01 复利曲线 -->
+    <div class="c7 rv">
+      <figure class="fig">
+        <span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span>
+        <div class="figHead"><span><b>FIG.01</b> — 微习惯的复合效应（重绘原书图1）</span><span>DAILY ±1% × 365D</span></div>
+        <div class="figSvgWrap">
+          <svg viewBox="0 0 800 400" role="img" aria-label="每天进步百分之一一年后提高约37倍的复利曲线图">
+            <!-- grid -->
+            <g stroke="var(--line)" stroke-width="1">
+              <line x1="60" y1="60" x2="750" y2="60"/><line x1="60" y1="135" x2="750" y2="135"/>
+              <line x1="60" y1="210" x2="750" y2="210"/><line x1="60" y1="285" x2="750" y2="285"/>
+            </g>
+            <!-- axes -->
+            <g stroke="var(--ink)" stroke-width="1.8">
+              <line x1="60" y1="40" x2="60" y2="360"/>
+              <line x1="60" y1="360" x2="750" y2="360"/>
+            </g>
+            <!-- baseline value 1 -->
+            <line x1="60" y1="349" x2="750" y2="349" stroke="var(--ink-3)" stroke-width="1.2" stroke-dasharray="5 6"/>
+            <text x="746" y="341" font-size="11" fill="var(--ink-3)" text-anchor="end">1.00 起点</text>
+            <!-- up curve 1.01^n -->
+            <polyline fill="none" stroke="var(--red)" stroke-width="3" stroke-linejoin="round"
+              points="60,349 111,347 165,343 218,336 271,326 324,313 378,294 431,270 484,239 537,200 590,152 643,94 696,29 720,-2"/>
+            <!-- down curve 0.99^n -->
+            <polyline fill="none" stroke="var(--blue)" stroke-width="2.4" stroke-linejoin="round"
+              points="60,349 165,359.4 271,363.4 378,365.2 484,366.1 590,366.6 696,366.9 744,367"/>
+            <!-- terminal markers -->
+            <circle cx="696" cy="29" r="5" fill="var(--red)"/>
+            <rect x="478" y="30" width="196" height="58" fill="none" stroke="var(--red)" stroke-width="1.2"/>
+            <text x="492" y="53" font-size="15" font-weight="700" fill="var(--red)">↑ 37.78×</text>
+            <text x="492" y="74" font-size="11" fill="var(--ink-2)">每天进步 1% → 一年后</text>
+            <text x="500" y="392" font-size="12.5" font-weight="700" fill="var(--blue)">↓ ≈0.03×　每天退步 1%</text>
+            <circle cx="696" cy="366.9" r="5" fill="var(--blue)"/>
+            <!-- ticks -->
+            <g font-size="11" fill="var(--ink-3)">
+              <text x="60" y="380" text-anchor="middle">DAY 0</text>
+              <text x="222" y="380" text-anchor="middle">DAY 90</text>
+              <text x="385" y="380" text-anchor="middle">DAY 180</text>
+              <text x="547" y="380" text-anchor="middle">DAY 270</text>
+              <text x="700" y="380" text-anchor="middle">DAY 365</text>
+              <text x="30" y="64">37.78×</text>
+              <text x="34" y="216">19×</text>
+              <text x="26" y="353">1×</text>
+            </g>
+          </svg>
+        </div>
+        <figcaption>重绘自原书第1章 图1：随着时间的推移，微习惯的影响会加剧。1.01<sup>365</sup>=37.78；0.99<sup>365</sup>=0.03。原文表述：「如果你一年内每天都能进步 1%，到你完成时，你将会进步 37 倍。」</figcaption>
+      </figure>
+    </div>
+
+    <!-- 滞后指标 -->
+    <div class="c4 rv card"><span class="idxTag">THESIS.01</span>
+      <h4>结果 = 习惯的滞后指标</h4>
+      <p>你的净资产是财务习惯的滞后指标；你的体重是饮食习惯的滞后指标；你的知识是学习习惯的滞后指标；你的杂乱是内务习惯的滞后指标。你需要更关心此刻前行的<b>轨迹</b>，而不是已经取得的结果。</p>
+    </div>
+    <div class="c4 rv card"><span class="idxTag">THESIS.02</span>
+      <h4>正负两种复利</h4>
+      <p>坏习惯令你江河日下，好习惯使你天天向上。生产力、知识、人际关系都是正复利；压力、消极思想与抱怨都是负复利。「好习惯使时间成为你的盟友，坏习惯使时间成为你的敌人。」</p>
+    </div>
+    <div class="c4 rv card"><span class="idxTag">THESIS.03</span>
+      <h4>什么是真正的进步</h4>
+      <p>房间从 25℉ 加热到 31℉，冰块纹丝不动；到 32℉ 冰开始融化——突破时刻是此前一系列行动积蓄潜能的结果。癌细胞增生期间 80% 时间检测不到；竹子前五年几乎看不见，然后在六周内蹿高 90 英尺。</p>
+    </div>
+
+    <!-- SIM.01 复利模拟器 -->
+    <div class="c12 rv sim" id="simCompound">
+      <span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span>
+      <div class="simHead">
+        <span class="simId"><i>SIM.01</i>交互仿真 · 1% 复利实验室</span>
+        <span class="simTitle"><span class="liveDot"></span>拖动参数，实时重绘增长曲线</span>
+      </div>
+      <div class="simBody cols" style="row-gap:30px">
+        <div class="c5">
+          <div class="sldRow"><label for="sldDays">周期 T（天）</label><input type="range" id="sldDays" min="30" max="1000" step="1" value="365"><output id="outDays">365</output></div>
+          <div class="sldRow"><label for="sldRate">日改进率 r（%）</label><input type="range" id="sldRate" min="-2" max="2" step="0.05" value="1"><output id="outRate">+1.00</output></div>
+          <div class="sldRow"><label for="sldBase">初始水平 B</label><input type="range" id="sldBase" min="1" max="10" step="0.5" value="1"><output id="outBase">1.0</output></div>
+          <div class="statRow">
+            <div class="statBox hot"><div class="v" id="stFinal">37.78×</div><div class="k">年终倍率</div></div>
+            <div class="statBox"><div class="v" id="stVal">37.78</div><div class="k">最终水平值</div></div>
+            <div class="statBox"><div class="v" id="stBreak" style="font-size:15px">—</div><div class="k">越过旧水平 50% 所需天数</div></div>
+          </div>
+          <div class="chipSet" style="margin-top:16px" id="cmpPresets">
+            <button class="presetChip on" data-r="1" data-t="365">原书基准 +1%/年</button>
+            <button class="presetChip" data-r="-1" data-t="365">退步 −1%/年</button>
+            <button class="presetChip" data-r="0.5" data-t="365">温和 +0.5%</button>
+            <button class="presetChip" data-r="2" data-t="200">激进 +2%</button>
+          </div>
+          <p class="note" id="cmpVerdict" style="margin-top:16px">// 正复利：最有力的结果总是姗姗来迟。别在潜能蓄积期下车。</p>
+        </div>
+        <div class="c7">
+          <figure class="fig" style="padding:14px 14px 0">
+            <div class="figHead"><span><b>LIVE.PLOT</b> — B·(1+r)<sup>t</sup></span><span id="liveEq">y = 1.00 × (1+0.01)^365</span></div>
+            <div class="figSvgWrap">
+              <svg viewBox="0 0 760 320" id="simChart" role="img" aria-label="复利实时绘图区">
+                <g stroke="var(--line)" stroke-width="1" id="simGridY"></g>
+                <line x1="46" y1="30" x2="46" y2="280" stroke="var(--ink)" stroke-width="1.6"/>
+                <line x1="46" y1="280" x2="740" y2="280" stroke="var(--ink)" stroke-width="1.6"/>
+                <path id="simPathUp" fill="none" stroke="var(--red)" stroke-width="2.8"/>
+                <path id="simPathDown" fill="none" stroke="var(--blue)" stroke-width="1.8" stroke-dasharray="6 5" opacity=".55"/>
+                <g font-size="11" fill="var(--ink-3)">
+                  <text x="46" y="300" text-anchor="middle">T0</text>
+                  <text x="740" y="300" text-anchor="end" id="xTmax">365d</text>
+                  <text x="14" y="284" id="yLabBottom">1×</text>
+                  <text x="14" y="34" id="yLabTop">—</text>
+                </g>
+                <circle id="dotEnd" r="4.5" fill="var(--red)"/>
+                <text id="labEnd" font-size="13" font-weight="700" fill="var(--red)">—</text>
+              </svg>
+            </div>
+            <figcaption>红线：日改进 r 的复合轨迹；蓝虚线：每日倒退 r 的对照轨迹。本图为公式实时演算，非装饰动画。</figcaption>
+          </figure>
+        </div>
+      </div>
+      <div class="simFoot">// 公式：(1+r)^T　默认对照组恒取 −r。数据仅在本地浏览器计算，无网络请求。</div>
+    </div>
+  </div>
+
+  <!-- 潜能蓄积期 -->
+  <div class="secBody cols rv">
+    <div class="c6">
+      <span class="kick blue">关键概念 CONCEPT.02</span>
+      <h3 class="sub">失望谷地：努力为什么迟迟不见效</h3>
+      <p class="body">在任何探索的早期和中期，通常都有一个不如意的低谷区：你期望立竿见影，但最初几天、几周甚至几个月里几乎看不到变化。克利尔称之为<b>「潜能蓄积期」</b>（Plateau of Latent Potential）。抱怨拼命努力却没有成功，就像抱怨冰块从 25℉ 加热到 31℉ 时没有融化一样——功夫没有白费，它只是被蓄积起来了。</p>
+      <p class="body">当你最终突破蓄积期时，外界会称之为一夜之间的成功。外部世界只看到最具戏剧性的薄发瞬间，无视之前厚积的漫长过程。这正是持久习惯难以养成的核心原因之一：<b>人们在做了一点小改变却没立即见效后选择放弃。</b></p>
+    </div>
+    <div class="c6">
+      <figure class="fig">
+        <span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span>
+        <div class="figHead"><span><b>FIG.02</b> — 潜能蓄积期（重绘原书图2）</span><span>VALLEY OF DISAPPOINTMENT</span></div>
+        <div class="figSvgWrap">
+          <svg viewBox="0 0 760 360" role="img" aria-label="期望的线性进步与实际的潜能蓄积期曲线对比">
+            <g stroke="var(--line)" stroke-width="1">
+              <line x1="56" y1="70" x2="740" y2="70"/><line x1="56" y1="140" x2="740" y2="140"/>
+              <line x1="56" y1="210" x2="740" y2="210"/><line x1="56" y1="280" x2="740" y2="280"/>
+            </g>
+            <g stroke="var(--ink)" stroke-width="1.8">
+              <line x1="56" y1="36" x2="56" y2="312"/>
+              <line x1="56" y1="312" x2="740" y2="312"/>
+            </g>
+            <!-- expectation linear -->
+            <polyline fill="none" stroke="var(--ink-3)" stroke-width="2" stroke-dasharray="7 6" points="56,304 740,58"/>
+            <!-- actual latent curve: flat then breakthrough -->
+            <path fill="none" stroke="var(--red)" stroke-width="3" d="M56 306 C 220 300, 330 292, 430 272 S 600 190, 700 52"/>
+            <!-- gap area hint -->
+            <polygon points="360,242 430,272 360,158" fill="var(--red-soft)" opacity=".9"/>
+            <line x1="360" y1="242" x2="360" y2="158" stroke="var(--red)" stroke-width="1.4" stroke-dasharray="4 4"/>
+            <text x="348" y="150" font-size="12" fill="var(--red)" text-anchor="end">你的期待（线性）</text>
+            <text x="348" y="256" font-size="12" fill="var(--ink-2)" text-anchor="end">实际发生的事</text>
+            <text x="565" y="230" font-size="12.5" font-weight="700" fill="var(--red)">突破临界点</text>
+            <text x="420" y="205" font-size="11.5" fill="var(--ink-2)">失望谷地</text>
+            <text x="88" y="300" font-size="11.5" fill="var(--ink-2)">潜能正在蓄积…</text>
+            <text x="120" y="332" font-size="11" fill="var(--ink-3)">WEEKS / MONTHS OF WORK</text>
+            <text x="702" y="333" font-size="11" fill="var(--ink-3)" text-anchor="end">BREAKTHROUGH</text>
+          </svg>
+        </div>
+        <figcaption>重绘自原书第1章 图2。原文注解：人们期望进步是线性的，实际结果的显现往往滞后——这可能导致「失望谷地」，即投入数周或数月的辛勤工作后没有任何看得见的效果而深感沮丧。</figcaption>
+      </figure>
+    </div>
+
+    <blockquote class="pullQuote c12 rv" style="max-width:none">
+      <p class="qZh">“每当感到无能为力时，我就会去看石匠凿石头。也许他凿了 100 次，石头上没有出现裂缝的迹象。然而在他凿到第 101 次时，那块石头裂成了两半。我知道这不是最后那次凿击造成的，而是此前连续凿击的结果。”</p>
+      <p class="qSrc">— 社会改革家雅各布·里斯 · 圣安东尼奥马刺队更衣室悬挂语录（原书第1章）</p>
+    </blockquote>
+  </div>
+
+  <!-- 系统 vs 目标 -->
+  <div class="secBody cols rv">
+    <div class="c12">
+      <span class="kick">方法论 METHOD.01</span>
+      <h3 class="sub">忘记目标，专注于体系 —— 为什么目标主义失灵</h3>
+      <p class="body">目标是关于你想要达到的结果，体系是涉及导致这些结果的过程。教练的目标是夺冠，体系则是招募球员、管理助理教练和训练的方式。三届超级碗冠军比尔·沃尔什说得直截了当：「<b>比分是会自理的。</b>」如果你想要更好的结果，就别再紧盯着目标不放，而要把精力集中到体系建设上。</p>
+    </div>
+    <div class="c3 rv card"><span class="idxTag">PROBLEM.1</span><h4>赢家和输家心怀相同的目标</h4><p>每个奥运选手都想夺金。目标本身不能区分赢家和输家——实施一点一滴改进体系的队伍才与众不同。</p></div>
+    <div class="c3 rv card"><span class="idxTag">PROBLEM.2</span><h4>实现一个目标只是短暂改变</h4><p>大扫除能让居室整洁一时；若不改变导致脏乱的体系，很快故态复萌。治标不治本。</p></div>
+    <div class="c3 rv card"><span class="idxTag">PROBLEM.3</span><h4>目标限制了你的幸福感</h4><p>「等我瘦下来就会快乐」把幸福绑在未来节点上，也让你始终两手空空而非心平气和。</p></div>
+    <div class="c3 rv card"><span class="idxTag">PROBLEM.4</span><h4>目标与长期进步相冲突</h4><p>围绕目标的人一旦达标便失去继续的理由。架子上的奖牌结束后，马拉松训练戛然而止。</p></div>
+    <div class="c12 rv">
+      <div class="formula">
+        <span class="fLabel">CORE-EQUATION.01 · 全书总纲</span>
+        <div class="fLine">不求拔高你的<var>目标</var>，但求落实你的<var>体系</var>。</div>
+        <div class="fEx"><span>EN ORIGIN</span>You do not rise to the level of your goals. You fall to the level of your systems.（你不会达到目标的高度，只会跌至体系的水平。）</div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============================ SEC 03 身份认同 ============================ -->
+<section class="sec" id="sec03">
+  <div class="secHead rv">
+    <div class="secNum">03</div>
+    <div class="secIdBlock">
+      <div class="secKicker"><span>SEC.03 / IDENTITY ENGINE</span><span><i>●</i> OUTCOME→PROCESS→IDENTITY</span></div>
+      <h2 class="secTitleZh">你的习惯如何塑造你的身份（反之亦然）</h2>
+      <div class="secTitleEn">How Your Habits Shape Your Identity, And Vice Versa</div>
+    </div>
+    <p class="secPunch">// 改变你是谁的最实际的方法，就是改变你所做的。每个行动都是投给你想成为的那个人的一票。</p>
+  </div>
+
+  <div class="secBody cols">
+    <div class="c6 rv">
+      <span class="kick blue">关键概念 CONCEPT.03</span>
+      <h3 class="sub">行为改变有三个层次</h3>
+      <p class="body"><b>结果层</b>：减肥、出书、夺冠——你设定的大多数目标都在这一层。<b>过程层</b>：定时锻炼、定期整理、按时冥想——你养成的大多数习惯都在这一层。<b>身份层</b>：你的世界观、自我形象与对己对人的判断——多数信念与偏见藏在这里。三者都有用，关键是<b>改变的方向</b>：多数人从「我要得到什么」出发养成基于结果的习惯；更有效的做法是从「我想成为谁」出发，培养基于身份的习惯。</p>
+      <div class="formula" style="margin-top:20px">
+        <span class="fLabel">IDENTITY.SWITCH · 拒烟两种回应</span>
+        <div class="fLine" style="font-size:16px;line-height:2">
+          甲：「不用了谢谢，我正<var>在戒烟</var>。」→ 潜台词：我仍是吸烟者<br>
+          乙：「不，谢谢。我<var>已经不抽烟了</var>。」→ 身份已然转变
+        </div>
+        <div class="fEx"><span>REASONING</span>当行为与身份完全一致时，你追求的不再是行为上的改变——一举一动无非体现你所认同的那类人的举动。</div>
+      </div>
+      <p class="body" style="margin-top:20px">两步进程：<b>（1）决定你想成为哪类人；（2）用小赢证明给自己看。</b>从想要的结果往回推：什么类型的人能得到这种结果？一位减重超过 100 磅的朋友的秘诀就是反复自问——「<mark>一个健康的人会怎么做？</mark>」然后像个健康的人那样行事。</p>
+    </div>
+
+    <div class="c6 rv">
+      <figure class="fig">
+        <span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span>
+        <div class="figHead"><span><b>FIG.03</b> — 行为改变三层次（重绘原书图3·洋葱模型）</span><span>ONION MODEL</span></div>
+        <div class="figSvgWrap">
+          <svg viewBox="0 0 760 380" role="img" aria-label="行为改变三层洋葱模型：结果、过程、身份">
+            <!-- outer ring result -->
+            <circle cx="330" cy="190" r="158" fill="none" stroke="var(--line-strong)" stroke-width="1.6"/>
+            <!-- middle process -->
+            <circle cx="330" cy="190" r="106" fill="none" stroke="var(--blue)" stroke-width="1.8"/>
+            <!-- core identity -->
+            <circle cx="330" cy="190" r="54" fill="var(--red)" opacity=".92"/>
+            <text x="330" y="184" font-size="17" font-weight="800" text-anchor="middle" data-inv="1" style="fill:#fff">身份</text>
+            <text x="330" y="205" font-size="10.5" fill="rgba(255,255,255,.85)" text-anchor="middle" style="fill:rgba(255,255,255,.9)">IDENTITY</text>
+            <!-- labels -->
+            <g font-family="ui-monospace,Menlo,Consolas,monospace">
+              <text x="540" y="80" font-size="12" fill="var(--ink-3)">第三层 · 最深</text>
+              <text x="540" y="122" font-size="15" font-weight="750" fill="var(--red)" id="onionL3T">身份 IDENTITY</text>
+              <text x="540" y="148" font-size="12" fill="var(--ink-2)">信仰 · 世界观 · 自我形象</text>
+              <text x="540" y="196" font-size="12" fill="var(--ink-3)">第二层</text>
+              <text x="540" y="228" font-size="14" font-weight="700" fill="var(--blue)">过程 PROCESS</text>
+              <text x="540" y="254" font-size="12" fill="var(--ink-2)">习惯与体系 · 做什么</text>
+              <text x="540" y="300" font-size="12" fill="var(--ink-3)">第一层 · 最外</text>
+              <text x="540" y="332" font-size="13" font-weight="700" fill="var(--ink)">结果 OUTCOMES</text>
+              <text x="684" y="332" font-size="11.5" fill="var(--ink-3)">得到了什么</text>
+            </g>
+            <!-- connector lines -->
+            <line x1="368" y1="150" x2="532" y2="118" stroke="var(--red)" stroke-width="1.2" stroke-dasharray="4 4"/>
+            <line x1="420" y1="215" x2="532" y2="224" stroke="var(--blue)" stroke-width="1.2" stroke-dasharray="4 4"/>
+            <line x1="486" y1="286" x2="532" y2="320" stroke="var(--line-strong)" stroke-width="1.2" stroke-dasharray="4 4"/>
+            <path d="M46 338 h72 m0 0 v-0 M118 338 a8 8 0 0 0 0 -16" fill="none" stroke="none"/>
+          </svg>
+        </div>
+        <figcaption>重绘自原书第2章 图3/图4：对于基于结果的习惯，重点是你想达到的目标；对于基于身份的习惯，重点是你想成为谁。洋葱比喻意味着由外向内难以持久，由内向外才能生根。</figcaption>
+      </figure>
+    </div>
+
+    <blockquote class="pullQuote c12 rv">
+      <p class="qZh">“你采取的每一个行动，都是在投票给你想成为的那个人。”</p>
+      <p class="qEn">Every action you take is a vote for the type of person you wish to become.</p>
+      <p class="qSrc">— 第2章 ｜ 选票意象：不需要全体一致投票才能赢得选举，你只需要多数即可。「你的目标只是赢得大多数时间。」</p>
+    </blockquote>
+
+    <div class="c5 rv card"><span class="idxTag">CASE.02</span>
+      <h4>布莱恩·克拉克的指甲</h4>
+      <p>靠意志力戒掉咬指甲后，他让妻子预约了一次修甲。美甲师说他的指甲除了咬痕以外非常健康有魅力——突然之间他为自己的手指感到自豪。「从那以后我再没咬过指甲，甚至没有动过念头。」<b>内在激励的终极形式，是习惯与身份融为一体。</b></p>
+    </div>
+    <div class="c7 rv">
+      <span class="kick plain">证据链 EVIDENCE.CHAIN</span>
+      <div class="tblWrap">
+        <table class="swiss">
+          <thead><tr><th>#</th><th>机制</th><th>原文要点</th></tr></thead>
+          <tbody>
+            <tr><td class="monoNo">E1</td><td class="k">词源证据</td><td>identity 源自拉丁语 essentitas（存在）与 identidem（反复）——身份就是你的「反复存在」。</td></tr>
+            <tr><td class="monoNo">E2</td><td class="k">频率优势</td><td>每次经历都会修改自我形象，但一次性经历的影响会消退；习惯因高频而成为塑造身份的主要证据来源。</td></tr>
+            <tr><td class="monoNo">E3</td><td class="k">身份黏性</td><td>「我不会分辨方向」「我数学不好」——年复一年对自己讲述同一个故事会滑入心理定式并信以为真。越贴合的身份越难改变。</td></tr>
+            <tr><td class="monoNo">E4</td><td class="k">反向投票</td><td>选坏习惯也是在给那种身份投票。好消息是：你不需要完美，只需要多数。</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note" style="margin-top:12px">// 本章收束于一句更深的目的陈述：真正的问题不是「什么」或「如何」，而是「谁」。第一步不是设定目标，而是选定你想成为的那类人。</p>
+    </div>
+  </div>
+</section>
+<!-- ============================ SEC 04 习惯回路 ============================ -->
+<section class="sec" id="sec04">
+  <div class="secHead rv">
+    <div class="secNum">04</div>
+    <div class="secIdBlock">
+      <div class="secKicker"><span>SEC.04 / HABIT LOOP</span><span><i>●</i> CUE → CRAVING → RESPONSE → REWARD</span></div>
+      <h2 class="secTitleZh">培养良好习惯的四步法 · 行为转变四大定律</h2>
+      <div class="secTitleEn">The Habit Loop &amp; The Four Laws Of Behaviour Change</div>
+    </div>
+    <p class="secPunch">// 提示触发渴求，渴求激发反应，反应提供奖励——四步构成一个神经反馈回路。</p>
+  </div>
+
+  <div class="secBody cols">
+    <div class="c5 rv">
+      <span class="kick">科学起点 LAB.01</span>
+      <h3 class="sub">1898 年，桑代克的迷笼实验</h3>
+      <p class="body">心理学家爱德华·桑代克把猫放进「拼图盒」：拉动绳圈、按下杠杆或跳上平台就能逃出并吃到食物。追踪每只猫的行为模式后他发现：随着尝试次数增加，猫的无效动作（嗅遍角落、抓挠松散物体）逐渐减少，逃脱所需的时间越来越短。“碰巧按下杠杆开门”的行为被奖励固化成了自动程序。<b>导致满意结果的行为趋向重复，带来不满结果的行为则被淘汰</b>——这一定律为理解习惯形成奠定了基础。</p>
+      <p class="body">今天我们知道：大脑不是在有意识地推理，而是把<b>得到奖励的行为链</b>编码进基底核，形成「自动化」。习惯发挥作用的真正意义在于释放认知资源——<b>只有让生活的基本要素变得更容易，你才能创造自由思考和创造力所需的精神空间。习惯不会限制自由，它们会创造自由。</b></p>
+      <div class="chipSet" style="margin-top:16px">
+        <span class="presetChip">问题阶段 = 提示 + 渴求</span>
+        <span class="presetChip">解决阶段 = 反应 + 奖励</span>
+      </div>
+      <p class="note" style="margin-top:14px">// 原书强调：若一种行为在四个环节中任何一个做得不够，它就不会成为习惯。没有前一步，就不会有下一步；没有全部四步，行为不会重复。</p>
+    </div>
+
+    <div class="c7 rv">
+      <figure class="fig">
+        <span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span>
+        <div class="figHead"><span><b>FIG.04</b> — 习惯回路（重绘原书图5·图6）</span><span>FEEDBACK LOOP ENGINE</span></div>
+        <div class="figSvgWrap">
+          <svg viewBox="0 0 780 400" role="img" aria-label="习惯回路四阶段循环图：提示渴求反应奖励">
+            <!-- phase arcs background -->
+            <path d="M390 200 m-150 0 a150 150 0 0 1 300 0" fill="none" stroke="var(--line)" stroke-width="30"/>
+            <path d="M390 200 m-150 0 a150 150 0 0 0 300 0" fill="none" stroke="var(--line)" stroke-width="30" opacity=".55"/>
+            <!-- arrows circular -->
+            <g stroke="var(--ink)" stroke-width="2.2" fill="none">
+              <path d="M390 34 a166 166 0 0 1 152 100" />
+              <path d="M542 134 l8 -18 M542 134 l-19 -6"/>
+              <path d="M542 266 a166 166 0 0 1 -152 100"/>
+              <path d="M390 366 l19 -6 M390 366 l9 -17"/>
+              <path d="M238 266 A166 166 0 0 1 238 134"/>
+              <path d="M238 134 l-8 18 M238 134 l18 6"/>
+            </g>
+            <!-- center -->
+            <circle cx="390" cy="200" r="66" fill="var(--card)" stroke="var(--red)" stroke-width="1.6"/>
+            <text x="390" y="192" font-size="13" font-weight="800" fill="var(--ink)" text-anchor="middle">习惯循环</text>
+            <text x="390" y="212" font-size="10.5" fill="var(--ink-3)" text-anchor="middle">HABIT LOOP</text>
+            <!-- nodes -->
+            <g font-weight="800" text-anchor="middle">
+              <rect x="305" y="-6" width="170" height="52" fill="var(--red)"/><text x="390" y="22" font-size="15" fill="#fff" data-inv="1">提示 CUE</text>
+              <text x="390" y="40" font-size="10" fill="rgba(255,255,255,.85)">触发信息 · 让你注意到奖励</text>
+              <rect x="604" y="174" width="140" height="52" fill="var(--ink)"/><text x="674" y="202" font-size="15" fill="var(--bg)" data-t="1">渴求 CRAVING</text>
+              <rect x="330" y="356" width="120" height="44" fill="var(--blue)"/><text x="390" y="377" font-size="15" fill="#fff" data-inv="1">反应 RESPONSE</text>
+              <rect x="36" y="174" width="140" height="52" fill="var(--card)" stroke="var(--ink)" stroke-width="1.6"/><text x="106" y="196" font-size="15" fill="var(--ink)">奖励 REWARD</text>
+              <text x="106" y="214" font-size="10" fill="var(--ink-3)">满足需求 + 教会大脑</text>
+            </g>
+            <!-- phase labels -->
+            <g font-size="10.5" fill="var(--ink-3)" letter-spacing="2">
+              <text x="500" y="60">问题阶段 / PROBLEM</text>
+              <text x="500" y="76" fill="var(--blue)">感知 ⇄ 动力</text>
+              <text x="118" y="290">解决阶段 / SOLUTION</text>
+              <text x="118" y="306" fill="var(--blue)">行动 ⇄ 满足</text>
+            </g>
+          </svg>
+        </div>
+        <figcaption>重绘自原书第3章 图5/图6。文字节点对应原文表述：提示的作用是让你注意到奖励的存在；渴求是想要得到奖励；回应(反应)则是获得奖励；奖励有两个目的——满足需求、教益未来。</figcaption>
+      </figure>
+    </div>
+
+    <!-- four laws overview -->
+    <div class="c12 rv">
+      <span class="kick blue">框架总览 FRAMEWORK.01 · 从回路到定律：把杠杆拨向左边</span>
+      <div class="lawGrid">
+        <div class="lawCell">
+          <span class="lawNo">LAW 01</span>
+          <h4>让它显而易见</h4><div class="enLaw">Make It Obvious</div>
+          <p>作用于<b>提示</b>：设计执行意图与习惯叠加，改造环境让好习惯的线索无处不在；同时把坏习惯的线索藏起来。</p>
+          <div class="probe">反用 → <b>使其无从显现</b>：脱离视线，脱离心思</div>
+        </div>
+        <div class="lawCell">
+          <span class="lawNo">LAW 02</span>
+          <h4>让它有吸引力</h4><div class="enLaw">Make It Attractive</div>
+          <p>作用于<b>渴求</b>：绑定喜好、借助群体引力、重构心态叙述，放大对奖励的期待感。</p>
+          <div class="probe">反用 → <b>使其缺乏吸引力</b>：重新定义坏习惯，凸显其代价</div>
+        </div>
+        <div class="lawCell">
+          <span class="lawNo">LAW 03</span>
+          <h4>让它简便易行</h4><div class="enLaw">Make It Easy</div>
+          <p>作用于<b>反应</b>：减小与好习惯相关的摩擦力，增大坏习惯的阻力；先标准化再优化。</p>
+          <div class="probe">反用 → <b>使其难以施行</b>：承诺机制 + 自动化封锁</div>
+        </div>
+        <div class="lawCell">
+          <span class="lawNo">LAW 04</span>
+          <h4>让它令人愉悦</h4><div class="enLaw">Make It Satisfying</div>
+          <p>作用于<b>奖励</b>：给延迟回报的好习惯附加即时肯定；追踪可视进度，绝不中断两次。</p>
+          <div class="probe">反用 → <b>使其令人厌恶</b>：问责伙伴让错误立即付出社会成本</div>
+        </div>
+      </div>
+      <p class="note" style="margin-top:12px">// 四条定律几乎适用于所有领域。原书附录给出的连续谱：「这里的行为毫不费力 ↔ 这里的行为难度不小」——显而易见↔脱离视线、有吸引力↔缺乏吸引力、简便易行↔难以施行、令人愉悦↔令人厌恶。</p>
+    </div>
+  </div>
+</section>
+<!-- ============================ SEC 05 第一定律 ============================ -->
+<section class="sec" id="sec05">
+  <div class="secHead rv">
+    <div class="secNum">05</div>
+    <div class="secIdBlock">
+      <div class="secKicker"><span>SEC.05 / LAW-01 · MAKE IT OBVIOUS</span><span><i>●</i> CUE DESIGN SYSTEM</span></div>
+      <h2 class="secTitleZh">让它显而易见 · 第一空间工程学</h2>
+      <div class="secTitleEn">Law One — Cue Architecture &amp; Environment Design</div>
+    </div>
+    <p class="secPunch">// 多数人以为自己缺乏动力，其实他们缺的是明确的计划：何时、何地、具体做什么。</p>
+  </div>
+
+  <blockquote class="pullQuote rv">
+    <p class="qZh">“环境是塑造人类行为的无形之手。”</p>
+    <p class="qEn">Environment is the invisible hand that shapes human behavior.</p>
+    <p class="qSrc">— 第6章 原动力被高估，环境往往更重要</p>
+  </blockquote>
+
+  <div class="secBody cols">
+    <!-- scorecard -->
+    <div class="c4 rv">
+      <span class="kick">策略 S1 / 习惯记分卡</span>
+      <h3 class="sub">先把行为摆上操作台</h3>
+      <p class="body">改变的第一步是觉察。列出你每日的日常习惯清单，逐项标记：<b>＋ 好 / － 坏 / ＝ 中性</b>。打分的目的不是评判，而是如实指认。「行为转变的过程总是始于自觉。」你的现有习惯不需要被宣布为敌人——只有看清它们的存在，才能设计与改造。</p>
+      <div class="card" style="margin-top:16px"><span class="idxTag">CASE.03</span>
+        <h4>日本的「指差确认」</h4>
+        <p>列车司机在出站前用手指向信号灯并大声说出状态，将下意识行为提升到有意识层面。这套安全系统<b>减少错误高达约 85%，事故发生率降低约 30%</b>；纽约地铁采用其简化版「只指不说」，两年内误发车事故下降了57%。</p>
+      </div>
+    </div>
+
+    <!-- implementation intention -->
+    <div class="c8 rv">
+      <span class="kick blue">策略 S2 / 执行意图 Implementation Intention</span>
+      <h3 class="sub">给习惯一个存在的时间与空间坐标</h3>
+      <p class="body">数百项研究表明，事先就何时何地行动制订计划，能显著提高坚持流感疫苗接种、按时锻炼、早睡和戒烟的可能性。当人们被要求回答「你要走哪条路去投票站？什么时候去？哪路公共汽车会送你去？」这类问题时，投票率随之提高。<b>许多人认为他们缺乏做事的动力，但实际上他们真正缺乏的是明确的计划。</b>设定执行意图后，行动时刻到来时根本不需要再做决定。</p>
+      <div class="cols" style="margin-top:20px;row-gap:26px">
+        <div class="c6">
+          <div class="formula">
+            <span class="fLabel">FORMULA.F1</span>
+            <div class="fLine">我将在<var>[时间]</var>和<var>[地点]</var>做<var>[行为]</var>。</div>
+            <div class="fEx"><span>SAMPLES 原书示例</span>
+              冥想 · 早晨 7 点，我将在厨房冥想 1 分钟<br>
+              学习 · 下午 6 点，我将在卧室学 20 分钟西班牙语<br>
+              健身 · 下午 5 点，我将在本地健身房锻炼 1 小时
+            </div>
+          </div>
+        </div>
+        <div class="c6">
+          <div class="formula">
+            <span class="fLabel">FORMULA.F2 · 新年开始尤其有效</span>
+            <div class="fLine">继<var>[当前习惯]</var>之后，我将<var>[新习惯]</var>。</div>
+            <div class="fEx"><span>SAMPLES 原书示例（习惯叠加）</span>
+              冥想 · 每天早上倒完咖啡后，我会沉思 1 分钟<br>
+              安全 · 穿上跑鞋后，我会给家人发短信告知跑步路线<br>
+              财务 · 当我想买超过 100 美元的东西时，我会等 24 小时再买
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FIG.05 stacking chain -->
+    <div class="c7 rv">
+      <figure class="fig">
+        <span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span>
+        <div class="figHead"><span><b>FIG.05</b> — 习惯叠加链条（重绘原书图7）</span><span>CUE-CHAINING</span></div>
+        <div class="figSvgWrap">
+          <svg viewBox="0 0 800 210" role="img" aria-label="把新习惯叠加到既有习惯之后的链条图示">
+            <!-- existing blocks -->
+            <g font-size="12.5" font-weight="700" text-anchor="middle">
+              <rect x="40" y="60" width="150" height="64" fill="var(--card)" stroke="var(--line-strong)" stroke-width="1.6"/>
+              <text x="115" y="88" fill="var(--ink)">倒完早晨咖啡</text><text x="115" y="108" font-size="10" fill="var(--ink-3)">既有锚点 EXISTING</text>
+              <rect x="230" y="60" width="150" height="64" fill="var(--red)"/>
+              <text x="305" y="88" fill="#fff">冥想 60 秒</text><text x="305" y="108" font-size="10" fill="rgba(255,255,255,.85)">新叠加 NEW</text>
+              <rect x="420" y="60" width="150" height="64" fill="var(--blue)"/>
+              <text x="495" y="88" fill="#fff">写当日待办事项</text><text x="495" y="108" font-size="10" fill="#fff" opacity=".85">第二层叠加</text>
+              <rect x="610" y="60" width="150" height="64" fill="var(--ink)"/>
+              <text x="685" y="88" fill="var(--bg)">立即着手第一件事</text><text x="685" y="108" font-size="10" fill="var(--bg)" opacity=".75">第三层叠加</text>
+            </g>
+            <!-- links -->
+            <g stroke="var(--ink)" stroke-width="1.8" fill="none">
+              <path d="M190 92 h34"/><path d="M216 86 l10 6 -10 6"/>
+              <path d="M380 92 h34"/><path d="M406 86 l10 6 -10 6"/>
+              <path d="M570 92 h34"/><path d="M596 86 l10 6 -10 6"/>
+            </g>
+            <!-- dimension marks -->
+            <g stroke="var(--ink-3)" stroke-width="1">
+              <line x1="40" y1="160" x2="40" y2="172"/><line x1="190" y1="160" x2="190" y2="172"/>
+              <line x1="40" y1="166" x2="190" y2="166"/>
+              <line x1="190" y1="160" x2="190" y2="172"/><line x1="380" y1="160" x2="380" y2="172"/>
+              <line x1="190" y1="166" x2="380" y2="166"/>
+            </g>
+            <g font-size="10.5" fill="var(--ink-3)" text-anchor="middle">
+              <text x="115" y="184">TRIGGER-A 提示源</text>
+              <text x="285" y="184">每一个动作都是下一个动作的提示</text>
+            </g>
+            <text x="525" y="184" font-size="11.5" fill="var(--red)" font-weight="700" text-anchor="middle">狄德罗效应的积极版本 →</text>
+          </svg>
+        </div>
+        <figcaption>重绘自原书第5章 图7：习惯堆积通过将新行为叠加在旧行为之上，增加坚持习惯的可能性；每个习惯都是下一个习惯的线索。触发叠加的秘诀是选对锚点——提示必须具体且可立即执行。</figcaption>
+      </figure>
+    </div>
+
+    <!-- Diderot story -->
+    <div class="c5 rv">
+      <span class="kick plain">原理注脚 NOTEBOOK.01</span>
+      <h3 class="sub">为什么叠加有效：行为的关联性</h3>
+      <p class="body">1765 年，狄德罗靠出售私人图书馆摆脱贫困，买了一件猩红色的长袍；华袍与家中旧物的不协调感驱使他逐件升级用品，消费像多米诺骨牌一样连锁展开——史称<b>「狄德罗效应」</b>。任何行为都不是孤立的：去洗手间提醒你洗手，洗手提醒你需要洗衣粉。克利尔的洞察是把这种「连锁购买反应」反转成生产力工具：</p>
+      <p class="note">// 早间叠加示例（原书）：①倒完咖啡→冥想 60 秒；②冥想结束→写下当天待办；③写完待办→立即着手第一件事。</p>
+      <div class="chipSet" style="margin-top:12px">
+        <span class="presetChip">策略源自 BJ·福格的小习惯项目</span>
+        <span class="presetChip">执行意图的一种特殊形式</span>
+      </div>
+    </div>
+
+    <!-- SIM.02 stack builder -->
+    <div class="c12 rv sim" id="simStack">
+      <div class="simHead">
+        <span class="simId"><i>SIM.02</i>交互仿真 · 习惯叠加生成器</span>
+        <span class="simTitle">选择锚点习惯 → 输入新习惯 → 生成符合 F2 公式的执行语句</span>
+      </div>
+      <div class="simBody cols">
+        <div class="c4">
+          <label class="fieldLab" for="selAnchor">STEP.1 当前习惯锚点</label>
+          <select class="sel" id="selAnchor">
+            <option value="每天早上倒完咖啡之后">☕ 倒完早晨的咖啡</option>
+            <option value="脱下上班穿的鞋之后">👟 脱下上班穿的鞋</option>
+            <option value="坐下来吃晚饭的时候">🍚 坐下来吃晚饭</option>
+            <option value="夜里上床睡觉之前">🛏 上床睡觉前</option>
+            <option value="刷完牙之后">🪥 刷完牙</option>
+            <option value="关掉电脑之后">💻 关掉工作电脑</option>
+            <option value="倒进第一口水之后">💧 倒好早晨第一杯水</option>
+          </select>
+        </div>
+        <div class="c4">
+          <label class="fieldLab" for="inpNewHabit">STEP.2 想建立的新习惯</label>
+          <input class="txt" id="inpNewHabit" type="text" maxlength="24" placeholder="例如：做三次深呼吸" value="读一页书">
+        </div>
+        <div class="c4">
+          <label class="fieldLab">&nbsp;</label>
+          <button class="btn" id="btnGenStack" style="width:100%;justify-content:center">⚙ 生成叠加句</button>
+        </div>
+        <div class="c12">
+          <div class="stackOut" id="stackOutLine">继<var>　　当前习惯锚点　　</var>之后，我将<var>　　新习惯　　</var>。</div>
+          <p class="note" id="stackTips" style="margin-top:12px">// 校验通过。原书要诀：锚点越具体越好；避免把高频事件绑在低频事件后面；叠加层数不宜过厚，三层左右最稳。</p>
+        </div>
+      </div>
+      <div class="simFoot">// 提示性仿真挂件：输出文案可直接抄录到便签或手机提醒中，作为执行意图使用。</div>
+    </div>
+
+    <!-- environment -->
+    <div class="c12 rv">
+      <span class="kick blue">策略 S3 / 环境设计 · 让提示物自己说话</span>
+      <div class="cols" style="margin-top:18px;row-gap:30px">
+        <div class="c5">
+          <div class="formula">
+            <span class="fLabel">LEWIN.EQUATION · 1936</span>
+            <div class="fLine">B = f( P , E )</div>
+            <div class="fEx"><span>库尔特·卢因</span>行为 = 人与环境的函数。1952 年经济学家霍金斯·斯特恩描述的「暗示冲动购物」正是它的商业验证——顾客购买的原因常常不是需要，而是产品被呈现的方式。</div>
+          </div>
+          <p class="body" style="margin-top:18px">人类约有 1100 万个感觉接收器，其中约 1000 万个用于视觉——<b>视觉是我们行为最大的催化剂</b>。你所看到的细微变化会导致行为上的重大转变。好消息正如原书所说：「你不必成为环境的受害者，你也可以成为它的建筑师。」</p>
+          <p class="note">// 实操原则「一个空间，一种用途」：卧室留给睡眠，书桌留给工作。空间内的提示边界越清晰，习惯的触发越自动。</p>
+        </div>
+        <div class="c7">
+          <div class="statRow" style="margin-top:0">
+            <div class="statBox"><div class="v">−8%</div><div class="k">阿姆斯特丹史基浦机场小便池中心贴苍蝇贴纸 → 卫生清洁成本年度降幅</div></div>
+            <div class="statBox"><div class="v">−30%</div><div class="k">电表装在主走廊的家庭 vs 装在地下室 → 用电量差距</div></div>
+            <div class="statBox hot"><div class="v">45%</div><div class="k">可口可乐销售额来自购物通道端头货架（最显眼位置）</div></div>
+          </div>
+          <p class="body" style="margin-top:16px">克利尔自己的做法：把苹果从冰箱保鲜盒移到厨房台面醒目处，水果消耗量自然上升——<b>人们选择产品不是因为它们是什么，而是因为它们在哪里。</b>反过来，把坏习惯相关的事物藏进柜子深处、断开默认入口，同样是环境设计的一部分。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIM.03 friction console -->
+    <div class="c12 rv sim" id="simFriction">
+      <div class="simHead">
+        <span class="simId"><i>SIM.03</i>交互仿真 · 环境摩擦控制台</span>
+        <span class="simTitle">点击卡片开关布局方案 → 观察好/坏习惯两侧摩擦系数 μ 的位移</span>
+      </div>
+      <div class="simBody cols">
+        <div class="c4 frGrid">
+          <div class="frItem onGood" data-side="good" data-w="22"><div class="t">健身包放门口玄关<em>μ−</em></div><div class="d">出门必经之路的可视提示，第三定律与第一定律联动。</div></div>
+          <div class="frItem onBad" data-side="bad" data-w="26"><div class="t">手机充电器移出卧室<em>μ+</em></div><div class="d">为睡前刷屏增加一层物理阻力与距离成本。</div></div>
+          <div class="frItem" data-side="good" data-w="18"><div class="t">台面常驻水果篮<em>μ−</em></div><div class="d">原书同款实验：可见即消耗。</div></div>
+          <div class="frItem" data-side="bad" data-w="20"><div class="t">零食收进高处柜子<em>μ+</em></div><div class="d">看不见 ≠ 不存在，但欲望会被距离稀释。</div></div>
+          <div class="frItem" data-side="good" data-w="14"><div class="t">书翻开放在枕头上<em>μ−</em></div><div class="d">「在枕头上放本书」的原书叠加案例。</div></div>
+          <div class="frItem onBad" data-side="bad" data-w="0" style="visibility:hidden"><div class="t">占位</div><div class="d"></div></div>
+        </div>
+        <div class="c8">
+          <p class="fieldLab">GOOD-HABIT FRICTION REDUCED ∑(μ−)</p>
+          <div class="meter"><i id="meterGood" style="--c:var(--green);width:41%"></i></div>
+          <p class="fieldLab" style="margin-top:22px">BAD-HABIT FRICTION ADDED ∑(μ+)</p>
+          <div class="meter"><i id="meterBad" style="--c:var(--red);width:57%"></i></div>
+          <div class="alertBand show" id="frVerdict"><b>VERDICT //</b><span id="frText">至少激活三项改造时，控制台才具备参考意义——纪律性强的人并非更擅长自控，而是更少置身于充满诱惑的环境。</span></div>
+        </div>
+      </div>
+      <div class="simFoot">// 判据来自第7章：自我控制能力强的人通常最不需要使用它。「毅力、勇气和意志力是取得成功的要素，但增强这些品质的途径不是期望你自己成为自律的人，而是创造一个有纪律的环境。」</div>
+    </div>
+
+    <!-- self control secret -->
+    <div class="c12 rv cols">
+      <div class="c5">
+        <span class="kick">秘密 LAB.02 / 自我控制的秘密</span>
+        <h3 class="sub">意志力不是解药，摆脱提示才是</h3>
+        <p class="body">1971 年越南战争中的调查显示：35% 的驻越军人尝试过海洛因，成瘾者高达 20%。然而研究人员李·罗宾斯发现，回家的士兵中<b>一年内复吸仅约 5%、三年内复发仅 12%</b>——十人中有九人几乎一夜戒除。与此相反，普通海洛因成瘾者康复回家后的复吸率约为 90%。<b>当生活环境彻底改变，毒瘾会随提示一起消失。</b></p>
+      </div>
+      <div class="c7">
+        <p class="body">这颠覆了「成瘾不可逆」「戒瘾全靠意志」的传统叙事。科学家分析那些看似有强大自控力的人后发现：他们与深陷泥潭者并无不同，区别在于<b>他们很少把自己置于充满诱惑的环境中</b>——「比较典型的情况是，自我控制能力强的人通常最不需要使用它。」因此抵抗诱惑是在做无用功：可卡因图片只需 33 毫秒就能激活瘾君子大脑的奖励通路，快得无法进入意识层面。你可以改掉一个习惯，但你不太可能忘记它。真正的解法只有一条：<mark>把它藏起来。</mark></p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============================ SEC 06 第二定律 ============================ -->
+<section class="sec" id="sec06">
+  <div class="secHead rv">
+    <div class="secNum">06</div>
+    <div class="secIdBlock">
+      <div class="secKicker"><span>SEC.06 / LAW-02 · MAKE IT ATTRACTIVE</span><span><i>●</i> CRAVING AMPLIFIER</span></div>
+      <h2 class="secTitleZh">让它有吸引力 · 多巴胺与渴求的编程术</h2>
+      <div class="secTitleEn">Law Two — Dopamine, Temptation Bundling &amp; Social Gravity</div>
+    </div>
+    <p class="secPunch">// 激发行动的原动力来自对奖励的期待之时，而非期待被满足的那一刻。</p>
+  </div>
+
+  <div class="secBody cols">
+    <!-- dopamine -->
+    <div class="c6 rv">
+      <span class="kick">神经机制 LAB.03</span>
+      <h3 class="sub">期待的神经化学：渴求 &gt; 喜欢</h3>
+      <p class="body">科学家一度认为多巴胺与快乐有关；真相是：<b>不仅在你体验快乐时，更在你期待快乐时，大脑都会分泌多巴胺。</b>赌徒在下注前体内多巴胺浓度激增，赢了之后反而不升；成瘾者一看到粉末便大量分泌，而不是在吸食之后。实验中被阻断多巴胺的小鼠依旧「喜欢」糖，却不再「想要」糖——欲望引擎熄火后，连生命活动都会停止。伏隔核在渴求出现时 100% 被激活，「喜欢中心」则仅有约 10% 参与工作。<b>对一种体验的期待，往往比体验本身更令人愉悦</b>——孩子盼圣诞节早晨的感觉好过拆开礼物那一刻。</p>
+      <div class="chipSet">
+        <span class="presetChip">渴求 = 现状与期望的落差信号</span>
+        <span class="presetChip">提示因观察者的心境而获得意义</span>
+      </div>
+      <p class="note" style="margin-top:12px">// 深层动机清单（原书第10章）：节省精力 / 获取食物和水 / 寻找伴侣并传宗接代 / 与他人建立联系并结合 / 赢得社会认可 / 减少不确定性 / 获取地位和声望。习惯攀附在这些古老动机之上——约会软件↔传宗接代、脸书↔建立联系、Instagram↔赢得认可、谷歌↔减少不确定性、电子游戏↔地位声望。你的习惯是用以满足古老欲望的现代方法。</p>
+    </div>
+
+    <div class="c6 rv">
+      <figure class="fig">
+        <span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span>
+        <div class="figHead"><span><b>FIG.06</b> — 多巴胺随期待的转移（重绘原书图9）</span><span>DOPAMINE SPIKES BEFORE REWARD</span></div>
+        <div class="figSvgWrap">
+          <svg viewBox="0 0 760 330" role="img" aria-label="多巴胺浓度在学习前后阶段的四状态变化曲线">
+            <line x1="40" y1="270" x2="730" y2="270" stroke="var(--ink)" stroke-width="1.7"/>
+            <g font-size="10.5" fill="var(--ink-3)">
+              <text x="30" y="70">DA 高峰区 →</text><text transform="rotate(-90 22 200)" x="22" y="150">DOPAMINE LEVEL</text>
+            </g>
+            <text x="385" y="312" font-size="10.5" fill="var(--ink-3)" text-anchor="middle">TIME →　（重复次数）</text>
+            <!-- A first reward spike -->
+            <path d="M60 262 C110 258,130 250,150 218 C165 194,172 160,180 160 C188 160,196 196,212 236 C228 260,250 264,290 262" fill="none" stroke="var(--ink-2)" stroke-width="2"/>
+            <text x="180" y="140" font-size="11.5" fill="var(--ink-2)" text-anchor="middle">A 初次体验奖励</text>
+            <!-- B pre-action surge after cue -->
+            <path d="M300 260 C330 256,342 246,356 210 C368 178,376 118,386 106 C396 96,404 120,418 176 C430 216,452 244,484 252" fill="none" stroke="var(--red)" stroke-width="2.8"/>
+            <circle cx="386" cy="103" r="4.5" fill="var(--red)"/>
+            <text x="386" y="84" font-size="11.5" font-weight="700" fill="var(--red)" text-anchor="middle">B 提示识别后→行动前激增</text>
+            <!-- C disappointed dip -->
+            <path d="M520 252 C552 248,566 258,578 274 C590 288,600 294,614 292" fill="none" stroke="var(--blue)" stroke-width="2.2"/>
+            <circle cx="592" cy="291" r="4.2" fill="var(--blue)"/>
+            <text x="585" y="245" font-size="11.5" fill="var(--blue)">C 期待落空失望回落</text>
+            <!-- D delayed reward re-spike -->
+            <path d="M636 292 C656 292,668 268,682 232 C692 208,702 190,714 186 C724 183,732 192,742 205" fill="none" stroke="var(--green)" stroke-width="2.4"/>
+            <circle cx="705" cy="187" r="4.4" fill="var(--green)"/>
+            <text x="672" y="164" font-size="11.5" fill="var(--green)">D 奖励迟到时的再飙升</text>
+          </svg>
+        </div>
+        <figcaption>重绘自原书第8章 图9：学得习惯之前（A），多巴胺在首次体验奖励时释放；此后激提前移到提示被识别之后（B）；期待落空则失望回落（C）；奖励比预期稍晚到达时再次飙升（D），仿佛大脑在说——下次别忘了重复这个动作。</figcaption>
+      </figure>
+    </div>
+
+    <!-- temptation bundling -->
+    <div class="c7 rv">
+      <span class="kick blue">策略 S4 / 绑定喜好 Temptation Bundling</span>
+      <h3 class="sub">把「需要做的事」绑上「想做的事」</h3>
+      <p class="body">都柏林的工程学生罗南·伯恩黑进了自己健身单车的程序：只有以特定配速踩踏板时，奈飞的剧集才会继续播放——配速太低节目暂停。粉丝评价他「用一次一个奈飞狂欢的方式减肥」。企业同样是绑定喜好大师：ABC 将周四晚间编排为 TGIT 观剧夜，鼓励观众配红酒爆米花——<b>把他们需要观众做的事（看剧）绑定观众早想做之事（放松吃喝）</b>。这是普雷马克原理的行为学应用：「高频行为将会强化低频行为。」</p>
+      <div class="formula" style="margin-top:16px">
+        <span class="fLabel">FORMULA.F3 · 习惯叠加 × 绑定喜好</span>
+        <div class="fLine">①继<var>[当前习惯]</var>之后，我将<var>[我需要的习惯]</var>。</div>
+        <div class="fLine" style="margin-top:6px">②继<var>[我需要的习惯]</var>之后，我将<var>[我想要的习惯]</var>。</div>
+        <div class="fEx"><span>SAMPLE 原书示例</span>你特别想看新闻，但你需要表达更多感激：吃完午饭我会给三位客户说感谢的话 → 说完感谢的话，我会刷新看新闻。</div>
+      </div>
+    </div>
+
+    <!-- social -->
+    <div class="c5 rv card"><span class="idxTag">STRATEGY.S5 · 社会规范的三面镜子</span>
+      <h4 style="font-size:17px">我们尤其擅长模仿三类人</h4>
+      <p style="margin-top:10px"><b>① 亲近的人：</b>一项追踪 1.2 万人长达 32 年的研究发现，一个人若有一位肥胖朋友，其肥胖概率增加 57%；恋爱中一人减重，伴侣三分之一可能跟着瘦。<b>② 群体中的多数人：</b>阿施从众实验中，面对显而易见的错误答案，将近 75% 的受试者最终认同了整个团体的答案。<b>③ 有权势的人：</b>模仿高地位者的行为自带吸引力，地位越高者越能带动潮流。</p>
+      <p style="margin-top:10px">培养好习惯最有效的方式之一：<mark>加入一种文化，在其中你所偏爱的行为被认定为正常行为</mark>——波尔加夫妇刻意营造「象棋高于一切」的家庭文化，三个女儿全部成长为世界顶级棋手。「没有什么比群体归属感更能维持一个人做事的动力了。」</p>
+    </div>
+
+    <!-- reframing + sim -->
+    <div class="c12 rv sim" id="simReframe">
+      <div class="simHead">
+        <span class="simId"><i>SIM.04</i>交互仿真 · 心态重构器</span>
+        <span class="simTitle">点击卡片完成换框练习 —— 同一件事，两种说法都为真</span>
+      </div>
+      <div class="simBody">
+        <p class="body" style="max-width:none;margin-bottom:18px">重构你的习惯叙述，突出益处而非不足，可以改变思维方式并让习惯更有吸引力。原书给出最简练的操作：把「我得早起上班」换成「<b>我想</b>早起上班」。听起来像文字游戏？无论选择何种心态，我们都能找到证据——一位轮椅使用者说：「我没有被困在轮椅上，我被它解放了。要不是因为轮椅，我只能躺在床上。」</p>
+        <div class="cols" id="reframeGrid" style="row-gap:18px"></div>
+        <div class="statRow">
+          <div class="statBox hot"><div class="v" id="rfDone">0 / 6</div><div class="k">已完成重构</div></div>
+          <div class="statBox"><div class="v" id="rfMsg" style="font-size:15px">点击任意卡片开始</div><div class="k">MINDSET PROTOCOL</div></div>
+        </div>
+      </div>
+      <div class="simFoot">// 动机仪式（第10章）：把注意力集中在与难缠习惯相关的好处而非坏处上；许多人在演讲前默念「我很兴奋」，利用同一套生理唤醒换取正向解读。</div>
+    </div>
+  </div>
+</section>
+<!-- ============================ SEC 07 第三定律 ============================ -->
+<section class="sec" id="sec07">
+  <div class="secHead rv">
+    <div class="secNum">07</div>
+    <div class="secIdBlock">
+      <div class="secKicker"><span>SEC.07 / LAW-03 · MAKE IT EASY</span><span><i>●</i> FRICTION ENGINEERING</span></div>
+      <h2 class="secTitleZh">让它简便易行 · 从重复到自动性</h2>
+      <div class="secTitleEn">Law Three — Repetition, Least Effort &amp; The Two-Minute Rule</div>
+    </div>
+    <p class="secPunch">// 你不能改善一个不存在的习惯。先标准化，然后才能优化。</p>
+  </div>
+
+  <div class="secBody cols">
+    <!-- quantity vs quality -->
+    <div class="c6 rv">
+      <span class="kick">开篇案例 CASE.04</span>
+      <h3 class="sub">数量组 vs 质量组：行动压倒酝酿</h3>
+      <p class="body">佛罗里达大学的电影摄影教授把学生分成两组：数量组的成绩只按提交照片数计分——交 100 张得 A，90 张得 B；质量组整学期只需制作一张近乎完美的照片。学期结束，<b>所有优秀作品全部出自数量组</b>：他们在拍摄、试错、暗房调试中磨炼了技能；质量组则坐而论道追求完美，只剩理论和一张平庸的照片。</p>
+      <p class="body">克利尔把这种现象命名为<b>「酝酿与行动的区别」</b>：罗列二十个写作想法是酝酿，坐下来开写才是行动；读饮食书籍是酝酿，真正吃一顿健康饭才是行动。「因追求最佳而丢掉了足够好。」酝酿让你感觉在做事，实际上你只是在准备做事——它不承担失败的风险，这正是它诱人的原因。<b>如果你想掌握一种习惯，关键是从重复开始，无须力求完美。</b></p>
+      <div class="chipSet">
+        <span class="presetChip">赫布定律：一起激发的神经元连在一起</span>
+        <span class="presetChip">长时程增强 LTP</span>
+        <span class="presetChip">伦敦出租车司机的海马体更大；退休后逐渐缩小</span>
+      </div>
+    </div>
+
+    <div class="c6 rv">
+      <figure class="fig">
+        <span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span>
+        <div class="figHead"><span><b>FIG.07</b> — 自动性曲线与习惯线（重绘原书图11）</span><span>AUTOMATICITY / HABIT LINE</span></div>
+        <div class="figSvgWrap">
+          <svg viewBox="0 0 760 340" role="img" aria-label="习惯随重复次数从费力到自动的曲线图，跨越习惯线后形成自动化">
+            <g stroke="var(--line)" stroke-width="1">
+              <line x1="56" y1="60" x2="740" y2="60"/><line x1="56" y1="130" x2="740" y2="130"/>
+              <line x1="56" y1="200" x2="740" y2="200"/><line x1="56" y1="270" x2="740" y2="270"/>
+            </g>
+            <g stroke="var(--ink)" stroke-width="1.8"><line x1="56" y1="30" x2="56" y2="300"/><line x1="56" y1="300" x2="740" y2="300"/></g>
+            <!-- habit line -->
+            <line x1="56" y1="88" x2="740" y2="88" stroke="var(--red)" stroke-width="1.8" stroke-dasharray="8 6"/>
+            <text x="736" y="76" font-size="12" font-weight="700" fill="var(--red)" text-anchor="end">HABIT LINE 习惯线</text>
+            <!-- decreasing effort curve -->
+            <path d="M70 70 C120 200,160 258,230 272 C330 291,480 288,720 279" fill="none" stroke="var(--blue)" stroke-width="3"/>
+            <!-- crossing point -->
+            <circle cx="196" cy="250" r="5" fill="var(--blue)"/>
+            <text x="208" y="242" font-size="11.5" fill="var(--ink-2)">此处越过习惯线 → 动作无需有意为之</text>
+            <text x="86" y="102" font-size="11.5" fill="var(--ink-2)">A点：极大努力与专注</text>
+            <text x="150" y="212" font-size="11.5" fill="var(--ink-2)">B点：容易些但仍需刻意</text>
+            <text x="430" y="264" font-size="11.5" fill="var(--ink-2)">C点之后：不加思索地自动完成</text>
+            <text x="58" y="322" font-size="10.5" fill="var(--ink-3)">REPS → 次数（不是天数！）</text>
+            <text x="20" y="36" font-size="10.5" fill="var(--ink-3)" transform="rotate(-90 26 96)">EFFORT 精神投入</text>
+          </svg>
+        </div>
+        <figcaption>重绘自原书第11章 图11/图12。关键结论：「习惯是基于<b>频率</b>而不是时长形成的。」与其问需要多少天才能养成，不如问需要多少次重复才能让动作变得自动化。</figcaption>
+      </figure>
+    </div>
+
+    <!-- least effort -->
+    <div class="c12 rv cols">
+      <div class="c5">
+        <span class="kick blue">策略 S6 / 最省力法则</span>
+        <h3 class="sub">与其提高水压，不如抻直软管</h3>
+        <p class="body">花园水管中间弯折时你有两种选择：加大阀门水压硬冲，或把软管抻直让水自然流出。顽固坚持老习惯不断给自己打气属于前者；清除环境中的阻力点属于后者。日本制造商 1970 年代的<b>精益生产</b>就是全面应用：重新设计工作台使工人不必转身取工具——1974 年美国产彩电售后需求是日本的五倍，1979 年美国工人组装一台彩电耗时是日本工人的三倍以上。克利尔把这个策略命名为「<mark>因减而加</mark>」。</p>
+      </div>
+      <div class="c3 card"><span class="idxTag">DATA.01</span><div class="caseNum">19.2→23.4%</div><p style="margin-top:8px">英国政府把纳税申报表格的跳转链接改为直接呈现表格链接后申报率的提升幅度——减少一个阻力点就价值数百万税收。</p></div>
+      <div class="c4 card"><span class="idxTag">CASE.05 · 重启居室</span>
+        <h4>纳科尔斯的环境预备法</h4>
+        <p style="margin-top:6px">密西西比州的信息技术开发者奥斯瓦尔德·纳科尔斯：看完电视就把遥控器放回架子上、整理靠垫、叠好毛毯；下车随手清空车内垃圾；洗澡加热间隙顺便擦马桶。每个动作都为下一个动作降低成本，家里永远处于随时可以开始新事情的状态。</p>
+      </div>
+      <div class="c12">
+        <figure class="fig">
+          <div class="figHead"><span><b>FIG.08</b> — 决定性时刻（重绘原书图14）</span><span>DECISIVE MOMENTS / FORK ROADS</span></div>
+          <div class="figSvgWrap">
+            <svg viewBox="0 0 820 190" role="img" aria-label="一天中的决定性时刻像岔路口，小选择累积成截然不同的一天">
+              <g fill="none" stroke-width="2.6">
+                <path d="M50 95 H300" stroke="var(--ink)"/>
+                <path d="M300 95 C420 95,470 45,600 42 H770" stroke="var(--green)"/>
+                <path d="M300 95 C420 95,470 148,600 152 H770" stroke="var(--red)"/>
+              </g>
+              <path d="M770 42 l-16 -8 v16 z" fill="var(--green)"/>
+              <path d="M770 152 l-16 -8 v16 z" fill="var(--red)"/>
+              <circle cx="300" cy="95" r="7" fill="var(--bg)" stroke="var(--ink)" stroke-width="2"/>
+              <text x="150" y="72" text-anchor="middle" font-size="12" fill="var(--ink-2)">晨起瞬间 DECISIVE MOMENT</text>
+              <text x="462" y="28" text-anchor="middle" font-size="13" font-weight="750" fill="var(--green)">拿起跑鞋出门 → 状态向上的一天</text>
+              <text x="462" y="182" text-anchor="middle" font-size="13" font-weight="750" fill="var(--red)">瘫进沙发刷手机 → 消沉的一天</text>
+              <text x="80" y="132" font-size="10.5" fill="var(--ink-3)">每一天都由许多时刻组成，真正决定你一天走向的是少数岔路口选择</text>
+            </svg>
+          </div>
+          <figcaption>习惯是切入点，而不是终点站——「它们是出租车，而不是健身房」。走进哪家餐馆决定了你只能点什么菜：选项面从一开始就被锁定，这就是掌控岔路口的意义。</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <!-- two-minute rule -->
+    <div class="c12 rv sim" id="simTwoMin">
+      <div class="simHead">
+        <span class="simId"><i>STRATEGY.S7</i>两分钟规则 THE TWO-MINUTE RULE</span>
+        <span class="simTitle">当你开始培养一种新习惯时，它所用时间不应超过两分钟。</span>
+      </div>
+      <div class="simBody cols">
+        <div class="c6">
+          <p class="body" style="max-width:none">几乎任何宏大目标都能缩到两分钟的启动尺寸：<b>每晚睡前阅读 → 读一页；做 30 分钟瑜伽 → 拿出瑜伽垫；复习功课 → 打开笔记；整理衣物 → 叠一双袜子；跑 3 英里 → 系好跑鞋鞋带。</b>其功能是制造一种「门户习惯」，让第一个动作变成仪式化开关——一种程序的开始阶段越是仪式化，你就越有可能进入做大事所需的注意力高度集中状态。</p>
+          <p class="note">// 一位读者借助「去健身房但不能超过 5 分钟」的策略成功减重 100 多磅：几周后他想，「反正都来了，不如多待一会儿。」写日记的诀窍同理——格雷戈·麦吉沃恩总是在感觉写烦之前收笔；海明威的建议是：一定要在你感觉还好时及时停手。</p>
+        </div>
+        <div class="c6">
+          <figure class="fig" style="padding:14px 14px 0">
+            <div class="figHead"><span><b>SLOTS</b> — 门户习惯降维阶梯（原书第13章）</span><span>MARATHON → SHOELACES</span></div>
+            <div class="figSvgWrap">
+              <svg viewBox="0 0 700 250" role="img" aria-label="从跑马拉松到系鞋带的难度降维阶梯图">
+                <g font-size="13" font-weight="700" text-anchor="middle">
+                  <rect x="20" y="20" width="180" height="44" fill="none" stroke="var(--line-strong)" stroke-width="1.6"/><text x="110" y="47" fill="var(--ink)">跑马拉松 · 极难</text>
+                  <rect x="130" y="74" width="180" height="44" fill="none" stroke="var(--line-strong)" stroke-width="1.6"/><text x="220" y="101" fill="var(--ink)">跑 5000 米 · 有点难</text>
+                  <rect x="240" y="128" width="180" height="44" fill="none" stroke="var(--line-strong)" stroke-width="1.6"/><text x="330" y="155" fill="var(--ink)">走 1 万步 · 稍有难度</text>
+                  <rect x="350" y="182" width="210" height="52" fill="var(--red)"/><text x="455" y="203" fill="#fff">穿上跑鞋</text><text x="455" y="222" font-size="10.5" fill="rgba(255,255,255,.85)">两分钟版 · 门户习惯 GATEWAY</text>
+                </g>
+                <g stroke="var(--red)" stroke-width="1.6" fill="none">
+                  <path d="M140 64 l40 -34 m0 0 l-17 3 M180 30 l3 17"/>
+                  <path d="M250 118 l40 -34 m0 0 l-17 3 M290 84 l3 17"/>
+                  <path d="M370 170 l38 -32 m0 0 l-16 4 M408 138 l4 16"/>
+                </g>
+                <text x="590" y="228" font-size="11" fill="var(--ink-3)" text-anchor="middle">目标 ≠ 门径</text>
+                <text x="590" y="206" font-size="10.5" fill="var(--ink-3)" text-anchor="end">你的目标可能是马拉松，</text>
+              </svg>
+            </div>
+            <figcaption>但要掌握萌芽状态的习惯就得先把开始变得轻而易举：做得比你希望的少，总好过什么都不做。掌握前两分钟 → 巩固 → 再向下一阶段推进。</figcaption>
+          </figure>
+        </div>
+      </div>
+      <div class="simFoot">// 对觉得「两分钟规则是心理骗局」的人，原书给出加强版：做一件事但两分钟后必须停下来——这不是开始的策略，而是你一天要做的全部。持续一百二十秒即可。</div>
+    </div>
+
+    <!-- commitment devices -->
+    <div class="c12 rv cols">
+      <div class="c5">
+        <span class="kick">策略 S8 / 让好习惯不可避免</span>
+        <h3 class="sub">承诺机制 Commitment Device &amp; 自动化</h3>
+        <p class="body">1830 年夏，维克多·雨果赶稿《巴黎圣母院》严重逾期。他做了一个极端的计划：<b>把自己所有的衣服锁进柜子，只留披肩</b>——没有衣服可穿就没法外出社交，整个秋冬宅家写作，比截稿日提前两周交书。这就是承诺机制的雏形：用当下的单一选择，锁定未来无数个会被诱惑攻陷的时刻。</p>
+        <p class="note">// 单次决策清单（原书）：设置自动储蓄转账、购买好床垫保护睡眠、给手机设定勿扰时段等——一次决策长期受益，让好习惯不可避免。</p>
+      </div>
+      <div class="c3 card"><span class="idxTag">TECH.A</span><h4>自动化 Automation</h4><p style="margin-top:6px">自动偿还信用卡、自动转存工资的一部分……机器从不忘记执行一次复利扣款，也从不争论要不要做。</p></div>
+      <div class="c4 card"><span class="idxTag">TECH.B</span><h4>技术锁 Tech Lock</h4><p style="margin-top:6px">雨果式的现代版本：社会科学家称之为承诺装置——预先抬高坏习惯的成本（断网软件、健身押金合约），使其「在当前变得难以施行」。</p></div>
+    </div>
+  </div>
+</section>
+<!-- ============================ SEC 08 第四定律 ============================ -->
+<section class="sec" id="sec08">
+  <div class="secHead rv">
+    <div class="secNum">08</div>
+    <div class="secIdBlock">
+      <div class="secKicker"><span>SEC.08 / LAW-04 · MAKE IT SATISFYING</span><span><i>●</i> REWARD CLOSURE</span></div>
+      <h2 class="secTitleZh">让它令人愉悦 · 即时奖励的闭环设计</h2>
+      <div class="secTitleEn">Law Four — Immediate Rewards, Tracking &amp; Never Miss Twice</div>
+    </div>
+    <p class="secPunch">// 重复有即时回报的行为，避免有即时惩罚的动作。前三条定律提高行为发生的概率，第四定律提高行为重复的概率。</p>
+  </div>
+
+  <blockquote class="pullQuote rv">
+    <p class="qZh">“你要在当下为良好习惯付出代价；你要在将来为坏习惯付出代价。”</p>
+    <p class="qSrc">— 第15章 行为转变的基本准则</p>
+  </blockquote>
+
+  <div class="secBody cols">
+    <!-- time inconsistency -->
+    <div class="c6 rv">
+      <span class="kick blue">核心悖论 PARADOX.01</span>
+      <h3 class="sub">时间不一致性：为什么即时感赢过远期利益</h3>
+      <p class="body">人类祖先活在<b>即时回报环境</b>里——吃喝躲避捕食者都立竿见影；过去五百年我们才迁入以延迟回报为主的环境。大脑硬件却还是旧石器时代的配置：坏习惯的奖励是即时的（尼古丁即刻缓解焦虑），后果延迟十年；好习惯恰好相反——今天流的汗要到明年才显形。行为经济学称之为「时间不一致性」。巴斯夏的警告值得刻在工位上：<b>「习惯的第一个果实越甜，以后的果实就越苦。」</b></p>
+      <div class="formula" style="margin-top:18px">
+        <span class="fLabel">CARDINAL-RULE · 行为转变基本规则（升级版）</span>
+        <div class="fLine">重复有<var>即时回报</var>的行为；避免有<var>即时惩罚</var>的动作。</div>
+        <div class="fEx"><span>PATCH 补丁策略</span>给好习惯加装即时甜点：办完卡先泡 5 分钟桑拿、存完钱收到一条到账短信……只要它不与你的身份冲突。</div>
+      </div>
+    </div>
+    <div class="c6 rv">
+      <span class="kick">开篇案例 CASE.06 · 一口薄荷味的商业史</span>
+      <h3 class="sub">箭牌口香糖与牙膏的味道革命</h3>
+      <p class="body">19 世纪初投放市场的口香糖表现一直不温不火。1891 年箭牌推出后销量开始飙升并成为全球最大口香糖公司——秘密不在胶基本身，而在添加的留兰香风味和广告词营造的洁净错觉：「清新你的口气」。牙膏同理：制造商在产品中添加留兰香与薄荷，制造清爽口感让刷牙立刻产生愉悦反馈，「清洁口腔」的神功其实来自味觉副产品。<b>带来即时愉悦的产品改变了十亿人的日常行为</b>——这正是第四定律的商业级证明：重复因满足而持续。</p>
+      <p class="note">// 第四定律的要义不是廉价糖衣。原书反复强调：所加的即时奖励必须符合你想成为的人的身份叙事——否则你只是在贿赂自己。</p>
+    </div>
+
+    <!-- SIM.05 tracker -->
+    <div class="c12 rv sim" id="simTracker">
+      <div class="simHead">
+        <span class="simId"><i>SIM.05</i>交互仿真 · 习惯追踪器 HABIT TRACKER</span>
+        <span class="simTitle"><span class="liveDot"></span>点击日期打卡 → 数据实时计算并本地保存</span>
+      </div>
+      <div class="simBody cols">
+        <div class="c8">
+          <label class="fieldLab" for="trkMonth">SELECT.MONTH 选择月份（演示数据集 2025）</label>
+          <select class="sel" id="trkMonth" style="max-width:280px">
+            <option value="2025-07">2025年7月</option>
+            <option value="2025-08">2025年8月</option>
+          </select>
+          <div id="trkGridWrap" style="margin-top:18px"><div class="trkGrid" id="trkGrid"></div></div>
+          <div class="trkLegend">
+            <span><i class="filled"></i>已完成 DONE</span>
+            <span><i></i>错过 MISSED / 未到</span>
+            <span style="font-family:var(--mono)">规则：点击任意日期切换状态</span>
+          </div>
+        </div>
+        <div class="c4">
+          <div class="statRow" style="grid-template-columns:1fr;margin-top:0">
+            <div class="statBox hot"><div class="v" id="tkCurrent">0 天</div><div class="k">当前连续 STREAK</div></div>
+            <div class="statBox"><div class="v" id="tkBest">0 天</div><div class="k">最长纪录 MAX</div></div>
+            <div class="statBox"><div class="v" id="tkRate">0%</div><div class="k">完成率 COMPLETION</div></div>
+            <div class="statBox"><div class="v" id="tkTotal">0</div><div class="k">累计完成次数</div></div>
+          </div>
+          <div class="alertBand" id="missAlert"><b>⚠ NEVER-MISS-TWICE //</b><span>检测到断链：错过一次是意外，错过两次是一种新习惯的开始。今天就接上链条。</span></div>
+          <button class="btn sm" id="btnSeed" style="margin-top:14px">🎲 载入示范数据</button>
+          <button class="btn sm" id="btnReset" style="margin-top:14px;border-color:var(--line-strong);color:var(--ink-3)">清空记录</button>
+        </div>
+      </div>
+      <div class="simFoot">// 三重功效对应前三条定律：视觉提示 = 显而易见(L1)；不想失去进步曲线 = 有吸引力(L2)；划掉一格本身即奖励 = 令人愉悦(L4)。富兰克林的小册子（13项品行）与本页原理相同。</div>
+    </div>
+
+    <!-- paper clip -->
+    <div class="c12 rv cols">
+      <div class="c7">
+        <span class="kick plain">CASE.07 · 视觉度量 Visual Measure</span>
+        <h3 class="sub">曲别针策略：把无形努力倒进玻璃罐</h3>
+        <p class="body">22 岁的销售新人特伦特·迪尔施米德每天早上在办公桌上放两个罐子，一个装满 120 个曲别针，另一个是空的。每打完一个推销电话，他就把一个曲别针移到空罐。<b>18 个月他为公司创造了 500 万美元收益，24 岁时已另获年薪超过 10 万美元的新职位。</b>类似的变奏无处不在：每写完一页移动一枚发夹、每做完一组俯卧撑转移一颗弹珠。取得进步令人满意，而视觉量度为任何活动附加了即时满足感——食物日志、健身日志、打孔忠诚卡、软件进度条、书籍页码皆属此类。</p>
+        <p class="note">// 杰里·宋飞的坚持只关心一件事：「永不中断」天天写笑话；喜剧演员克里斯·洛克先在小夜总会测试数百个段子并随时记录效果，精挑细选后的几条重磅笑话成为新节目骨干。</p>
+      </div>
+      <div class="c5">
+        <figure class="fig" style="padding:16px 16px 0">
+          <div class="figHead"><span><b>COUNTER.VIZ</b> — 双罐机制示意</span><span>120 CALLS/DAY</span></div>
+          <div class="figSvgWrap">
+            <svg viewBox="0 0 420 210" role="img" aria-label="两个玻璃罐之间转移曲别针的示意图">
+              <g>
+                <rect x="46" y="34" width="120" height="150" rx="8" fill="none" stroke="var(--line-strong)" stroke-width="2"/>
+                <rect x="254" y="34" width="120" height="150" rx="8" fill="none" stroke="var(--line-strong)" stroke-width="2"/>
+                <g fill="var(--red)"><circle cx="70" cy="60" r="5"/><circle cx="88" cy="52" r="5"/><circle cx="106" cy="64" r="5"/><circle cx="126" cy="54" r="5"/><circle cx="144" cy="66" r="5"/><circle cx="82" cy="80" r="5"/><circle cx="104" cy="86" r="5"/><circle cx="128" cy="78" r="5"/><circle cx="146" cy="90" r="5"/><circle cx="72" cy="100" r="5"/></g>
+                <text x="106" y="172" font-size="12" font-weight="700" fill="var(--ink)" text-anchor="middle">待办罐 TO-DO</text>
+                <text x="106" y="190" font-size="10" fill="var(--ink-3)" text-anchor="middle">FILLED CLIPS ↓ 每次成功</text>
+                <path d="M176 96 h64" stroke="var(--ink)" stroke-width="1.8"/>
+                <path d="M240 96 l-11 -7 v14 z" fill="var(--ink)"/>
+                <text x="207" y="76" font-size="11" fill="var(--ink-2)" text-anchor="middle">COLD CALL ×1</text>
+                <text x="314" y="172" font-size="12" font-weight="700" fill="var(--red)" text-anchor="middle">已完成 DONE</text>
+                <text x="314" y="190" font-size="10" fill="var(--ink-3)" text-anchor="middle">可见进度 → 即时满足</text>
+              </g>
+            </svg>
+          </div>
+          <figcaption>只需看一眼罐子就知道自己做了多少事——当证据摆在面前时，人更难自欺。</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <!-- never miss twice -->
+    <div class="c12 rv cols">
+      <div class="c5 card" style="border-color:var(--warn)">
+        <span class="idxTag" style="color:var(--warn)">RECOVERY.PROTOCOL · 绝不错过两次</span>
+        <h4>查理·芒格：除非万不得已，永远不要打断复利</h4>
+        <p style="margin-top:8px">从 100 美元起步，50% 的收益率把你带到 150 美元；接下来只需亏损 33% 就被打回原点——<b>避免 33% 的损失与获得 50% 的收益等值。</b>糟糕的日子恰恰保持了你从好日子累积的复合收益：十次下蹲、五组冲刺、一个俯卧撑，做任何事都比什么都不做强。「错过的日子对你的打击大于成功的日子对你的帮助。」初犯不会毁了你，真正要命的是随之而来的重复错误——成功人士摔倒后会迅速爬起来。</p>
+      </div>
+      <div class="c7">
+        <span class="kick">策略 S9 / 问责伙伴 Accountability Partner &amp; 习惯契约 Habit Contract</span>
+        <h3 class="sub">让坏习惯的代价立即发生且当众发生</h3>
+        <p class="body">第四定律的反面同样锋利：使坏习惯令人厌恶的最快捷路径是由问责伙伴监督——一旦违约就付出<b>可见的社会成本</b>。更进一步是把口头承诺升级为书面协议：</p>
+        <div class="formula">
+          <span class="fLabel">HABIT-CONTRACT · 习惯契约模板</span>
+          <div class="fLine" style="font-size:15px;line-height:2">我<var>[姓名]</var>将于<var>[期限]</var>内保持习惯<var>[具体行为]</var>。违反时我将向<var>[问责人]</var>支付<var>[惩罚]</var>，并向<var>[证人]</var>如实报告。</div>
+          <div class="fEx"><span>EFFECT 原理</span>习惯契约可被用来增加任何行为的社会成本，它使得违背承诺公开而痛苦——即便仅仅是心理上的痛苦也足够有效。</div>
+        </div>
+        <p class="note">// 追踪应当轻装上阵的三条原书建议：①凡能量化尽量自动化（手环/账单/日历已在替你记录）；②手动追踪仅限最重要的习惯——追踪一个好过随意跟踪十个；③行动一结束立即记录：「在[当前习惯]之后，我将[追踪我的习惯]」。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============================ SEC 09 进阶战术 ============================ -->
+<section class="sec" id="sec09">
+  <div class="secHead rv">
+    <div class="secNum">09</div>
+    <div class="secIdBlock">
+      <div class="secKicker"><span>SEC.09 / ADVANCED TACTICS</span><span><i>●</i> GENES · GOLDILOCKS · MASTERY</span></div>
+      <h2 class="secTitleZh">从「单纯的好」到「真正的伟大」</h2>
+      <div class="secTitleEn">Advanced Tactics — Talent, Motivation &amp; Mastery</div>
+    </div>
+    <p class="secPunch">// 基因并不决定你的命运，而是决定你在哪些领域存在发挥特长的机会。</p>
+  </div>
+
+  <div class="secBody cols">
+    <!-- genes -->
+    <div class="c7 rv">
+      <span class="kick">第18章 揭秘天才</span>
+      <h3 class="sub">选对游戏，基因才是顺风而不是逆风</h3>
+      <p class="body">物理学家加博尔·马特的话被原书引为纲：<b>「基因可以预设，但不能预订。」</b>习惯更快的领域正是你的天赋适配区——关键在于让雄心与能力对齐。行为遗传学家罗伯特·普洛民坦言：他们已经不再检测性格是否含遗传成分，「因为我们根本找不到不受基因影响的成分」。经科学验证的「五大性格特征」是公认的性格图谱：</p>
+      <div class="tblWrap" style="margin-top:16px">
+        <table class="swiss">
+          <thead><tr><th>#</th><th>特征</th><th>谱系两端（From → To）</th><th>习惯启示</th></tr></thead>
+          <tbody>
+            <tr><td class="monoNo">1</td><td class="k">开放性</td><td>好奇与创造 ⇄ 谨慎与一丝不苟</td><td>开放者更适合引入变化的实验型习惯</td></tr>
+            <tr><td class="monoNo">2</td><td class="k">自觉性</td><td>有条理高效率 ⇄ 随意自发</td><td>自觉性高者易接受结构与追踪类工具</td></tr>
+            <tr><td class="monoNo">3</td><td class="k">外向性</td><td>活泼开朗 ⇄ 孤独保守</td><td>决定社交或独处式习惯的吸引力差异</td></tr>
+            <tr><td class="monoNo">4</td><td class="k">亲和性</td><td>友好同情 ⇄ 挑剔淡漠</td><td>亲和者更易从合作与感恩习惯获益</td></tr>
+            <tr><td class="monoNo">5</td><td class="k">神经质</td><td>焦虑敏感 ⇄ 自信平静</td><td>与杏仁核超敏相关；需要更温和的反馈节奏</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note" style="margin-top:12px">// 原书策略：在先天具备潜质的领域养成满意的习惯更容易；若目前身处不利领域——用「综合优势」换赛道、创造自己的新游戏、或者在现有游戏中做好你能控制的部分。「习惯+基因=擅长的领域。」特殊之处在于选择：固化规则对你不利就自定规则。</p>
+    </div>
+
+    <div class="c5 rv">
+      <figure class="fig">
+        <span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span>
+        <div class="figHead"><span><b>FIG.09</b> — 金发女孩准则（重绘原书图15）</span><span>YERKES-DODSON INVERTED-U</span></div>
+        <div class="figSvgWrap">
+          <svg viewBox="0 0 720 330" role="img" aria-label="动机水平随挑战难度的倒U曲线：无聊区、心流峰、焦虑区">
+            <g stroke="var(--line)" stroke-width="1">
+              <line x1="50" y1="70" x2="690" y2="70"/><line x1="50" y1="140" x2="690" y2="140"/>
+              <line x1="50" y1="210" x2="690" y2="210"/>
+            </g>
+            <g stroke="var(--ink)" stroke-width="1.8"><line x1="50" y1="40" x2="50" y2="290"/><line x1="50" y1="290" x2="690" y2="290"/></g>
+            <text transform="rotate(-90 26 240)" x="20" y="160" font-size="10.5" fill="var(--ink-3)">MOTIVATION 动机水平</text>
+            <text x="380" y="315" font-size="10.5" fill="var(--ink-3)" text-anchor="middle">CHALLENGE 挑战难度 →</text>
+            <!-- zones -->
+            <rect x="60" y="180" width="180" height="110" fill="var(--blue-soft)"/>
+            <rect x="490" y="180" width="180" height="110" fill="var(--red-soft)"/>
+            <path d="M62 282 C 170 272,220 120,370 78 S 580 200,686 270" fill="none" stroke="var(--gold)" stroke-width="3.2"/>
+            <circle cx="370" cy="78" r="6" fill="var(--gold)"/>
+            <text x="150" y="235" font-size="12.5" font-weight="700" fill="var(--blue)">无聊区 BOREDOM</text>
+            <text x="150" y="258" font-size="11" fill="var(--ink-2)">对手是 4 岁小孩</text>
+            <text x="370" y="56" font-size="12.5" font-weight="800" fill="var(--gold)" text-anchor="middle">心流 FLOW · 最佳激励峰值</text>
+            <text x="370" y="112" font-size="11" fill="var(--ink-2)" text-anchor="middle">难度 ≈ 当前能力 + 4%</text>
+            <text x="582" y="235" font-size="12.5" font-weight="700" fill="var(--red)">焦虑区 ANXIETY</text>
+            <text x="582" y="258" font-size="11" fill="var(--ink-2)" text-anchor="end">对手是费德勒</text>
+          </svg>
+        </div>
+        <figcaption>重绘自原书第19章 图15（耶克斯-多德逊法则）：人们面对一个勉强能应付的挑战时动力最充足——最佳激励水平处于枯燥乏味与焦虑不安的中点。达到心流所需的任务难度约比当前能力高出 4%。</figcaption>
+      </figure>
+    </div>
+
+    <!-- steve martin & boredom -->
+    <div class="c6 rv card"><span class="idxTag">CASE.08</span>
+      <h4>史蒂夫·马丁的十二年喜剧复利</h4>
+      <p style="margin-top:6px">他的第一场单口秀只有半场观众，掌声寥寥；此后十几年里他每周都在改良段子、扩展表演时长——但每年只加一两分钟新料，保留几个保证奏笑的老包袱。<b>「苦学十年，提高四年，然后有了疯狂成功的四年。」</b>纽约连续三天演出共卖出 45,000 张票。他用扩展而非替换的方式让习惯持续停留在心流窗口内。</p>
+    </div>
+    <div class="c6 rv card"><span class="idxTag">TRUTH.01</span>
+      <h4>成功的最大威胁不是失败，而是倦怠</h4>
+      <p style="margin-top:6px">资深举重教练的答案出乎意料：顶级选手与其他人的差别之一，是<b>谁能应付每天枯燥乏味的训练，一遍又一遍做同样的动作</b>。成功者同样会激情消退，区别是尽管觉得枯燥仍想办法坚持。老虎机每小时转轮 600 次——可变奖励把新奇感变成工业品；而真正的高手靠结构化挑战对抗单调。马基雅维利早有观察：「男人都图新鲜，全都急于改变现状。」</p>
+    </div>
+
+    <!-- mastery staircase -->
+    <div class="c7 rv">
+      <figure class="fig">
+        <span class="reg tl"></span><span class="reg tr"></span><span class="reg bl"></span><span class="reg br"></span>
+        <div class="figHead"><span><b>FIG.10</b> — 精通循环阶梯（重绘原书图16）</span><span>HABITS + DELIBERATE PRACTICE = MASTERY</span></div>
+        <div class="figSvgWrap">
+          <svg viewBox="0 0 760 300" role="img" aria-label="精通由一个又一个习惯阶梯累积而成">
+            <defs><linearGradient id="stairGlow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--red)" stop-opacity=".16"/><stop offset="1" stop-color="var(--red)" stop-opacity="0"/></linearGradient></defs>
+            <polygon points="80,270 190,214 300,270 190,326" fill="url(#stairGlow)" opacity=".9"/>
+            <g stroke="var(--ink)" stroke-width="2">
+              <path d="M80 270 h120 l55 -27 v-46" fill="none"/>
+              <path d="M135 243 h120 l55 -27 v-48" fill="none" opacity=".85"/>
+              <path d="M190 216 h120 l55 -27 v-48" fill="none" opacity=".7"/>
+              <path d="M245 189 h120 l55 -27 v-48" fill="none" opacity=".55"/>
+              <path d="M300 162 h120 l55 -27 v-48" fill="none" opacity=".4"/>
+            </g>
+            <g font-size="11.5" fill="var(--ink-2)">
+              <text x="86" y="292">习惯① 内化</text>
+              <text x="196" y="238">+ 刻意练习回到「有意识」区</text>
+              <text x="306" y="184">习惯② 内化</text>
+              <text x="418" y="128">习惯③ …</text>
+              <text x="520" y="74" font-size="13" font-weight="800" fill="var(--red)">MASTERY 精通</text>
+            </g>
+            <path d="M396 106 C480 66,560 52,672 44" fill="none" stroke="var(--red)" stroke-width="2.4" stroke-dasharray="7 5"/>
+            <path d="M672 44 l-15 -9 v17 z" fill="var(--red)"/>
+            <text x="86" y="356" font-size="11" fill="var(--ink-3)">每个习惯都建立在最后一个的基础之上，更高范围的技能被不断内化 → 自动化带来的小错误需要刻意练习来纠偏</text>
+          </svg>
+        </div>
+        <figcaption>重绘自原书第20章 图16：「习惯动作 + 刻意练习 = 精通」。自动化是有代价的——熟练之后对反馈的敏感度下降，你只是在强化而不再改善当前的习惯；运动员每次训练后记录不足并寻求改进，就是这个回路的现实版。</figcaption>
+      </figure>
+    </div>
+
+    <div class="c5 rv">
+      <span class="kick blue"> rituals / 反思与回顾的制度化</span>
+      <h3 class="sub">两份年度报告，防止身份硬化</h3>
+      <p class="body">克利尔的两个仪式各占每年数小时：<b>年终总结（12月）</b>回答三个问题——今年什么事做得比较好？什么事做得不太好？我学到了什么？<b>诚信报告（夏天）</b>回答另外三问——推动我生活和工作的核心价值观是什么？我现在生活和工作的正直程度如何？我怎样为将来设定更高的标准？马拉松冠军基普乔格每次训练后记录当天情况并寻求不足；游泳名将莱德基给自己 1–10 的健康打分并记营养睡眠，教练每周翻阅写感想。</p>
+      <div class="formula" style="margin-top:16px">
+        <span class="fLabel">ANTI-RIGIDITY · 如何不让身份变成牢笼</span>
+        <div class="fLine" style="font-size:14.5px;line-height:2">
+          「我是CEO」→ 我是怎样制作和创造东西的人<br>
+          「我是运动员」→ 我是精神坚强喜欢身体挑战的人
+        </div>
+        <div class="fEx"><span>P.GRAYHAM QUOTE</span>尽量弱化你的身份。越是让某种单一信念定义你，面临生活剧变时越难适应。「就像水在障碍物周围流动一样，你的身份应随环境变化。」</div>
+      </div>
+      <p class="note" style="margin-top:12px">// 定期反思=正常距离照镜子：从不回顾像从不照镜子（反馈过少），天天忧心每个选择则是放大镜看自己（反馈过多）。</p>
+    </div>
+  </div>
+</section>
+<!-- ============================ SEC 10 工具箱 ============================ -->
+<section class="sec" id="sec10">
+  <div class="secHead rv">
+    <div class="secNum">10</div>
+    <div class="secIdBlock">
+      <div class="secKicker"><span>SEC.10 / TOOLBOX &amp; TAKEAWAYS</span><span><i>●</i> FIELD-READY KITS</span></div>
+      <h2 class="secTitleZh">行动工具箱 · 四大定律速查 + 原文金句库</h2>
+      <div class="secTitleEn">The Toolbox — Strategy Matrix &amp; Quote Bank</div>
+    </div>
+    <p class="secPunch">// 把整本书压缩成一张表、一套模板和一排可以直接抄走的句子。</p>
+  </div>
+
+  <div class="secBody cols">
+    <div class="c12 rv">
+      <span class="kick blue">MATRIX.01 · 策略总矩阵（培养好习惯 × 戒除坏习惯）</span>
+      <div class="tblWrap">
+        <table class="swiss">
+          <thead><tr><th>定律 / 阶段</th><th>杠杆对象</th><th>培养好习惯的策略</th><th>戒除坏习惯（反用）</th></tr></thead>
+          <tbody>
+            <tr><td class="k">① 让它显而易见<br><span style="font-family:var(--mono);font-size:10px;color:var(--ink-3)">CUE 提示</span></td>
+                <td>触发信息</td>
+                <td>习惯记分卡；执行意图「我将在[时间][地点]做[事]」；习惯叠加「继[当前习惯]之后」；环境设计——一个空间一种用途</td>
+                <td>使其无从显现：移除环境中的提示物，「脱离视线，脱离心思」；别指望靠意志力硬扛</td></tr>
+            <tr><td class="k">② 让它有吸引力<br><span style="font-family:var(--mono);font-size:10px;color:var(--ink-3)">CRAVING 渴求</span></td>
+                <td>期待感</td>
+                <td>绑定喜好「需要的事 + 想做的事」；加入相关行为属正常行为的文化圈层；创造动机仪式；把「我得」改写为「我想」</td>
+                <td>使其缺乏吸引力：重新定义坏习惯，凸显其真实代价与身份成本</td></tr>
+            <tr><td class="k">③ 让它简便易行<br><span style="font-family:var(--mono);font-size:10px;color:var(--ink-3)">RESPONSE 反应</span></td>
+                <td>行动摩擦</td>
+                <td>减小阻力（因减而加）；预备好环境一步到位；掌握决定性时刻；两分钟规则建立门户习惯；先标准化再优化</td>
+                <td>使其难以施行：承诺机制锁定未来选择，雨果式锁柜；技术封锁与距离成本</td></tr>
+            <tr><td class="k">④ 让它令人愉悦<br><span style="font-family:var(--mono);font-size:10px;color:var(--ink-3)">REWARD 奖励</span></td>
+                <td>重复概率</td>
+                <td>附加符合身份的即时奖励；曲别针式视觉度量；习惯追踪法并「永不中断」；绝不连续错过两次</td>
+                <td>使其令人厌恶：问责伙伴当众监督；签订习惯契约让违约立即付出社会成本</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- templates -->
+    <div class="c12 rv" style="margin-top:6px">
+      <span class="kick blue">KITS.02 · 五张可直接抄录的模板卡</span>
+    </div>
+    <div class="c4 rv card"><span class="idxTag">KIT.01 · 执行意图</span><h4>何时何地做什么</h4><p style="margin-top:8px;font-family:var(--mono);font-size:13.5px;color:var(--ink)">我将在[时间]和[地点]做[行为]。</p><p style="margin-top:8px">示例：早晨7点，我在厨房冥想1分钟。新周期起点（周一/月初/新年）成功率更高——新的开始让人欢欣鼓舞。</p></div>
+    <div class="c4 rv card"><span class="idxTag">KIT.02 · 习惯叠加</span><h4>挂载在既有锚点之后</h4><p style="margin-top:8px;font-family:var(--mono);font-size:13.5px;color:var(--ink)">继[当前习惯]之后，我将[新习惯]。</p><p style="margin-top:8px">提示要具体到可立即执行。反向应用（戒断）：继[我想刷手机]这个冲动出现后，我将先做三次深呼吸。</p></div>
+    <div class="c4 rv card"><span class="idxTag">KIT.03 · 两分钟降维</span><h4>把宏大目标缩成启动动作</h4><p style="margin-top:8px;font-family:var(--mono);font-size:13.5px;color:var(--ink)">目标：读30本书 → 门径：读一页书</p><p style="margin-top:8px">掌握前两分钟 → 扎实 → 进入下一阶段。身体出现在健身房里本身就构成一次身份投票。</p></div>
+    <div class="c4 rv card"><span class="idxTag">KIT.04 · 绑定喜好</span><h4>需要的事换想做的事</h4><p style="margin-top:8px;font-family:var(--mono);font-size:13.5px;color:var(--ink)">只有骑健身单车时才能看奈飞。</p><p style="margin-top:8px">或者叠加版：吃完午饭说三句感谢→说完感谢才刷新闻。高频强化低频。</p></div>
+    <div class="c4 rv card"><span class="idxTag">KIT.05 · 即时奖励</span><h4>给延迟回报装上甜点</h4><p style="margin-top:8px;font-family:var(--mono);font-size:13.5px;color:var(--ink)">完成[好习惯]后立刻享受[小奖励]</p><p style="margin-top:8px">存完钱移一枚曲别针/记录一笔。奖励须与身份一致——健身后的按摩OK，酗酒式的自我犒赏不行。</p></div>
+    <div class="c4 rv card"><span class="idxTag">KIT.06 · 问责契约</span><h4>让代价公开而迅速</h4><p style="margin-top:8px;font-family:var(--mono);font-size:13.5px;color:var(--ink)">违约→向[伙伴]支付[惩罚]+如实报告</p><p style="margin-top:8px">邀请可信任的人做证人。许多读者用此法成功戒烟：让配偶每日抽查烟灰缸。</p></div>
+
+    <blockquote class="pullQuote c12 rv">
+      <p class="qZh">“小习惯不会简单相加，它们会复合。”</p>
+      <p class="qEn">Habits do not simply add up, they compound.</p>
+      <p class="qSrc">— 结论 获得持久成果的秘诀：「获得持久成果的秘诀是不断进步，永不停歇。」这就是微习惯的力量——微小的变化，显著的结果。</p>
+    </blockquote>
+
+    <!-- quote wall -->
+    <div class="c12 rv">
+      <span class="kick blue">BANK.03 · 原文金句库 QUOTE BANK</span>
+      <div class="quoteWall">
+        <div class="qCell"><div class="qTagRow"><b>Q.01</b><span>CH.01 复利观</span></div><p class="qText">你得到的结果是衡量你习惯的滞后指标。</p><p class="qFrom">—— 你的净资产、体重、知识皆是</p></div>
+        <div class="qCell"><div class="qTagRow"><b>Q.02</b><span>CH.01 轨迹论</span></div><p class="qText">你应该更关心你在当下前行的轨迹，而不是你已经取得了什么样的结果。</p><p class="qFrom">—— 你此时是辉煌还是潦倒并不重要</p></div>
+        <div class="qCell"><div class="qTagRow"><b>Q.03</b><span>CH.01 时间观</span></div><p class="qText">好习惯使时间成为你的盟友，坏习惯使时间成为你的敌人。</p><p class="qFrom">—— 正负复利的分野</p></div>
+        <div class="qCell"><div class="qTagRow"><b>Q.04</b><span>CH.01 突破观</span></div><p class="qText">你所做的努力并没有白费：它刚刚被蓄积起来。</p><p class="qFrom">—— 潜能蓄积期的安慰剂效应</p></div>
+        <div class="qCell"><div class="qTagRow"><b>Q.05</b><span>CH.01 石匠箴言</span></div><p class="qText">凿到第 101 次时石头裂成两半——我知道这不是最后那次凿击造成的，而是此前连续凿击的结果。</p><p class="qFrom">—— 雅各布·里斯，马刺队更衣室悬挂</p></div>
+        <div class="qCell"><div class="qTagRow"><b>Q.06</b><span>CH.02 身份论</span></div><p class="qText">你的身份来自你的习惯。每个行动都是投票给你想成为的人。</p><p class="qFrom">—— 目标不是跑马拉松而是成为跑步者</p></div>
+        <div class="qCell"><div class="qTagRow"><b>Q.07</b><span>CH.02 改变律</span></div><p class="qText">改变你是谁的最实际的方法，就是改变你所做的。</p><p class="qFrom">—— 每次写下一页时，你就是作家</p></div>
+        <div class="qCell"><div class="qTagRow"><b>Q.08</b><span>CH.03 自由论</span></div><p class="qText">习惯不会限制自由，它们会创造自由。</p><p class="qFrom">—— 没有建立习惯的人往往享有最少的自由</p></div>
+        <div class="qCell"><div class="qTagRow"><b>Q.09</b><span>CH.05 计划论</span></div><p class="qText">许多人认为他们缺乏做事的动力，但实际上他们真正缺乏的是明确的计划。</p><p class="qFrom">—— 执行意图消解一切模糊措辞</p></div>
+        <div class="qCell"><div class="qTagRow"><b>Q.10</b><span>CH.07 环境论</span></div><p class="qText">毅力、勇气和意志力固然重要，但增强它们的途径不是期望自己成为自律的人，而是创造一个有纪律的环境。</p><p class="qFrom">—— 自控力最强的人最少使用自控力</p></div>
+        <div class="qCell"><div class="qTagRow"><b>Q.11</b><span>CH.13 标准化</span></div><p class="qText">你必须先标准化，然后才能优化。你不能改善一个不存在的习惯。</p><p class="qFrom">—— 两分钟规则的哲学底座</p></div>
+        <div class="qCell"><div class="qTagRow"><b>Q.12</b><span>CH.15 代价律</span></div><p class="qText">习惯的第一个果实越甜，以后的果实就越苦。</p><p class="qFrom">—— 巴斯夏 · 时间不一致性的诗意版</p></div>
+        <div class="qCell"><div class="qTagRow"><b>Q.13</b><span>CH.16 断链守则</span></div><p class="qText">错过一次是意外，错过两次是一种新习惯的开始。</p><p class="qFrom">—— 成功人士摔倒后会迅速爬起来</p></div>
+        <div class="qCell"><div class="qTagRow"><b>Q.14</b><span>CH.19 倦怠警句</span></div><p class="qText">成功的最大威胁不是失败，而是倦怠。</p><p class="qFrom">—— 专业选手做的是别人不想做的事</p></div>
+        <div class="qCell"><div class="qTagRow"><b>Q.15</b><span>结论 收束句</span></div><p class="qText">如果你觉得改变自己的习惯很难，问题的根源不是你，而是你的体系。</p><p class="qFrom">—— 微小的变化，显著的结果</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ FOOTER ============================ -->
+<footer class="colophon">
+  <div class="wrap">
+    <div class="footGrid">
+      <div>
+        <h6>// COLOPHON 制本说明</h6>
+        <p class="footBig"><span class="barMark"></span>原子习惯 READING-NOTES v1.0</p>
+        <p style="margin-top:14px">设计语言：数据解构主义 × 现代瑞士主义。全部图表以 SVG 按原书插图重绘；五个交互仿真挂件全部本地运行。单文件构建，无任何外部依赖，可离线阅读。</p>
+      </div>
+      <div>
+        <h6>SOURCE 来源</h6>
+        <ul>
+          <li>[英原著] Atomic Habits © 2018 James Clear / Avery</li>
+          <li>[中译本] 《掌控习惯》迩东晨译·北京联合出版公司 2019</li>
+          <li>引文均出自该版本原文</li>
+        </ul>
+      </div>
+      <div>
+        <h6>CHAPTERS 索引</h6>
+        <ul>
+          <li><a href="#sec01">SEC.01 书籍档案</a></li>
+          <li><a href="#sec02">SEC.02 核心命题</a></li>
+          <li><a href="#sec03">SEC.03 身份认同</a></li>
+          <li><a href="#sec04">SEC.04 习惯回路</a></li>
+          <li><a href="#sec05">SEC.05 第一定律</a></li>
+        </ul>
+      </div>
+      <div>
+        <h6>DISCLAIMER 使用声明</h6>
+        <p>本文页为个人读书笔记性质的研习资料，仅供学习交流；原书版权归属原作者及出版社。所有交互数据仅存储于浏览器本地，不上传任何信息。</p>
+        <p style="margin-top:10px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--ink-3)">EOF — 微小的变化，显著的结果。TINY CHANGES, REMARKABLE RESULTS.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</main>
+<script>
+/* ============================================================
+   ATOMIC NOTES ENGINE · CORE RUNTIME (vanilla JS, no deps)
+   ============================================================ */
+(function(){
+"use strict";
+
+/* ---------- THEME ---------- */
+var root=document.documentElement;
+var body=document.body;
+var KEY="atomic-notes-theme";
+function prefersDark(){return window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches}
+function applyTheme(t){body.setAttribute("data-theme",t);try{localStorage.setItem(KEY,t)}catch(e){}}
+var saved=null;try{saved=localStorage.getItem(KEY)}catch(e){}
+applyTheme(saved||(prefersDark()?"dark":"light"));
+var themeBtn=document.getElementById("themeBtn");
+if(themeBtn){themeBtn.addEventListener("click",function(){
+  var cur=body.getAttribute("data-theme")==="dark"?"light":"dark";
+  applyTheme(cur);
+});}
+
+/* ---------- SCROLL PROGRESS ---------- */
+var bar=document.getElementById("progressBar");
+function onScroll(){
+  if(!bar)return;
+  var h=document.documentElement;
+  var max=h.scrollHeight-h.clientHeight;
+  var p=max>0?(h.scrollTop||document.body.scrollTop)/max*100:0;
+  bar.style.width=p.toFixed(2)+"%";
+}
+window.addEventListener("scroll",onScroll,{passive:true});
+window.addEventListener("resize",onScroll);
+onScroll();
+
+/* ---------- REVEAL ON SCROLL ---------- */
+var rvs=document.querySelectorAll(".rv");
+if("IntersectionObserver" in window){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add("on");io.unobserve(e.target);}
+    });
+  },{threshold:.08,rootMargin:"0px 0px -6% 0px"});
+  rvs.forEach(function(el){io.observe(el)});
+}else{
+  rvs.forEach(function(el){el.classList.add("on")});
+}
+
+/* ---------- NAV ACTIVE STATE ---------- */
+var navLinks=Array.prototype.slice.call(document.querySelectorAll(".navLinks a"));
+var secs=navLinks.map(function(a){return document.querySelector(a.getAttribute("href"))}).filter(Boolean);
+if("IntersectionObserver" in window&&secs.length){
+  var nio=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        navLinks.forEach(function(a){
+          a.classList.toggle("on",a.getAttribute("href")==="#"+e.target.id);
+        });
+      }
+    });
+  },{rootMargin:"-40% 0px -55% 0px"});
+  secs.forEach(function(s){nio.observe(s)});
+}
+
+/* ============================================================
+   SIM.01 · COMPOUND LAB
+   ============================================================ */
+var cmp={
+  days:document.getElementById("sldDays"),
+  rate:document.getElementById("sldRate"),
+  base:document.getElementById("sldBase")
+};
+if(cmp.days&&cmp.rate&&cmp.base){
+  var oDays=document.getElementById("outDays"),oRate=document.getElementById("outRate"),oBase=document.getElementById("outBase");
+  var stFinal=document.getElementById("stFinal"),stVal=document.getElementById("stVal"),stBreak=document.getElementById("stBreak");
+  var up=document.getElementById("simPathUp"),down=document.getElementById("simPathDown");
+  var gridY=document.getElementById("simGridY");
+  var dotEnd=document.getElementById("dotEnd"),labEnd=document.getElementById("labEnd");
+  var xTmax=document.getElementById("xTmax"),yLabTop=document.getElementById("yLabTop"),yLabBottom=document.getElementById("yLabBottom");
+  var liveEq=document.getElementById("liveEq");
+  var verdict=document.getElementById("cmpVerdict");
+
+  function fmt(n){
+    if(n>=1000)return n.toLocaleString("en-US",{maximumFractionDigits:0});
+    if(n>=100)return n.toFixed(0);
+    if(n>=10)return n.toFixed(1);
+    return n.toFixed(2);
+  }
+  function buildGrid(yMax){
+    var s="";
+    for(var i=1;i<=3;i++){
+      var yy=(280-i*(250/4)).toFixed(1);
+      s+='<line x1="46" y1="'+yy+'" x2="740" y2="'+yy+'"/>';
+    }
+    gridY.innerHTML=s;
+    yLabTop.textContent=fmt(yMax)+"×";
+    yLabBottom.textContent="B";
+  }
+  function updateChart(base,r,T){
+    var W=740,L=46,yb=280,top=30;
+    var vMax=base*Math.pow(1+Math.abs(r),T);
+    var scale=(yb-top)/(vMax>0?vMax:1);
+    function pt(t,val){var x=L+(W-L)*t/T;var y=yb-val*scale;return x.toFixed(1)+","+y.toFixed(1)}
+    /* sample ~60 points, log-spaced density toward the end for r>0 */
+    var ptsU=[],ptsD=[],n=90,i,t,v;
+    function toPath(a){return "M"+a[0]+" L"+a.slice(1).join(" ")}
+    for(i=0;i<=n;i++){t=T*i/n;v=base*Math.pow(1+r,t);ptsU.push(pt(t,v))}
+    for(i=0;i<=n;i++){t=T*i/n;v=base*Math.pow(1-r,t);ptsD.push(pt(t,v))}
+    up.setAttribute("d",toPath(ptsU));
+    down.setAttribute("d",toPath(ptsD));
+    var endY=parseFloat(ptsU[n].split(",")[1]);
+    dotEnd.setAttribute("cx",(L+(W-L)));dotEnd.setAttribute("cy",endY);
+    labEnd.setAttribute("x",734);labEnd.setAttribute("y",Math.max(endY-8,14));
+    labEnd.setAttribute("text-anchor","end");
+    labEnd.textContent="×"+fmt(Math.pow(1+r,T));
+    buildGrid(vMax);
+    xTmax.textContent=T+"d";
+    liveEq.innerHTML="y = "+fmt(base)+" × (1+"+(r>=0?"+":"")+r+")<sup>"+T+"</sup>";
+  }
+  function breakEvenDays(base,r,T){
+    if(r<=0)return null;
+    var target=base*1.5;
+    var need=Math.log(target/base)/Math.log(1+r);
+    if(need>T)return ">"+T;
+    return Math.ceil(need)+"天";
+  }
+  function run(){
+    var T=parseInt(cmp.days.value,10);
+    var r=parseFloat(cmp.rate.value)/100;
+    var B=parseFloat(cmp.base.value);
+    oDays.textContent=T;
+    oRate.textContent=(r>=0?"+":"")+(r*100).toFixed(2);
+    oBase.textContent=B.toFixed(1);
+    var mult=Math.pow(1+r,T);
+    stFinal.textContent="×"+fmt(mult);
+    stVal.textContent=fmt(B*mult);
+    var be=breakEvenDays(B,r,T);
+    stBreak.textContent=r<=0?"—（负利率）":(be==null?"超出周期":be);
+    updateChart(B,r,T);
+    if(verdict){
+      if(r>0.0001){
+        verdict.textContent="// 正复利：最有力的结果总是姗姗来迟。前半程几乎贴地的曲线，正是大多数人下车的地方。别在潜能蓄积期放弃。";
+      }else if(r<-0.0001){
+        verdict.textContent="// 负复利：时间为敌时，年终残值仅为起点的 ≈"+fmt(Math.pow(1-Math.abs(r),T))+"。第一步是止损——绝不连续错过两次。";
+      }else{
+        verdict.textContent="// 零改进率：原地踏步的轨迹是一条水平线。习惯的中性态并不存在——不进即退。";
+      }
+    }
+  }
+  ["input","change"].forEach(function(ev){
+    cmp.days.addEventListener(ev,run);cmp.rate.addEventListener(ev,run);cmp.base.addEventListener(ev,run);
+  });
+  var chips=document.querySelectorAll("#cmpPresets .presetChip");
+  chips.forEach(function(ch){
+    ch.addEventListener("click",function(){
+      chips.forEach(function(c){c.classList.remove("on")});
+      ch.classList.add("on");
+      cmp.rate.value=ch.getAttribute("data-r");
+      cmp.days.value=ch.getAttribute("data-t");
+      run();
+    });
+  });
+  run();
+}
+
+})();
+</script>
+<script>
+/* ============================================================
+   SIM.02 – SIM.05 · INTERACTIVE KITS
+   ============================================================ */
+(function(){
+"use strict";
+
+/* ---------- SIM.02 · HABIT STACK BUILDER ---------- */
+var selA=document.getElementById("selAnchor"),inpN=document.getElementById("inpNewHabit");
+var btnG=document.getElementById("btnGenStack"),outL=document.getElementById("stackOutLine"),tips=document.getElementById("stackTips");
+if(selA&&btnG){
+  btnG.addEventListener("click",function(){
+    var a=(selA.value||"").trim().replace(/之后$/,""),n=(inpN.value||"").trim();
+    if(!n){
+      tips.textContent="// ⚠ 新习惯为空。原书示例：读一页书、做三次深呼吸、写下今日待办……请填入一个两分钟内能完成的行为。";
+      return;
+    }
+    outL.innerHTML="继<var>"+a+"</var>之后，我将<var>"+n.replace(/</g,"&lt;")+"</var>。";
+    var ok=n.length>=3&&n.length<=18;
+    tips.textContent=ok
+      ?"// ✅ 已生成合格叠加句 · 字数适中、行为具体。要诀：提示越具体越可立即执行；同链叠加不宜超过三层。"
+      :"// 建议：新习惯长度以 4–16 字为宜，且必须是「可立即开始」的具体动作而非抽象目标（写「读一页书」，而不是「多读书」）。";
+  });
+}
+
+/* ---------- SIM.03 · FRICTION CONSOLE ---------- */
+var frItems=document.querySelectorAll("#simFriction .frItem[data-side]");
+var mG=document.getElementById("meterGood"),mB=document.getElementById("meterBad"),frTx=document.getElementById("frText");
+var SUM_G=54,SUM_B=46;
+if(frItems.length&&mG&&mB){
+  function refreshFr(){
+    var g=0,b=0,cnt=0;
+    frItems.forEach(function(it){
+      if(it.classList.contains("onGood")){g+=parseInt(it.getAttribute("data-w"),10);cnt++}
+      if(it.classList.contains("onBad")){b+=parseInt(it.getAttribute("data-w"),10);cnt++}
+    });
+    mG.style.width=Math.round(g/SUM_G*100)+"%";
+    mB.style.width=Math.round(b/SUM_B*100)+"%";
+    if(frTx){
+      if(cnt===0)frTx.textContent="全部处于默认状态：点击左侧卡片，把环境向对你有利的方向倾斜。";
+      else if(cnt<3)frTx.textContent="已激活 "+cnt+" 项改造。建议继续叠加：摩擦系数每降低一分，行为的启动概率就上升一分——「因减而加」。";
+      else frTx.textContent="已激活 "+cnt+" 项改造。你现在的布局正是第7章的理想状态：好习惯近在咫尺，坏习惯需要穿越阻力。纪律性强的人只是很少置身诱惑之中。";
+    }
+  }
+  frItems.forEach(function(it){it.addEventListener("click",function(){var side=it.getAttribute("data-side")==="good"?"onGood":"onBad";it.classList.toggle(side);refreshFr()})});
+  refreshFr();
+}
+
+/* ---------- SIM.04 · MINDSET REFRAMER ---------- */
+var RFX=[
+  {o:"我得早起去健身",n:"我想变得强壮，所以我起床",note:"视负担为机遇"},
+  {o:"我得给客户打电话",n:"我又得到一次赢下订单的机会",note:"从义务到筹码"},
+  {o:"我得为家人做晚饭",n:"我想为家人掌勺，这是我的表达",note:"同一件事，两种真话"},
+  {o:"我必须停止刷手机",n:"我要把时间还给真正在乎的事",note:"指向渴望而非恐惧"},
+  {o:"我今天不在状态，先算了",n:"糟糕的状态更要坚持——哪怕做得更少",note:"身份大于表现"},
+  {o:"我又失败了，前功尽弃",n:"错过一次是意外，我只输了一票；多数选票仍然在我手里",note:"绝不错过两次"}
+];
+var rg=document.getElementById("reframeGrid");
+if(rg){
+  var rfDone=document.getElementById("rfDone"),rfMsg=document.getElementById("rfMsg");
+  var total=RFX.length,doneC=0;
+  RFX.forEach(function(pair,i){
+    var c=document.createElement("div");
+    c.className="reframeCard c4";
+    c.setAttribute("role","button");c.setAttribute("tabindex","0");
+    c.innerHTML='<span class="hint">REFRAME.0'+(i+1)+'</span>'
+      +'<p class="oldTx">'+pair.o+'</p>'
+      +'<div class="arrowSw">↧ 点击重构 ↧</div>'
+      +'<p class="newTx">'+pair.n+'<span style="display:block;font-family:var(--mono);font-size:10px;font-weight:400;color:var(--red);letter-spacing:.14em;margin-top:8px">'+pair.note+'</span></p>';
+    function flip(){
+      if(c.classList.toggle("done")){
+        doneC++;
+      }else{
+        doneC--;
+        pair.revealed=false;
+      }
+      rfDone.textContent=doneC+" / "+total;
+      if(doneC===total){rfMsg.textContent="完成 ✔ 重构不是自欺——两种说法都为真，你选择了更有生产力的那一种。"}
+      else if(doneC>0){rfMsg.textContent="已重构 "+doneC+" 条 · 继续保持这个视角"}
+      else{rfMsg.textContent="点击任意卡片开始"}
+    }
+    c.addEventListener("click",flip);
+    c.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();flip()}});
+    rg.appendChild(c);
+  });
+}
+
+/* ---------- SIM.05 · HABIT TRACKER ---------- */
+var tkGrid=document.getElementById("trkGrid");
+if(tkGrid){
+  var selM=document.getElementById("trkMonth");
+  var tkCurrent=document.getElementById("tkCurrent"),tkBest=document.getElementById("tkBest"),
+      tkRate=document.getElementById("tkRate"),tkTotal=document.getElementById("tkTotal"),
+      missAlert=document.getElementById("missAlert"),
+      btnSeed=document.getElementById("btnSeed"),btnReset=document.getElementById("btnReset");
+  var DAYS={2025:{"2025-07":31,"2025-08":31}};
+  /* 演示锚点：视为“今天”的日期 */
+  var ANCHOR={"2025-07":31,"2025-08":27};
+  var KEYT="atomic-notes-tracker";
+  var state={};
+  try{
+    var raw=localStorage.getItem(KEYT);
+    if(raw)state=JSON.parse(raw)||{};
+  }catch(e){}
+  function ensure(mk){if(!state[mk])state[mk]={};return state[mk]}
+  function save(){try{localStorage.setItem(KEYT,JSON.stringify(state))}catch(e){}}
+
+  function render(){
+    var mk=selM.value,y=mk.split("-")[0];
+    var nD=DAYS[y][mk],anchor=ANCHOR[mk];
+    var st=ensure(mk);
+    var html="";
+    var DOW=["日","一","二","三","四","五","六"];
+    var first=new Date(2025,parseInt(mk.slice(5),10)-1,1).getDay();
+    /* 首行星期标签 */
+    html+='<div class="trkHeadRow" style="grid-column:1/-1;display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:4px">';
+    DOW.forEach(function(d){html+='<span style="font-family:var(--mono);font-size:10px;color:var(--ink-3);text-align:center;letter-spacing:.1em">'+d+'</span>'});
+    html+="</div>";
+    for(var i=0;i<first;i++)html+='<span></span>';
+    for(var d=1;d<=nD;d++){
+      var cls="trkDay";
+      var dow=new Date(2025,parseInt(mk.slice(5),10)-1,d).getDay();
+      if(dow===0||dow===6)cls+=" wk";
+      if(st[d])cls+=" done";
+      else if(d<anchor)cls+=" missed";
+      if(d===anchor)cls+=" today";
+      if(d>anchor)cls+=" future";
+      html+='<button type="button" class="'+cls+'" data-d="'+d+'" aria-label="'+mk+'-'+d+' 打卡切换">'+d+"</button>";
+    }
+    tkGrid.innerHTML=html;
+    tkGrid.style.gridTemplateColumns="repeat(7,minmax(38px,54px))";
+    tkGrid.style.justifyContent="start";
+    tkGrid.style.maxWidth="460px";
+    Array.prototype.forEach.call(tkGrid.querySelectorAll(".trkDay"),function(el){
+      el.addEventListener("click",function(){
+        var dv=el.getAttribute("data-d");
+        if(el.classList.contains("future"))return;
+        var s=ensure(mk);
+        if(s[dv])delete s[dv];else s[dv]=1;
+        save();render();
+      });
+    });
+    stats(mk,nD,anchor,st);
+  }
+
+  function stats(mk,nD,anchor,st){
+    var totalDays=0,cnt=0;
+    for(var d=1;d<=anchor;d++){
+      totalDays++;
+      if(st[d])cnt++;
+    }
+    var rate=totalDays?Math.round(cnt/totalDays*100):0;
+    var best=0,cur=0,gap=false;
+    for(var j=1;j<=anchor;j++){
+      if(st[j]){cur++;if(cur>best)best=cur}
+      else cur=0;
+    }
+    /* 当前streak：从锚点向前数 */
+    var cStreak=0,k=anchor;
+    while(k>=1&&st[k]){cStreak++;k--}
+    if(anchor>=1&&!st[anchor]){cStreak=0;k=anchor-1;while(k>=1&&st[k]){cStreak++;k--}}
+    tkCurrent.textContent=cStreak+" 天";
+    tkBest.textContent=best+" 天";
+    tkRate.textContent=rate+"%";
+    tkTotal.textContent=cnt;
+    /* never-miss-twice detector */
+    gap=false;
+    for(var m=2;m<anchor;m++){
+      if(!st[m]&&st[m-1]&&st[m+1]){gap=true;break}
+    }
+    if(missAlert)missAlert.classList.toggle("show",gap&&!tkTotal.disabled);
+  }
+
+  if(btnSeed){
+    btnSeed.addEventListener("click",function(){
+      var mk=selM.value,anchor=ANCHOR[mk],s={};
+      for(var d=1;d<=anchor;d++){ if(d%9!==2&&d%11!==5)s[d]=1 }
+      /* 制造一个单日断点，触发 NEVER-MISS-TWICE 提示 */
+      delete s[Math.max(2,Math.floor(anchor*0.55))];
+      state[mk]=s;save();render();
+    });
+  }
+  if(btnReset){
+    btnReset.addEventListener("click",function(){
+      state[selM.value]={};save();render();
+    });
+  }
+  if(selM)selM.addEventListener("change",render);
+  render();
+}
+
+})();
+</script>
+</body>
+</html>

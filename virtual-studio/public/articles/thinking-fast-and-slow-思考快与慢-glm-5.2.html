@@ -1,0 +1,2596 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>思考，快与慢 · 原子朋克知识库</title>
+<style>
+/* ============================================
+   思考，快与慢 · 单文件知识库
+   风格：极繁主义 × 复古原子朋克 Atompunk
+   作者：丹尼尔·卡尼曼 Daniel Kahneman
+   ============================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* 浅色模式 - 原子时代调色板 */
+  --bg: #f1e6cc;
+  --bg-alt: #ebdfc1;
+  --paper: #fbf3dc;
+  --paper-2: #fff8e7;
+  --ink: #1c1410;
+  --ink-soft: #4a3a2a;
+  --ink-muted: #7a6a52;
+  --primary: #d44d1a;
+  --primary-dark: #a83a10;
+  --secondary: #1d6e6e;
+  --secondary-light: #2d8585;
+  --accent: #d4a017;
+  --accent-2: #c93b3b;
+  --line: #2a1f17;
+  --grid: rgba(42, 31, 23, 0.08);
+  --shadow: rgba(28, 20, 16, 0.18);
+  --halftone: rgba(212, 77, 26, 0.12);
+  --card-border: #2a1f17;
+  --quote-bg: #ebdfc1;
+}
+
+[data-theme="dark"] {
+  --bg: #0a1418;
+  --bg-alt: #0f1e24;
+  --paper: #122830;
+  --paper-2: #142c34;
+  --ink: #f5ecd9;
+  --ink-soft: #d4c4a8;
+  --ink-muted: #9a8a6e;
+  --primary: #ff7a3d;
+  --primary-dark: #ff9d6b;
+  --secondary: #5eead4;
+  --secondary-light: #7ff0db;
+  --accent: #fbbf24;
+  --accent-2: #ff5757;
+  --line: #5eead4;
+  --grid: rgba(94, 234, 212, 0.07);
+  --shadow: rgba(0, 0, 0, 0.5);
+  --halftone: rgba(255, 122, 61, 0.12);
+  --card-border: #5eead4;
+  --quote-bg: #142c34;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; scroll-padding-top: 110px; }
+
+body {
+  font-family: Georgia, 'Times New Roman', "宋体", "PingFang SC", "Noto Serif SC", serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.75;
+  overflow-x: hidden;
+  min-height: 100vh;
+  transition: background 0.5s ease, color 0.5s ease;
+}
+
+/* 半色调圆点背景 */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.7;
+}
+
+/* 原子轨道装饰背景 */
+body::after {
+  content: '';
+  position: fixed;
+  top: -200px;
+  right: -200px;
+  width: 600px;
+  height: 600px;
+  border: 2px solid var(--halftone);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  box-shadow:
+    0 0 0 60px transparent,
+    inset 0 0 0 30px transparent;
+  background:
+    radial-gradient(circle, transparent 30%, var(--halftone) 30.5%, transparent 31%),
+    radial-gradient(circle, transparent 45%, var(--halftone) 45.5%, transparent 46%),
+    radial-gradient(circle, transparent 60%, var(--halftone) 60.5%, transparent 61%);
+  opacity: 0.4;
+  animation: slow-spin 80s linear infinite;
+}
+
+@keyframes slow-spin { to { transform: rotate(360deg); } }
+
+::view-transition-old(root), ::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) { z-index: 1; }
+::view-transition-new(root) { z-index: 9999; }
+
+/* ===== 预加载屏 ===== */
+#preloader {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+#preloader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.pre-atom {
+  position: relative;
+  width: 140px;
+  height: 140px;
+}
+.pre-atom::before {
+  content: '';
+  position: absolute;
+  inset: 50%;
+  width: 16px;
+  height: 16px;
+  background: var(--primary);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 20px var(--primary);
+}
+.pre-atom .orbit {
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--line);
+  border-radius: 50%;
+  opacity: 0.6;
+}
+.pre-atom .orbit:nth-child(1) { transform: rotate(0deg); animation: orbit1 3s linear infinite; }
+.pre-atom .orbit:nth-child(2) { transform: rotate(60deg); animation: orbit2 3s linear infinite; }
+.pre-atom .orbit:nth-child(3) { transform: rotate(120deg); animation: orbit3 3s linear infinite; }
+.pre-atom .electron {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--accent);
+  border-radius: 50%;
+  top: -5px;
+  left: 50%;
+  margin-left: -5px;
+  box-shadow: 0 0 12px var(--accent);
+}
+.pre-atom .orbit:nth-child(2) .electron { background: var(--secondary); box-shadow: 0 0 12px var(--secondary); }
+.pre-atom .orbit:nth-child(3) .electron { background: var(--accent-2); box-shadow: 0 0 12px var(--accent-2); }
+
+@keyframes orbit1 { to { transform: rotate(360deg); } }
+@keyframes orbit2 { from { transform: rotate(60deg); } to { transform: rotate(420deg); } }
+@keyframes orbit3 { from { transform: rotate(120deg); } to { transform: rotate(480deg); } }
+
+.pre-title {
+  font-family: Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: 0.4em;
+  color: var(--ink);
+  text-transform: uppercase;
+}
+.pre-sub {
+  font-size: 0.8rem;
+  letter-spacing: 0.6em;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+}
+.pre-bar {
+  width: 280px;
+  height: 4px;
+  background: var(--bg-alt);
+  border: 1px solid var(--line);
+  position: relative;
+  overflow: hidden;
+}
+.pre-bar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 0%;
+  background: var(--primary);
+  animation: loadbar 1.8s ease-out forwards;
+}
+@keyframes loadbar { to { width: 100%; } }
+
+.pre-pct {
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  letter-spacing: 0.2em;
+}
+
+/* ===== 顶部导航 ===== */
+#topnav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 72px;
+  background: var(--paper);
+  border-bottom: 3px double var(--line);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  gap: 32px;
+  box-shadow: 0 4px 0 var(--halftone), 0 8px 20px var(--shadow);
+  transition: background 0.4s, border-color 0.4s;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.brand-mark {
+  width: 40px;
+  height: 40px;
+  position: relative;
+  flex-shrink: 0;
+}
+.brand-mark svg { width: 100%; height: 100%; }
+.brand-text {
+  font-family: Georgia, serif;
+  font-weight: 900;
+  font-size: 1.05rem;
+  letter-spacing: 0.15em;
+  color: var(--ink);
+  text-transform: uppercase;
+  line-height: 1;
+}
+.brand-text small {
+  display: block;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  color: var(--primary);
+  margin-top: 4px;
+  font-weight: 700;
+}
+
+.toc-wrap {
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.toc-wrap::-webkit-scrollbar { display: none; }
+
+.toc-top {
+  display: flex;
+  gap: 4px;
+  list-style: none;
+  align-items: center;
+  justify-content: center;
+}
+.toc-top li a {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  text-decoration: none;
+  border: 1.5px solid transparent;
+  border-radius: 2px;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+  position: relative;
+  font-family: Georgia, serif;
+  text-transform: uppercase;
+}
+.toc-top li a::before {
+  content: '';
+  position: absolute;
+  left: -2px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  background: var(--primary);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.toc-top li a:hover {
+  color: var(--primary);
+  border-color: var(--line);
+  background: var(--paper-2);
+  transform: translateY(-1px);
+}
+.toc-top li a.active {
+  color: var(--paper-2);
+  background: var(--primary);
+  border-color: var(--primary);
+}
+.toc-top li a.active::before { opacity: 0; }
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.theme-toggle {
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--line);
+  background: var(--paper-2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.theme-toggle:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  transform: rotate(15deg);
+}
+.theme-toggle svg {
+  width: 22px;
+  height: 22px;
+  stroke: var(--ink);
+  fill: none;
+  stroke-width: 2;
+  transition: stroke 0.3s;
+}
+.theme-toggle:hover svg { stroke: var(--paper-2); }
+
+.menu-btn {
+  display: none;
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--line);
+  background: var(--paper-2);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+.menu-btn span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--ink);
+  position: relative;
+}
+.menu-btn span::before, .menu-btn span::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--ink);
+}
+.menu-btn span::before { top: -6px; }
+.menu-btn span::after { top: 6px; }
+
+/* ===== 抽屉式移动端导航 ===== */
+#drawer {
+  position: fixed;
+  top: 0;
+  right: -320px;
+  width: 300px;
+  height: 100vh;
+  background: var(--paper);
+  border-left: 3px double var(--line);
+  z-index: 1100;
+  padding: 80px 24px 24px;
+  transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  overflow-y: auto;
+}
+#drawer.open { right: 0; }
+#drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(4px);
+  z-index: 1050;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s, visibility 0.4s;
+}
+#drawer-backdrop.show { opacity: 1; visibility: visible; }
+
+.drawer-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--line);
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: var(--ink);
+  border-radius: 50%;
+}
+.toc-drawer {
+  list-style: none;
+}
+.toc-drawer li {
+  margin-bottom: 8px;
+}
+.toc-drawer li a {
+  display: block;
+  padding: 12px 16px;
+  color: var(--ink-soft);
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border-left: 3px solid transparent;
+  transition: all 0.25s;
+  font-family: Georgia, serif;
+}
+.toc-drawer li a:hover, .toc-drawer li a.active {
+  color: var(--primary);
+  border-left-color: var(--primary);
+  background: var(--paper-2);
+}
+
+/* ===== 主容器 ===== */
+main {
+  position: relative;
+  z-index: 1;
+  padding-top: 72px;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* ===== Hero ===== */
+.hero {
+  min-height: calc(100vh - 72px);
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 60px 32px;
+  overflow: hidden;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 60px;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 16px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 0.7rem;
+  letter-spacing: 0.4em;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+  font-family: Georgia, serif;
+}
+.hero-tag::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.4); }
+}
+
+.hero-title {
+  font-family: Georgia, serif;
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 900;
+  line-height: 0.95;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+  text-transform: none;
+}
+.hero-title .accent {
+  color: var(--primary);
+  font-style: italic;
+  display: inline-block;
+  position: relative;
+}
+.hero-title .accent::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: var(--accent);
+  z-index: -1;
+  opacity: 0.6;
+}
+
+.hero-subtitle {
+  font-size: 1.15rem;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  margin-bottom: 36px;
+  max-width: 560px;
+  font-style: italic;
+}
+
+.hero-meta {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  padding: 28px;
+  background: var(--paper);
+  border: 2px solid var(--line);
+  position: relative;
+  box-shadow: 8px 8px 0 var(--halftone);
+}
+.hero-meta::before, .hero-meta::after {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background: var(--primary);
+  border-radius: 50%;
+}
+.hero-meta::before { top: -12px; left: -12px; }
+.hero-meta::after { bottom: -12px; right: -12px; }
+
+.meta-item {
+  border-left: 3px solid var(--primary);
+  padding-left: 14px;
+}
+.meta-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+.meta-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.meta-value small {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
+
+/* Hero 装饰 */
+.hero-visual {
+  position: relative;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-visual svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 30px var(--halftone));
+}
+
+.scroll-cue {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.7rem;
+  letter-spacing: 0.4em;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  animation: bob 2s ease-in-out infinite;
+}
+.scroll-cue::after {
+  content: '';
+  width: 1px;
+  height: 30px;
+  background: var(--ink-muted);
+}
+@keyframes bob {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-8px); }
+}
+
+/* ===== Section 通用 ===== */
+section {
+  padding: 100px 0;
+  position: relative;
+}
+
+.section-header {
+  margin-bottom: 60px;
+  position: relative;
+}
+.section-num {
+  font-family: Georgia, serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.5em;
+  color: var(--primary);
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-num::before {
+  content: '';
+  width: 40px;
+  height: 2px;
+  background: var(--primary);
+}
+.section-title {
+  font-family: Georgia, serif;
+  font-size: clamp(2rem, 4.5vw, 3.5rem);
+  font-weight: 900;
+  color: var(--ink);
+  line-height: 1.05;
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+.section-title em {
+  font-style: italic;
+  color: var(--primary);
+}
+.section-lead {
+  font-size: 1.1rem;
+  color: var(--ink-soft);
+  max-width: 720px;
+  line-height: 1.8;
+  font-style: italic;
+}
+
+/* ===== 双系统对比卡片 ===== */
+.systems-grid {
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr;
+  gap: 0;
+  align-items: stretch;
+  margin-bottom: 60px;
+}
+
+.system-card {
+  background: var(--paper);
+  border: 2.5px solid var(--line);
+  padding: 36px;
+  position: relative;
+  box-shadow: 10px 10px 0 var(--halftone);
+}
+.system-card.sys1 {
+  border-top: 12px solid var(--primary);
+}
+.system-card.sys2 {
+  border-top: 12px solid var(--secondary);
+}
+
+.system-card .badge {
+  position: absolute;
+  top: -18px;
+  left: 24px;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 6px 14px;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.system-card.sys2 .badge { background: var(--secondary); }
+
+.system-card h3 {
+  font-family: Georgia, serif;
+  font-size: 1.8rem;
+  font-weight: 900;
+  margin: 16px 0 8px;
+  color: var(--ink);
+}
+.system-card .h3-sub {
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+.system-card ul {
+  list-style: none;
+}
+.system-card ul li {
+  padding: 10px 0 10px 24px;
+  border-bottom: 1px dashed var(--grid);
+  position: relative;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+.system-card ul li:last-child { border-bottom: none; }
+.system-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 18px;
+  width: 12px;
+  height: 12px;
+  background: var(--accent);
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+.system-card.sys2 ul li::before { background: var(--secondary); }
+
+.system-vs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--ink);
+  letter-spacing: 0.2em;
+  position: relative;
+}
+.system-vs::before, .system-vs::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: 1px;
+  height: 30%;
+  background: var(--line);
+  opacity: 0.4;
+}
+.system-vs::before { top: 0; }
+.system-vs::after { bottom: 0; }
+
+/* ===== 前景理论 SVG ===== */
+.diagram-frame {
+  background: var(--paper);
+  border: 2.5px solid var(--line);
+  padding: 40px;
+  margin: 40px 0;
+  position: relative;
+  box-shadow: 8px 8px 0 var(--halftone);
+}
+.diagram-frame::before {
+  content: '';
+  position: absolute;
+  top: 12px; left: 12px; right: 12px; bottom: 12px;
+  border: 1px solid var(--line);
+  pointer-events: none;
+  opacity: 0.3;
+}
+.diagram-caption {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  font-weight: 700;
+  text-align: center;
+}
+.diagram-title {
+  font-family: Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 24px;
+  color: var(--ink);
+}
+
+.prospect-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+.prospect-svg {
+  width: 100%;
+  height: auto;
+}
+.prospect-notes h4 {
+  font-family: Georgia, serif;
+  font-size: 1.1rem;
+  color: var(--primary);
+  margin-bottom: 10px;
+  letter-spacing: 0.05em;
+}
+.prospect-notes p {
+  color: var(--ink-soft);
+  margin-bottom: 18px;
+  font-size: 0.95rem;
+}
+.prospect-notes .key {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 2px 8px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin: 0 2px;
+}
+
+/* ===== 四重模式 ===== */
+.fourfold {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 2.5px solid var(--line);
+  background: var(--paper);
+  margin: 40px 0;
+  position: relative;
+  box-shadow: 8px 8px 0 var(--halftone);
+}
+.fourfold-cell {
+  padding: 28px;
+  border-right: 2px solid var(--line);
+  border-bottom: 2px solid var(--line);
+  position: relative;
+  min-height: 200px;
+}
+.fourfold-cell:nth-child(2n) { border-right: none; }
+.fourfold-cell:nth-child(n+3) { border-bottom: none; }
+
+.fourfold-cell .quad-num {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-family: Georgia, serif;
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--halftone);
+  line-height: 1;
+}
+.fourfold-cell .quad-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: var(--primary);
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+.fourfold-cell .quad-title {
+  font-family: Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  margin-bottom: 12px;
+  color: var(--ink);
+}
+.fourfold-cell .quad-desc {
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+.fourfold-cell .quad-icon {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  margin-bottom: 12px;
+}
+
+/* ===== 偏误卡片网格 ===== */
+.bias-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.bias-card {
+  background: var(--paper);
+  border: 2px solid var(--line);
+  padding: 24px;
+  position: relative;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+.bias-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 6px 6px 0 var(--primary);
+}
+.bias-card::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 30px;
+  height: 30px;
+  border-top: 4px solid var(--accent);
+  border-left: 4px solid var(--accent);
+}
+.bias-card::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 30px;
+  height: 30px;
+  border-bottom: 4px solid var(--secondary);
+  border-right: 4px solid var(--secondary);
+}
+.bias-num {
+  font-family: Georgia, serif;
+  font-size: 0.75rem;
+  color: var(--primary);
+  letter-spacing: 0.3em;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.bias-name {
+  font-family: Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.bias-en {
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+  font-style: italic;
+}
+.bias-desc {
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  line-height: 1.65;
+}
+.bias-eg {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--grid);
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  font-style: italic;
+}
+.bias-eg strong { color: var(--primary); font-style: normal; }
+
+/* ===== 案例 ===== */
+.case-block {
+  display: grid;
+  grid-template-columns: 80px 1fr 1fr;
+  gap: 30px;
+  padding: 36px;
+  background: var(--paper);
+  border: 2.5px solid var(--line);
+  margin-bottom: 24px;
+  align-items: start;
+  position: relative;
+  box-shadow: 6px 6px 0 var(--halftone);
+}
+.case-num {
+  font-family: Georgia, serif;
+  font-size: 4rem;
+  font-weight: 900;
+  color: var(--primary);
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+}
+.case-content h3 {
+  font-family: Georgia, serif;
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+.case-content .case-q {
+  font-style: italic;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+  padding: 12px;
+  background: var(--bg-alt);
+  border-left: 4px solid var(--accent);
+  font-size: 0.92rem;
+}
+.case-content p {
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  margin-bottom: 8px;
+}
+.case-result {
+  padding: 16px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 0.88rem;
+  border: 2px solid var(--line);
+}
+.case-result .label {
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+.case-result strong {
+  font-family: Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--paper);
+}
+.case-result .stat {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 6px 0;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+.case-result .stat:last-child { border-bottom: none; }
+.case-result .stat-num {
+  font-family: Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--accent);
+}
+.case-result .stat-desc {
+  font-size: 0.78rem;
+  color: var(--paper);
+  opacity: 0.8;
+}
+
+/* ===== 峰终定律 ===== */
+.peak-end-wrap {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.peak-end-text h3 {
+  font-family: Georgia, serif;
+  font-size: 1.6rem;
+  margin-bottom: 16px;
+  color: var(--ink);
+}
+.peak-end-text p {
+  color: var(--ink-soft);
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+}
+.peak-end-text .formula {
+  background: var(--paper);
+  border: 2px dashed var(--primary);
+  padding: 16px 20px;
+  margin: 20px 0;
+  font-family: Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+.peak-end-text .formula em {
+  font-style: italic;
+  color: var(--ink);
+}
+
+/* ===== 工具箱 ===== */
+.toolbox-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+.tool-card {
+  background: var(--paper);
+  border: 2px solid var(--line);
+  padding: 24px;
+  text-align: center;
+  position: relative;
+  transition: all 0.3s;
+}
+.tool-card:hover {
+  background: var(--ink);
+  color: var(--paper);
+  transform: translateY(-4px) rotate(-1deg);
+}
+.tool-card:hover .tool-icon { color: var(--accent); }
+.tool-card:hover h4, .tool-card:hover p { color: var(--paper); }
+.tool-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s;
+}
+.tool-card h4 {
+  font-family: Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 900;
+  margin-bottom: 8px;
+  color: var(--ink);
+  transition: color 0.3s;
+}
+.tool-card p {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  transition: color 0.3s;
+}
+.tool-num {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+  letter-spacing: 0.1em;
+}
+
+/* ===== 金句 ===== */
+.quotes-section {
+  background: var(--bg-alt);
+  border-top: 3px double var(--line);
+  border-bottom: 3px double var(--line);
+}
+.quote-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  margin-top: 40px;
+}
+.quote-card {
+  background: var(--paper);
+  padding: 36px 36px 36px 60px;
+  position: relative;
+  border: 2px solid var(--line);
+  font-family: Georgia, serif;
+  box-shadow: 6px 6px 0 var(--halftone);
+}
+.quote-card::before {
+  content: '"';
+  position: absolute;
+  top: 0;
+  left: 16px;
+  font-size: 5rem;
+  font-weight: 900;
+  color: var(--primary);
+  line-height: 1;
+  font-family: Georgia, serif;
+}
+.quote-card .q-text {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--ink);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+.quote-card .q-attr {
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.quote-card .q-attr::before {
+  content: '— ';
+  color: var(--primary);
+}
+
+/* ===== 渐显动画 ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.stagger > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.stagger.visible > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+.stagger.visible > *:nth-child(1) { transition-delay: 0.05s; }
+.stagger.visible > *:nth-child(2) { transition-delay: 0.12s; }
+.stagger.visible > *:nth-child(3) { transition-delay: 0.19s; }
+.stagger.visible > *:nth-child(4) { transition-delay: 0.26s; }
+.stagger.visible > *:nth-child(5) { transition-delay: 0.33s; }
+.stagger.visible > *:nth-child(6) { transition-delay: 0.4s; }
+.stagger.visible > *:nth-child(7) { transition-delay: 0.47s; }
+.stagger.visible > *:nth-child(8) { transition-delay: 0.54s; }
+.stagger.visible > *:nth-child(9) { transition-delay: 0.61s; }
+
+/* SVG 路径绘制 */
+.draw-path {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  transition: stroke-dashoffset 2s ease;
+}
+.draw-path.drawn {
+  stroke-dashoffset: 0;
+}
+
+/* ===== 滚动感知文字 ===== */
+.insight-line {
+  font-family: Georgia, serif;
+  font-size: clamp(1.3rem, 2.5vw, 2rem);
+  font-weight: 700;
+  text-align: center;
+  margin: 60px auto;
+  max-width: 900px;
+  line-height: 1.6;
+  color: var(--ink);
+  padding: 30px 0;
+  position: relative;
+}
+.insight-line::before, .insight-line::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background: var(--primary);
+}
+.insight-line::before { top: 0; }
+.insight-line::after { bottom: 0; }
+.insight-line em {
+  color: var(--primary);
+  font-style: italic;
+}
+
+/* ===== 数字统计 ===== */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 40px;
+  margin: 40px 0;
+  border: 2.5px solid var(--line);
+  position: relative;
+  box-shadow: 8px 8px 0 var(--halftone);
+}
+.stat-block {
+  text-align: center;
+  padding: 0 20px;
+  border-right: 1px solid rgba(255,255,255,0.15);
+}
+.stat-block:last-child { border-right: none; }
+.stat-block .num {
+  font-family: Georgia, serif;
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 8px;
+  display: block;
+}
+.stat-block .label {
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  color: var(--paper);
+  opacity: 0.8;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+/* ===== Footer ===== */
+footer {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 60px 32px 40px;
+  border-top: 6px solid var(--primary);
+  position: relative;
+  z-index: 2;
+}
+.footer-grid {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+.footer-brand h3 {
+  font-family: Georgia, serif;
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+  color: var(--paper);
+}
+.footer-brand p {
+  font-size: 0.9rem;
+  opacity: 0.7;
+  line-height: 1.7;
+}
+.footer-col h4 {
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: var(--accent);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+.footer-col ul { list-style: none; }
+.footer-col ul li {
+  padding: 6px 0;
+  font-size: 0.88rem;
+  opacity: 0.8;
+}
+.footer-bottom {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  opacity: 0.6;
+  letter-spacing: 0.1em;
+}
+
+/* 装饰星爆 */
+.starburst {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background: var(--primary);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 1100px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-visual { max-width: 400px; margin: 0 auto; }
+  .prospect-wrap, .peak-end-wrap { grid-template-columns: 1fr; }
+  .bias-grid { grid-template-columns: repeat(2, 1fr); }
+  .toolbox-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  .stat-block:nth-child(2) { border-right: none; }
+  .stat-block:nth-child(1), .stat-block:nth-child(2) { border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 20px; margin-bottom: 20px; }
+}
+
+@media (max-width: 768px) {
+  .toc-wrap, .brand-text { display: none; }
+  .menu-btn { display: flex; }
+  #topnav { padding: 0 16px; gap: 16px; }
+  .container { padding: 0 20px; }
+  section { padding: 60px 0; }
+  .hero { padding: 40px 20px; }
+  .systems-grid { grid-template-columns: 1fr; gap: 30px; }
+  .system-vs { padding: 20px 0; }
+  .system-vs::before, .system-vs::after { display: none; }
+  .fourfold { grid-template-columns: 1fr; }
+  .fourfold-cell { border-right: none !important; border-bottom: 2px solid var(--line) !important; }
+  .fourfold-cell:last-child { border-bottom: none !important; }
+  .case-block { grid-template-columns: 1fr; gap: 16px; }
+  .case-num { font-size: 2.5rem; }
+  .bias-grid, .toolbox-grid, .quote-grid, .stats-bar { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .hero-meta { grid-template-columns: 1fr; }
+  .diagram-frame { padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============== 预加载屏 ============== -->
+<div id="preloader">
+  <div class="pre-atom">
+    <div class="orbit"><div class="electron"></div></div>
+    <div class="orbit"><div class="electron"></div></div>
+    <div class="orbit"><div class="electron"></div></div>
+  </div>
+  <div style="text-align:center">
+    <div class="pre-title">Cogito</div>
+    <div class="pre-sub">Atomic Knowledge Base</div>
+  </div>
+  <div class="pre-bar"></div>
+  <div class="pre-pct" id="prePct">LOADING · 0%</div>
+</div>
+
+<!-- ============== 顶部导航 ============== -->
+<nav id="topnav">
+  <div class="brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 40 40">
+        <circle cx="20" cy="20" r="3" fill="var(--primary)"/>
+        <ellipse cx="20" cy="20" rx="18" ry="7" fill="none" stroke="var(--line)" stroke-width="1.5"/>
+        <ellipse cx="20" cy="20" rx="18" ry="7" fill="none" stroke="var(--line)" stroke-width="1.5" transform="rotate(60 20 20)"/>
+        <ellipse cx="20" cy="20" rx="18" ry="7" fill="none" stroke="var(--line)" stroke-width="1.5" transform="rotate(120 20 20)"/>
+      </svg>
+    </div>
+    <div class="brand-text">
+      Cogito
+      <small>Atomic Library</small>
+    </div>
+  </div>
+
+  <div class="toc-wrap">
+    <ul class="toc-top" id="tocTop">
+      <li><a href="#hero" data-target="hero" class="active">序章</a></li>
+      <li><a href="#overview" data-target="overview">核心观点</a></li>
+      <li><a href="#systems" data-target="systems">双系统</a></li>
+      <li><a href="#prospect" data-target="prospect">前景理论</a></li>
+      <li><a href="#fourfold" data-target="fourfold">四重模式</a></li>
+      <li><a href="#biases" data-target="biases">偏误清单</a></li>
+      <li><a href="#cases" data-target="cases">经典案例</a></li>
+      <li><a href="#peakend" data-target="peakend">峰终定律</a></li>
+      <li><a href="#toolbox" data-target="toolbox">理性防线</a></li>
+      <li><a href="#quotes" data-target="quotes">原书金句</a></li>
+    </ul>
+  </div>
+
+  <div class="nav-actions">
+    <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
+      <svg id="themeIcon" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4"/>
+        <line x1="12" y1="2" x2="12" y2="5"/>
+        <line x1="12" y1="19" x2="12" y2="22"/>
+        <line x1="2" y1="12" x2="5" y2="12"/>
+        <line x1="19" y1="12" x2="22" y2="12"/>
+        <line x1="4.93" y1="4.93" x2="7.05" y2="7.05"/>
+        <line x1="16.95" y1="16.95" x2="19.07" y2="19.07"/>
+        <line x1="4.93" y1="19.07" x2="7.05" y2="16.95"/>
+        <line x1="16.95" y1="7.05" x2="19.07" y2="4.93"/>
+      </svg>
+    </button>
+    <button class="menu-btn" id="menuBtn" aria-label="打开目录"><span></span></button>
+  </div>
+</nav>
+
+<!-- ============== 抽屉式移动导航 ============== -->
+<div id="drawer-backdrop"></div>
+<aside id="drawer">
+  <button class="drawer-close" id="drawerClose">×</button>
+  <div style="font-size:0.7rem;letter-spacing:0.3em;color:var(--primary);font-weight:700;margin-bottom:20px;">TABLE OF CONTENTS</div>
+  <ul class="toc-drawer" id="tocDrawer">
+    <li><a href="#hero" data-target="hero">序章 · 启幕</a></li>
+    <li><a href="#overview" data-target="overview">一 · 核心观点</a></li>
+    <li><a href="#systems" data-target="systems">二 · 双系统模型</a></li>
+    <li><a href="#prospect" data-target="prospect">三 · 前景理论</a></li>
+    <li><a href="#fourfold" data-target="fourfold">四 · 四重模式</a></li>
+    <li><a href="#biases" data-target="biases">五 · 认知偏误清单</a></li>
+    <li><a href="#cases" data-target="cases">六 · 经典案例</a></li>
+    <li><a href="#peakend" data-target="peakend">七 · 峰终定律</a></li>
+    <li><a href="#toolbox" data-target="toolbox">八 · 理性防线工具箱</a></li>
+    <li><a href="#quotes" data-target="quotes">九 · 原书金句</a></li>
+  </ul>
+</aside>
+
+<main>
+
+<!-- ============== Hero ============== -->
+<section class="hero" id="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="hero-tag">Knowledge Base · No.001</div>
+      <h1 class="hero-title">
+        思考，<br>
+        <span class="accent">快</span>与<span class="accent">慢</span>
+      </h1>
+      <p class="hero-subtitle">
+        一座关于人类判断之脆弱与直觉之强大的原子能知识库——<br>
+        诺奖得主丹尼尔·卡尼曼用四十年实验，揭开心智的双系统引擎。
+      </p>
+
+      <div class="hero-meta">
+        <div class="meta-item">
+          <div class="meta-label">Author · 著</div>
+          <div class="meta-value">丹尼尔·卡尼曼<small>Daniel Kahneman · 1934–2024</small></div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Nobel · 荣誉</div>
+          <div class="meta-value">2002 经济学奖<small>前景理论奠基人</small></div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Published · 出版</div>
+          <div class="meta-value">2011 / Farrar Straus Giroux<small>中文版 2012 中信出版社</small></div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Designed by · 设计</div>
+          <div class="meta-value">Zhexi Wu<small>POWERED BY GLM-5.2 · Z.ai</small></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+        <!-- 原子轨道 -->
+        <defs>
+          <radialGradient id="atomGlow" cx="50%" cy="50%">
+            <stop offset="0%" stop-color="#d44d1a" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#d44d1a" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="200" cy="200" r="80" fill="url(#atomGlow)"/>
+
+        <!-- 三条轨道 -->
+        <g stroke="var(--line)" stroke-width="2" fill="none" opacity="0.7">
+          <ellipse cx="200" cy="200" rx="160" ry="60"/>
+          <ellipse cx="200" cy="200" rx="160" ry="60" transform="rotate(60 200 200)"/>
+          <ellipse cx="200" cy="200" rx="160" ry="60" transform="rotate(120 200 200)"/>
+        </g>
+
+        <!-- 系统1 / 系统2 标签 -->
+        <g font-family="Georgia, serif" font-weight="900">
+          <text x="200" y="60" text-anchor="middle" font-size="14" fill="var(--primary)" letter-spacing="3">SYSTEM 1</text>
+          <text x="200" y="360" text-anchor="middle" font-size="14" fill="var(--secondary)" letter-spacing="3">SYSTEM 2</text>
+        </g>
+
+        <!-- 中心原子核 -->
+        <circle cx="200" cy="200" r="22" fill="var(--ink)"/>
+        <text x="200" y="206" text-anchor="middle" font-family="Georgia, serif" font-size="18" font-weight="900" fill="var(--accent)">M</text>
+
+        <!-- 电子 -->
+        <circle cx="360" cy="200" r="10" fill="var(--primary)"/>
+        <circle cx="120" cy="73" r="10" fill="var(--secondary)"/>
+        <circle cx="120" cy="327" r="10" fill="var(--accent-2)"/>
+
+        <!-- 星爆装饰 -->
+        <g fill="var(--accent)" opacity="0.7">
+          <polygon points="60,60 65,75 80,75 68,85 73,100 60,90 47,100 52,85 40,75 55,75" transform="scale(0.6) translate(40,40)"/>
+          <polygon points="340,340 345,355 360,355 348,365 353,380 340,370 327,380 332,365 320,355 335,355" transform="scale(0.6) translate(140,140)"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="scroll-cue">SCROLL · 向下探索</div>
+</section>
+
+<!-- ============== 核心观点 ============== -->
+<section id="overview">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-num">CHAPTER 01 / 概览</div>
+      <h2 class="section-title">一、大脑里住着<em>两个自我</em></h2>
+      <p class="section-lead">
+        卡尼曼以一生研究凝练出一个核心命题：人类的心智并非单一主体，而是由两套互补又冲突的系统驱动——一套快速、自动、刻板；一套缓慢、费力、逻辑。前者产生印象与直觉，后者负责监督与修正。然而进化让"懒惰"的系统2习惯于接受系统1的暗示，于是偏误悄然登场。
+      </p>
+    </div>
+
+    <div class="insight-line reveal">
+      "我们对自己的<em>思考方式</em>之无知，远超我们对世界之无知。"
+    </div>
+
+    <div class="stats-bar reveal">
+      <div class="stat-block">
+        <span class="num" data-count="2">0</span>
+        <span class="label">思维系统</span>
+      </div>
+      <div class="stat-block">
+        <span class="num" data-count="38">0</span>
+        <span class="label">章 · 五部分</span>
+      </div>
+      <div class="stat-block">
+        <span class="num" data-count="100">0</span>
+        <span class="label">余项实验</span>
+      </div>
+      <div class="stat-block">
+        <span class="num" data-count="2017">0</span>
+        <span class="label">年中文修订</span>
+      </div>
+    </div>
+
+    <div class="case-block reveal" style="grid-template-columns: 1fr;">
+      <p style="color:var(--ink-soft);font-size:1rem;line-height:1.9;">
+        全书分为五部分：<strong style="color:var(--primary);">第一部分</strong>讲述两套系统及其协作与冲突；<strong style="color:var(--primary);">第二部分</strong>探讨启发式与偏误——系统1的捷径如何制造系统性错误；<strong style="color:var(--primary);">第三部分</strong>描述过度自信——人类对自身理解的过度乐观；<strong style="color:var(--primary);">第四部分</strong>呈现前景理论——选择中的非理性；<strong style="color:var(--primary);">第五部分</strong>区分经验自我与记忆自我——幸福的双重面孔。每一部分都建立在严谨实验之上，构成一座关于"人类判断之脆弱"的宏伟建筑。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 双系统模型 ============== -->
+<section id="systems">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-num">CHAPTER 02 / 模型</div>
+      <h2 class="section-title">二、双系统：<em>直觉</em>与<em>推理</em>的角力</h2>
+      <p class="section-lead">
+        系统1像自动巡航——它持续不断地运行，无需意志力，产生熟悉感、印象与情感。系统2像手动驾驶——它被认为在掌舵，却常常偷懒放任。理解二者的分工与失误，是清醒思考的起点。
+      </p>
+    </div>
+
+    <div class="systems-grid reveal">
+      <div class="system-card sys1">
+        <span class="badge">System 1</span>
+        <h3>快思考 · 直觉</h3>
+        <div class="h3-sub">Fast · Automatic · Frequent</div>
+        <ul>
+          <li>自动运行，无法关闭</li>
+          <li>不费力或费力极少</li>
+          <li>无自主控制感</li>
+          <li>联想机器：相溶概念互相激活</li>
+          <li>认知放松 → 真实感、熟悉感</li>
+          <li>常态与惊奇：构建连贯故事</li>
+          <li>忽略歧义，suppress怀疑</li>
+          <li>WYSIATI：所见即所有</li>
+          <li>强度匹配：跨维度翻译</li>
+          <li>心理霰弹枪：激发情感与行动</li>
+        </ul>
+      </div>
+
+      <div class="system-vs">⟷</div>
+
+      <div class="system-card sys2">
+        <span class="badge">System 2</span>
+        <h3>慢思考 · 推理</h3>
+        <div class="h3-sub">Slow · Effortful · Rare</div>
+        <ul>
+          <li>需调用注意力，被干扰即停摆</li>
+          <li>耗费心智能量，血糖下降</li>
+          <li>主管计算、推理、比较</li>
+          <li>能遵循规则、按步骤执行</li>
+          <li>能处理"统计性"思维</li>
+          <li>监督系统1的建议——但常常偷懒</li>
+          <li>认知负荷下能力骤降</li>
+          <li>损耗后倾向选择默认</li>
+          <li>自认为是主角——其实是配角</li>
+          <li>懒惰是其根本弱点</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="diagram-frame reveal">
+      <div class="diagram-caption">FIGURE 2.1 · 认知放松 ↔ 认知紧张 双向机制</div>
+      <div class="diagram-title">系统1如何决定系统2是否出场</div>
+      <svg viewBox="0 0 900 280" style="width:100%;height:auto;">
+        <defs>
+          <marker id="arrowR" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+            <polygon points="0,0 10,5 0,10" fill="var(--ink)"/>
+          </marker>
+          <marker id="arrowG" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+            <polygon points="0,0 10,5 0,10" fill="var(--primary)"/>
+          </marker>
+        </defs>
+
+        <!-- 输入 -->
+        <g>
+          <rect x="20" y="100" width="140" height="80" fill="var(--paper-2)" stroke="var(--line)" stroke-width="2"/>
+          <text x="90" y="130" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="700" fill="var(--ink)">刺激输入</text>
+          <text x="90" y="150" text-anchor="middle" font-size="11" fill="var(--ink-soft)">视觉 · 听觉 · 记忆</text>
+          <text x="90" y="166" text-anchor="middle" font-size="10" fill="var(--ink-muted)" font-style="italic">清晰度 · 重复度</text>
+        </g>
+
+        <!-- 系统1处理 -->
+        <g>
+          <rect x="220" y="80" width="180" height="120" fill="var(--primary)" stroke="var(--line)" stroke-width="2.5"/>
+          <text x="310" y="115" text-anchor="middle" font-family="Georgia,serif" font-size="16" font-weight="900" fill="var(--paper)">SYSTEM 1</text>
+          <text x="310" y="140" text-anchor="middle" font-size="11" fill="var(--paper)" opacity="0.9">联想 · 模式识别</text>
+          <text x="310" y="158" text-anchor="middle" font-size="11" fill="var(--paper)" opacity="0.9">情感反应 · 印象生成</text>
+          <text x="310" y="180" text-anchor="middle" font-size="10" fill="var(--accent)" font-style="italic" font-weight="700">→ 认知放松 OR 紧张</text>
+        </g>
+
+        <!-- 中介：放松/紧张 -->
+        <g>
+          <rect x="460" y="100" width="160" height="80" fill="var(--paper-2)" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="6 3"/>
+          <text x="540" y="130" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="900" fill="var(--accent)">认知放松</text>
+          <text x="540" y="148" text-anchor="middle" font-size="11" fill="var(--ink-soft)">熟悉 · 真实 · 不费力</text>
+          <text x="540" y="166" text-anchor="middle" font-size="10" fill="var(--ink-muted)" font-style="italic">放松→系统2休眠</text>
+        </g>
+
+        <!-- 系统2 -->
+        <g>
+          <rect x="680" y="80" width="180" height="120" fill="var(--secondary)" stroke="var(--line)" stroke-width="2.5"/>
+          <text x="770" y="115" text-anchor="middle" font-family="Georgia,serif" font-size="16" font-weight="900" fill="var(--paper)">SYSTEM 2</text>
+          <text x="770" y="140" text-anchor="middle" font-size="11" fill="var(--paper)" opacity="0.9">推理 · 验证 · 抑制</text>
+          <text x="770" y="158" text-anchor="middle" font-size="11" fill="var(--paper)" opacity="0.9">计算 · 比较 · 反思</text>
+          <text x="770" y="180" text-anchor="middle" font-size="10" fill="var(--accent)" font-style="italic" font-weight="700">→ 仅在紧张时被唤醒</text>
+        </g>
+
+        <!-- 箭头 -->
+        <line x1="160" y1="140" x2="215" y2="140" stroke="var(--ink)" stroke-width="2" marker-end="url(#arrowR)"/>
+        <line x1="400" y1="140" x2="455" y2="140" stroke="var(--ink)" stroke-width="2" marker-end="url(#arrowR)"/>
+        <line x1="620" y1="140" x2="675" y2="140" stroke="var(--primary)" stroke-width="2.5" stroke-dasharray="4 2" marker-end="url(#arrowG)"/>
+
+        <!-- 回路 -->
+        <path d="M 770 200 Q 770 240 540 240 Q 310 240 310 200" fill="none" stroke="var(--primary)" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6"/>
+        <text x="540" y="260" text-anchor="middle" font-size="10" fill="var(--primary)" font-style="italic">系统2修正系统1的输出（仅当其被唤起时）</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 前景理论 ============== -->
+<section id="prospect">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-num">CHAPTER 03 / 理论</div>
+      <h2 class="section-title">三、前景理论：<em>损失厌恶</em>与人性的 S 曲线</h2>
+      <p class="section-lead">
+        卡尼曼与特沃斯基在1979年发表的论文彻底改写了经济学对人的假设。他们用一条 S 形曲线证明：人对收益与损失的感受并不对称——损失一元的痛苦，约是收益一元快乐的两倍。这条曲线，让"理性人"走下神坛。
+      </p>
+    </div>
+
+    <div class="diagram-frame reveal">
+      <div class="diagram-caption">FIGURE 3.1 · 前景理论价值函数 · 1979</div>
+      <div class="diagram-title">为什么我们更怕输，而不是更想赢</div>
+
+      <div class="prospect-wrap">
+        <svg class="prospect-svg" viewBox="0 0 500 380">
+          <defs>
+            <pattern id="hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="6" stroke="var(--halftone)" stroke-width="2"/>
+            </pattern>
+          </defs>
+
+          <!-- 坐标轴 -->
+          <line x1="60" y1="190" x2="470" y2="190" stroke="var(--line)" stroke-width="2"/>
+          <line x1="240" y1="40" x2="240" y2="340" stroke="var(--line)" stroke-width="2"/>
+
+          <!-- 箭头 -->
+          <polygon points="470,190 460,185 460,195" fill="var(--line)"/>
+          <polygon points="240,40 235,50 245,50" fill="var(--line)"/>
+
+          <!-- 轴标签 -->
+          <text x="475" y="195" font-family="Georgia,serif" font-size="12" font-weight="700" fill="var(--ink)">收益 / 损失</text>
+          <text x="250" y="38" font-family="Georgia,serif" font-size="12" font-weight="700" fill="var(--ink)">价值 V</text>
+          <text x="245" y="205" font-family="Georgia,serif" font-size="11" fill="var(--ink-muted)">参考点 0</text>
+          <text x="380" y="205" font-family="Georgia,serif" font-size="11" fill="var(--secondary)" font-style="italic">收益区 Gains</text>
+          <text x="120" y="205" font-family="Georgia,serif" font-size="11" fill="var(--primary)" font-style="italic">损失区 Losses</text>
+
+          <!-- 参考线 -->
+          <line x1="60" y1="190" x2="470" y2="190" stroke="var(--grid)" stroke-width="1" stroke-dasharray="2 4"/>
+
+          <!-- 收益曲线（上凸，缓和） -->
+          <path class="draw-path" d="M 240 190 Q 280 145 320 125 T 400 105 T 460 95"
+                fill="none" stroke="var(--secondary)" stroke-width="3.5"/>
+
+          <!-- 损失曲线（下凸，陡峭） -->
+          <path class="draw-path" d="M 240 190 Q 200 245 160 280 T 80 320 T 30 335"
+                fill="none" stroke="var(--primary)" stroke-width="3.5"/>
+
+          <!-- 阴影区域表示损失更陡 -->
+          <path d="M 240 190 Q 200 245 160 280 T 80 320 T 30 335 L 30 190 Z"
+                fill="var(--primary)" opacity="0.1"/>
+          <path d="M 240 190 Q 280 145 320 125 T 400 105 T 460 95 L 460 190 Z"
+                fill="var(--secondary)" opacity="0.1"/>
+
+          <!-- 标注点 -->
+          <circle cx="320" cy="125" r="5" fill="var(--secondary)" stroke="var(--paper)" stroke-width="2"/>
+          <circle cx="160" cy="280" r="5" fill="var(--primary)" stroke="var(--paper)" stroke-width="2"/>
+
+          <text x="330" y="115" font-size="10" fill="var(--secondary)" font-weight="700">+100 → V ≈ +10</text>
+          <text x="100" y="295" font-size="10" fill="var(--primary)" font-weight="700">−100 → V ≈ −20</text>
+
+          <!-- 关键标注 -->
+          <g transform="translate(60,60)">
+            <rect x="0" y="0" width="180" height="50" fill="var(--paper-2)" stroke="var(--accent)" stroke-width="1.5"/>
+            <text x="90" y="20" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="900" fill="var(--accent)">损失厌恶系数</text>
+            <text x="90" y="40" text-anchor="middle" font-family="Georgia,serif" font-size="16" font-weight="900" fill="var(--primary)">λ ≈ 2.25</text>
+          </g>
+        </svg>
+
+        <div class="prospect-notes">
+          <h4>① 参考点依赖</h4>
+          <p>效用并非由最终财富决定，而是相对某一<span class="key">参考点</span>的偏离。同一个100元，对刚得500元者和刚失500元者，价值完全不同。</p>
+
+          <h4>② 敏感性递减</h4>
+          <p>从100到200的差距，主观感受强于从1100到1200。曲线两端逐渐平缓，<span class="key">边际价值递减</span>是收益与损失共同的特征。</p>
+
+          <h4>③ 损失厌恶</h4>
+          <p>损失曲线的斜率约为收益曲线的<span class="key">2.25倍</span>。这是为什么人们拒绝50/50的赌注——丢100元的痛远胜于赢100元的乐。</p>
+
+          <h4>④ 禀赋效应</h4>
+          <p>一旦拥有某物，对其估价立即上升。卖者要价常为买者出价的<span class="key">两倍以上</span>——因为"放弃"是损失，"获得"是收益。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 四重模式 ============== -->
+<section id="fourfold">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-num">CHAPTER 04 / 框架</div>
+      <h2 class="section-title">四、四重模式：<em>风险态度</em>的四象限</h2>
+      <p class="section-lead">
+        前景理论的延伸——卡尼曼将收益与损失×高概率与低概率交叉，得到四种典型风险态度。它解释了为什么买保险的人也买彩票：人在不同象限里判若两人。
+      </p>
+    </div>
+
+    <div class="fourfold reveal">
+      <div class="fourfold-cell">
+        <div class="quad-num">01</div>
+        <div class="quad-label">高概率 · 收益</div>
+        <div class="quad-title">风险规避</div>
+        <div class="quad-desc">
+          确定有收益时，人倾向于"落袋为安"。<br>
+          <strong style="color:var(--primary);">例：</strong>选确定的3000元，而非80%概率得4000元（期望值更高）。
+        </div>
+      </div>
+      <div class="fourfold-cell">
+        <div class="quad-num">02</div>
+        <div class="quad-label">高概率 · 损失</div>
+        <div class="quad-title">风险寻求</div>
+        <div class="quad-desc">
+          大概率损失时，人宁愿赌一把以求翻盘。<br>
+          <strong style="color:var(--primary);">例：</strong>拒接确定的3000元损失，赌90%概率失4000元——即使期望值更糟。
+        </div>
+      </div>
+      <div class="fourfold-cell">
+        <div class="quad-num">03</div>
+        <div class="quad-label">低概率 · 收益</div>
+        <div class="quad-title">风险寻求</div>
+        <div class="quad-desc">
+          小概率大奖诱人放手一搏。<br>
+          <strong style="color:var(--primary);">例：</strong>买彩票。人对1%概率的过高加权，让彩票业全球繁荣。
+        </div>
+      </div>
+      <div class="fourfold-cell">
+        <div class="quad-num">04</div>
+        <div class="quad-label">低概率 · 损失</div>
+        <div class="quad-title">风险规避</div>
+        <div class="quad-desc">
+          小概率大灾令人愿意付保费避险。<br>
+          <strong style="color:var(--primary);">例：</strong>买保险。同样因小概率被过度加权，保险业与彩票业同根同源。
+        </div>
+      </div>
+    </div>
+
+    <div class="insight-line reveal">
+      同一个人，<em>既买彩票又买保险</em>——这并非矛盾，而是前景理论最锋利的实证。
+    </div>
+  </div>
+</section>
+
+<!-- ============== 认知偏误清单 ============== -->
+<section id="biases">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-num">CHAPTER 05 / 偏误</div>
+      <h2 class="section-title">五、认知偏误<em>清单</em></h2>
+      <p class="section-lead">
+        卡尼曼与特沃斯基、塞勒等学者共同勾勒出一张"人类判断失误地图"。下列九项偏误，每一项都源自系统1的捷径，每一项都有可复现的实验佐证。
+      </p>
+    </div>
+
+    <div class="bias-grid stagger">
+      <div class="bias-card">
+        <div class="bias-num">№ 01</div>
+        <div class="bias-name">锚定效应</div>
+        <div class="bias-en">Anchoring Effect</div>
+        <div class="bias-desc">无关的初始数值会系统性影响后续判断。系统1将锚视为"建议"，系统2懒于修正。</div>
+        <div class="bias-eg"><strong>实验：</strong>问甘地活过114岁没？后续估寿命明显高于问"活过35岁没？"的组。</div>
+      </div>
+
+      <div class="bias-card">
+        <div class="bias-num">№ 02</div>
+        <div class="bias-name">可得性启发</div>
+        <div class="bias-en">Availability Heuristic</div>
+        <div class="bias-desc">越易回想起的事件，越被高估频率。媒体报道强度直接塑造风险感知。</div>
+        <div class="bias-eg"><strong>实验：</strong>飞机失事新闻后，购票量骤降——尽管客观概率未变。</div>
+      </div>
+
+      <div class="bias-card">
+        <div class="bias-num">№ 03</div>
+        <div class="bias-name">代表性启发</div>
+        <div class="bias-en">Representativeness</div>
+        <div class="bias-desc">依据刻板相似度判断概率，忽略基准率与样本量。</div>
+        <div class="bias-eg"><strong>实验：</strong>"琳达是银行出纳员" vs "银行出纳员+女权主义者"——后者被选更多（合取谬误）。</div>
+      </div>
+
+      <div class="bias-card">
+        <div class="bias-num">№ 04</div>
+        <div class="bias-name">框架效应</div>
+        <div class="bias-en">Framing Effect</div>
+        <div class="bias-desc">同样的事实，正向/负向表述会引发相反决策。</div>
+        <div class="bias-eg"><strong>实验：</strong>"90%存活" vs "10%死亡"——医生选前者多20个百分点。</div>
+      </div>
+
+      <div class="bias-card">
+        <div class="bias-num">№ 05</div>
+        <div class="bias-name">过度自信</div>
+        <div class="bias-en">Overconfidence</div>
+        <div class="bias-desc">相信自己所知甚于实际所知。"所知之圈"远小于"自信之圈"。</div>
+        <div class="bias-eg"><strong>实验：</strong>90%司机自认驾驶水平"高于均值"——数学上不可能。</div>
+      </div>
+
+      <div class="bias-card">
+        <div class="bias-num">№ 06</div>
+        <div class="bias-name">后见之明</div>
+        <div class="bias-en">Hindsight Bias</div>
+        <div class="bias-desc">事后回看，一切"早有征兆"。这扭曲我们对决策质量的评估。</div>
+        <div class="bias-eg"><strong>实验：</strong>9·11后，68%美国人认为"事件可预见"——事前却几乎无人警示。</div>
+      </div>
+
+      <div class="bias-card">
+        <div class="bias-num">№ 07</div>
+        <div class="bias-name">禀赋效应</div>
+        <div class="bias-en">Endowment Effect</div>
+        <div class="bias-desc">拥有即升值。"不失去"的痛苦系数，约为"未获得"的快乐系数2.25倍。</div>
+        <div class="bias-eg"><strong>实验：</strong>获赠咖啡杯者要价约为未获者出价的2倍以上。</div>
+      </div>
+
+      <div class="bias-card">
+        <div class="bias-num">№ 08</div>
+        <div class="bias-name">WYSIATI</div>
+        <div class="bias-en">所见即所有</div>
+        <div class="bias-desc">系统1用现有信息构建最连贯的故事，对"不知道的"视而不见。</div>
+        <div class="bias-eg"><strong>实验：</strong>仅给出某律师爱好描述，多数人据此判断其专业，从不问"还缺什么信息"。</div>
+      </div>
+
+      <div class="bias-card">
+        <div class="bias-num">№ 09</div>
+        <div class="bias-name">聚焦错觉</div>
+        <div class="bias-en">Focusing Illusion</div>
+        <div class="bias-desc">"想到时它就重要"——注意力之所及，被错认作生活之全部。</div>
+        <div class="bias-eg"><strong>金句：</strong>"生活中没有什么事，比你想到它时更重要。"</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 经典案例 ============== -->
+<section id="cases">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-num">CHAPTER 06 / 案例</div>
+      <h2 class="section-title">六、四个<em>经典实验</em></h2>
+      <p class="section-lead">
+        每一个实验都是一面镜子，照见系统1的盲区与系统2的怠惰。它们不是抽象模型，而是可重现的人性切片。
+      </p>
+    </div>
+
+    <div class="case-block reveal">
+      <div class="case-num">01</div>
+      <div class="case-content">
+        <h3>球棒与球 · Bat and Ball</h3>
+        <div class="case-q">
+          一根球棒和一只球共卖 1.10 美元。<br>
+          球棒比球贵 1.00 美元。<br>
+          请问球多少钱？
+        </div>
+        <p>直觉答案：10 美分（系统1脱口而出）。</p>
+        <p>正确答案：5 美分（球5¢ + 球棒1.05¢ = 1.10¢，差1.00¢）。</p>
+        <p>这道题诊断系统2是否出场。多数人不会算——他们直接接受系统1的"漂亮答案"。</p>
+      </div>
+      <div class="case-result">
+        <div class="label">哈佛/MIT 实测</div>
+        <div class="stat">
+          <span class="stat-num">50%+</span>
+          <span class="stat-desc">大学生答错</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">10¢</span>
+          <span class="stat-desc">直觉陷阱答案</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">5¢</span>
+          <span class="stat-desc">正确答案</span>
+        </div>
+        <p style="font-size:0.75rem;margin-top:8px;color:var(--accent);font-style:italic;">系统1赢了——懒惰的系统2没有验算。</p>
+      </div>
+    </div>
+
+    <div class="case-block reveal">
+      <div class="case-num">02</div>
+      <div class="case-content">
+        <h3>琳达问题 · The Linda Problem</h3>
+        <div class="case-q">
+          琳达，31岁，哲学系毕业，关注歧视与社会正义，曾参与反核示威。<br>
+          哪个更可能？<br>
+          (A) 琳达是银行出纳员<br>
+          (B) 琳达是银行出纳员且是女权主义者
+        </div>
+        <p>89% 受试者选 B——但 B 是 A 的子集，概率必然更低。</p>
+        <p>这是"合取谬误"（Conjunction Fallacy）：系统1偏好"听起来对味"的故事，无视集合论。</p>
+      </div>
+      <div class="case-result">
+        <div class="label">卡尼曼-特沃斯基 1983</div>
+        <div class="stat">
+          <span class="stat-num">89%</span>
+          <span class="stat-desc">选 B（错误）</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">P(A)</span>
+          <span class="stat-desc">≥ P(A∩B)</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">∞</span>
+          <span class="stat-desc">故事性压倒逻辑</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-block reveal">
+      <div class="case-num">03</div>
+      <div class="case-content">
+        <h3>亚洲疾病 · Asian Disease Problem</h3>
+        <div class="case-q">
+          一种罕见疾病将夺走600人生命。两套方案：<br>
+          正向框架：A方案救200人；B方案1/3概率救600、2/3概率全失。<br>
+          负向框架：A方案死400人；B方案1/3概率不死、2/3概率死600。
+        </div>
+        <p>两组选项数学等价，但医生选择截然相反。</p>
+        <p>正向框架下：72% 选确定方案（风险规避）。</p>
+        <p>负向框架下：78% 选赌一把（风险寻求）。</p>
+        <p>框架效应证明：决策并非基于事实，而是基于<em style="color:var(--primary);">事实如何被讲述</em>。</p>
+      </div>
+      <div class="case-result">
+        <div class="label">Tversky-Kahneman 1981</div>
+        <div class="stat">
+          <span class="stat-num">72%</span>
+          <span class="stat-desc">正向 → 选确定</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">78%</span>
+          <span class="stat-desc">负向 → 选赌博</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">50%</span>
+          <span class="stat-desc">理性人应一致</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-block reveal">
+      <div class="case-num">04</div>
+      <div class="case-content">
+        <h3>出租车问题 · Cab Problem</h3>
+        <div class="case-q">
+          城中出租车：85% 蓝色，15% 绿色。<br>
+          一起肇事逃逸，目击者称车为蓝色。<br>
+          法庭测得：目击者在同等光线下对蓝绿车识别正确率 80%。<br>
+          真正蓝色车的概率是多少？
+        </div>
+        <p>直觉答案：80%（系统1只看"目击者说蓝"）。</p>
+        <p>贝叶斯答案：41%（必须考虑基准率）。</p>
+        <p>人系统性忽略基准率——这是代表性启发的副产物。</p>
+      </div>
+      <div class="case-result">
+        <div class="label">贝叶斯推理实验</div>
+        <div class="stat">
+          <span class="stat-num">80%</span>
+          <span class="stat-desc">直觉答案</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">41%</span>
+          <span class="stat-desc">正确贝叶斯值</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">P(蓝|说蓝)</span>
+          <span class="stat-desc">= (0.8×0.15)/(0.8×0.15+0.2×0.85) ≈ 41%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 峰终定律 ============== -->
+<section id="peakend">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-num">CHAPTER 07 / 记忆</div>
+      <h2 class="section-title">七、峰终定律：<em>记忆自我</em>的剪辑术</h2>
+      <p class="section-lead">
+        人对一段经历的回忆，并非体验的总和，而是被两个瞬间主导：峰值与终值。持续时间几乎被忽略——这就是"时长忽视"。
+      </p>
+    </div>
+
+    <div class="peak-end-wrap reveal">
+      <div>
+        <svg viewBox="0 0 600 380" style="width:100%;height:auto;">
+          <!-- 坐标 -->
+          <line x1="50" y1="320" x2="560" y2="320" stroke="var(--line)" stroke-width="2"/>
+          <line x1="50" y1="40" x2="50" y2="320" stroke="var(--line)" stroke-width="2"/>
+
+          <text x="305" y="350" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="var(--ink-muted)">时间 →</text>
+          <text x="20" y="180" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="700" fill="var(--ink-muted)" transform="rotate(-90 20 180)">痛苦程度</text>
+
+          <!-- 实验A：60秒冷水 -->
+          <path class="draw-path" d="M 80 280 Q 100 150 120 130 L 130 130 Q 140 130 145 280 L 80 280 Z"
+                fill="var(--primary)" fill-opacity="0.15" stroke="var(--primary)" stroke-width="2.5"/>
+          <text x="105" y="335" text-anchor="middle" font-size="10" fill="var(--primary)" font-weight="700">实验A · 60秒</text>
+
+          <!-- 实验B：90秒冷水，末段微温 -->
+          <path class="draw-path" d="M 320 280 Q 340 150 360 130 L 380 130 Q 400 130 410 200 L 460 240 L 480 280 L 320 280 Z"
+                fill="var(--secondary)" fill-opacity="0.15" stroke="var(--secondary)" stroke-width="2.5"/>
+          <text x="400" y="335" text-anchor="middle" font-size="10" fill="var(--secondary)" font-weight="700">实验B · 90秒</text>
+
+          <!-- 峰值标注 -->
+          <circle cx="125" cy="130" r="4" fill="var(--primary)"/>
+          <circle cx="370" cy="130" r="4" fill="var(--secondary)"/>
+          <text x="125" y="115" text-anchor="middle" font-size="9" fill="var(--primary)">峰值</text>
+          <text x="370" y="115" text-anchor="middle" font-size="9" fill="var(--secondary)">峰值</text>
+
+          <!-- 终值标注 -->
+          <circle cx="145" cy="280" r="4" fill="var(--primary)"/>
+          <circle cx="480" cy="280" r="4" fill="var(--secondary)"/>
+          <text x="145" y="270" text-anchor="middle" font-size="9" fill="var(--primary)">冷终值</text>
+          <text x="480" y="270" text-anchor="middle" font-size="9" fill="var(--secondary)">温终值</text>
+
+          <!-- 结论标注 -->
+          <g transform="translate(170,50)">
+            <rect x="0" y="0" width="280" height="50" fill="var(--paper-2)" stroke="var(--accent)" stroke-width="1.5"/>
+            <text x="140" y="22" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="900" fill="var(--accent)">结果：B 被记住为"更不痛苦"</text>
+            <text x="140" y="40" text-anchor="middle" font-size="10" fill="var(--ink-soft)">尽管 B 总痛苦量（面积）更大</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="peak-end-text">
+        <h3>冰冷实验 · 1993</h3>
+        <p>
+          受试者将手浸入 14℃ 冷水 60 秒（实验A）。
+        </p>
+        <p>
+          另一次，浸入同样冷水 60 秒后，额外增加 30 秒——但水温在最后升至 15℃（仍很冷，但稍好受）。这是实验B。
+        </p>
+        <p>
+          问受试者愿意重复哪个？理性答案应是 A（总痛苦更少）。然而 <strong style="color:var(--primary);">80% 选 B</strong>——因为记忆自我只记得"峰"与"终"。
+        </p>
+
+        <div class="formula">
+          记忆评分 ≈ <em>(峰值 + 终值) / 2</em><br>
+          <span style="font-size:0.85rem;color:var(--ink-soft);">→ 时长被完全忽略</span>
+        </div>
+
+        <p>
+          这一定律塑造了我们对假期、电影、手术、甚至整段人生的回忆。<strong>持续时间不重要，结束方式才重要。</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 理性防线工具箱 ============== -->
+<section id="toolbox">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-num">CHAPTER 08 / 工具</div>
+      <h2 class="section-title">八、理性防线<em>工具箱</em></h2>
+      <p class="section-lead">
+        卡尼曼坦言："我对自己的偏误无能为力，五十年研究没让我变聪明。"但他给出了群体层面的解法——把判断外包给清单、算法与外部视角。
+      </p>
+    </div>
+
+    <div class="toolbox-grid stagger">
+      <div class="tool-card">
+        <div class="tool-num">T·01</div>
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h4>放慢一拍</h4>
+        <p>重大决策前强制延迟24小时。让系统2有机会出场——尤其在认知紧张时。</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-num">T·02</div>
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M12 3v18"/></svg>
+        </div>
+        <h4>外部视角</h4>
+        <p>问"类似项目平均成功率多少"，而非"我的项目如何独特"。统计压倒故事。</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-num">T·03</div>
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <h4>事先清单</h4>
+        <p>用清单替代直觉。医学航空业已证明：清单能将失误率降低近半。</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-num">T·04</div>
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <h4>寻找反例</h4>
+        <p>问"哪些证据会让我改变主意"——对抗WYSIATI。如果找不到反例，可能你没在找。</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-num">T·05</div>
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <h4>算法替代</h4>
+        <p>能用公式就别用人。简单线性模型常胜过专家直觉——尤其在预测领域。</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-num">T·06</div>
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h4>事前验尸</h4>
+        <p>决策前假设"一年后此项目已失败"，让团队写下失败原因。激发对过度自信的修正。</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-num">T·07</div>
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+        </div>
+        <h4>警惕锚定</h4>
+        <p>看到第一个数字时主动想一个"反方向"的极端值。在谈判前自定底线。</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-num">T·08</div>
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h4>多视角</h4>
+        <p>独立征集3个以上意见再汇总。群体讨论前不分享，避免锚定与从众污染。</p>
+      </div>
+    </div>
+
+    <div class="case-block reveal" style="grid-template-columns: 1fr; margin-top:40px;">
+      <p style="color:var(--ink-soft);font-size:1rem;line-height:1.9;">
+        <strong style="color:var(--primary);">卡尼曼的诚实告诫：</strong>他在书中坦承，研究了一辈子偏误，自己的直觉判断并未因此变得更好。理性防线不是个人修行，而是<strong style="color:var(--ink);">组织制度</strong>——它需要在决策流程中嵌入清单、算法、外部视角与事前验尸，把"希望人变聪明"换成"系统不让愚蠢发生"。这是全书最务实也最谦逊的结论。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 原书金句 ============== -->
+<section id="quotes" class="quotes-section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-num">CHAPTER 09 / 金句</div>
+      <h2 class="section-title">九、原书<em>金句</em></h2>
+      <p class="section-lead">
+        从近500页原作中精选八句最锋利的论断——它们既是思想的浓缩，也是行动的鞭子。
+      </p>
+    </div>
+
+    <div class="quote-grid stagger">
+      <div class="quote-card">
+        <div class="q-text">"我们既能对显而易见之物视而不见，又对自己的盲目同样盲目。"</div>
+        <div class="q-attr">第一章 · 双系统</div>
+      </div>
+      <div class="quote-card">
+        <div class="q-text">"懒惰是深层心智的一个特征——不愿付出努力的系统2，会接受系统1几乎所有建议。"</div>
+        <div class="q-attr">第二章 · 注意与努力</div>
+      </div>
+      <div class="quote-card">
+        <div class="q-text">"对意外之事的'理解'，让我们相信过去是可预测的——而后见之明因此而生。"</div>
+        <div class="q-attr">第十九章 · 理解的错觉</div>
+      </div>
+      <div class="quote-card">
+        <div class="q-text">"让人相信 falsehood 的可靠方法，是频繁重复——因为熟悉感难以与真相区分。"</div>
+        <div class="q-attr">第五章 · 认知放松</div>
+      </div>
+      <div class="quote-card">
+        <div class="q-text">"生活中没有什么事，比你想到它时更重要——这就是聚焦错觉。"</div>
+        <div class="q-attr">第三十七章 · 经验自我与记忆自我</div>
+      </div>
+      <div class="quote-card">
+        <div class="q-text">"损失比收益更显著——这是前景理论最简洁也最深刻的命题。"</div>
+        <div class="q-attr">第二十六章 · 前景理论</div>
+      </div>
+      <div class="quote-card">
+        <div class="q-text">"我们相信自己所相信的，很大程度上取决于我们所看到的——而我们所看到的，取决于我们注意的。"</div>
+        <div class="q-attr">WYSIATI · 所见即所有</div>
+      </div>
+      <div class="quote-card">
+        <div class="q-text">"记忆自我的剪辑术，让一段90秒的痛苦被记得比60秒更轻松——这暴露了幸福感的根本悖论。"</div>
+        <div class="q-attr">第三十五章 · 两个自我</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============== Footer ============== -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h3>思考，快与慢 · 原子朋克知识库</h3>
+      <p>一份单文件 HTML 读书笔记。以原子朋克视觉语言，重绘丹尼尔·卡尼曼关于人类判断脆弱性的毕生研究。所有图表、案例、数据，均源自原书《Thinking, Fast and Slow》(2011)。</p>
+    </div>
+    <div class="footer-col">
+      <h4>About</h4>
+      <ul>
+        <li>原著：D. Kahneman</li>
+        <li>出版：2011 FSG</li>
+        <li>中文：中信出版社</li>
+        <li>Nobel：2002 经济学</li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Credits</h4>
+      <ul>
+        <li>Designed by Zhexi Wu</li>
+        <li>Powered by GLM-5.2</li>
+        <li>Z.ai · 2024</li>
+        <li>Atomic Library · No.001</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© Atomic Library · 单文件离线可用</span>
+    <span>RENDERED IN PURE HTML / CSS / SVG / JS</span>
+  </div>
+</footer>
+
+<script>
+/* ============================================
+   JS · 预加载 / 主题切换 / 滚动动画 / ScrollSpy
+   ============================================ */
+
+(function() {
+  'use strict';
+
+  /* ---------- 预加载屏：双重兜底 ---------- */
+  const preloader = document.getElementById('preloader');
+  const prePct = document.getElementById('prePct');
+  let loadProgress = 0;
+  const loadTimer = setInterval(() => {
+    loadProgress = Math.min(100, loadProgress + Math.random() * 15 + 5);
+    if (prePct) prePct.textContent = 'LOADING · ' + Math.floor(loadProgress) + '%';
+    if (loadProgress >= 100) {
+      clearInterval(loadTimer);
+      setTimeout(hidePreloader, 200);
+    }
+  }, 120);
+
+  function hidePreloader() {
+    if (preloader && !preloader.classList.contains('hidden')) {
+      preloader.classList.add('hidden');
+    }
+  }
+
+  // 兜底1：window.load
+  if (document.readyState === 'complete') {
+    setTimeout(hidePreloader, 600);
+  } else {
+    window.addEventListener('load', () => setTimeout(hidePreloader, 600));
+  }
+  // 兜底2：2秒强制淡出
+  setTimeout(hidePreloader, 2000);
+
+  /* ---------- 主题切换：View Transition 波纹 ---------- */
+  const themeToggle = document.getElementById('themeToggle');
+  const root = document.documentElement;
+  const themeIcon = document.getElementById('themeIcon');
+
+  function applyThemeIcon(theme) {
+    if (theme === 'dark') {
+      themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+    } else {
+      themeIcon.innerHTML = '<circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.93" y1="4.93" x2="7.05" y2="7.05"/><line x1="16.95" y1="16.95" x2="19.07" y2="19.07"/><line x1="4.93" y1="19.07" x2="7.05" y2="16.95"/><line x1="16.95" y1="7.05" x2="19.07" y2="4.93"/>';
+    }
+  }
+
+  // 初始化图标
+  applyThemeIcon(root.getAttribute('data-theme'));
+
+  themeToggle.addEventListener('click', function(e) {
+    const currentTheme = root.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    const x = e.clientX;
+    const y = e.clientY;
+    const endRadius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+
+    if (document.startViewTransition) {
+      const transition = document.startViewTransition(() => {
+        root.setAttribute('data-theme', newTheme);
+        applyThemeIcon(newTheme);
+      });
+      transition.ready.then(() => {
+        root.animate(
+          {
+            clipPath: [
+              `circle(0 at ${x}px ${y}px)`,
+              `circle(${endRadius}px at ${x}px ${y}px)`
+            ]
+          },
+          {
+            duration: 600,
+            easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+            pseudoElement: '::view-transition-new(root)'
+          }
+        );
+      });
+    } else {
+      root.setAttribute('data-theme', newTheme);
+      applyThemeIcon(newTheme);
+    }
+  });
+
+  /* ---------- 移动端抽屉 ---------- */
+  const menuBtn = document.getElementById('menuBtn');
+  const drawer = document.getElementById('drawer');
+  const drawerBackdrop = document.getElementById('drawer-backdrop');
+  const drawerClose = document.getElementById('drawerClose');
+
+  function openDrawer() {
+    drawer.classList.add('open');
+    drawerBackdrop.classList.add('show');
+  }
+  function closeDrawer() {
+    drawer.classList.remove('open');
+    drawerBackdrop.classList.remove('show');
+  }
+  if (menuBtn) menuBtn.addEventListener('click', openDrawer);
+  if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
+  if (drawerBackdrop) drawerBackdrop.addEventListener('click', closeDrawer);
+
+  /* ---------- 磁吸 hover ---------- */
+  function applyMagnetic(el, strength = 0.3) {
+    el.addEventListener('mousemove', function(e) {
+      const rect = el.getBoundingClientRect();
+      const mx = e.clientX - rect.left - rect.width / 2;
+      const my = e.clientY - rect.top - rect.height / 2;
+      el.style.transform = `translate(${mx * strength}px, ${my * strength}px)`;
+    });
+    el.addEventListener('mouseleave', function() {
+      el.style.transform = '';
+    });
+  }
+  document.querySelectorAll('.toc-top li a, .theme-toggle, .tool-card, .bias-card').forEach(el => {
+    applyMagnetic(el, 0.25);
+  });
+
+  /* ---------- IntersectionObserver: 渐入 ---------- */
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -80px 0px' });
+
+  document.querySelectorAll('.reveal, .stagger').forEach(el => {
+    revealObserver.observe(el);
+  });
+
+  /* ---------- IntersectionObserver: SVG 路径绘制 ---------- */
+  const drawObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const paths = entry.target.querySelectorAll('.draw-path');
+        paths.forEach((p, i) => {
+          const len = p.getTotalLength ? p.getTotalLength() : 1000;
+          p.style.strokeDasharray = len;
+          p.style.strokeDashoffset = len;
+          setTimeout(() => {
+            p.style.transition = 'stroke-dashoffset 2.4s ease';
+            p.style.strokeDashoffset = '0';
+          }, i * 200 + 100);
+        });
+        drawObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.diagram-frame, .peak-end-wrap').forEach(el => {
+    drawObserver.observe(el);
+  });
+
+  /* ---------- 计数器动画 ---------- */
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const target = parseInt(el.getAttribute('data-count'), 10);
+        const duration = 1800;
+        const start = performance.now();
+        function tick(now) {
+          const t = Math.min(1, (now - start) / duration);
+          const eased = 1 - Math.pow(1 - t, 3);
+          const val = Math.floor(target * eased);
+          el.textContent = val;
+          if (t < 1) requestAnimationFrame(tick);
+          else el.textContent = target;
+        }
+        requestAnimationFrame(tick);
+        counterObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
+
+  /* ---------- 滚动感知文字 opacity ---------- */
+  const insightLines = document.querySelectorAll('.insight-line');
+  function updateInsightOpacity() {
+    const vh = window.innerHeight;
+    insightLines.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      const center = rect.top + rect.height / 2;
+      const dist = Math.abs(center - vh / 2);
+      const max = vh * 0.5;
+      const op = Math.max(0.35, 1 - dist / max);
+      el.style.opacity = op.toFixed(2);
+    });
+  }
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        updateInsightOpacity();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+  updateInsightOpacity();
+
+  /* ---------- ScrollSpy：精准限定 .toc-top 项 ---------- */
+  const sections = document.querySelectorAll('section[id]');
+  const tocTopLinks = document.querySelectorAll('#tocTop a[data-target]');
+  const tocDrawerLinks = document.querySelectorAll('#tocDrawer a[data-target]');
+
+  function updateScrollSpy() {
+    const scrollY = window.scrollY + 120;
+    let currentId = sections[0]?.id;
+    sections.forEach(sec => {
+      if (sec.offsetTop <= scrollY) currentId = sec.id;
+    });
+    // 仅更新顶部 TOC
+    tocTopLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('data-target') === currentId);
+    });
+    // 抽屉中也同步（但不触发滚动）
+    tocDrawerLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('data-target') === currentId);
+    });
+  }
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        updateScrollSpy();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+  updateScrollSpy();
+
+  /* ---------- TOC 点击：精准定位 top nav 项，避免水平位移 ---------- */
+  // 用原生 anchor + scroll-padding-top 处理，无需 JS 干预 scrollIntoView
+
+  /* ---------- 抽屉链接点击后关闭 ---------- */
+  tocDrawerLinks.forEach(a => {
+    a.addEventListener('click', () => setTimeout(closeDrawer, 200));
+  });
+
+})();
+</script>
+</body>
+</html>

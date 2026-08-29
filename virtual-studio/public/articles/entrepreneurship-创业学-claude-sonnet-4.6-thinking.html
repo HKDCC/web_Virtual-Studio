@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>读书笔记 · 创业学 — 蒂蒙斯 / 斯皮内利</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1510;
+    --ink-soft: #3d3427;
+    --ink-muted: #7a6e61;
+    --paper: #faf7f2;
+    --paper-warm: #f4ede0;
+    --paper-tinted: #efe6d5;
+    --gold: #b8860b;
+    --gold-light: #d4a017;
+    --gold-pale: #f0d98a;
+    --rust: #8b3a1e;
+    --teal: #1f5f5b;
+    --teal-light: #2d8178;
+    --navy: #1e2d4a;
+    --border: #d9cdb8;
+    --border-strong: #b8a890;
+    --highlight: #fdf3cd;
+    --critical-bg: #f9f0f0;
+    --critical-border: #c47a7a;
+    --insight-bg: #f0f5f2;
+    --insight-border: #5a8a70;
+    --quote-bg: #f5f0e8;
+    --meta-bg: #eef2f7;
+    --meta-border: #7a9abf;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Serif SC', 'EB Garamond', Georgia, serif;
+    line-height: 1.85;
+    padding: 0;
+  }
+
+  /* ── COVER ── */
+  .cover {
+    background: var(--navy);
+    color: #e8dfc8;
+    padding: 80px 60px 70px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 40px,
+        rgba(255,255,255,0.012) 40px,
+        rgba(255,255,255,0.012) 41px
+      );
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+  }
+  .cover-label {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 28px;
+  }
+  .cover-title-zh {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 3.4rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #f0e8d4;
+    margin-bottom: 8px;
+    letter-spacing: 0.08em;
+  }
+  .cover-title-en {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 1.3rem;
+    font-style: italic;
+    color: rgba(220,205,180,0.7);
+    margin-bottom: 36px;
+    letter-spacing: 0.04em;
+  }
+  .cover-divider {
+    width: 60px;
+    height: 2px;
+    background: var(--gold);
+    margin-bottom: 28px;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 48px;
+    flex-wrap: wrap;
+  }
+  .cover-meta-item {
+    display: flex;
+    flex-direction: column;
+  }
+  .cover-meta-label {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    color: rgba(200,185,160,0.65);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+  .cover-meta-value {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.9rem;
+    color: #d8ccb4;
+  }
+  .cover-edition-badge {
+    position: absolute;
+    top: 60px;
+    right: 60px;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold-light);
+  }
+  .cover-edition-badge span:first-child {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+  .cover-edition-badge span:last-child {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    opacity: 0.8;
+    margin-top: 2px;
+  }
+
+  /* ── TOC ── */
+  .toc-wrapper {
+    background: var(--paper-warm);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 60px;
+  }
+  .toc-title {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 24px;
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 48px;
+  }
+  .toc-item {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 5px 0;
+    border-bottom: 1px dotted var(--border);
+    text-decoration: none;
+    color: var(--ink-soft);
+    transition: color 0.2s;
+  }
+  .toc-item:hover { color: var(--gold); }
+  .toc-num {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    min-width: 22px;
+  }
+  .toc-text {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.88rem;
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 64px 40px 100px;
+  }
+
+  /* ── SECTIONS ── */
+  .section {
+    margin-bottom: 72px;
+  }
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 32px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .section-num {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 2rem;
+    color: var(--ink-muted);
+    line-height: 1;
+  }
+  .section-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .section-subtitle {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--ink-muted);
+    margin-left: auto;
+  }
+
+  h3 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 32px 0 14px;
+    padding-left: 14px;
+    border-left: 3px solid var(--gold);
+  }
+  h4 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin: 22px 0 10px;
+  }
+
+  p {
+    font-size: 0.96rem;
+    line-height: 1.95;
+    color: var(--ink-soft);
+    margin-bottom: 14px;
+  }
+
+  /* ── CALLOUT BLOCKS ── */
+  .callout {
+    margin: 28px 0;
+    padding: 20px 24px;
+    border-radius: 2px;
+    position: relative;
+  }
+  .callout-label {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .callout-core {
+    background: var(--navy);
+    color: #ddd5c0;
+    border-left: 4px solid var(--gold);
+  }
+  .callout-core .callout-label { color: var(--gold-light); }
+  .callout-core p { color: #ccc3ad; font-size: 0.93rem; }
+
+  .callout-insight {
+    background: var(--insight-bg);
+    border-left: 4px solid var(--insight-border);
+  }
+  .callout-insight .callout-label { color: var(--teal); }
+  .callout-insight p { color: #2d4a3e; }
+
+  .callout-critical {
+    background: var(--critical-bg);
+    border-left: 4px solid var(--critical-border);
+  }
+  .callout-critical .callout-label { color: var(--rust); }
+  .callout-critical p { color: #4a2020; }
+
+  .callout-meta {
+    background: var(--meta-bg);
+    border-left: 4px solid var(--meta-border);
+  }
+  .callout-meta .callout-label { color: var(--navy); }
+  .callout-meta p { color: #1e2d4a; }
+
+  .callout-analogy {
+    background: #f4f0fa;
+    border-left: 4px solid #7a5fa8;
+  }
+  .callout-analogy .callout-label { color: #5a3f8a; }
+  .callout-analogy p { color: #2d2040; }
+
+  /* ── QUOTE BLOCK ── */
+  .quote-block {
+    margin: 32px 0;
+    padding: 24px 32px;
+    background: var(--quote-bg);
+    border-top: 1px solid var(--border-strong);
+    border-bottom: 1px solid var(--border-strong);
+    position: relative;
+  }
+  .quote-block::before {
+    content: '\201C';
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 5rem;
+    color: var(--border-strong);
+    line-height: 1;
+  }
+  .quote-text {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 1.15rem;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.75;
+    margin-bottom: 10px;
+    padding-left: 8px;
+  }
+  .quote-source {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 0.72rem;
+    color: var(--ink-muted);
+    letter-spacing: 0.08em;
+    text-align: right;
+  }
+
+  /* ── DATA TABLE ── */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    font-size: 0.88rem;
+  }
+  .data-table th {
+    background: var(--ink);
+    color: #e8dfc8;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-weight: 500;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    padding: 10px 14px;
+    text-align: left;
+  }
+  .data-table td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--ink-soft);
+    vertical-align: top;
+    line-height: 1.7;
+  }
+  .data-table tr:nth-child(even) td { background: var(--paper-warm); }
+  .data-table tr:hover td { background: var(--paper-tinted); }
+
+  /* ── TIMMONS TRIANGLE SVG ── */
+  .diagram-wrapper {
+    margin: 32px 0;
+    padding: 32px;
+    background: var(--paper-warm);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .diagram-caption {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 0.72rem;
+    color: var(--ink-muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  /* ── ENTREPRENEURIAL MIND LIST ── */
+  .mind-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .mind-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 14px 16px;
+    background: var(--paper-warm);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+  }
+  .mind-icon {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    flex-shrink: 0;
+  }
+  .mind-content {}
+  .mind-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+  .mind-desc {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  /* ── OPPORTUNITY CHECKLIST ── */
+  .opp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--border-strong);
+    margin: 20px 0;
+  }
+  .opp-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .opp-item:nth-child(even) { border-right: none; }
+  .opp-check {
+    color: var(--teal);
+    font-size: 0.85rem;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  .opp-text {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* ── COMPARISON PANEL ── */
+  .compare-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin: 24px 0;
+    border: 1px solid var(--border-strong);
+  }
+  .compare-col {
+    padding: 20px 22px;
+  }
+  .compare-col:first-child {
+    border-right: 1px solid var(--border-strong);
+    background: var(--critical-bg);
+  }
+  .compare-col:last-child { background: var(--insight-bg); }
+  .compare-head {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+    border-bottom: 2px solid;
+  }
+  .compare-col:first-child .compare-head { color: var(--rust); border-color: var(--rust); }
+  .compare-col:last-child .compare-head { color: var(--teal); border-color: var(--teal); }
+  .compare-list { list-style: none; }
+  .compare-list li {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    padding: 5px 0;
+    border-bottom: 1px dotted var(--border);
+    line-height: 1.65;
+  }
+  .compare-list li:last-child { border: none; }
+
+  /* ── HARVEST STAGES ── */
+  .stages-flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 24px 0;
+    overflow-x: auto;
+  }
+  .stage-box {
+    flex: 1;
+    min-width: 100px;
+    padding: 16px 12px;
+    text-align: center;
+    background: var(--navy);
+    color: #d8ccb4;
+    position: relative;
+  }
+  .stage-box:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: -14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 28px solid transparent;
+    border-bottom: 28px solid transparent;
+    border-left: 14px solid var(--navy);
+    z-index: 1;
+  }
+  .stage-box:nth-child(2) { background: #2a3d5a; }
+  .stage-box:nth-child(2)::after { border-left-color: #2a3d5a; }
+  .stage-box:nth-child(3) { background: #334d6e; }
+  .stage-box:nth-child(3)::after { border-left-color: #334d6e; }
+  .stage-box:nth-child(4) { background: #3d5e82; }
+  .stage-box:nth-child(4)::after { border-left-color: #3d5e82; }
+  .stage-box:nth-child(5) { background: #476e96; }
+  .stage-num {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 1.5rem;
+    color: var(--gold-pale);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stage-text {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 0.7rem;
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  /* ── DIALOGUE SECTION ── */
+  .dialogue-block {
+    margin: 24px 0;
+    padding: 22px 26px;
+    background: var(--paper-tinted);
+    border: 1px dashed var(--border-strong);
+    border-radius: 2px;
+  }
+  .dialogue-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .dialogue-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .dialogue-who {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .dialogue-body {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    line-height: 1.85;
+  }
+  .dialogue-body em { font-style: italic; color: var(--ink-muted); }
+
+  /* ── INFOBAR ── */
+  .infobar {
+    display: flex;
+    gap: 16px;
+    margin: 24px 0;
+    flex-wrap: wrap;
+  }
+  .infobar-item {
+    flex: 1;
+    min-width: 140px;
+    padding: 16px 18px;
+    border-top: 3px solid var(--gold);
+    background: var(--paper-warm);
+  }
+  .infobar-num {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .infobar-desc {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 0.72rem;
+    color: var(--ink-muted);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* ── ANNOTATION ── */
+  .annotation {
+    margin: 16px 0;
+    padding: 12px 18px;
+    background: var(--highlight);
+    border-left: 3px solid var(--gold-light);
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.88rem;
+    font-style: italic;
+    color: var(--ink-soft);
+    line-height: 1.8;
+  }
+
+  /* ── CROSS-DOMAIN CARDS ── */
+  .cross-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .cross-card {
+    padding: 20px 20px;
+    background: var(--paper-warm);
+    border: 1px solid var(--border);
+  }
+  .cross-card-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .cross-domain-tag {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    background: var(--navy);
+    color: var(--gold-pale);
+    border-radius: 2px;
+  }
+  .cross-book {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--ink-muted);
+  }
+  .cross-body {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.84rem;
+    color: var(--ink-soft);
+    line-height: 1.8;
+    margin: 0;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--ink);
+    color: rgba(220,205,180,0.55);
+    padding: 36px 60px;
+    text-align: center;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    line-height: 2;
+  }
+  .footer strong {
+    color: var(--gold-light);
+    font-weight: 500;
+  }
+
+  /* ── SEPARATOR ── */
+  .sep {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 40px 0;
+  }
+  .sep-ornament {
+    text-align: center;
+    margin: 32px 0;
+    color: var(--gold);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 1.4rem;
+    line-height: 1;
+  }
+  .sep-ornament::before, .sep-ornament::after {
+    content: '—';
+    color: var(--border-strong);
+    margin: 0 12px;
+  }
+
+  /* ── HIGHLIGHT TEXT ── */
+  mark {
+    background: var(--gold-pale);
+    color: var(--ink);
+    padding: 0 2px;
+  }
+  strong { color: var(--ink); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 680px) {
+    .cover { padding: 48px 28px 52px; }
+    .cover-title-zh { font-size: 2.2rem; }
+    .toc-wrapper { padding: 36px 28px; }
+    .toc-grid { grid-template-columns: 1fr; }
+    .main { padding: 40px 20px 80px; }
+    .mind-grid, .opp-grid, .compare-panel, .cross-grid { grid-template-columns: 1fr; }
+    .stages-flow { flex-direction: column; }
+    .stage-box::after { display: none; }
+    .infobar { flex-direction: column; }
+    .cover-edition-badge { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-edition-badge">
+    <span>9th</span>
+    <span>Edition</span>
+  </div>
+  <div class="cover-label">读书笔记 · Reading Notes</div>
+  <div class="cover-title-zh">创业学</div>
+  <div class="cover-title-en">New Venture Creation: Entrepreneurship for the 21st Century</div>
+  <div class="cover-divider"></div>
+  <div class="cover-meta">
+    <div class="cover-meta-item">
+      <span class="cover-meta-label">作者</span>
+      <span class="cover-meta-value">杰弗里·蒂蒙斯 / 小斯蒂芬·斯皮内利</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="cover-meta-label">出版</span>
+      <span class="cover-meta-value">McGraw-Hill Education</span>
+    </div>
+    <div class="cover-meta-item">
+      <span class="cover-meta-label">核心主张</span>
+      <span class="cover-meta-value">机会驱动 · 团队核心 · 资源节俭</span>
+    </div>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc-wrapper">
+  <div class="toc-title">目录 · Contents</div>
+  <div class="toc-grid">
+    <a class="toc-item" href="#s1"><span class="toc-num">01</span><span class="toc-text">总览：这本书在说什么</span></a>
+    <a class="toc-item" href="#s2"><span class="toc-num">02</span><span class="toc-text">蒂蒙斯模型：创业过程的核心框架</span></a>
+    <a class="toc-item" href="#s3"><span class="toc-num">03</span><span class="toc-text">创业者心智与行为特质</span></a>
+    <a class="toc-item" href="#s4"><span class="toc-num">04</span><span class="toc-text">机会：识别、评估与窗口</span></a>
+    <a class="toc-item" href="#s5"><span class="toc-num">05</span><span class="toc-text">团队：人是一切的核心</span></a>
+    <a class="toc-item" href="#s6"><span class="toc-num">06</span><span class="toc-text">资源：稀缺即创意</span></a>
+    <a class="toc-item" href="#s7"><span class="toc-num">07</span><span class="toc-text">创业融资与财务逻辑</span></a>
+    <a class="toc-item" href="#s8"><span class="toc-num">08</span><span class="toc-text">商业计划与可行性分析</span></a>
+    <a class="toc-item" href="#s9"><span class="toc-num">09</span><span class="toc-text">创业伦理与领导力</span></a>
+    <a class="toc-item" href="#s10"><span class="toc-num">10</span><span class="toc-text">收获与退出策略</span></a>
+    <a class="toc-item" href="#s11"><span class="toc-num">11</span><span class="toc-text">跨领域联想：创业学的隐藏对话</span></a>
+    <a class="toc-item" href="#s12"><span class="toc-num">12</span><span class="toc-text">批判性重构：挑战蒂蒙斯的前提</span></a>
+    <a class="toc-item" href="#s13"><span class="toc-num">13</span><span class="toc-text">金句精华与读后记</span></a>
+    <a class="toc-item" href="#s14"><span class="toc-num">14</span><span class="toc-text">与其他理论的对话</span></a>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- SECTION 1 -->
+  <div class="section" id="s1">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <span class="section-title">总览：这本书在说什么</span>
+    </div>
+
+    <p>《创业学》是杰弗里·蒂蒙斯（Jeffry A. Timmons）在20世纪80年代创立、并与斯皮内利共同持续完善的一部学术-实践融合著作，被公认为创业学领域的奠基性经典教材，在全球商学院使用超过三十年。全书的核心命题只有一个，但它极其有力：<strong>创业不是天赋异禀者的孤独冒险，而是一个可以学习、可以管理、可以系统优化的过程。</strong></p>
+
+    <p>作者的起点是一个反传统的信念——创业者不是"生来如此"，而是在特定条件下被塑造出来的。书的全部建构都在为这一信念提供证据：蒂蒙斯用数十年的田野调研、案例追踪和理论建模，试图将创业这件"混沌之事"拆解为可操作的变量。</p>
+
+    <div class="callout callout-core">
+      <span class="callout-label">核心论点</span>
+      <p>创业成功由三种力量的动态平衡决定：<strong>机会（Opportunity）、团队（Team）、资源（Resources）</strong>。创始人的核心任务，是在不断变化的市场环境中，持续校准这三者之间的"契合度与平衡"（Fit and Balance）。</p>
+    </div>
+
+    <p>与大量流行的创业书籍不同，蒂蒙斯拒绝神话叙事。他不讲乔布斯式的天才独白，而是去拆解为什么某些团队能识别到真正的机会，为什么某些团队在资源贫乏的情况下依然能建立护城河。这本书的气质是：严谨、务实、充满对失败案例的冷静审视。</p>
+
+    <div class="infobar">
+      <div class="infobar-item">
+        <div class="infobar-num">1983</div>
+        <p class="infobar-desc">初版面世，开创系统性创业学研究体系</p>
+      </div>
+      <div class="infobar-item">
+        <div class="infobar-num">9</div>
+        <p class="infobar-desc">历经9版迭代，持续整合新案例与理论</p>
+      </div>
+      <div class="infobar-item">
+        <div class="infobar-num">3</div>
+        <p class="infobar-desc">三角模型中三个核心变量，缺一不可</p>
+      </div>
+      <div class="infobar-item">
+        <div class="infobar-num">∞</div>
+        <p class="infobar-desc">强调创业者心智可以通过学习持续精进</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <span class="section-title">蒂蒙斯模型：创业过程的核心框架</span>
+      <span class="section-subtitle">The Timmons Model</span>
+    </div>
+
+    <p>蒂蒙斯模型是本书最重要的理论贡献，也是理解全书其他章节的"解码器"。它的形态是一个动态平衡的三角形，三个顶点分别是机会、团队与资源，而创始人（Entrepreneur）站在三角形的中心，担任"驱动力"与"调节者"。</p>
+
+    <div class="diagram-wrapper">
+      <svg viewBox="0 0 520 380" width="480" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;">
+        <defs>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="2.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <!-- Arrow markers -->
+          <marker id="arr-gold" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#b8860b"/>
+          </marker>
+        </defs>
+
+        <!-- Triangle background -->
+        <polygon points="260,40 60,320 460,320" fill="#f4ede0" stroke="#1e2d4a" stroke-width="2.5"/>
+
+        <!-- Inner triangle (resource scarcity zone) -->
+        <polygon points="260,96 108,295 412,295" fill="none" stroke="#d9cdb8" stroke-width="1" stroke-dasharray="5,4"/>
+
+        <!-- Top vertex: Opportunity -->
+        <circle cx="260" cy="40" r="44" fill="#1e2d4a" stroke="#b8860b" stroke-width="2"/>
+        <text x="260" y="35" text-anchor="middle" font-family="'Noto Serif SC', serif" font-size="13" font-weight="700" fill="#f0d98a">机　会</text>
+        <text x="260" y="52" text-anchor="middle" font-family="'EB Garamond', Georgia, serif" font-size="10" font-style="italic" fill="#c8b88a">Opportunity</text>
+
+        <!-- Bottom-left vertex: Team -->
+        <circle cx="60" cy="320" r="44" fill="#1f5f5b" stroke="#b8860b" stroke-width="2"/>
+        <text x="60" y="315" text-anchor="middle" font-family="'Noto Serif SC', serif" font-size="13" font-weight="700" fill="#f0d98a">团　队</text>
+        <text x="60" y="332" text-anchor="middle" font-family="'EB Garamond', Georgia, serif" font-size="10" font-style="italic" fill="#c8b88a">Team</text>
+
+        <!-- Bottom-right vertex: Resources -->
+        <circle cx="460" cy="320" r="44" fill="#8b3a1e" stroke="#b8860b" stroke-width="2"/>
+        <text x="460" y="315" text-anchor="middle" font-family="'Noto Serif SC', serif" font-size="13" font-weight="700" fill="#f0d98a">资　源</text>
+        <text x="460" y="332" text-anchor="middle" font-family="'EB Garamond', Georgia, serif" font-size="10" font-style="italic" fill="#c8b88a">Resources</text>
+
+        <!-- Center: Entrepreneur -->
+        <circle cx="260" cy="220" r="38" fill="#fff" stroke="#b8860b" stroke-width="2.5" filter="url(#glow)"/>
+        <text x="260" y="215" text-anchor="middle" font-family="'Noto Serif SC', serif" font-size="11.5" font-weight="700" fill="#1a1510">创始人</text>
+        <text x="260" y="232" text-anchor="middle" font-family="'EB Garamond', Georgia, serif" font-size="9.5" font-style="italic" fill="#7a6e61">Entrepreneur</text>
+
+        <!-- Arrows: bi-directional between vertices and center -->
+        <line x1="224" y1="200" x2="120" y2="110" stroke="#b8860b" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-gold)"/>
+        <line x1="296" y1="200" x2="395" y2="110" stroke="#b8860b" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-gold)"/>
+        <line x1="260" y1="258" x2="260" y2="290" stroke="#b8860b" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr-gold)"/>
+
+        <!-- Side labels -->
+        <text x="155" y="185" font-family="'Noto Sans SC', sans-serif" font-size="9.5" fill="#7a6e61" transform="rotate(-54,155,185)">契合度与平衡</text>
+        <text x="340" y="140" font-family="'Noto Sans SC', sans-serif" font-size="9.5" fill="#7a6e61" transform="rotate(54,340,140)">动态调节</text>
+
+        <!-- Bottom annotation -->
+        <text x="260" y="360" text-anchor="middle" font-family="'Noto Sans SC', sans-serif" font-size="9" fill="#7a6e61" letter-spacing="1">资本市场背景 · 创业环境 · 时机</text>
+        <rect x="140" y="348" width="240" height="1" fill="#d9cdb8"/>
+      </svg>
+      <div class="diagram-caption">图 1 · 蒂蒙斯创业过程模型（The Timmons Model of the Entrepreneurial Process）</div>
+    </div>
+
+    <h3>机会（Opportunity）——模型的驱动引擎</h3>
+    <p>在蒂蒙斯的体系中，<mark>机会是整个创业过程的起点，也是最容易被误解的概念</mark>。他反复强调：机会不等于想法（Idea）。一个想法只有满足特定条件，才能升格为"真正的机会"。机会必须是<strong>市场驱动的</strong>——它的存在来自于被识别出来的顾客需求，而非创业者的一厢情愿。</p>
+
+    <p>机会还具有时间性：它在"机会窗口"（Window of Opportunity）打开时存在，随着竞争加剧、市场成熟而关闭。这意味着创业者必须同时具备识别能力与行动速度——太早进入，市场不存在；太晚进入，窗口已关。</p>
+
+    <h3>团队（Team）——执行力的载体</h3>
+    <p>蒂蒙斯认为，创业学界长期低估了团队的作用。他的研究表明，<mark>投资人在评估项目时，优先级几乎永远是：团队 > 机会 > 商业计划</mark>。原因很直接：商业计划会变，机会会漂移，但一支高质量的团队有能力在变化中找到出路，而一支弱团队会把最好的机会葬送。</p>
+
+    <p>好的创业团队的关键不在于"天才云集"，而在于技能互补（Complementary Skills）与心理契合。创始人需要能坦诚地评估自己的短板，并围绕这些短板去招募共同创始人或核心成员。</p>
+
+    <h3>资源（Resources）——"少即是多"的哲学</h3>
+    <p>这里蒂蒙斯有一个反直觉的洞察：<mark>资源过剩对创业公司来说可能比资源匮乏更危险。</mark>早期融到过多的钱，会让团队丧失对效率的专注，掩盖商业模式中真正的缺陷。他提出了"引导（Bootstrapping）"的哲学——在最低限度的资源约束下，验证商业假设，证明价值主张，然后再去融资扩张。</p>
+
+    <div class="callout callout-insight">
+      <span class="callout-label">核心洞察 · 平衡即战略</span>
+      <p>蒂蒙斯模型的精髓不在于三个变量本身，而在于它们之间的<strong>"契合度"（Fit）</strong>。一个顶级的机会遇到一支平庸的团队，会产生灾难性的资源错配；一支卓越的团队锁定一个平庸的机会，会陷入持续内耗。创始人的核心任务，是像调音师一样不断校准三者的张力——这是一种动态的平衡，而非静态的配置。</p>
+    </div>
+
+    <h3>创始人：驱动力与调节者</h3>
+    <p>创始人处于三角形的中心，这个位置意味深长。他/她不是"拥有"三个顶点的人，而是在它们之间持续进行决策、妥协与再分配的人。蒂蒙斯将这个角色描述为"领导创业过程的人"——而领导的本质，是在不确定性中维持方向感，在团队、机会、资源之间不断寻找新的动态均衡点。</p>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <span class="section-title">创业者心智与行为特质</span>
+      <span class="section-subtitle">The Entrepreneurial Mind</span>
+    </div>
+
+    <p>蒂蒙斯专门用大量篇幅研究"创业者是什么样的人"这个问题——但他非常谨慎地避免将其神话化。他的结论是：<mark>有一组可识别的行为模式和心理特质，它们可以被培养，也可以在后天强化。</mark></p>
+
+    <p>他从数十个案例中归纳出成功创业者的特质群，并将其划分为两类：<strong>可习得的行为（Learnable Behaviors）</strong>与<strong>内在动机驱动（Intrinsic Motivation）</strong>。以下是书中列举的核心特质：</p>
+
+    <div class="mind-grid">
+      <div class="mind-item">
+        <div class="mind-icon">🎯</div>
+        <div class="mind-content">
+          <div class="mind-title">承诺与决心</div>
+          <p class="mind-desc">Commitment & Determination——对目标不顾一切的专注，在绝大多数人放弃时仍然坚持。这是最被投资人和研究者反复验证的第一特质。</p>
+        </div>
+      </div>
+      <div class="mind-item">
+        <div class="mind-icon">👁️</div>
+        <div class="mind-content">
+          <div class="mind-title">机会执念</div>
+          <p class="mind-desc">Opportunity Obsession——以市场为中心、以用户为中心，而非以产品或技术为中心。将一切认知资源投入到识别、理解和抓住机会上。</p>
+        </div>
+      </div>
+      <div class="mind-item">
+        <div class="mind-icon">⚖️</div>
+        <div class="mind-content">
+          <div class="mind-title">风险承受与管理</div>
+          <p class="mind-desc">Tolerance of Risk——并非鲁莽冒险，而是"计算后的风险承担"（Calculated Risk Taking）。善于识别风险边界并在可控范围内行动。</p>
+        </div>
+      </div>
+      <div class="mind-item">
+        <div class="mind-icon">🔄</div>
+        <div class="mind-content">
+          <div class="mind-title">创造力与适应力</div>
+          <p class="mind-desc">Creativity & Adaptability——不拘泥于既定方案，善于在约束中发现替代路径。对环境变化的高灵敏度与快速响应。</p>
+        </div>
+      </div>
+      <div class="mind-item">
+        <div class="mind-icon">🤝</div>
+        <div class="mind-content">
+          <div class="mind-title">领导力</div>
+          <p class="mind-desc">Leadership——建立共同愿景的能力；以诚信为基础的影响力；在压力下维持团队凝聚力的情商。</p>
+        </div>
+      </div>
+      <div class="mind-item">
+        <div class="mind-icon">🌫️</div>
+        <div class="mind-content">
+          <div class="mind-title">模糊容忍度</div>
+          <p class="mind-desc">Tolerance for Ambiguity——在信息不完整、方向不明确的状态下仍能做出决策，而不陷入决策瘫痪。</p>
+        </div>
+      </div>
+      <div class="mind-item">
+        <div class="mind-icon">💡</div>
+        <div class="mind-content">
+          <div class="mind-title">内驱力与卓越动机</div>
+          <p class="mind-desc">Motivation to Excel——超越"赚钱"本身的内在驱动，渴望创造影响、建立有意义的事物。这种动机决定了在逆境中的持久力。</p>
+        </div>
+      </div>
+      <div class="mind-item">
+        <div class="mind-icon">🔍</div>
+        <div class="mind-content">
+          <div class="mind-title">自我认知</div>
+          <p class="mind-desc">Self-Reliance & Self-Knowledge——清醒地知道自己的强项与弱项；用团队而非个人来弥补能力缺口；不因自负而陷入盲区。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-critical">
+      <span class="callout-label">批判性审视</span>
+      <p>蒂蒙斯对创业者特质的描述存在一个方法论陷阱：他的样本主要来自<strong>成功的创业者</strong>（幸存者偏差）。失败的创业者同样可能具备"承诺与决心"，只是在错误的方向上坚持过头了。这份特质清单本质上是对成功者的事后归因，而非对成功的预测性指标。作者在书中部分地承认了这一局限，但并未完全解决它。</p>
+    </div>
+
+    <p>值得一提的是，蒂蒙斯专门讨论了创业者常见的自我认知偏差：过度乐观（Overoptimism）、控制幻觉（Illusion of Control）与对失败信号的选择性忽视。他认为，<mark>一个成熟的创业者必须在激情与冷静评估之间保持张力</mark>——既要有足够的激情去开始，又要有足够的清醒去知道何时该转向、甚至何时该放弃。</p>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <span class="section-title">机会：识别、评估与窗口</span>
+      <span class="section-subtitle">Opportunity Recognition &amp; Evaluation</span>
+    </div>
+
+    <p>如果说蒂蒙斯模型是全书的骨架，那么机会理论就是骨架上最重要的那块骨头。蒂蒙斯用了整整数章来回答一个问题：<strong>什么是真正的创业机会，如何识别它，如何评估它？</strong></p>
+
+    <h3>机会的本质：与需求的共鸣</h3>
+    <p>蒂蒙斯明确区分了<strong>想法（Idea）</strong>与<strong>机会（Opportunity）</strong>。想法是主观的、技术导向的、以创始人为中心的；机会是客观的（有市场需求支撑的）、市场导向的、以顾客为中心的。能否完成从"想法"到"机会"的升格，是区分优秀创业者与普通创业者的关键分水岭。</p>
+
+    <p>机会的识别通常发生在以下几个情境中：</p>
+    <p>一是<strong>行业变革期</strong>——技术突破、监管变化、人口结构转型，这些力量会在原有市场中留下裂缝，而裂缝就是机会的入口。二是<strong>信息不对称</strong>——创业者掌握了市场上其他人尚未掌握的信息或洞察，这种先知优势是机会的早期形态。三是<strong>资源错配</strong>——某些需求在市场上被明显低估或服务不足（Underserved Market），这种错配本身就是机会的信号。</p>
+
+    <h3>机会评估的六维框架</h3>
+    <p>书中提供了一套严谨的机会评估工具——"机会认知框架"（Opportunity Recognition Framework），可简化为以下六个维度：</p>
+
+    <div class="opp-grid">
+      <div class="opp-item">
+        <span class="opp-check">✦</span>
+        <p class="opp-text"><strong>市场规模与增长性</strong><br>目标市场是否足够大（通常要求百亿级以上），增速是否高于行业平均？小市场无法支撑高成长企业。</p>
+      </div>
+      <div class="opp-item">
+        <span class="opp-check">✦</span>
+        <p class="opp-text"><strong>毛利率结构</strong><br>蒂蒙斯强调毛利率是商业模式质量的核心指标。毛利率低于40%的机会，在大多数情况下很难支撑创业公司的高速成长。</p>
+      </div>
+      <div class="opp-item">
+        <span class="opp-check">✦</span>
+        <p class="opp-text"><strong>现金流周期</strong><br>机会本身是否能产生正向现金流，或者何时能够达到？现金流为负的期限越长，所需资本越多，风险越高。</p>
+      </div>
+      <div class="opp-item">
+        <span class="opp-check">✦</span>
+        <p class="opp-text"><strong>竞争壁垒的耐久性</strong><br>护城河是否可持续？专利、网络效应、品牌、转换成本——这些壁垒的强度与寿命，决定了机会的"可收割期"长度。</p>
+      </div>
+      <div class="opp-item">
+        <span class="opp-check">✦</span>
+        <p class="opp-text"><strong>时机窗口</strong><br>机会窗口是否打开？技术、监管、消费者心理的成熟度是否达到了临界点？太早或太晚都会错过。</p>
+      </div>
+      <div class="opp-item">
+        <span class="opp-check">✦</span>
+        <p class="opp-text"><strong>团队-机会匹配度</strong><br>这个机会对于这支特定的团队是否合适？同样的机会，放在不同团队手中，价值可能相差十倍。</p>
+      </div>
+    </div>
+
+    <div class="quote-block">
+      <p class="quote-text">Good opportunities have the following characteristics: they create or add significant value to a customer or end user; they do so by solving a significant problem, removing a serious pain point, or meeting a significant want or need for which someone will pay a premium.</p>
+      <div class="quote-source">— Jeffry Timmons, New Venture Creation (9th Ed.), Chapter 3</div>
+    </div>
+
+    <h3>"机会窗口"的时间政治学</h3>
+    <p>蒂蒙斯用"机会窗口"这一概念来处理时间维度的问题。他的观点是：几乎所有好的机会都有一个类似"保质期"的结构——<mark>在窗口打开的初期进入，竞争优势最大；随着时间推移，竞争者涌入、市场标准化，机会的超额回报空间逐渐收窄直至消失。</mark></p>
+
+    <p>这个框架的重要推论是：快速行动本身就是一种竞争优势，但"快"不等于"莽"。真正的速度优势在于：比竞争者更快地完成从"识别机会"到"验证假设"再到"资源配置"的完整循环。</p>
+
+    <div class="callout callout-insight">
+      <span class="callout-label">延伸洞察 · 机会的社会性</span>
+      <p>蒂蒙斯有一个值得深思的观察：<strong>机会往往不是被"发明"的，而是被"发现"的。</strong>它在被识别之前就已经存在于市场中，只是隐藏在信息噪音、既有假设或认知盲区之下。这意味着，创业者最重要的能力之一不是"创造"，而是"观察"——对现有市场的深刻、持续、逆向的观察。</p>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <span class="section-title">团队：人是一切的核心</span>
+      <span class="section-subtitle">The Entrepreneurial Team</span>
+    </div>
+
+    <p>蒂蒙斯对团队的论述中有一句话几乎成了创业学的经典格言：<mark>投资人投资的是人，而不是商业计划。</mark>一份精彩的商业计划配一支糟糕的团队，依然会失败；一支卓越的团队配一份平庸的计划，往往能找到出路。</p>
+
+    <h3>团队构建的三个核心问题</h3>
+    <p>蒂蒙斯将团队构建的挑战凝练为三个问题：一是"我们有谁（Who we are）"——现有成员的能力版图与短板清单；二是"我们需要谁（Who we need）"——与机会匹配所必须补足的能力缺口；三是"我们如何留住谁（How we keep them）"——股权结构、激励设计与文化建设。</p>
+
+    <h3>互补性：团队的化学结构</h3>
+    <p>真正高效的创业团队不是一群同质化的天才，而是技能与心理特质高度互补的组合。蒂蒙斯描述了一种理想的三角结构：<strong>一个机会发现者（Visionary）、一个运营执行者（Operator）、一个关系网络编织者（Connector）</strong>——这三种角色的缺失，都会在不同阶段形成致命的短板。</p>
+
+    <h3>创始人稀释与股权陷阱</h3>
+    <p>书中对创始人股权分配有独特而务实的论述。蒂蒙斯指出，早期股权分配中最常见的错误有两种：一是<strong>平等分配主义</strong>——几个联合创始人各占25%，表面上公平，实则在关键决策时形成僵局；二是<strong>过早稀释</strong>——为了让早期关键员工加入，给出了与其未来贡献不相称的股权比例。</p>
+
+    <div class="callout callout-core">
+      <span class="callout-label">核心原则 · 团队与股权</span>
+      <p>股权应当反映的是<strong>未来的贡献</strong>，而非过去的关系或当下的情绪。蒂蒙斯推荐使用"归属时间表（Vesting Schedule）"来对齐长期激励；同时强调，创业团队的凝聚力来自于共同的价值观与愿景，而不是股权数字的表面相等。</p>
+    </div>
+
+    <h3>领导力的演化：从"创始人"到"CEO"</h3>
+    <p>蒂蒙斯观察到一个几乎普遍存在的现象：<mark>在公司从0到1阶段呼风唤雨的创始人，在公司从1到100的管理阶段，往往成为最大的瓶颈。</mark>创始人的直觉式领导、扁平化管理风格和高风险容忍度，在早期是优势，在规模化后可能变成灾难。他因此专门论述了"领导力演化"——创始人需要有意识地转变管理方式，或者在正确的时机引入职业经理人。</p>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section" id="s6">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <span class="section-title">资源：稀缺即创意</span>
+      <span class="section-subtitle">Resources &amp; Bootstrapping</span>
+    </div>
+
+    <p>资源章节是全书最具反传统色彩的部分。蒂蒙斯的核心命题是：<strong>创业者不应该先问"我有多少资源"，而应该先问"这个机会需要什么资源，以及我能用最小的资源代价来验证它吗？"</strong></p>
+
+    <h3>资源的"租借"哲学</h3>
+    <p>他提出了一个富有洞见的框架：<mark>成功的创业者是资源的"租借者"（Resource Renter），而不是资源的"拥有者"（Resource Owner）。</mark>在能借用的时候绝不购买，在能合作的时候绝不雇佣，在能外包的时候绝不内包。这种"轻资产"思维，是在资本市场青睐之前，早期创业公司生存的基本策略。</p>
+
+    <h3>引导式创业（Bootstrapping）的艺术</h3>
+    <p>蒂蒙斯详细论述了引导式创业的具体方法：延迟支付、加快收款（通过预付款、订阅制等方式）、以股权换服务、借用顾客的资源、利用政府补贴和研究资金等。这些方法共同指向一个目的：<strong>在不依赖外部股权融资的情况下，尽可能长地运转并验证商业假设。</strong></p>
+
+    <div class="compare-panel">
+      <div class="compare-col">
+        <div class="compare-head">资源过剩的风险</div>
+        <ul class="compare-list">
+          <li>掩盖了商业模式的真实缺陷</li>
+          <li>降低了对效率的关注</li>
+          <li>形成不可持续的组织文化（高消耗）</li>
+          <li>过早规模化，尚未找到 Product-Market Fit</li>
+          <li>稀释了创始人的控制权与激励</li>
+        </ul>
+      </div>
+      <div class="compare-col">
+        <div class="compare-head">资源稀缺的红利</div>
+        <ul class="compare-list">
+          <li>强迫团队聚焦在最核心的假设上</li>
+          <li>培养极端的效率意识与创意</li>
+          <li>迫使更快地与真实客户接触</li>
+          <li>保留更大的股权空间以备未来激励</li>
+          <li>提高组织韧性与抗风险能力</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="annotation">
+      这与精益创业（Lean Startup）的MVP（最小可行产品）理念高度共鸣——但蒂蒙斯早于埃里克·莱斯（Eric Ries）十余年就系统地阐述了这一逻辑，只是语言体系不同。
+    </div>
+  </div>
+
+  <!-- SECTION 7 -->
+  <div class="section" id="s7">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <span class="section-title">创业融资与财务逻辑</span>
+      <span class="section-subtitle">Entrepreneurial Finance</span>
+    </div>
+
+    <p>蒂蒙斯的融资章节与普通金融学教材有根本性的不同：他不是在讲"如何融到最多的钱"，而是在讲"融资与创业价值创造之间的内在关系"。这一视角使得他对融资的论述远比通常的创业书更有深度。</p>
+
+    <h3>自由现金流：企业价值的真实度量</h3>
+    <p>蒂蒙斯反复强调，在创业语境中，<mark>自由现金流（Free Cash Flow）比利润更重要，比收入增速更能揭示企业的真实健康状况。</mark>一个快速增长的企业如果持续消耗现金且无法找到现金流正转的路径，它的"高估值"本质上是一个对未来偿付的赌注。理解这一点，是创业者与投资人进行对等对话的前提。</p>
+
+    <h3>资本市场的"食物链"</h3>
+    <p>书中对创业融资生态系统有完整的描绘，从种子期到上市，各阶段融资来源与逻辑如下：</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>融资阶段</th>
+          <th>主要来源</th>
+          <th>核心诉求</th>
+          <th>典型估值逻辑</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>种子期（Pre-Seed/Seed）</td>
+          <td>创始人自筹、亲友（3F）、天使</td>
+          <td>概念验证，团队信任</td>
+          <td>团队+愿景，无明确数字模型</td>
+        </tr>
+        <tr>
+          <td>早期（Series A）</td>
+          <td>早期VC、超级天使</td>
+          <td>PMF验证，初步增长数据</td>
+          <td>收入倍数，用户增速</td>
+        </tr>
+        <tr>
+          <td>成长期（Series B/C）</td>
+          <td>成长型VC、战略投资者</td>
+          <td>规模化路径，单位经济模型</td>
+          <td>ARR倍数，LTV/CAC比例</td>
+        </tr>
+        <tr>
+          <td>后期（Late Stage/Pre-IPO）</td>
+          <td>大型PE、战略并购方</td>
+          <td>盈利路径，市场领导力</td>
+          <td>EBITDA，可比公司估值</td>
+        </tr>
+        <tr>
+          <td>退出（IPO / M&amp;A）</td>
+          <td>公开市场 / 战略买家</td>
+          <td>流动性变现，价值锁定</td>
+          <td>公开市场PE，交易溢价</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>风险投资的逻辑：极端的幂律世界</h3>
+    <p>蒂蒙斯深入分析了风险投资的组合逻辑：VC的回报遵循幂律分布——少数几笔超级成功的投资，覆盖了全部失败投资的损失。这一结构意味着，VC的决策本质上是在押注"超额回报的可能性"，而非"平均回报的概率"。这对创业者有深刻的启示：<mark>真正的VC并不害怕高风险，他们害怕的是"低潜力的安全项目"</mark>——因为那永远不会产生他们需要的10倍、100倍回报。</p>
+
+    <div class="callout callout-meta">
+      <span class="callout-label">术语精要 · Deal Terms</span>
+      <p>蒂蒙斯对"交易条款（Deal Terms）"的讨论是本书较为独特的部分。他指出，创始人与VC的博弈核心不在于估值数字，而在于<strong>控制权条款（Anti-Dilution、Liquidation Preference、Protective Provisions）</strong>的结构设计。一个看似高估值但含有"完全棘轮条款"的融资协议，可能让创始人在最终退出时颗粒无收。理解条款结构，是创始人保护自身利益的必修课。</p>
+    </div>
+  </div>
+
+  <!-- SECTION 8 -->
+  <div class="section" id="s8">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <span class="section-title">商业计划与可行性分析</span>
+      <span class="section-subtitle">Business Planning &amp; Feasibility Analysis</span>
+    </div>
+
+    <p>在创业书籍中，商业计划往往被过度神圣化。蒂蒙斯对此有清醒的纠偏：<mark>商业计划不是目的，它是一个思考工具——写商业计划的过程，比商业计划本身更有价值。</mark></p>
+
+    <h3>可行性分析先于商业计划</h3>
+    <p>书中明确区分了两个经常被混淆的概念：<strong>可行性分析（Feasibility Analysis）</strong>是用来回答"这个机会是否值得追求"的问题；而<strong>商业计划（Business Plan）</strong>是用来回答"如何追求这个机会"的问题。在没有完成可行性验证之前就写商业计划，是将有限资源投入了一个未经验证的假设。</p>
+
+    <p>可行性分析需要覆盖以下几个关键维度：市场是否真实存在（Customer Discovery）；竞争格局是否允许新进入者生存；商业模式是否能产生足够的毛利；团队能力是否与机会要求匹配。</p>
+
+    <h3>商业计划的结构要素</h3>
+    <p>蒂蒙斯给出了一份经典的商业计划框架，核心章节包括：执行摘要（必须在两页内说服读者）、市场分析（规模、趋势、目标细分）、竞争分析（直接与间接竞争者，差异化优势）、商业模式与收入来源、营销与销售策略、运营计划、管理团队介绍、财务模型（至少三年的收入/支出/现金流预测）、融资需求与资金用途。</p>
+
+    <div class="callout callout-critical">
+      <span class="callout-label">批判性视角</span>
+      <p>蒂蒙斯的商业计划框架在互联网时代之前是标准答案，但在今天面临一个根本性挑战：<strong>市场变化速度已经超过了任何商业计划的预测能力。</strong>三年财务预测在大多数新兴赛道中，第二年就会彻底失效。这并非说商业计划无用，而是应当将其理解为"当前假设的快照"，而非"未来执行的蓝图"。敏捷方法论（Agile）和精益创业对这一问题给出了更动态的解决方案，是对蒂蒙斯框架的必要补充。</p>
+    </div>
+  </div>
+
+  <!-- SECTION 9 -->
+  <div class="section" id="s9">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <span class="section-title">创业伦理与领导力</span>
+      <span class="section-subtitle">Ethics &amp; Entrepreneurial Leadership</span>
+    </div>
+
+    <p>蒂蒙斯是极少数在创业学教材中大篇幅讨论伦理问题的学者之一。他的核心立场是：<mark>伦理不是约束创业的外部规则，而是创业可持续性的内在条件。</mark></p>
+
+    <h3>创业伦理的特殊语境</h3>
+    <p>创业环境中存在几种独特的伦理压力：股东（包括创始人）与雇员之间的利益冲突；融资过程中对投资人的信息披露义务；对顾客的真实性承诺；以及在公司困难期如何平衡各方利益。蒂蒙斯认为，这些压力往往在公司高速成长的过程中集中爆发，创始人必须在"长期信誉"与"短期利益"之间做出清晰选择。</p>
+
+    <p>他尤其警惕一种现象：在创业公司的亢奋文化中，<strong>"快速行动，打破规则"的口号有时会滑向对规则的滥用，甚至演变为欺诈。</strong>Theranos、WeWork等案例（虽然在书的早期版本中未被收录）都印证了他的这一担忧。</p>
+
+    <h3>领导力的四个层次</h3>
+    <p>书中对创业领导力的论述超越了一般性的"激励团队"表述，他从四个层次来描述成熟的创业领导力：首先是<strong>自我领导</strong>——管理自己的情绪、精力和注意力；其次是<strong>人际领导</strong>——建立信任、沟通愿景、化解冲突；第三是<strong>团队领导</strong>——构建高效运转的组织结构；最后是<strong>战略领导</strong>——在不确定性中保持方向感，并引导组织穿越不同的成长阶段。</p>
+
+    <div class="quote-block">
+      <p class="quote-text">The single most important factor in the long-run success of an entrepreneurial venture is the quality of its management, and the single most important factor in the quality of management is its integrity.</p>
+      <div class="quote-source">— Jeffry Timmons</div>
+    </div>
+  </div>
+
+  <!-- SECTION 10 -->
+  <div class="section" id="s10">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <span class="section-title">收获与退出策略</span>
+      <span class="section-subtitle">Harvest &amp; Exit</span>
+    </div>
+
+    <p>在蒂蒙斯的框架中，<mark>"收获（Harvest）"不是创业的终点，而是对整个价值创造过程的闭环确认。</mark>他强调，从创业第一天起就应当有意识地构建"可收割"的公司——即使创始人的最终目标不是出售，清晰的价值评估体系也是健康经营的必要条件。</p>
+
+    <h3>主要退出路径的比较</h3>
+
+    <div class="stages-flow">
+      <div class="stage-box">
+        <div class="stage-num">01</div>
+        <p class="stage-text">IPO<br>公开上市</p>
+      </div>
+      <div class="stage-box">
+        <div class="stage-num">02</div>
+        <p class="stage-text">战略并购<br>Strategic M&A</p>
+      </div>
+      <div class="stage-box">
+        <div class="stage-num">03</div>
+        <p class="stage-text">管理层回购<br>MBO</p>
+      </div>
+      <div class="stage-box">
+        <div class="stage-num">04</div>
+        <p class="stage-text">PE/财务并购<br>Financial Buyout</p>
+      </div>
+      <div class="stage-box">
+        <div class="stage-num">05</div>
+        <p class="stage-text">家族传承<br>Family Succession</p>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>退出方式</th>
+          <th>适用场景</th>
+          <th>优势</th>
+          <th>风险/局限</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>IPO（首次公开募股）</td>
+          <td>市场领导者，高增长，规模化完成</td>
+          <td>流动性最高；品牌效应；保留控制权可能</td>
+          <td>成本极高；监管合规压力；公开市场波动</td>
+        </tr>
+        <tr>
+          <td>战略并购（M&A）</td>
+          <td>与大型企业有协同效应</td>
+          <td>溢价空间大；执行快；整合资源</td>
+          <td>文化冲突；创始人可能丧失控制；retention锁定</td>
+        </tr>
+        <tr>
+          <td>管理层回购（MBO）</td>
+          <td>创始人希望保持独立性</td>
+          <td>文化延续；团队稳定</td>
+          <td>资金来源有限；对管理层压力大</td>
+        </tr>
+        <tr>
+          <td>PE/财务并购</td>
+          <td>盈利稳定但增长放缓的公司</td>
+          <td>为创始人提供流动性；专业管理介入</td>
+          <td>通常伴随裁员优化；创始人影响力下降</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-insight">
+      <span class="callout-label">延伸洞察 · 收获不只是金钱</span>
+      <p>蒂蒙斯专门讨论了一个常被忽视的维度：<strong>非财务性收获（Non-Financial Harvest）</strong>——包括社会影响力、知识传承、行业变革、对员工生命的改变。他认为，将收获仅等同于"卖出后套现多少钱"是对创业价值的严重低估。真正有深度的创业者，在思考退出时，会同时追问"这家公司离开了我之后，会以什么方式继续存在？"</p>
+    </div>
+  </div>
+
+  <div class="sep-ornament">◆</div>
+
+  <!-- SECTION 11 -->
+  <div class="section" id="s11">
+    <div class="section-header">
+      <span class="section-num">11</span>
+      <span class="section-title">跨领域联想：创业学的隐藏对话</span>
+      <span class="section-subtitle">Cross-Domain Resonances</span>
+    </div>
+
+    <p>蒂蒙斯的框架具有非凡的"跨领域通约性"——它与多个看似无关的领域存在深层的结构同构。以下是几组值得深思的联想：</p>
+
+    <div class="cross-grid">
+      <div class="cross-card">
+        <div class="cross-card-head">
+          <span class="cross-domain-tag">生态学</span>
+          <span class="cross-book">Niche Theory</span>
+        </div>
+        <p class="cross-body">蒂蒙斯的"机会窗口"与生态学中的"生态位开放（Niche Opening）"惊人相似——新的生态位在物种灭绝或环境突变后短暂开放，物种必须在竞争对手填入之前完成适应性进化。创业者的"时机感"，本质上是对生态位开放信号的敏感度。</p>
+      </div>
+      <div class="cross-card">
+        <div class="cross-card-head">
+          <span class="cross-domain-tag">军事战略</span>
+          <span class="cross-book">孙子兵法 · 克劳塞维茨</span>
+        </div>
+        <p class="cross-body">蒂蒙斯的"资源节俭+速度优先"策略，与游击战思想高度共鸣。创业公司面对大型竞争者，正如游击队面对正规军：无法以消耗战取胜，只能以速度、灵活性和对地形（市场细分）的深刻理解来形成局部优势。孙子的"避实击虚"，正是市场进入策略的古老智慧。</p>
+      </div>
+      <div class="cross-card">
+        <div class="cross-card-head">
+          <span class="cross-domain-tag">认知科学</span>
+          <span class="cross-book">卡尼曼《思考，快与慢》</span>
+        </div>
+        <p class="cross-body">蒂蒙斯强调的"计算后的风险承担"，恰好是对抗系统一（直觉、情感驱动）过度主导决策的解药。创业者的过度乐观偏差、控制幻觉，都是系统一在高不确定情境下的认知失火。蒂蒙斯提供的框架（机会评估、可行性分析），本质上是在为系统二（理性、分析）建立强制激活的触发器。</p>
+      </div>
+      <div class="cross-card">
+        <div class="cross-card-head">
+          <span class="cross-domain-tag">物理学</span>
+          <span class="cross-book">耗散结构理论</span>
+        </div>
+        <p class="cross-body">蒂蒙斯模型的"动态平衡"与普里戈金的耗散结构理论有结构性共鸣：一个创业公司是一个远离平衡态的开放系统，它必须持续与外部环境（市场）进行能量（资源）交换，才能维持内部有序性（组织效率）。平衡不是静止，而是在持续波动中维持的稳态——与蒂蒙斯所说的"Fit and Balance"是同一件事的不同表达。</p>
+      </div>
+      <div class="cross-card">
+        <div class="cross-card-head">
+          <span class="cross-domain-tag">人类学</span>
+          <span class="cross-book">文化资本理论</span>
+        </div>
+        <p class="cross-body">书中对创业生态系统的描述（硅谷、波士顿128号公路等），无意间呈现了布尔迪厄"社会资本与场域"的概念：创业者的成功，不仅取决于个人特质，还深刻地取决于他/她所在场域中的社会网络、文化惯例与制度支持。这是蒂蒙斯框架相对薄弱的部分——它对"结构性不平等"着墨不足。</p>
+      </div>
+      <div class="cross-card">
+        <div class="cross-card-head">
+          <span class="cross-domain-tag">戏剧理论</span>
+          <span class="cross-book">斯坦尼斯拉夫斯基体系</span>
+        </div>
+        <p class="cross-body">蒂蒙斯将创始人描述为"既是编剧又是主演"——这与斯坦尼斯拉夫斯基的"体验派"表演哲学共鸣：最好的表演不是在扮演他人，而是"成为"角色。最好的创业不是在执行商业计划，而是在活出一个自己深信不疑的使命。两者的核心都是：<em>真实性（Authenticity）是吸引力的根源。</em></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 12 -->
+  <div class="section" id="s12">
+    <div class="section-header">
+      <span class="section-num">12</span>
+      <span class="section-title">批判性重构：挑战蒂蒙斯的前提</span>
+      <span class="section-subtitle">Critical Reconstruction</span>
+    </div>
+
+    <p>这是本笔记最具挑战性的部分。蒂蒙斯的理论体系是严谨、厚重且经过实践检验的，但它也有一些前提假设值得被放在今天的语境下重新审视。</p>
+
+    <div class="dialogue-block">
+      <div class="dialogue-header">
+        <div class="dialogue-icon">🔬</div>
+        <div class="dialogue-who">质疑一：创业机会是"发现"的，还是"建构"的？</div>
+      </div>
+      <p class="dialogue-body">
+        蒂蒙斯的机会理论基本上持一种"发现论"视角——机会客观存在于市场之中，等待有眼力的创业者去识别。<em>但萨拉斯韦西（Saras Sarasvathy）的"效果推理（Effectuation）"研究给出了根本性的挑战：</em>专家级创业者并不是在"寻找预先存在的机会"，而是在行动中不断与利益相关者共同"建构"机会。机会并非独立存在的客体，它是行动者与市场互动的产物。这一视角转移，从根本上动摇了蒂蒙斯"先识别机会，再匹配资源"的线性逻辑。
+      </p>
+    </div>
+
+    <div class="dialogue-block">
+      <div class="dialogue-header">
+        <div class="dialogue-icon">🌍</div>
+        <div class="dialogue-who">质疑二：模型是否有地理与文化边界？</div>
+      </div>
+      <p class="dialogue-body">
+        蒂蒙斯的案例库高度集中于美国（尤其是硅谷和东海岸）的创业生态。他的"机会发现-团队组建-VC融资"路径，预设了一个相当完善的<em>市场制度环境：健全的法制、流动的人才市场、活跃的风险资本。</em>在制度欠发达、关系网络主导的市场（如中国、印度或非洲），这条路径面临根本性的修正需求。"关系"（Guanxi）、政府关系、非正式制度，在蒂蒙斯的框架里几乎是空白的，但在许多市场中它们才是决定性变量。
+      </p>
+    </div>
+
+    <div class="dialogue-block">
+      <div class="dialogue-header">
+        <div class="dialogue-icon">⚡</div>
+        <div class="dialogue-who">质疑三：数字时代的"资源观"是否需要重写？</div>
+      </div>
+      <p class="dialogue-body">
+        蒂蒙斯的资源理论建立在"资源是稀缺且有成本的"这一前提上。但在今天，<em>计算资源（云计算）、分发渠道（社交媒体）、开源代码库、API经济</em>——这些资源的边际成本趋近于零。一个两人团队可以以几乎为零的资源成本，在全球范围内测试产品假设并获取最初的用户。蒂蒙斯的"引导式创业"哲学的精神依然适用，但其具体战术已经被技术革命彻底改写。
+      </p>
+    </div>
+
+    <div class="dialogue-block">
+      <div class="dialogue-header">
+        <div class="dialogue-icon">♀</div>
+        <div class="dialogue-who">质疑四：创业者画像的性别盲区</div>
+      </div>
+      <p class="dialogue-body">
+        蒂蒙斯对"典型创业者"的描述——高度自信、风险容忍、竞争导向、个人英雄主义——与性别研究中记录的"男性领导原型"高度重合。<em>女性创业者在风险资本获取、媒体叙事、投资人刻板印象等方面面临的系统性障碍，在书中基本缺席。</em>这不是蒂蒙斯的个人失察，而是时代局限的折射——但作为读者，我们需要意识到，书中描述的"成功创业者特质"，部分是对一类特定人群（白人男性、精英教育背景）成功路径的提炼，而非普遍性规律。
+      </p>
+    </div>
+
+    <div class="callout callout-analogy">
+      <span class="callout-label">重构建议 · 从"框架"到"镜头"</span>
+      <p>与其将蒂蒙斯模型视为一个普适性的"创业方程式"，不如将其视为一个<strong>分析镜头</strong>——它最擅长聚焦某些类型的问题（机会评估、团队构建、融资策略），同时对另一些维度（制度环境、权力结构、文化差异、技术颠覆）存在盲点。将蒂蒙斯与效果推理理论、精益创业方法、平台经济逻辑结合使用，才能形成更完整的创业认知工具箱。</p>
+    </div>
+  </div>
+
+  <!-- SECTION 13 -->
+  <div class="section" id="s13">
+    <div class="section-header">
+      <span class="section-num">13</span>
+      <span class="section-title">金句精华与读后记</span>
+      <span class="section-subtitle">Selected Insights &amp; Reflections</span>
+    </div>
+
+    <div class="quote-block">
+      <p class="quote-text">Entrepreneurship is not about being born with the right genes. It is about recognizing and seizing opportunity, managing risk, and doing so better than anyone else.</p>
+      <div class="quote-source">— Timmons & Spinelli</div>
+    </div>
+
+    <div class="quote-block">
+      <p class="quote-text">The difference between a good opportunity and a great opportunity is whether the idea has a large and growing market, favorable margins, and the potential to generate significant free cash flow.</p>
+      <div class="quote-source">— Jeffry Timmons</div>
+    </div>
+
+    <div class="quote-block">
+      <p class="quote-text">Entrepreneurs who succeed are those who can tolerate ambiguity, live with uncertainty, and have the capacity to make good decisions when they don't have enough information to make perfect ones.</p>
+      <div class="quote-source">— Timmons & Spinelli</div>
+    </div>
+
+    <div class="quote-block">
+      <p class="quote-text">资源匮乏是创意的母亲。真正的创业者不是那些拥有最多资源的人，而是那些能从最少资源中创造出最大价值的人。</p>
+      <div class="quote-source">— 核心论旨（意译）</div>
+    </div>
+
+    <h3>读后记</h3>
+    <p>读完《创业学》，最深的感受是：这本书对"创业"这件事有一种近乎考古学的耐心。蒂蒙斯不满足于给出励志口号，他要挖掘的是成功与失败背后的结构性原因。这种学术诚实，使得这本书在创业书籍的洪流中经久不衰。</p>
+
+    <p>但这本书也让人意识到，<mark>所有的框架都是在特定历史条件下生长出来的。</mark>蒂蒙斯的世界是一个资源有物理形态的世界，是一个机会窗口有相对清晰边界的世界，是一个VC融资是主流创业路径的世界。今天的创业者生活在一个更加混沌、速度更快、规则更模糊的环境中——他们需要的可能不是一个更完整的框架，而是更强大的"在框架之外思考"的能力。</p>
+
+    <p>矛盾的是，学习蒂蒙斯的最好理由，恰恰是为了超越他。理解这个框架的结构，是为了在它无法适用的时候，知道该去哪里寻找新的地图。</p>
+
+    <div class="annotation">
+      阅读建议：本书最值得精读的章节是：蒂蒙斯模型（Chapter 2-3）、机会识别（Chapter 4-5）、创业财务（Chapter 12-14）、以及收获策略（Chapter 19）。其他章节可以根据自身所处创业阶段选择性深读。
+    </div>
+  </div>
+
+  <!-- SECTION 14 -->
+  <div class="section" id="s14">
+    <div class="section-header">
+      <span class="section-num">14</span>
+      <span class="section-title">与其他理论的对话</span>
+      <span class="section-subtitle">Theoretical Dialogues</span>
+    </div>
+
+    <p>蒂蒙斯的体系并非孤立存在，它与若干重要的理论传统有深刻的关联与对话。了解这些关联，有助于在更宽阔的智识地图上定位蒂蒙斯的贡献。</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>理论 / 方法论</th>
+          <th>代表人物</th>
+          <th>与蒂蒙斯的关系</th>
+          <th>互补价值</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>效果推理（Effectuation）</td>
+          <td>萨拉斯·萨拉斯韦西</td>
+          <td>对立补充：蒂蒙斯是"因果推理"（Causation），萨拉斯韦西是"效果推理"</td>
+          <td>解释了为什么专家创业者在不确定高的情境下反而"倒推"行动，而非预测规划</td>
+        </tr>
+        <tr>
+          <td>精益创业（Lean Startup）</td>
+          <td>埃里克·莱斯 / 史蒂夫·布兰克</td>
+          <td>继承与精化：精益创业是蒂蒙斯"资源节俭"哲学在互联网时代的操作化实现</td>
+          <td>提供了MVP验证、持续迭代的具体方法论工具（Build-Measure-Learn循环）</td>
+        </tr>
+        <tr>
+          <td>竞争战略理论</td>
+          <td>迈克尔·波特</td>
+          <td>互补：波特分析产业层面竞争结构，蒂蒙斯聚焦创业公司层面的机会-资源-团队配置</td>
+          <td>五力模型为蒂蒙斯的竞争壁垒分析提供了产业级别的背景框架</td>
+        </tr>
+        <tr>
+          <td>资源基础观（RBV）</td>
+          <td>巴尼（Barney）/ 彭罗斯</td>
+          <td>深层共鸣：RBV认为可持续竞争优势来自独特、难以复制的资源组合，与蒂蒙斯的团队-资源配置论一脉相承</td>
+          <td>为蒂蒙斯的"团队即核心资源"观点提供了战略管理理论的理论背书</td>
+        </tr>
+        <tr>
+          <td>颠覆性创新理论</td>
+          <td>克莱顿·克里斯坦森</td>
+          <td>互补：克里斯坦森关注成熟企业被颠覆的结构性原因，蒂蒙斯关注创业者如何利用颠覆性时机进入市场</td>
+          <td>两者结合，可以精确定位"机会窗口"的制度性来源——大企业的创新者困境，是创业者的战略开口</td>
+        </tr>
+        <tr>
+          <td>制度经济学</td>
+          <td>诺思（North）/ 威廉姆森</td>
+          <td>对蒂蒙斯框架的补充维度：制度（法律、文化规范、非正式规则）是蒂蒙斯模型的"操作系统"，却未被充分论述</td>
+          <td>解释了为什么同样的机会-团队-资源组合，在不同制度环境下会产生截然不同的结果</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-core">
+      <span class="callout-label">综合定位</span>
+      <p>在创业学的理论版图上，蒂蒙斯占据了一个独特的位置：他不是纯粹的学院派理论家（他的模型是实践归纳的），也不是简单的实操手册作者（他的框架具有相当的理论深度）。他的贡献是在"创业可教可学"这一信念下，<strong>将创业过程系统化为一门学科</strong>——这一工作的历史价值，无论今天如何批判其细节，都是不可否认的。</p>
+    </div>
+
+  </div>
+
+</div><!-- /main -->
+
+<!-- FOOTER -->
+<div class="footer">
+  <strong>创业学 · New Venture Creation</strong><br>
+  杰弗里·蒂蒙斯 / 小斯蒂芬·斯皮内利 著<br>
+  读书笔记 · 包含核心框架整理、批判性分析与跨领域延伸<br>
+  ——<br>
+  本笔记依原书主要论点整理，图表为原创重绘，金句为原书英文引用或意译。
+</div>
+
+</body>
+</html>

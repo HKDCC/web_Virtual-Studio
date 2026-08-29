@@ -1,0 +1,1914 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>【读书笔记】一个周末！打造千万事业 · Million Dollar Weekend</title>
+<style>
+/* ==========================================================
+   《一个周末！打造千万事业》读书笔记 · 单文件离线版
+   美术方向：独立创业 × 反精致商业 × Weekend Hustle
+   ========================================================== */
+:root{
+  --font-body:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC","Source Han Sans SC","Hiragino Sans GB",sans-serif;
+  --font-serif:"Songti SC","SimSun","Noto Serif CJK SC","Source Han Serif SC",serif;
+  --font-mono:ui-monospace,"Cascadia Mono",Consolas,"JetBrains Mono","Courier New",monospace;
+}
+html[data-theme="light"]{
+  --paper:#efe4ca;
+  --paper2:#e7dab9;
+  --card:#f9f2df;
+  --card2:#fbf7ea;
+  --ink:#261f16;
+  --muted:#5f5545;
+  --accent:#d84e17;
+  --accent-deep:#b03a08;
+  --amber:#e8a013;
+  --hl:#ffe14d;
+  --hl-soft:rgba(255,214,40,.55);
+  --line:#33291c;
+  --line-soft:rgba(51,41,28,.35);
+  --stamp:#c2401a;
+  --note:#fdf6b2;
+  --shadow:rgba(60,45,20,.22);
+  --code-bg:rgba(51,41,28,.07);
+  color-scheme: light;
+}
+html[data-theme="dark"]{
+  --paper:#14161a;
+  --paper2:#101216;
+  --card:#1d2027;
+  --card2:#232732;
+  --ink:#ede4d0;
+  --muted:#b0a68f;
+  --accent:#ff7a45;
+  --accent-deep:#ffa06b;
+  --amber:#ffc95e;
+  --hl:#8f6d00;
+  --hl-soft:rgba(255,201,64,.30);
+  --line:#d8cdb4;
+  --line-soft:rgba(216,205,180,.30);
+  --stamp:#ff8757;
+  --note:#3a3417;
+  --shadow:rgba(0,0,0,.55);
+  --code-bg:rgba(216,205,180,.10);
+  color-scheme: dark;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper);
+  background-image:
+    radial-gradient(var(--line-soft) 1px, transparent 1px);
+  background-size:26px 26px;
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:16.5px;
+  line-height:1.85;
+  transition:background-color .35s,color .35s;
+  overflow-x:hidden;
+}
+::selection{background:var(--hl);color:#261f16}
+
+/* ---------- 滚动进度条 ---------- */
+#progress{
+  position:fixed;top:0;left:0;height:5px;width:0%;
+  background:linear-gradient(90deg,var(--accent),var(--amber));
+  z-index:999;border-radius:0 3px 3px 0;
+  box-shadow:0 0 6px var(--shadow);
+}
+
+/* ---------- 主题按钮 ---------- */
+#themeBtn{
+  position:fixed;top:18px;right:3vw;z-index:998;
+  font-family:var(--font-mono);font-size:.82rem;letter-spacing:.08em;
+  background:var(--card);color:var(--ink);
+  border:2px solid var(--line);border-radius:4px;
+  padding:.5em .9em;cursor:pointer;
+  box-shadow:3px 3px 0 var(--shadow);
+  transform:rotate(2deg);
+  transition:transform .15s,box-shadow .15s;
+}
+#themeBtn:hover{transform:rotate(0deg) scale(1.04);box-shadow:4px 4px 0 var(--shadow)}
+
+/* ---------- 布局：全宽 fluid ---------- */
+.wrap{width:min(95vw,1900px);margin:0 auto}
+.layout{
+  display:grid;
+  grid-template-columns:minmax(210px,230px) 1fr;
+  gap:clamp(20px,2.5vw,46px);
+  align-items:start;
+  width:min(95vw,1900px);
+  margin:0 auto;
+}
+@media(max-width:1080px){
+  .layout{grid-template-columns:1fr}
+  aside.toc{display:none}
+}
+
+/* ---------- 目录侧导航 ---------- */
+aside.toc{
+  position:sticky;top:70px;
+  border:2px solid var(--line);
+  background:var(--card);
+  padding:18px 14px 22px;
+  box-shadow:5px 5px 0 var(--shadow);
+  transform:rotate(-.6deg);
+  max-height:calc(100vh - 110px);
+  overflow-y:auto;
+}
+.toc h3{
+  font-family:var(--font-mono);font-size:.8rem;letter-spacing:.25em;
+  border-bottom:2px dashed var(--line-soft);padding-bottom:.6em;margin-bottom:.8em;
+  color:var(--accent);
+}
+.toc ol{list-style:none}
+.toc li{margin:.35em 0}
+.toc a{
+  display:block;color:var(--ink);text-decoration:none;
+  font-size:.86rem;padding:.28em .5em;border-left:3px solid transparent;
+  transition:border-color .15s,background .15s;
+}
+.toc a:hover,.toc a.active{
+  border-left-color:var(--accent);
+  background:var(--code-bg);
+  font-weight:bold;
+}
+.toc .toc-no{font-family:var(--font-mono);color:var(--muted);font-size:.72rem;margin-right:.5em}
+
+/* ---------- HERO ---------- */
+header.hero{
+  width:min(95vw,1900px);margin:34px auto 8px;
+  border:3px solid var(--line);
+  background:var(--card);
+  box-shadow:8px 8px 0 var(--shadow);
+  padding:clamp(26px,4vw,58px);
+  position:relative;
+  overflow:hidden;
+}
+.hero-kicker{
+  font-family:var(--font-mono);font-size:.85rem;letter-spacing:.3em;color:var(--accent);
+  display:flex;gap:1.2em;flex-wrap:wrap;margin-bottom:1em;
+}
+.hero h1{
+  font-size:clamp(2.1rem,5.2vw,4.6rem);
+  line-height:1.15;letter-spacing:.02em;font-weight:900;
+}
+.hero h1 .hl{white-space:nowrap}
+.hl{
+  background:linear-gradient(104deg,transparent 2%,var(--hl-soft) 5%,var(--hl-soft) 95%,transparent 98%);
+  padding:.05em .18em;border-radius:2px;
+}
+.hero-sub{
+  margin-top:1.1em;font-family:var(--font-serif);
+  font-size:clamp(1rem,1.6vw,1.3rem);max-width:62ch;color:var(--ink);
+}
+.hero-meta{
+  margin-top:1.6em;display:flex;flex-wrap:wrap;gap:.6em;
+  font-family:var(--font-mono);font-size:.78rem;
+}
+.chip{
+  border:1.5px solid var(--line);padding:.25em .8em;border-radius:999px;
+  background:var(--card2);
+}
+.chip b{color:var(--accent)}
+.stamp{
+  position:absolute;display:inline-block;
+  font-family:var(--font-mono);font-weight:bold;letter-spacing:.18em;
+  color:var(--stamp);border:3px double var(--stamp);
+  padding:.35em .8em;border-radius:6px;text-transform:uppercase;
+  opacity:.85;pointer-events:none;mix-blend-mode:multiply;
+}
+html[data-theme="dark"] .stamp{mix-blend-mode:normal}
+.stamp.s1{top:26px;left:-14px;transform:rotate(-14deg);font-size:clamp(.7rem,1.2vw,1rem)}
+.stamp.s2{bottom:60px;right:36px;transform:rotate(9deg);font-size:clamp(.65rem,1.1vw,.92rem)}
+.stamp.s3{top:110px;right:-10px;transform:rotate(12deg);font-size:clamp(.6rem,1vw,.85rem);border-style:dashed}
+
+/* ---------- 章节 ---------- */
+section{margin-top:clamp(56px,7vh,96px)}
+.sec-head{position:relative;margin-bottom:1.4em}
+.sec-num{
+  font-family:var(--font-mono);font-weight:800;
+  font-size:clamp(3.4rem,8vw,6.5rem);line-height:.9;
+  color:transparent;-webkit-text-stroke:2px var(--line-soft);
+  position:absolute;top:-.35em;left:-.05em;z-index:0;user-select:none;
+}
+.sec-head h2{
+  position:relative;z-index:1;
+  font-size:clamp(1.6rem,3.2vw,2.5rem);font-weight:900;letter-spacing:.04em;
+  padding-left:.1em;
+  border-bottom:4px solid var(--line);display:inline-block;padding-bottom:.15em;
+}
+.sec-head h2 .en{font-family:var(--font-mono);font-size:.45em;letter-spacing:.25em;color:var(--accent);vertical-align:.6em;margin-left:.8em}
+.sec-lede{max-width:88ch;margin-top:.9em;color:var(--ink)}
+.sec-lede em{font-style:normal;background:var(--hl-soft);padding:0 .15em}
+
+/* ---------- 卡片系统 ---------- */
+.grid{display:grid;gap:clamp(14px,1.6vw,24px)}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(420px,92vw),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(330px,92vw),1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(min(255px,92vw),1fr))}
+.card{
+  border:2px solid var(--line);
+  background:var(--card);
+  padding:clamp(16px,1.8vw,26px);
+  position:relative;
+  box-shadow:4px 4px 0 var(--shadow);
+}
+.card.paper-edge{
+  background:var(--card2);
+  border-style:solid;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%);
+}
+.card h3,.card h4{line-height:1.4}
+.card h3{font-size:1.12rem;margin-bottom:.5em;font-weight:800}
+.card h3 .tagno{
+  font-family:var(--font-mono);font-size:.72em;color:var(--accent);
+  border:1.5px solid var(--accent);border-radius:3px;padding:.05em .45em;
+  margin-right:.55em;vertical-align:.15em;letter-spacing:.06em;
+}
+.card p{font-size:.94rem;color:var(--ink)}
+.card p+p{margin-top:.6em}
+.muted{color:var(--muted)}
+.small{font-size:.83rem}
+.mono{font-family:var(--font-mono)}
+.accent{color:var(--accent);font-weight:bold}
+mark{background:linear-gradient(100deg,transparent 1%,var(--hl-soft) 4%,var(--hl-soft) 96%,transparent 99%);color:inherit;padding:0 .12em}
+hr.dash{border:none;border-top:2px dashed var(--line-soft);margin:1em 0}
+
+ul.tick{list-style:none;margin-top:.5em}
+ul.tick li{
+  padding-left:1.5em;position:relative;margin:.35em 0;font-size:.93rem;
+}
+ul.tick li::before{
+  content:"▸";position:absolute;left:.2em;color:var(--accent);font-weight:bold;
+}
+ol.steps{counter-reset:st;list-style:none;margin-top:.5em}
+ol.steps li{
+  counter-increment:st;position:relative;padding-left:2.4em;margin:.55em 0;font-size:.94rem;
+}
+ol.steps li::before{
+  content:counter(st,decimal-leading-zero);
+  position:absolute;left:0;top:.18em;
+  font-family:var(--font-mono);font-weight:bold;font-size:.82em;
+  color:var(--accent);border-bottom:2px solid var(--accent);padding:0 .15em;
+}
+
+/* 表格 */
+.tblwrap{overflow-x:auto;margin-top:.8em}
+table.tbl{border-collapse:collapse;width:100%;font-size:.9rem;background:var(--card2)}
+table.tbl th{
+  font-family:var(--font-mono);font-size:.78rem;letter-spacing:.1em;
+  border:1.5px solid var(--line);padding:.5em .7em;text-align:left;
+  background:var(--code-bg);
+}
+table.tbl td{border:1.5px solid var(--line-soft);padding:.5em .7em;vertical-align:top}
+table.tbl tr td:first-child{white-space:nowrap}
+
+/* 引用块 */
+blockquote.bq{
+  border-left:5px solid var(--accent);
+  background:var(--code-bg);
+  padding:.9em 1.2em;margin:1em 0;
+  font-family:var(--font-serif);
+}
+blockquote.bq .who{
+  display:block;text-align:right;font-family:var(--font-mono);
+  font-size:.78rem;color:var(--muted);margin-top:.4em;
+}
+
+/* 便利贴 */
+.stickynote{
+  background:var(--note);
+  border:1.5px solid var(--line-soft);
+  padding:16px 18px;
+  box-shadow:3px 5px 8px var(--shadow);
+  transform:rotate(-1.6deg);
+  font-size:.92rem;line-height:1.75;
+  max-width:340px;
+}
+.stickynote.r{transform:rotate(1.8deg)}
+.stickynote .pin{
+  display:block;width:13px;height:13px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#ff9c7a,var(--accent));
+  margin:-26px auto 8px;box-shadow:1px 2px 3px var(--shadow);
+}
+html[data-theme="dark"] .stickynote{color:#f3ecd8}
+
+/* 票据卡 */
+.ticket{
+  border:2px solid var(--line);background:var(--card2);
+  padding:18px 20px;position:relative;
+  -webkit-mask-image:radial-gradient(circle 7px at 0 50%,transparent 97%,#000 100%),radial-gradient(circle 7px at 100% 50%,transparent 97%,#000 100%);
+  mask-image:radial-gradient(circle 7px at 0 50%,transparent 97%,#000 100%),radial-gradient(circle 7px at 100% 50%,transparent 97%,#000 100%);
+  -webkit-mask-composite:source-in;
+  mask-composite:intersect;
+}
+.ticket::before,.ticket::after{
+  content:"✂ - - - - - - - - - - - - - - - - - - -";
+  position:absolute;left:8%;right:0;font-family:var(--font-mono);
+  font-size:.72rem;color:var(--muted);letter-spacing:.1em;
+}
+.ticket::before{top:-.6em}.ticket::after{bottom:-.6em}
+
+/* 模板/代码块 */
+pre.tmpl{
+  background:var(--code-bg);border:1.5px dashed var(--line-soft);
+  padding:1em 1.2em;font-family:var(--font-serif);
+  white-space:pre-wrap;font-size:.92rem;line-height:1.9;margin-top:.7em;
+}
+pre.tmpl .fill{color:var(--accent);font-weight:bold}
+
+/* 大数字装饰 */
+.bigstat{font-family:var(--font-mono);font-weight:800;color:var(--accent)}
+.stat-row{display:flex;flex-wrap:wrap;gap:clamp(12px,2vw,28px);margin-top:1em}
+.stat{
+  flex:1 1 150px;border:2px solid var(--line);background:var(--card);
+  padding:14px 16px;text-align:center;box-shadow:3px 3px 0 var(--shadow);
+}
+.stat .n{font-family:var(--font-mono);font-size:clamp(1.3rem,2.4vw,2rem);font-weight:800;color:var(--accent)}
+.stat .l{font-size:.8rem;color:var(--muted);margin-top:.2em}
+
+/* ---------- SVG 图表容器 ---------- */
+.figure{
+  border:2px solid var(--line);background:var(--card);
+  padding:clamp(12px,1.5vw,22px);margin-top:1.2em;
+  box-shadow:5px 5px 0 var(--shadow);position:relative;
+}
+.figure figcaption{
+  font-family:var(--font-mono);font-size:.8rem;letter-spacing:.12em;
+  color:var(--muted);margin-bottom:.7em;
+}
+.figure figcaption b{color:var(--accent)}
+.figure svg{width:100%;height:auto;display:block}
+/* SVG 主题化样式类 */
+.sk{stroke:var(--line);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.sk-thin{stroke:var(--line-soft);fill:none;stroke-width:1.6}
+.sk-dash{stroke:var(--line);fill:none;stroke-width:2;stroke-dasharray:7 6}
+.svg-box{fill:var(--card2);stroke:var(--line);stroke-width:2.5}
+.svg-box-a{fill:var(--accent);stroke:var(--line);stroke-width:2.5}
+.svg-box-hl{fill:var(--hl);stroke:var(--line);stroke-width:2.5}
+.svg-t{fill:var(--ink);font-family:var(--font-body)}
+.svg-t-b{fill:var(--ink);font-family:var(--font-body);font-weight:700}
+.svg-t-m{fill:var(--ink);font-family:ui-monospace,Consolas,monospace}
+.svg-t-w{fill:#fff;font-family:var(--font-body);font-weight:700}
+.svg-t-a{fill:var(--accent);font-family:var(--font-body);font-weight:700}
+.svg-t-muted{fill:var(--muted);font-family:var(--font-body)}
+.svg-hl{fill:var(--hl-soft)}
+.svg-acc{fill:var(--accent)}
+.svg-amb{fill:var(--amber)}
+.svg-faint{fill:var(--code-bg)}
+
+/* ---------- 交互挂件 ---------- */
+.widget{
+  border:3px solid var(--line);
+  background:var(--card2);
+  padding:clamp(18px,2vw,30px);
+  margin-top:1.4em;position:relative;
+  box-shadow:6px 6px 0 var(--shadow);
+}
+.widget::before{
+  content:attr(data-badge);
+  position:absolute;top:-16px;left:18px;
+  font-family:var(--font-mono);font-size:.74rem;font-weight:bold;letter-spacing:.2em;
+  background:var(--accent);color:#fff;padding:.3em .9em;
+  transform:rotate(-2deg);box-shadow:2px 2px 0 var(--shadow);
+}
+.widget h3{font-size:1.25rem;font-weight:900;margin-bottom:.3em}
+.widget .w-desc{font-size:.9rem;color:var(--muted);margin-bottom:1em}
+.fieldrow{display:flex;flex-wrap:wrap;gap:16px 24px;margin:.8em 0}
+.field{flex:1 1 200px}
+.field label{
+  display:block;font-family:var(--font-mono);font-size:.76rem;
+  letter-spacing:.12em;margin-bottom:.35em;color:var(--muted);
+}
+.field input[type=number],.field input[type=text],.field textarea,.field select{
+  width:100%;font-family:var(--font-mono);font-size:1rem;
+  background:var(--card);color:var(--ink);
+  border:2px solid var(--line);border-radius:3px;padding:.5em .7em;
+}
+.field input:focus,.field textarea:focus,.field select:focus,button:focus-visible,a:focus-visible{
+  outline:3px solid var(--accent);outline-offset:2px;
+}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.btn{
+  font-family:var(--font-mono);font-size:.9rem;font-weight:bold;letter-spacing:.1em;
+  background:var(--accent);color:#fff;border:2px solid var(--line);
+  padding:.6em 1.4em;cursor:pointer;border-radius:3px;
+  box-shadow:3px 3px 0 var(--shadow);
+  transition:transform .12s,box-shadow .12s;
+}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--shadow)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shadow)}
+.btn.ghost{background:var(--card);color:var(--ink)}
+.result{
+  margin-top:1em;border:2px dashed var(--line);background:var(--card);
+  padding:1em 1.2em;font-size:.98rem;
+}
+.result .big{
+  font-family:var(--font-mono);font-size:clamp(1.5rem,3vw,2.4rem);font-weight:800;color:var(--accent);
+}
+.verdict{
+  display:inline-block;margin-top:.5em;font-family:var(--font-mono);
+  border:2px solid var(--stamp);color:var(--stamp);
+  padding:.25em .8em;transform:rotate(-1.5deg);font-weight:bold;letter-spacing:.08em;
+}
+
+/* 48h 挑战清单 */
+.chk{list-style:none;margin:.6em 0}
+.chk li{margin:.3em 0}
+.chk label{
+  display:flex;gap:.7em;align-items:flex-start;cursor:pointer;
+  padding:.4em .6em;border:1.5px solid transparent;border-radius:4px;
+  font-size:.93rem;transition:background .15s;
+}
+.chk label:hover{background:var(--code-bg)}
+.chk input[type=checkbox]{
+  width:19px;height:19px;margin-top:.28em;accent-color:var(--accent);cursor:pointer;flex:none;
+}
+.chk input:checked+span{text-decoration:line-through;color:var(--muted)}
+.clockface{
+  font-family:var(--font-mono);font-size:clamp(2.2rem,6vw,4.2rem);font-weight:800;
+  letter-spacing:.06em;color:var(--ink);text-align:center;
+  border:3px solid var(--line);background:var(--paper2);
+  padding:.25em .4em;border-radius:6px;margin:.5em 0;
+  font-variant-numeric:tabular-nums;
+}
+.clockface.done{color:var(--stamp);animation:blink 1s step-end infinite}
+@keyframes blink{50%{opacity:.45}}
+.wstatus{font-family:var(--font-mono);font-size:.8rem;letter-spacing:.15em;color:var(--muted);text-align:center}
+
+/* 话术生成器输出 */
+.scriptout{
+  background:var(--card);border:2px solid var(--line);padding:1.1em 1.3em;
+  font-family:var(--font-serif);white-space:pre-wrap;line-height:2;font-size:.95rem;
+}
+
+/* 金句抽签 */
+.lottery{
+  perspective:900px;cursor:pointer;min-height:220px;
+}
+.lottery-inner{
+  transition:transform .5s;transform-style:preserve-3d;
+  border:3px solid var(--line);background:var(--card);
+  padding:26px;min-height:220px;display:flex;flex-direction:column;justify-content:center;
+  box-shadow:5px 5px 0 var(--shadow);
+}
+.lottery.flipped .lottery-inner{transform:rotateY(360deg)}
+.lottery .q{font-family:var(--font-serif);font-size:clamp(1rem,1.8vw,1.3rem);line-height:1.9}
+.lottery .src{align-self:flex-end;margin-top:1em;font-family:var(--font-mono);font-size:.78rem;color:var(--accent)}
+
+/* 金句墙 */
+.quotes{columns:2;column-gap:clamp(14px,1.8vw,26px)}
+@media(max-width:900px){.quotes{columns:1}}
+.qcard{
+  break-inside:avoid;border:2px solid var(--line);background:var(--card);
+  padding:18px 20px;margin-bottom:clamp(14px,1.8vw,26px);
+  box-shadow:3px 3px 0 var(--shadow);
+}
+.qcard:nth-child(3n){transform:rotate(.5deg)}
+.qcard:nth-child(3n+1){transform:rotate(-.4deg)}
+.qcard .q{font-family:var(--font-serif);font-size:1rem;line-height:1.95}
+.qcard .q::before{content:"「";color:var(--accent);font-weight:bold}
+.qcard .q::after{content:"」";color:var(--accent);font-weight:bold}
+.qcard .src{
+  display:block;margin-top:.7em;font-family:var(--font-mono);
+  font-size:.75rem;letter-spacing:.1em;color:var(--muted);
+  border-top:1.5px dashed var(--line-soft);padding-top:.5em;
+}
+
+/* 案例卡 */
+.case-card{border:2px solid var(--line);background:var(--card);box-shadow:4px 4px 0 var(--shadow);padding:18px 20px;position:relative}
+.case-card .case-no{
+  position:absolute;top:-12px;right:14px;
+  font-family:var(--font-mono);font-size:.72rem;font-weight:bold;
+  background:var(--ink);color:var(--paper);padding:.2em .7em;letter-spacing:.15em;
+}
+.case-card h4{font-size:1.02rem;margin-bottom:.35em}
+.case-card .biz{font-family:var(--font-mono);font-size:.76rem;color:var(--muted);letter-spacing:.06em;margin-bottom:.6em}
+.case-card .nums{margin:.55em 0;font-family:var(--font-mono);font-size:.85rem;color:var(--accent);font-weight:bold;line-height:1.7}
+.case-card .lesson{font-size:.87rem;border-top:1.5px dashed var(--line-soft);padding-top:.5em;margin-top:.5em}
+.case-card .lesson b{color:var(--accent)}
+
+/* 借口清单 */
+.excuse{
+  border-left:6px solid var(--line);background:var(--card);
+  padding:14px 18px;box-shadow:3px 3px 0 var(--shadow);
+}
+.excuse .say{font-family:var(--font-serif);font-weight:bold;font-size:.98rem}
+.excuse .say::before{content:"“";color:var(--accent)}
+.excuse .say::after{content:"”";color:var(--accent)}
+.excuse .rebut{margin-top:.5em;font-size:.88rem;color:var(--ink)}
+.excuse .rebut::before{content:"↳ 推翻：";font-family:var(--font-mono);color:var(--accent);font-weight:bold}
+
+/* 页脚 */
+footer{
+  width:min(95vw,1900px);margin:80px auto 40px;
+  border-top:3px solid var(--line);padding-top:1.4em;
+  font-family:var(--font-mono);font-size:.8rem;color:var(--muted);
+  display:flex;flex-wrap:wrap;gap:1em;justify-content:space-between;
+}
+
+/* 打印 */
+@media print{
+  #themeBtn,#progress,aside.toc{display:none!important}
+  .layout{display:block;width:100%}
+  body{background:#fff;color:#111}
+  .card,.widget,.figure,.case-card{box-shadow:none;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<div id="progress" role="presentation"></div>
+<button id="themeBtn" type="button" aria-label="切换亮暗主题">◐ THEME</button>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <span class="stamp s1">48H CHALLENGE</span>
+  <span class="stamp s2">VALIDATED ✓</span>
+  <span class="stamp s3">WEEKEND APPROVED</span>
+  <div class="hero-kicker">
+    <span>READING NOTES // 读书笔记</span>
+    <span>NOAH KAGAN × TAHL RAZ</span>
+    <span>OFFLINE · SINGLE FILE</span>
+  </div>
+  <h1>一个周末！<br><span class="hl">打造千万事业</span></h1>
+  <p class="hero-sub">
+    <strong>Million Dollar Weekend</strong> —— 如何在一个周末的 48 小时里，完成
+    <mark>找点子 → 验证 → 收到第一笔真金白银</mark> 的创业启动流程，并在之后一年内持续成长。
+    核心只有一句话：<strong>在打造业务之前先收钱。</strong>
+  </p>
+  <div class="hero-meta">
+    <span class="chip">作者 <b>诺亚·凯根 Noah Kagan</b> &amp; 塔尔·拉兹 Tahl Raz</span>
+    <span class="chip">诺亚自述创办 8 项事业合计价值 <b>800 万美元</b></span>
+    <span class="chip">核心时限 <b>你只有 48 小时</b></span>
+    <span class="chip">一年有 <b>52 次</b>开始的机会</span>
+  </div>
+</header>
+
+<div class="layout">
+
+<!-- ================= 目录侧导航 ================= -->
+<aside class="toc" aria-label="目录导航">
+  <h3>INDEX ▚ 目录</h3>
+  <ol>
+    <li><a href="#intro"><span class="toc-no">00</span>导语 · 全书地图</a></li>
+    <li><a href="#ideas"><span class="toc-no">01</span>核心观点</a></li>
+    <li><a href="#psych"><span class="toc-no">02</span>原理与心理机制</a></li>
+    <li><a href="#methods"><span class="toc-no">03</span>方法论武器库</a></li>
+    <li><a href="#cases"><span class="toc-no">04</span>精彩案例墙</a></li>
+    <li><a href="#toolbox"><span class="toc-no">05</span>工具箱</a></li>
+    <li><a href="#quotes"><span class="toc-no">06</span>金句墙</a></li>
+  </ol>
+  <hr class="dash">
+  <h3>WIDGETS ▚ 挂件</h3>
+  <ol>
+    <li><a href="#w-calc"><span class="toc-no">▣</span>一分钟商业模式计算器</a></li>
+    <li><a href="#w-script"><span class="toc-no">▣</span>开口要求话术生成器</a></li>
+    <li><a href="#w-48h"><span class="toc-no">▣</span>48 小时挑战模拟器</a></li>
+    <li><a href="#w-lottery"><span class="toc-no">▣</span>金句抽签卡</a></li>
+  </ol>
+</aside>
+
+<main>
+
+<!-- ================= 00 导语 ================= -->
+<section id="intro">
+  <div class="sec-head">
+    <span class="sec-num" aria-hidden="true">00</span>
+    <h2>导语 · 全书一句话与结构地图<span class="en">OVERVIEW</span></h2>
+  </div>
+
+  <div class="ticket">
+    <p><strong>全书一句话总结：</strong>别再准备了——用<mark>「创造者勇气」</mark>在 48 小时内找到一个真实问题、向真人开口要求付费、拿到前三位客户，就完成了从 0 到 1 美元最关键的一步；剩下的，是用社群、电子邮件和行销实验把验证过的小火苗养成一门年入百万美元的事业。</p>
+  </div>
+
+  <p class="sec-lede">
+    作者诺亚·凯根是 Facebook 第 30 号员工，自述先后创办 Kickflip、Gambit、KingSumo、SendFox、Sumo、Tidycal、Monthly1K、AppSumo 共八项事业，合计价值 800 万美元（书名副题原文为「七次创业都成功」，两处并存如实记录）。他写这本书的动机是：<em>「想证明我可以教别人做同样的事情。」</em>
+  </p>
+  <p class="sec-lede">
+    为什么只用一个周末？——<mark>「因为这样你就没时间胆怯了！」</mark>从上千名学生身上他发现：把时限压到每个人都有的一个周末，会迫使你发挥创造力、聚焦在真正重要的事上。<strong>你只有 48 小时。</strong>
+  </p>
+
+  <div class="figure">
+    <figcaption><b>FIG.01</b> ▚ 百万美元周末流程三步图 + 三部九章旅程地图（依序二整理）</figcaption>
+    <svg viewBox="0 0 1180 430" role="img" aria-label="百万美元周末流程与全书结构图">
+      <!-- 三步流程 -->
+      <rect class="svg-box" x="30" y="40" width="320" height="120" rx="6"/>
+      <text class="svg-t-m" x="50" y="72" font-size="15">STEP 01 · 找出问题</text>
+      <text class="svg-t" x="50" y="102" font-size="15">找出人们遇到的问题，</text>
+      <text class="svg-t" x="50" y="126" font-size="15">而且是你能解决的问题。</text>
+      <path class="sk" d="M350 100 L400 100"/>
+      <path class="sk" d="M392 92 L402 100 L392 108"/>
+      <rect class="svg-box-a" x="404" y="40" width="330" height="120" rx="6"/>
+      <text class="svg-t-w" x="424" y="72" font-size="15">STEP 02 · 打造方案并验证潜力</text>
+      <text class="svg-t-w" x="424" y="102" font-size="14">打造难以抗拒的解决方案，</text>
+      <text class="svg-t-w" x="424" y="124" font-size="14">用简单市场调查验证百万美元潜力。</text>
+      <path class="sk" d="M734 100 L784 100"/>
+      <path class="sk" d="M776 92 L786 100 L776 108"/>
+      <rect class="svg-box-hl" x="788" y="40" width="360" height="120" rx="6"/>
+      <text class="svg-t-b" x="808" y="72" font-size="15">STEP 03 · 打造之前先预售 ★</text>
+      <text class="svg-t-b" x="808" y="102" font-size="14">不花半毛钱，快速验证点子是否可行</text>
+      <text class="svg-t-b" x="808" y="124" font-size="14">——先收到钱，再造东西。</text>
+      <!-- 出口数据 -->
+      <text class="svg-t-muted" x="30" y="192" font-size="13">学员出口样本：房地产咨询 月入 $83,000 ／ 饼干副业 年入 $20,000 ／ 科技指导 年入 $2,500,000</text>
+      <path class="sk-dash" d="M30 210 L1150 210"/>
+      <!-- 三部结构 -->
+      <text class="svg-t-m" x="30" y="245" font-size="14" letter-spacing="3">PART MAP · 三部九章</text>
+      <rect class="svg-faint" x="30" y="260" width="1120" height="140" rx="4"/>
+      <rect class="svg-box" x="50" y="280" width="330" height="100" rx="4"/>
+      <text class="svg-t-a" x="66" y="306" font-size="14">第一部 · 开始（第1–2章）</text>
+      <text class="svg-t" x="66" y="330" font-size="13">周末前 3–4 天：重新激发创造者勇气；</text>
+      <text class="svg-t" x="66" y="350" font-size="13">第1章「重点是现在而不是如何」＋自由数字；</text>
+      <text class="svg-t" x="66" y="370" font-size="13">第2章「拒绝目标」＋咖啡挑战。</text>
+      <path class="sk" d="M380 330 L416 330"/><path class="sk" d="M408 322 L418 330 L408 338"/>
+      <rect class="svg-box-a" x="420" y="280" width="360" height="100" rx="4"/>
+      <text class="svg-t-w" x="436" y="306" font-size="14">第二部 · 打造（第3–5章 = 周五/六/日）</text>
+      <text class="svg-t-w" x="436" y="330" font-size="13">第3章 产生可获利点子（≥10 个 → 前 3 个）</text>
+      <text class="svg-t-w" x="436" y="350" font-size="13">第4章 缩为 1 个＋一分钟商业模式</text>
+      <text class="svg-t-w" x="436" y="370" font-size="13">第5章 48 小时挑战：拿到前三位付费客户</text>
+      <path class="sk" d="M780 330 L816 330"/><path class="sk" d="M808 322 L818 330 L808 338"/>
+      <rect class="svg-box" x="820" y="280" width="310" height="100" rx="4"/>
+      <text class="svg-t-a" x="836" y="306" font-size="14">第三部 · 成长（第6–9章）</text>
+      <text class="svg-t" x="836" y="330" font-size="13">第6–7章 内容创建、受众、电子邮件行销；</text>
+      <text class="svg-t" x="836" y="350" font-size="13">第8章 实验式行销（Mint 六个月 0→100 万用户）；</text>
+      <text class="svg-t" x="836" y="370" font-size="13">第9章 个人生产力系统。</text>
+      <text class="svg-t-muted" x="30" y="420" font-size="12.5">※ 每一章的核心都是一个为事业带来具体资产的挑战。找不到付费客户？「太棒了！庆祝你的胜利性失败，快速开始验证下一个点子。」</text>
+    </svg>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat"><div class="n">48h</div><div class="l">验证时限 · 限制激发创造力</div></div>
+    <div class="stat"><div class="n">$1</div><div class="l">从零到第一块钱的起点</div></div>
+    <div class="stat"><div class="n">3 人</div><div class="l">验证黄金法则：三位付费客户</div></div>
+    <div class="stat"><div class="n">52</div><div class="l">一年可以开始的次数</div></div>
+  </div>
+</section>
+
+<!-- ================= 01 核心观点 ================= -->
+<section id="ideas">
+  <div class="sec-head">
+    <span class="sec-num" aria-hidden="true">01</span>
+    <h2>核心观点<span class="en">CORE IDEAS</span></h2>
+  </div>
+  <p class="sec-lede">全书开篇立场：<em>每天都有普通的一般人在开展有利可图的事业。你不必富有、聪明或经验丰富。</em>我们通常认为自己永远没有准备好——但其实你已经准备好了。以下先看作者逐条推翻的<mark>十大常见借口</mark>，再看贯穿全书的四个核心主张。</p>
+
+  <h3 class="mono" style="letter-spacing:.2em;color:var(--accent);margin-top:1.2em">▚ EXCUSES vs REBUTTALS · 十大借口清单（序一）</h3>
+  <div class="grid g2" style="margin-top:1em">
+    <div class="excuse"><div class="say">我没有什么好点子。</div><div class="rebut">但你一定有「问题」，每个人都有问题——这就是产生百万美元点子所需的一切。学完第三章「客户第一」后，点子会比想象中多。</div></div>
+    <div class="excuse"><div class="say">我的想法太多了。</div><div class="rebut">选三个做起来最有趣的，用第四章的市场研究和一分钟商业模式确定哪个最有潜力。</div></div>
+    <div class="excuse"><div class="say">创业有风险，辞掉工作让我很紧张。</div><div class="rebut">把一生花在讨厌的工作上才是冒险。不必辞职——清晨、晚上、周末执行流程即可；收入达到「自由数字」再辞。「我已经这样做过两次了。」</div></div>
+    <div class="excuse"><div class="say">我创办了几次事业，然后就失去兴趣了。</div><div class="rebut">「不开始和不结束来自同一组类似的恐惧。」用 100 法则在想放弃时克服阻力。</div></div>
+    <div class="excuse"><div class="say">但是，要如何扩大业务规模呢？</div><div class="rebut">这句话会阻止你获得第一个客户。不用考虑「扩展」，专注「开始」。扩展是第三部的事。</div></div>
+    <div class="excuse"><div class="say">我没有足够的时间创业。</div><div class="rebut">寻找可自动化的流程、记录业务、聘请他人。第九章的系统让诺亚经营八位数事业的同时每天健身、旅行。「如果是优先事项，就一定腾得出时间。」</div></div>
+    <div class="excuse"><div class="say">我要读更多书、做更多研究才能开始。</div><div class="rebut">你永远不会觉得百分之百准备好。完成这个过程之前，不要再买另一本书。</div></div>
+    <div class="excuse"><div class="say">我已经彻底破产了，花了那么多钱没赚到半毛。</div><div class="rebut"><strong>在赚到第一块钱之前，不要再花一毛钱了。</strong>百万美元周末流程不需要预先支出任何费用。</div></div>
+    <div class="excuse"><div class="say">我不擅长行销。</div><div class="rebut">当人们想要你的产品时，行销很容易。第三、六、七、八章的方法帮 Mint 六个月吸引百万用户、帮 TidyCal 六个月获得一万名付费客户。</div></div>
+    <div class="excuse"><div class="say">我需要一个技术联合创始人来搞 AI／VR／AR。</div><div class="rebut">不，你得先赚钱。客户不需要更多软件，需要的是解决方案。有很多不需要编程就能验证的方法。</div></div>
+  </div>
+
+  <div class="grid g2" style="margin-top:2em">
+    <div class="card paper-edge">
+      <h3><span class="tagno">观点 A</span>先收钱，再做事</h3>
+      <p>贯穿三章的铁律：<mark>在没有先验证是否有付费客户的情况下就开展事业，是非常致命的。</mark>付款的「承诺」不算数——那是一种礼貌的拒绝。必须从真人那里收到真钱。迪士尼口头同意合作后，诺亚自信开发六个月、花费 10 万美元，对方回复「没有立即的需要」断绝一切交流——这就是不预收钱的代价。</p>
+    </div>
+    <div class="card paper-edge">
+      <h3><span class="tagno">观点 B</span>客户第一，不是创办人第一</h3>
+      <p>大多数「想要创业者」专注于自己想创造的东西：做 Logo、注册 LLC、看 YouTube 学编程、买域名……然后放弃。正确顺序是先与人对话，在制造或花钱之前根据客户需求反复修正。「客户不关心你的点子，他们关心你能否解决他们的问题。」诺亚被问「这个点子怎么样」时的自动回复：「<strong>你有没有问过顾客怎么想呢？</strong>」</p>
+    </div>
+    <div class="card paper-edge">
+      <h3><span class="tagno">观点 C</span>开口要求是一切的前提</h3>
+      <p>「只有透过开口要求，才能得到你想要的东西。没有开口问，就没有机会得到什么。」Monthly1K 课程一万多人的数据显示：阻碍成功的首要因素不是缺乏策略，而是<mark>回避开口要求</mark>。「得到金钱并不是字面上的『得到』，这是一个『接收』的问题——只有在有人提出『要求』后才会发生。」</p>
+    </div>
+    <div class="card paper-edge">
+      <h3><span class="tagno">观点 D</span>现在做，而不是如何做（Now, Not How）</h3>
+      <p>大部分人先想太多然后再行动；每一个成功的创业家都是<mark>先行动，之后再慢慢想通</mark>。「行动前的任何分析都纯粹是猜测。在你完成某件事之前，真的不会完全理解它。」真实的回馈价值比任何书籍或课程高一百万倍，而且速度更快。AppSumo 与广告公司合作时一句「我们现在就做所有这些」，5 分钟做完原本要等 24 小时的接入事项。</p>
+    </div>
+  </div>
+
+  <div class="stickynote r" style="margin-top:2.4em">
+    <span class="pin" aria-hidden="true"></span>
+    <strong>失败观：</strong>找不到真正的客户付费？「太棒了！我们将庆祝你的<mark>胜利性失败</mark>（这花不了多少时间和金钱），并快速开始验证下一个事业点子。」几乎每个商业点子在第一次尝试时都注定会失败——Instagram 最初是一款波本威士忌的应用程式，Slack 最初是一款游戏应用程式。
+  </div>
+</section>
+
+<!-- ================= 02 原理与心理机制 ================= -->
+<section id="psych">
+  <div class="sec-head">
+    <span class="sec-num" aria-hidden="true">02</span>
+    <h2>原理与心理机制<span class="en">MECHANICS</span></h2>
+  </div>
+
+  <div class="figure">
+    <figcaption><b>FIG.02</b> ▚ 两种恐惧 → 创造者勇气 → 两种解药（序二 + 第1、2章）</figcaption>
+    <svg viewBox="0 0 1180 380" role="img" aria-label="两种恐惧与创造者勇气的对应图">
+      <rect class="svg-box" x="60" y="40" width="300" height="130" rx="6"/>
+      <text class="svg-t-a" x="80" y="74" font-size="16">恐惧 A · 害怕开始</text>
+      <text class="svg-t" x="80" y="104" font-size="13">相信创业=超大风险，以为更多准备、</text>
+      <text class="svg-t" x="80" y="126" font-size="13">更多计划能克服不安——</text>
+      <text class="svg-t" x="80" y="148" font-size="13">「这种不作为只会滋长更多怀疑和恐惧」</text>
+      <rect class="svg-box" x="820" y="40" width="300" height="130" rx="6"/>
+      <text class="svg-t-a" x="840" y="74" font-size="16">恐惧 B · 害怕开口问</text>
+      <text class="svg-t" x="840" y="104" font-size="13">开始后出现对拒绝的恐惧。</text>
+      <text class="svg-t" x="840" y="126" font-size="13">「如果你不能面对别人并开口提出</text>
+      <text class="svg-t" x="840" y="148" font-size="13">你想要的，就永远卖不掉任何东西。」</text>
+      <path class="sk" d="M360 105 C 480 105 520 170 560 170" />
+      <path class="sk" d="M550 160 L562 171 L546 176"/>
+      <path class="sk" d="M820 105 C 700 105 660 170 622 170"/>
+      <path class="sk" d="M634 160 L618 176 L620 159"/>
+      <rect class="svg-box-hl" x="450" y="145" width="280" height="80" rx="40"/>
+      <text class="svg-t-b" x="490" y="178" font-size="16">创造者勇气</text>
+      <text class="svg-t" x="472" y="204" font-size="12.5">提出想法（开始）＋ 有勇气尝试（开口要求）</text>
+      <path class="sk" d="M500 225 L380 290"/><path class="sk" d="M388 276 L378 292 L396 292"/>
+      <path class="sk" d="M680 225 L800 290"/><path class="sk" d="M786 278 L802 292 L802 274"/>
+      <rect class="svg-box" x="130" y="290" width="360" height="72" rx="4"/>
+      <text class="svg-t-b" x="150" y="318" font-size="14">解药 A：「现在做，而不是如何做」</text>
+      <text class="svg-t" x="150" y="342" font-size="12.5">＋ 1 美元挑战 ＋ 实验思维（一切皆实验）</text>
+      <rect class="svg-box" x="690" y="290" width="360" height="72" rx="4"/>
+      <text class="svg-t-b" x="710" y="318" font-size="14">解药 B：设定「拒绝目标」</text>
+      <text class="svg-t" x="710" y="342" font-size="12.5">＋ 咖啡挑战 ＋ 跟进技巧（跟进使成功率×3）</text>
+      <text class="svg-t-muted" x="30" y="30" font-size="12">背景：2013 年 Monthly1K 五人测试组开课两周几乎零进展 →「创业团体治疗」诊断出同两种恐惧，而非缺乏技能、欲望或智慧。</text>
+    </svg>
+  </div>
+
+  <div class="grid g3" style="margin-top:1.6em">
+    <div class="card">
+      <h3><span class="tagno">机制 1</span>一切皆实验</h3>
+      <p>「实验本来就应该会失败。如果失败了，汲取学到的东西，以稍微不同的方式再试一次。」超级成功企业家的共同点是试图推出大量看似随机的东西——线上课程、自行出版书籍、咨询业务、Airbnb、联盟行销、YouTube 频道、大学交友网站——这些项目几乎都失败了。<mark>「我们最终的成功是『尝试更多事情』这个事实的副产品。」</mark></p>
+    </div>
+    <div class="card">
+      <h3><span class="tagno">机制 2</span>拒绝脱敏 · chutzpah</h3>
+      <p>诺亚并非无所畏惧：每次面对拒绝都会害怕，「而正是因为如此，我成功了」。诀窍是<mark>透过反复曝露在疼痛中让自己麻木</mark>——拥抱不适，主动寻找它，把它当作指南针。父亲的秘诀是意第绪语的 <strong>chutzpah</strong>：勇气、魄力、胆量，「一种坚定、不顾一切的生活方式」。</p>
+    </div>
+    <div class="card">
+      <h3><span class="tagno">机制 3</span>限制激发创造力</h3>
+      <p>「严格的时间限制会打断你内心那个『想要创业家』的种种怀疑，迫使你快速反复迭代，直到找到可行的东西。」这就是黄金法则第一条「只有 48 小时」成立的心理基础。</p>
+    </div>
+    <div class="card">
+      <h3><span class="tagno">机制 4</span>维生素 vs 止痛药</h3>
+      <p>判断问题价值的试金石：潜在解决方案是<mark>维生素（可有可无）还是止痛药（一定要有）？</mark>AppSumo 选品标准：不做「有也不错」的维生素型产品，要做必需品式的止痛药型产品——「获得更多客户」正是每个商业人士最重要的业务需求。</p>
+    </div>
+    <div class="card">
+      <h3><span class="tagno">机制 5</span>最小可行受众 &amp; 1000 铁粉</h3>
+      <p>追求的不是粉丝数量而是质量：100 个了解、喜欢并信任你的高价值粉丝的终身价值，远超 10,000 个低价值粉丝的短期满足感——即赛斯·高汀的「最小可行受众」与凯文·凯利的「1,000 个铁粉」。社群是透过<mark>慷慨</mark>创造的：不带期望地增加价值。</p>
+    </div>
+    <div class="card">
+      <h3><span class="tagno">机制 6</span>The Dip 与数量组效应</h3>
+      <p>佛罗里达大学摄影课实验：学期末交 100 张照片的「数量组」在品质上彻底击败只交一张完美照片的「品质组」——因为更多实验、更多试错。100 法则用它对抗高汀所说的「低谷」（the dip）：开始工作与精熟工作之间那段你想退出的漫长过程。</p>
+    </div>
+    <div class="card">
+      <h3><span class="tagno">机制 7</span>霍桑效应 · 督促是一种超能力</h3>
+      <p>被人观察时会做出更好选择、更努力工作——这是督促伙伴（accountability partner）的理论依据。诺亚连续 10 年每个星期日向亚当·吉伯特发送「星期日回顾与预览」邮件。</p>
+    </div>
+    <div class="card">
+      <h3><span class="tagno">机制 8</span>过程定义自己，而非比较</h3>
+      <p>不要把幸福建立在「成为最聪明、最成功、最富有的人」之上——总会有人更强，每次比较都会削弱动力。<mark>透过每天做的事情（过程）来定义自己</mark>，比与他人比较更快更快乐地到达目的地。</p>
+    </div>
+    <div class="card">
+      <h3><span class="tagno">机制 9</span>让它变得有趣</h3>
+      <p>「这与意志力或自律无关。没有人会唠叨、责骂或恐吓你去创业。」人们以乐趣的名义做各种可怕的事，创业也不例外——让它变得有趣，你就会克服恐惧。童年类比：第一次骑自行车、爬树、跳进泥巴里的时刻，是我们学得最快也玩得最开心的时候。</p>
+    </div>
+  </div>
+
+  <div class="stickynote" style="margin-top:2.2em">
+    <span class="pin" aria-hidden="true"></span>
+    <strong>大公司也都始于小实验：</strong>苹果=两人想做随身电脑套件；Facebook=周末专案的大学生配对软件；特斯拉=电动车原型；Google=研究专案；Airbnb=会议期间在别人客厅打地铺；可汗学院=萨尔·可汗给表妹做的 10 分钟教学影片；AppSumo=诺亚低价买爱用软件的方式。
+  </div>
+</section>
+
+<!-- ================= 03 方法论武器库 ================= -->
+<section id="methods">
+  <div class="sec-head">
+    <span class="sec-num" aria-hidden="true">03</span>
+    <h2>方法论武器库<span class="en">PLAYBOOKS</span></h2>
+  </div>
+  <p class="sec-lede">逐步还原书中全部可操作框架。编号即使用顺序：周末前的准备（M1–M4）→ 找点子与验算（M5–M10）→ 48 小时拿钱（M11–M14）→ 成长机器（M15–M20）。</p>
+
+  <!-- M1 -->
+  <div class="card paper-edge" style="margin-top:1.4em">
+    <h3><span class="tagno">M1</span>自由数字 Freedom Number（第1章）</h3>
+    <p>一个短期的<strong>每月经常性收入目标</strong>——初期最有效的激励形式。诺亚 18 到 30 岁的自由数字是每月 3,000 美元：居住 1,000 + 食物/旅游交通 1,000 + 储蓄投资 1,000。有人低至 100 美元，有人高至涵盖抵押贷款。它有效的三点论证：</p>
+    <ol class="steps">
+      <li><strong>可行性</strong>：数字百分之百可达成，其上的价值——自由——却是无限的；不确定之时的安定之锚。</li>
+      <li><strong>具体而紧迫</strong>：不是「40 岁净资产 2,000 万」的大梦，而是今天就能着手；保留现职每月多赚 500 美元也算数。</li>
+      <li><strong>聚焦注意力</strong>：防止迷失在「如何赚第一个 100 万」的抽象焦虑中，把问题变成「本周/今天/现在做什么能赚钱？」</li>
+    </ol>
+    <p class="small mono" style="margin-top:.6em">挑战：写下一个不会让你害怕的数字——「我的自由数字是：______」</p>
+  </div>
+
+  <!-- M2 -->
+  <div class="grid g2" style="margin-top:1.4em">
+    <div class="card">
+      <h3><span class="tagno">M2</span>1 美元挑战（第1章）</h3>
+      <p>向你认识的某个人开口，为你未来的事业募集<strong>少少的 1 美元</strong>投资；交换条件是定期更新进展、让对方像个人董事会成员一样见证全过程。目的：体会「开始、要求、反复进行」的简单性——感受心跳加速的恐惧，然后无论如何去做。（完整邮件模板见<a href="#toolbox" style="color:var(--accent)">工具箱</a>。）</p>
+    </div>
+    <div class="card">
+      <h3><span class="tagno">M3</span>拒绝目标 &amp; 咖啡挑战（第2章）</h3>
+      <p>父亲的话：「你要热爱『拒绝』！像收集珍宝一样收集它们！设定『拒绝』目标。我每周争取达到 100 次拒绝，在其中你也会发现一些同意。」招聘设计师被嘲弄时诺亚给自己定下「至少 25 次拒绝」的目标——把难事变成游戏而非对自我价值的打击。<br>咖啡挑战：去任何一家店买个简单的东西并要求 <strong>10% 折扣</strong>，感受不自在。超过一万人完成。研究表明第一问被拒后跟进再问，成功率提高两倍；AppSumo 近 50% 销售额来自跟进邮件。</p>
+    </div>
+  </div>
+
+  <!-- M4 三个W -->
+  <div class="card paper-edge" style="margin-top:1.4em">
+    <h3><span class="tagno">M4</span>事业的三个 W + 从影响区出发（第3章）</h3>
+    <p>确定事业的三个坐标：<mark>Who 你要销售给谁｜What 你在解决什么问题｜Where 这些客户在哪里</mark>。本章目标：把有意锁定的市场缩减到三个族群，利用对这些市场的知识和经验产生大量想法。经验丰富的创业者总在「他们是谁、他们知道什么、他们认识的人」的影响区内找机会——Facebook（祖克柏周末邮件邀朋友试用）、微软（盖兹为阿布奎基某人写软体）、Barkery 狗狗烘焙店（带自制有机狗粮去狗公园每次卖光）都是这样起步的。成为「寻求问题者」：<mark>你的挫败感以及其他人的挫败感，就是你的商机。</mark>诺亚随身带笔记本记录困扰：快速健康早餐、可靠的清洁工、和伴侣去哪吃晚餐……</p>
+  </div>
+
+  <!-- M5 四大点子挑战 -->
+  <div class="card paper-edge" style="margin-top:1.4em">
+    <h3><span class="tagno">M5</span>创意点子产生器：四大点子挑战（第3章）</h3>
+    <p>目标：提出<strong>至少十个</strong>可能获利的事业想法。写下脑海中所有想法——糟糕的、疯狂的、不合理的都行，不要自我过滤，之后再削减。</p>
+    <div class="grid g2" style="margin-top:.8em">
+      <div class="card" style="box-shadow:none">
+        <h4><span class="mono accent">挑战①</span> 解决你自己的问题</h4>
+        <ul class="tick small">
+          <li>今天早上有哪一件事惹恼了我？</li>
+          <li>待办清单上哪件事存在一周以上了？</li>
+          <li>我常常做不好的一件事是什么？</li>
+          <li>最近想买却发现根本没人生产的是什么？</li>
+        </ul>
+        <p class="small muted">诺亚示范：「帮我找东西」代购研究服务／平价远距室内设计／朋友活动媒合平台。</p>
+      </div>
+      <div class="card" style="box-shadow:none">
+        <h4><span class="mono accent">挑战②</span> 畅销商品是你最好的朋友</h4>
+        <p class="small">看亚马逊畅销榜等卖疯的产品（iPad、iPhone…），思考如何做它们的<strong>配件</strong>（iPhone 贴纸）或向买家<strong>销售服务</strong>（教人用 iPhone）。向已经掏钱的人群销售更容易。（写下两个配件想法。）</p>
+      </div>
+      <div class="card" style="box-shadow:none">
+        <h4><span class="mono accent">挑战③</span> 逛逛线上市集</h4>
+        <p class="small">造访 Etsy、Facebook Marketplace、Craigslist、eBay；潜在客户已在论坛、贴文、教会团体里公开寻求解决方案。检查<strong>成交清单</strong>了解销量与成交价。（至少写下一个想法。）</p>
+      </div>
+      <div class="card" style="box-shadow:none">
+        <h4><span class="mono accent">挑战④</span> 搜寻引擎查询</h4>
+        <p class="small">人们每天进行 30 亿次 Google 搜索；从查询倒推愿意付费的解决方案，可用 AnswerThePublic.com 找高频问题，Reddit 的 r/SomebodyMakeThis 版块淘点子。（再多找两个想法。）</p>
+      </div>
+    </div>
+    <p class="small" style="margin-top:.8em"><strong>收尾筛选法：</strong>删掉不感兴趣的；若前三名对你尖叫「选我！选我！」即完成。无法决定时选<mark>最容易实施</mark>且你自己乐意付钱的。没有「完美」的想法——AppSumo 最初卖网路工具捆绑包，三年后才演进为单独交易网站。想法会随时间演变。</p>
+  </div>
+
+  <!-- M6 乘法公式 -->
+  <div class="card paper-edge" style="margin-top:1.4em">
+    <h3><span class="tagno">M6</span>百万美元乘法公式：市场机会检验（第4章）</h3>
+    <blockquote class="bq">你是冲浪者。你所销售的产品或服务就是你的冲浪板。<mark>市场就是浪潮，而浪潮才是最重要的。</mark>好浪不在于酷，在于有客户——不必进入热门科技领域，服务不足的草坪护理市场也是大浪。<span class="who">—— 第4章 · 冲浪者隐喻</span></blockquote>
+    <p>回答两个关键问题：</p>
+    <ol class="steps">
+      <li><strong>整个市场是萎缩、持平还是成长？</strong>（持平可以，成长更理想）——用 Google Trends 比较关键词过去数月数年的流行度。</li>
+      <li><strong>这个市场里有价值百万美元的机会吗？</strong>——须知道潜在客户数量 × 你的产品价格。可用 Facebook 广告管理员查受众规模、用广告档案库侦察竞争对手。</li>
+    </ol>
+    <p class="mono" style="margin-top:.6em;font-size:1.02rem">公式：<span class="accent">适合客户的价格点 × 理想客户数量 ≥ 100 万美元？</span> 是或不是。就这么简单。</p>
+    <div class="tblwrap">
+      <table class="tbl">
+        <caption class="small muted" style="text-align:left;caption-side:top;padding-bottom:.4em">书中三个评估实例（数字照录原文）</caption>
+        <tr><th>点子</th><th>Google 趋势</th><th>市场规模</th><th>单价</th><th>总价值</th><th>价值百万美元？</th></tr>
+        <tr><td>胡须油</td><td>持平但稍有成长</td><td>250 万人（乘法演算处原文数字；同章另处记 Facebook 受众约 2,500 万人）</td><td>$50</td><td>$125,000,000</td><td>✅ 是</td></tr>
+        <tr><td>居家办公室设置</td><td>显著上升</td><td>5 万人</td><td>$500</td><td>$25,000,000</td><td>✅ 是</td></tr>
+        <tr><td>月订阅制越南河粉汤</td><td>兴趣不大、无成长</td><td>1,000 人</td><td>$20</td><td>$20,000</td><td>❌ 不是（可为热情项目，但非百万美元生意）</td></tr>
+      </table>
+    </div>
+    <p class="small" style="margin-top:.6em">佐证案例：Ninja 折扣卡——柏克莱校园 2 万 5 千多名学生 × 10 美元最多 25 万美元；扩展到加州主要大学（100 万学生市场）即可支撑数百万美元事业。反例警示：<mark>不要浪费时间精确计算收入或担心最佳价格点</mark>——只需快速测试是否具备百万美元潜力。SOLD 排队公司案例：纽约专业排队员罗伯特·山缪尔在 Craigslist 发广告验证「是否有人愿意付费请他排队」，首单 15 小时获酬 325 美元；如今雇用 30 名员工，等候 2 小时最低收费 50 美元、每加一小时加 25 美元，年赚 8 万美元——工作是找到现有需求并满足它，不是创造看起来令人兴奋的东西。</p>
+  </div>
+
+  <!-- M7 一分钟商业模式 -->
+  <div class="card paper-edge" style="margin-top:1.4em">
+    <h3><span class="tagno">M7</span>一分钟商业模式 One-Minute Business Model（第4章）</h3>
+    <p>核心等式只有一行：<mark>收入（你赚得的所有钱）− 成本（赚到钱要花多少钱）＝ 利润（能带回去的金额）</mark>。有人请诺亚看商业计划，他的标准建议是：「<strong>你的计划就是赚钱！</strong>」此刻只需要粗略估计和高层次计算。延伸算式：<span class="mono accent">目标利润 ÷ 单位利润 ＝ 需售数量</span>。</p>
+    <div class="figure">
+      <figcaption><b>FIG.03</b> ▚ 一分钟商业模式等式图（含两个原书算例）</figcaption>
+      <svg viewBox="0 0 1180 400" role="img" aria-label="一分钟商业模式等式图">
+        <rect class="svg-box" x="60" y="40" width="270" height="110" rx="6"/>
+        <text class="svg-t-a" x="80" y="80" font-size="22">收入</text>
+        <text class="svg-t" x="80" y="110" font-size="13">你赚得的所有钱</text>
+        <text class="svg-t-m" x="345" y="105" font-size="40">−</text>
+        <rect class="svg-box" x="390" y="40" width="270" height="110" rx="6"/>
+        <text class="svg-t-a" x="410" y="80" font-size="22">成本</text>
+        <text class="svg-t" x="410" y="110" font-size="13">赚到钱需要花多少钱</text>
+        <text class="svg-t-m" x="675" y="105" font-size="40">=</text>
+        <rect class="svg-box-hl" x="720" y="40" width="270" height="110" rx="6"/>
+        <text class="svg-t-b" x="740" y="80" font-size="22">利润</text>
+        <text class="svg-t-b" x="740" y="110" font-size="13">能带回去的金额</text>
+        <path class="sk-dash" d="M60 190 L1120 190"/>
+        <rect class="svg-box" x="60" y="220" width="500" height="140" rx="4"/>
+        <text class="svg-t-m" x="80" y="252" font-size="15">例① 胡须油（第四章）</text>
+        <text class="svg-t" x="80" y="282" font-size="14">每售一件赚 $12.50 利润</text>
+        <text class="svg-t-b" x="80" y="315" font-size="15">1,000,000 ÷ 12.50 = 80,000 件</text>
+        <text class="svg-t-muted" x="80" y="342" font-size="12">四个缓冲因素：FB 可见人数只是下限／可复制到其他理容产品／</text>
+        <text class="svg-t-muted" x="80" y="358" font-size="12">复购远易于获客／可用订阅制增加购买量（Beardbrand 即此打法）</text>
+        <rect class="svg-box" x="600" y="220" width="520" height="140" rx="4"/>
+        <text class="svg-t-m" x="620" y="252" font-size="15">例② Sumo Jerky 中途救火（第4–5章）</text>
+        <text class="svg-t" x="620" y="282" font-size="13.5">原计划 $20/月卖零售 → 午夜重算：进价$10+运费$5，需 24h 卖 200 袋！</text>
+        <text class="svg-t-b" x="620" y="315" font-size="14">改卖 6 个月订阅制：1,000 ÷ 30（每单利润）= 只需 33 笔订单</text>
+        <text class="svg-t-muted" x="620" y="342" font-size="12">转动「平均订单价值」旋钮：所需销量从 200 笔降至 33 笔 —— 最终实收 $4,040、利润 $1,135。</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- 交互挂件：计算器 -->
+  <div class="widget" id="w-calc" data-badge="WIDGET ▸ CALCULATOR">
+    <h3>🧮 一分钟商业模式计算器</h3>
+    <p class="w-desc">照第 4 章公式实时验算：价格点 × 客户数（可选订阅周期），判断是否具备「价值百万美元的机会」潜力。评语逻辑基于书中概念（浪潮 / 止痛药 / 自由数字）。</p>
+    <div class="fieldrow">
+      <div class="field">
+        <label for="calcPrice">单价（美元 / 每期）</label>
+        <input type="number" id="calcPrice" min="0" step="0.5" value="50">
+      </div>
+      <div class="field">
+        <label for="calcQty">理想客户数（人 / 年）</label>
+        <input type="number" id="calcQty" min="0" step="10" value="25000">
+      </div>
+      <div class="field">
+        <label for="calcCycle">收费模式</label>
+        <select id="calcCycle">
+          <option value="1" selected>一次性购买（每年 1 次）</option>
+          <option value="12">月订阅（每年 12 期）</option>
+          <option value="4">季订阅（每年 4 期）</option>
+          <option value="2">半年订阅（每年 2 期）</option>
+        </select>
+      </div>
+    </div>
+    <div class="fieldrow">
+      <div class="field" style="flex:3 1 300px">
+        <label for="calcFn">收入调节器演示：平均订单价值倍率 ×<span id="fnVal" class="accent">1.0</span>（第4章六个调节器之一）</label>
+        <input type="range" id="calcFn" min="1" max="5" step="0.1" value="1" aria-describedby="fnVal">
+      </div>
+    </div>
+    <button class="btn" type="button" id="calcGo">▶ 运行一分钟验算</button>
+    <div class="result" id="calcOut" aria-live="polite">
+      <p class="muted small">输入参数后点击运行，或直接修改任意数值（自动重算）。</p>
+    </div>
+  </div>
+
+  <!-- M8 六调节器 -->
+  <div class="card paper-edge" style="margin-top:1.6em">
+    <h3><span class="tagno">M8</span>六个收入调节器（第4章）</h3>
+    <p>结果行不通时，逐项转动这些旋钮来放大收入——Sumo Jerky 正是在第 12 小时转动「平均订单价值」（零售 $20 → 订阅 $120/$240），把所需订单从 200 笔降到 33 笔：</p>
+    <div class="grid g3" style="margin-top:.8em">
+      <div class="card" style="box-shadow:none"><h4>1 · 平均订单价值</h4><p class="small">增加客户的购买金额。</p></div>
+      <div class="card" style="box-shadow:none"><h4>2 · 频率</h4><p class="small">增加人们购买的频率。</p></div>
+      <div class="card" style="box-shadow:none"><h4>3 · 价格点</h4><p class="small">调高或调低价格以影响总销售额。</p></div>
+      <div class="card" style="box-shadow:none"><h4>4 · 客户类型</h4><p class="small">接近更有利可图／更富裕的客户群（如卖零食给办公室而非个人）。</p></div>
+      <div class="card" style="box-shadow:none"><h4>5 · 产品线</h4><p class="small">增加额外产品使业务更具吸引力。</p></div>
+      <div class="card" style="box-shadow:none"><h4>6 · 附加服务</h4><p class="small">如卖饼干的可以提供办生日派对或到府烹调。</p></div>
+    </div>
+    <p class="small" style="margin-top:.8em">业务转向案例：AppSumo 从给矽谷新创的捆绑软体 → 向行销公司卖自有商品；Gambit 从 Facebook 体育游戏 → 社交游戏支付；山姆·帕尔 thehustle.co 从现场活动 → 活动资讯提供商，最终以八位数高价卖给 HubSpot。</p>
+  </div>
+
+  <!-- M9 验证黄金法则 -->
+  <div class="card paper-edge" style="margin-top:1.6em">
+    <h3><span class="tagno">M9</span>验证黄金法则与三种验证方法（第5章）</h3>
+    <blockquote class="bq"><strong>所谓验证是指——在 48 小时内找到三位愿意为你的点子付钱的客户。</strong><span class="who">—— 第5章 · 验证的定义</span></blockquote>
+    <p>验证的好处：不浪费时间；省下很多钱；发现点子是否真能吸引客户；可以先拿到钱；为自己点火。理论上每年可轻松测试 52 个想法，但通常只需 <strong>3 到 5 个周末</strong>就能找到黄金。</p>
+    <div class="figure">
+      <figcaption><b>FIG.04</b> ▚ 验证阶梯：黄金法则三支柱 × 三种验证方法对比</figcaption>
+      <svg viewBox="0 0 1180 470" role="img" aria-label="验证黄金法则与三种方法对比图">
+        <!-- 三支柱 -->
+        <text class="svg-t-m" x="30" y="30" font-size="14" letter-spacing="3">黄金法则为何有效 · 三支柱</text>
+        <rect class="svg-box" x="40" y="45" width="350" height="86" rx="4"/>
+        <text class="svg-t-b" x="58" y="73" font-size="14">柱① 只有 48 小时</text>
+        <text class="svg-t" x="58" y="97" font-size="12.5">「限制会激发创造力」，迫使快速迭代</text>
+        <text class="svg-t" x="58" y="117" font-size="12.5">直到找到可行之物。</text>
+        <rect class="svg-box" x="410" y="45" width="350" height="86" rx="4"/>
+        <text class="svg-t-b" x="428" y="73" font-size="14">柱② 获得前三个客户</text>
+        <text class="svg-t" x="428" y="97" font-size="12.5">第一个是朋友，第二个是家人，第三个最难——</text>
+        <text class="svg-t" x="428" y="117" font-size="12.5">现在这么难，之后只会更难。</text>
+        <rect class="svg-box" x="780" y="45" width="360" height="86" rx="4"/>
+        <text class="svg-t-b" x="798" y="73" font-size="14">柱③ 预先收钱 ★</text>
+        <text class="svg-t" x="798" y="97" font-size="12.5">「付款的承诺不代表通过验证，</text>
+        <text class="svg-t" x="798" y="117" font-size="12.5">那是一种礼貌的拒绝。」PayPal/Stripe/Venmo 都行。</text>
+        <rect class="svg-box-hl" x="40" y="143" width="1100" height="44" rx="4"/>
+        <text class="svg-t-b" x="330" y="172" font-size="16">顶梁：48 小时内 3 位付费客户 = 验证成功 ✔</text>
+        <!-- 三种方法 阶梯 -->
+        <text class="svg-t-m" x="30" y="228" font-size="14" letter-spacing="3">三种验证方法（推荐度 ↓）</text>
+        <rect class="svg-box-a" x="40" y="250" width="360" height="180" rx="4"/>
+        <text class="svg-t-w" x="60" y="282" font-size="16">方法一 · 直接预售 ★★★ 作者最爱</text>
+        <text class="svg-t-w" x="60" y="308" font-size="12.5">敲门/私讯/电话，主动沟通远胜被动发文。</text>
+        <text class="svg-t-w" x="60" y="330" font-size="12.5">山麓油漆：两句推销话术，两周预订 $8,000，</text>
+        <text class="svg-t-w" x="60" y="350" font-size="12.5">带来一年 $750,000 生意。</text>
+        <text class="svg-t-w" x="60" y="378" font-size="12.5">达娜的马事业：一周赚到第一个 $1,000，</text>
+        <text class="svg-t-w" x="60" y="398" font-size="12.5">连网站都没有，头几个月只用 PayPal。</text>
+        <text class="svg-t-w" x="60" y="420" font-size="12">标签：零成本 · 最快</text>
+        <rect class="svg-box" x="420" y="290" width="360" height="140" rx="4"/>
+        <text class="svg-t-a" x="440" y="320" font-size="15">方法二 · 线上市集 ★★</text>
+        <text class="svg-t" x="440" y="346" font-size="12.5">Craigslist / FB Marketplace / Reddit。</text>
+        <text class="svg-t" x="440" y="368" font-size="12.5">纳维尔出租相机几小时收 $75；</text>
+        <text class="svg-t" x="440" y="390" font-size="12.5">任天堂飞盘预售 20 个 @$20 后才去找制造商。</text>
+        <text class="svg-t" x="440" y="414" font-size="12">标签：可测虚拟产品</text>
+        <rect class="svg-box" x="800" y="330" width="340" height="100" rx="4"/>
+        <text class="svg-t-a" x="820" y="360" font-size="15">方法三 · 登陆页面 ★ 慎用</text>
+        <text class="svg-t" x="820" y="384" font-size="12.5">Instapage/Unbounce/ClickFunnels＋投广告。</text>
+        <text class="svg-t" x="820" y="404" font-size="12.5">「缓慢而昂贵」。正面案例 Kettle &amp; Fire：</text>
+        <text class="svg-t" x="820" y="422" font-size="12.5">$50 测试两周收近 $500 → 如今营收 1 亿美元。</text>
+        <text class="svg-t-muted" x="30" y="460" font-size="12">⚠ 若非要用登陆页面：把工作时间限制在 48 小时以内。</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- M10 十大准客户 + 话术 -->
+  <div class="grid g2" style="margin-top:1.6em">
+    <div class="card">
+      <h3><span class="tagno">M10</span>预售十大梦幻准客户清单</h3>
+      <p>受查特·贺姆斯《业绩是勉强出来的！》「梦幻百大客户策略」启发：建立<strong>十行表格</strong>，填入你想验证商业点子的理想人选，以最快速度从零到 1 美元。名单来源：Facebook 好友与社团、最喜爱的联络人、LinkedIn、前同事、过去的客户、简讯清单、教友、推特追踪者——从影响区的好朋友开始。</p>
+      <p class="small"><strong>红线检验：</strong>「如果你在想，天哪，我不知道有十个人可以买这个，那你可能需要考虑另外一个不同的商业点子。」</p>
+    </div>
+    <div class="card">
+      <h3><span class="tagno">M11</span>报价句型：价格 ＋ 效益 ＋ 时间</h3>
+      <p>转换阶段的报价永远是三色块拼合。书中五个现成例句：</p>
+      <ul class="tick small">
+        <li>「只需 50 美元，我今天就可以完成（修电脑）。这听起来不错吧？」</li>
+        <li>「只需 25 美元，我就能在 20 分钟内教您每天在 Mac 上节省 1 个小时。」</li>
+        <li>「只要 69 美元，我就能在 2 小时内教你写得更好。」</li>
+        <li>「只需 10 美元，我将传送一份 10 个思维技巧的 PDF，10 分钟改变思维方式。」</li>
+        <li>「本周开始，向您的办公室提供美味肉干连续 6 个月，只要 180 美元。」</li>
+      </ul>
+      <p class="small muted">对比展示技巧：「我们就像 X 的产品，但只要 Y 的费用。」</p>
+    </div>
+  </div>
+
+  <!-- 交互挂件：话术生成器 -->
+  <div class="widget" id="w-script" data-badge="WIDGET ▸ SCRIPT GEN">
+    <h3>🎙️ 验证阶梯 · 开口要求话术生成器</h3>
+    <p class="w-desc">按第 5 章「倾听 → 选项 → 转换」框架填空，即时生成一段照书而来的完整话术（含三个倾听问题与报价句型）。</p>
+    <div class="fieldrow">
+      <div class="field"><label for="sgWho">对象（如：邻居王太太 / 攀岩群组的伙伴）</label><input type="text" id="sgWho" value="喜欢攀岩的朋友" maxlength="30"></div>
+      <div class="field"><label for="sgPain">痛点（他们最沮丧的事）</label><input type="text" id="sgPain" value="每次抬头看保护点都要猛扭脖子" maxlength="60"></div>
+    </div>
+    <div class="fieldrow">
+      <div class="field"><label for="sgSol">解决方案</label><input type="text" id="sgSol" value="帮你装好一面攀岩用的确保护目镜" maxlength="60"></div>
+      <div class="field"><label for="sgPrice">报价（美元）</label><input type="number" id="sgPrice" value="60" min="1" max="100000"></div>
+      <div class="field"><label for="sgTime">交付时间（如：今天 / 20 分钟内 / 本周）</label><input type="text" id="sgTime" value="本周内" maxlength="20"></div>
+    </div>
+    <button class="btn" type="button" id="sgGo">⚡ 生成话术</button>
+    <div class="scriptout" id="sgOut" style="margin-top:1em" aria-live="polite"></div>
+  </div>
+
+  <!-- M12 四问题 -->
+  <div class="card paper-edge" style="margin-top:1.6em">
+    <h3><span class="tagno">M12</span>处理拒绝：四问题转化脚本（第5章）</h3>
+    <p>把拒绝变为新知识、新想法、甚至新客户——塔可饼海报连环被拒后，诺亚对每位拒绝者跑一遍这四个问题，意外挖出「塔可饼衬衫」的真实需求（PayPal 收到 15 张 $25 订单后才去找制造商）：</p>
+    <ol class="steps">
+      <li><strong>「为什么不要呢？」</strong>——直球对决；批评正确与否正是你想知道的。</li>
+      <li><strong>「你认识的人中有谁会真正喜欢这个呢？」</strong>——永远寻求推荐；具体说明推荐类型并用数字更有效。</li>
+      <li><strong>「什么会让这变成你理所当然愿意付钱的产品？」</strong>——也许他们想要的是相关的东西：遛狗？狗旅馆？狗狗约会？</li>
+      <li><strong>「你愿意为它付出多少？」</strong>——让潜在客户报出价格，破解新创公司最难的事之一：定价。</li>
+    </ol>
+    <p class="small muted">配套红线：不要问「你有兴趣吗？」——每个人都会说感兴趣，直到必须付费为止。要马上请对方立即付款；先卖再造可以，但要明确说明何时交付。</p>
+  </div>
+
+  <!-- M13 社媒 -->
+  <div class="card paper-edge" style="margin-top:1.6em">
+    <h3><span class="tagno">M13</span>独特角度四问 + 平台选择三标准 + 内容圈架构（第6章）</h3>
+    <div class="grid g2" style="margin-top:.7em">
+      <div>
+        <h4 class="mono accent small" style="letter-spacing:.15em">▚ 独特角度四问（班·凯永示范结构）</h4>
+        <ol class="steps small">
+          <li>你是谁？（14 年绩效教练，与顶尖运动员共事）</li>
+          <li>人们为什么要听你说？</li>
+          <li>你对什么充满热情？</li>
+          <li>你会为他人带来什么独特之事？</li>
+        </ol>
+        <p class="small muted">「你的独门秘方就是让你发光的不公平优势。」定位公式＝<mark>你将提供的结果 ＋ 目标市场</mark>。</p>
+      </div>
+      <div>
+        <h4 class="mono accent small" style="letter-spacing:.15em">▚ 平台选择三标准</h4>
+        <ol class="steps small">
+          <li>哪个地方有你想要连结的受众？</li>
+          <li>你喜欢透过哪个媒介创作内容？</li>
+          <li>与投入程度相比，在哪里能得到最大比例的结果？</li>
+        </ol>
+        <p class="small muted">诺亚排除 IG/Podcast/LinkedIn/部落格/推特/TikTok 后选择 YouTube（1 个 YouTube 订阅者≈25 个 TikTok 粉丝的一项衡量）。不需要露脸也不需要昂贵设备——他用 iPhone 12 在自家客厅做出了 75 万+ 订阅频道。</p>
+      </div>
+    </div>
+    <div class="figure">
+      <figcaption><b>FIG.05</b> ▚ 内容圈架构 Content Circle（阿里·阿布达尔剧本：440 万订阅、月入 40 万+ 美元）</figcaption>
+      <svg viewBox="0 0 1180 400" role="img" aria-label="内容圈三层架构图">
+        <circle class="svg-faint" cx="330" cy="200" r="165" />
+        <circle class="sk" cx="330" cy="200" r="165"/>
+        <circle class="sk-thin" cx="330" cy="200" r="112"/>
+        <circle class="svg-box-a" cx="330" cy="200" r="58"/>
+        <text class="svg-t-w" x="296" y="195" font-size="14">核心圈</text>
+        <text class="svg-t-w" x="288" y="214" font-size="11">极窄利基</text>
+        <text class="svg-t" x="238" y="128" font-size="12.5" transform="rotate(-8 238 128)">中圈圈：相邻需求</text>
+        <text class="svg-t" x="196" y="62" font-size="12.5">大圈圈：泛相关人群</text>
+        <text class="svg-t-muted" x="540" y="52" font-size="13">阿里·阿布达尔示例：</text>
+        <rect class="svg-box-a" x="540" y="66" width="580" height="54" rx="4"/>
+        <text class="svg-t-w" x="558" y="88" font-size="13">核心圈＝英国人的医学院入学考试 BMAT 备考影片</text>
+        <text class="svg-t-w" x="558" y="108" font-size="12">（利基再不起眼都行，只要让你和观众充满热情）</text>
+        <rect class="svg-box" x="540" y="132" width="580" height="44" rx="4"/>
+        <text class="svg-t" x="558" y="159" font-size="13">中圈圈＝一般学习与生产力（重叠话题，吸引更广人群）</text>
+        <rect class="svg-box" x="540" y="188" width="580" height="44" rx="4"/>
+        <text class="svg-t" x="558" y="215" font-size="13">大圈圈＝他的薪水、最新苹果产品（仍包含核心受众）</text>
+        <rect class="svg-box-hl" x="540" y="248" width="580" height="70" rx="4"/>
+        <text class="svg-t-b" x="558" y="276" font-size="13.5">清洁公司示例：蒸发冷却器×美国西南部 → 洗衣液×新屋主 →</text>
+        <text class="svg-t-b" x="558" y="298" font-size="13.5">十款最佳吸尘器×家庭用户</text>
+        <text class="svg-t-muted" x="540" y="345" font-size="12.5">其他范例：达斯汀水族箱 15 万订阅+数百万美元电商；凯尔·拉索塔仅 16,000 订阅、</text>
+        <text class="svg-t-muted" x="540" y="365" font-size="12.5">年联盟收入 100 万美元；安迪·施奈德「鸡语者」后院养鸡起步，5 年做到数十万美元营收。</text>
+        <text class="svg-t-muted" x="540" y="388" font-size="12.5">成为向导而非大师：标题多用「我如何……」；失败主题影片往往最受欢迎。</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- M14 邮件获利 -->
+  <div class="card paper-edge" style="margin-top:1.6em">
+    <h3><span class="tagno">M14</span>电子邮件获利：前 100 订阅者三部曲 + 名单磁铁 + 自动回复器（第7章）</h3>
+    <p>选择题：100 位电子邮件订阅者 vs 1,000 位 YouTube 订阅者 vs 10,000 位 Instagram 追踪者？答案是最少的 A。<mark>电子邮件是与客户沟通的王道</mark>——AppSumo 每年 6,500 万美元交易额中近 50% 来自电子邮件；健康的清单开启率目标是 20%。反面教材 LittleThings 因 Facebook 改演算法流失 75% 访客而关闭。</p>
+    <div class="figure">
+      <figcaption><b>FIG.06</b> ▚ 电子邮件获利漏斗：0→10→50→100→1000+</figcaption>
+      <svg viewBox="0 0 1180 430" role="img" aria-label="邮件订阅增长漏斗图">
+        <polygon class="svg-box-a" points="380,30 800,30 730,105 450,105"/>
+        <text class="svg-t-w" x="492" y="62" font-size="14">0→10 · 梦想十人（私信模板）</text>
+        <text class="svg-t-w" x="512" y="86" font-size="11.5">Bryan Harris 用此法涨到 1 万+ 订阅</text>
+        <polygon class="svg-box" points="450,120 730,120 680,190 500,190"/>
+        <text class="svg-t" x="508" y="150" font-size="13">11→50 · 懒惰行销</text>
+        <text class="svg-t" x="518" y="172" font-size="11.5">签名档/社媒简介放网址＝每天 40 张彩券</text>
+        <polygon class="svg-box" points="500,205 680,205 650,270 530,270"/>
+        <text class="svg-t" x="543" y="232" font-size="13">51→100 · 在活跃处发布</text>
+        <text class="svg-t" x="548" y="254" font-size="11.5">＋针对性推荐（越具体越有效）</text>
+        <polygon class="svg-box-hl" points="530,285 650,285 700,355 480,355"/>
+        <text class="svg-t-b" x="528" y="312" font-size="13">100+ · 名单磁铁放大</text>
+        <text class="svg-t-b" x="520" y="336" font-size="11.5">Chris 案例：一篇深度拆解文＋磁铁</text>
+        <path class="sk" d="M700 320 C 850 320 860 250 900 220"/>
+        <path class="sk" d="M888 218 L902 218 L897 232"/>
+        <rect class="svg-box" x="900" y="150" width="240" height="80" rx="4"/>
+        <text class="svg-t-a" x="916" y="178" font-size="13">Chris Von Wilpert：</text>
+        <text class="svg-t" x="916" y="200" font-size="12">40 小时拆解 HubSpot → 两周</text>
+        <text class="svg-t" x="916" y="220" font-size="12">邮件清单 0→1,000+</text>
+        <rect class="svg-box" x="30" y="120" width="300" height="150" rx="4"/>
+        <text class="svg-t-m" x="46" y="146" font-size="12.5">自动回复器三邮件（新订阅触发）</text>
+        <text class="svg-t" x="46" y="172" font-size="12">① 欢迎邮件「你真棒」＋提问收集需求</text>
+        <text class="svg-t" x="46" y="194" font-size="12">② 连结邮件「在 LinkedIn 上与我联络」</text>
+        <text class="svg-t" x="46" y="216" font-size="12">③ 内容邮件「用 50 美元创办八位数事业」</text>
+        <text class="svg-t-muted" x="46" y="244" font-size="11">开局送最好内容（开信率一开始最高）；一对一行销：</text>
+        <text class="svg-t-muted" x="46" y="262" font-size="11">刚开始回复每一位订阅者。</text>
+        <rect class="svg-box" x="30" y="290" width="300" height="120" rx="4"/>
+        <text class="svg-t-m" x="46" y="316" font-size="12.5">名单磁铁四种形态（第一版 ≤ 2 小时）</text>
+        <text class="svg-t" x="46" y="340" font-size="12">① 清单（影片内容执行清单）② 模板（企业利润率）</text>
+        <text class="svg-t" x="46" y="362" font-size="12">③ 高级指南　④ 免费书（11 个副业创意 PDF）</text>
+        <text class="svg-t-muted" x="46" y="392" font-size="11">Nick True 配套清单磁铁订阅最多；Jess Dante 伦敦入门指南下载 45,000+ 次。</text>
+        <text class="svg-t-muted" x="380" y="400" font-size="12">纳维尔·梅赫拉的 Kernest 邮件证明上限：讲故事＋个性 → 24 小时 $9,563 利润，约为之前的 100 倍。</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- M15 100法则 -->
+  <div class="grid g2" style="margin-top:1.6em">
+    <div class="card">
+      <h3><span class="tagno">M15</span>100 法则 The Rule of 100</h3>
+      <p>无论投入做什么，<mark>都要做满 100 次才去想是否停下来</mark>：YouTube→发 100 支影片；电子报→写 100 封邮件；新爱好→练习 100 天；创建业务→直接向 100 名客户推销。前 100 次重要的是「你做了」，不是别人是否喜欢。对照案例：诺亚 50 集、每集约 3 万下载后放弃 Podcast；同期起步的 Buffer 坚持下来，如今经常性收入 2,000 万美元。</p>
+    </div>
+    <div class="card">
+      <h3><span class="tagno">M16</span>五问行销计划（第8章）</h3>
+      <ol class="steps small">
+        <li>你今年的目标是什么？</li>
+        <li>你的客户到底是谁？可以在哪里找到他们？</li>
+        <li>你可以加倍投注的是哪一项行销活动？</li>
+        <li>如何取悦你的前 100 位顾客？</li>
+        <li>如果必须在 30 天内不花钱将业务翻倍，你会怎么做？</li>
+      </ol>
+      <p class="small muted">「光是复制计划然后希望和祈祷，这是行不通的。那是赌博。那是把运气当作策略。」</p>
+    </div>
+  </div>
+
+  <!-- M17 目标倒推+实验 -->
+  <div class="card paper-edge" style="margin-top:1.6em">
+    <h3><span class="tagno">M17</span>目标倒推公式 + 行销实验流程（第8章 · 丹尼尔·布利斯完整案例）</h3>
+    <p class="mono" style="font-size:1.05rem">目标倒推公式：<span class="accent">月利润目标 ÷ 单品利润 ＝ 月销量</span>　例：$4,000 ÷ $24/副 ≈ 166 副/月 ≈ 每天 5–6 副。</p>
+    <p>加拿大邮政职员丹尼尔想把攀岩确保护目镜做成月入 4,000 美元的业务（=他的自由数字）。手工制作卖出 12 副完成验证后，他把时间浪费在装饰 Shopify 网站、研究知识产权上。正确做法：</p>
+    <ol class="steps">
+      <li>从目标倒推出「每天 5–6 副」的具体任务量；</li>
+      <li>列行销策略清单，预估各管道 30 天销量排定优先级（每周只有一小时，所以只选预期最高的两项）；</li>
+      <li>限 30 天坚决测试——人际网络私讯✔（立刻出单）、批发给攀岩馆✔✔、市集发布✘、FB/GG 广告✘、赠品✘；</li>
+      <li>加倍有效、终止无效：Sierra Trading 单笔订单 4,200 美元，九成销售金额来自批发 → 全力押注批发。</li>
+    </ol>
+    <p class="small">黄金法则：<mark>「找到有效的方法并加倍投注努力，找到不起作用的部分并终止它。」</mark>懒惰心态：太难又反复无效就放弃前进，但 30 天足够让你从行销实验中得到成果。反例警示：Sumo.com 花 6 个月和 2 万美元推 Instagram 贴文，「确确实实创造了零元奇迹」。</p>
+    <p class="small muted">目标拆解示范：YouTube 50 万订阅年度目标 → 逐月里程碑（七月 18,833 名、八月 19,784 位、九月 20,783 名）。祖克柏的白板只有一个词和一个数字：「成长」「10 亿」。</p>
+  </div>
+
+  <!-- M18 取悦客户 -->
+  <div class="grid g2" style="margin-top:1.6em">
+    <div class="card">
+      <h3><span class="tagno">M18</span>取悦前 100 位客户（第8章）</h3>
+      <p>业务中最大的成长手段是<mark>客户留存和推荐</mark>。Gambit 年收入超 2,000 万美元时，诺亚仍向每位客户提供个人电话号码；AppSumo 初期亲自写信问首批客户威尔·戴瑞克喜欢与不喜欢什么。金句点评：<strong>「这无法规模化。而这正是重点所在。」</strong>每一步获取回馈的问题：「我们今天可以做一件什么事，来让您对我们的满意度加倍？」尼克·贝尔驻韩期间凌晨四点起床、亲自讯息每位客户，把 BPN 做成七位数业务。</p>
+    </div>
+    <div class="card">
+      <h3><span class="tagno">M19</span>通用行销点子清单（12 项 · 按序尝试）</h3>
+      <p class="small">①联络你的人脉（最先做）②付费广告（Bing/Google 关键字）③社群广告 ④内容行销 ⑤陌生开发 ⑥目标市场部落格赞助 ⑦网红行销 ⑧公关 ⑨SEO（先用 AnswerThePublic/SpyFu 研究）⑩赠品 ⑪合作（客串其他节目/电子报/频道）⑫批发/市集分发。</p>
+      <p class="small muted">原则：预估各管道 30 天销售量以便排序（不必准确，恰当猜测即可）；<strong>一开始先不要在行销上花钱，先把免费的选项都用尽再说。</strong></p>
+    </div>
+  </div>
+
+  <!-- M20 系统 -->
+  <div class="card paper-edge" style="margin-top:1.6em">
+    <h3><span class="tagno">M20</span>梦想之年 → 四类目标 → 行事历着色 → 支持系统（第9章）</h3>
+    <div class="grid g2" style="margin-top:.7em">
+      <div>
+        <h4 class="small mono accent" style="letter-spacing:.15em">▚ 梦想之年 &amp; 四类目标</h4>
+        <p class="small">先做大梦、不管如何实现；从愿景清单挑最兴奋的组织成目标，宁少勿多——「如果你对某个梦想犹豫不决，那它就不应该出现在你的目标清单上」。分四部分：<mark>工作、健康、个人、旅行</mark>。诺亚去年目标摘录：AppSumo 业绩 3,000 万美元；YouTube 50 万订阅；骑自行车横越美国；75,000 个伏地挺身；取得飞行员执照；在奥斯汀买房。每年回顾两次；手机锁定画面、便利贴、镜子——经常看到目标。</p>
+      </div>
+      <div>
+        <h4 class="small mono accent" style="letter-spacing:.15em">▚ 行事历着色四步 + WWND</h4>
+        <p class="small">①将所有内容分类；②指定颜色代码（蓝=工作、绿=健康、紫=个人、黄=旅行）；③优先事项标色规划每日行程（最重要的放周一、周二）；④每周日 15 分钟责任回顾及预览。「给我看你的行事历，我就可以告诉你什么对你来说最重要。」想懒惰怎么办？WWND——What Would Neville Do? 不做。可外包、停止、找软体代劳。</p>
+      </div>
+      <div>
+        <h4 class="small mono accent" style="letter-spacing:.15em">▚ 督促伙伴</h4>
+        <p class="small">找一个你尊敬、致力于相似目标的人，每周日互发「回顾与预览」邮件；对方必须回复并在你不持续时出声提醒，否则换人。诺亚坚持 10 年。亚当的追问示范：「你说仰卧起坐是今年的重要目标，我没有看到它们被列出来。」</p>
+      </div>
+      <div>
+        <h4 class="small mono accent" style="letter-spacing:.15em">▚ 潜力股网红三原则 + 推荐链 VIP 网路</h4>
+        <p class="small">①谁的工作让你印象深刻？②谁还没得到大量关注并且可能会回复？③你能帮这个人做什么？先赞美不求回报——「传送请求某事的讯息是垃圾邮件，赞美是关系」。安德鲁·陈 23 岁初到湾区时目标「前 6 个月每天结识 5 个新朋友」，不到一年结识马克·安德森与袁征。致谢邮件三要素：聊天亮点／后续待办／要求认识更多的人（每次只要一个人选）。诺亚自述：「我 90% 的净值来自于与人来往。」</p>
+      </div>
+    </div>
+    <p class="small" style="margin-top:.6em"><strong>第九章顿悟背景：</strong>2014 年 AppSumo 年收入约 400 万美元，诺亚却感到失落——一直在做「应该」做的事而非真正「想做」的事。瑞诗凯诗静修一个月后的改变：只推广全心支援的产品；清除有毒的关系；用「几个塔可饼」替代星级评价；中午之前不开会。<mark>「开创事业的根本就是要回归自由。」</mark></p>
+  </div>
+</section>
+
+<!-- ================= 04 案例墙 ================= -->
+<section id="cases">
+  <div class="sec-head">
+    <span class="sec-num" aria-hidden="true">04</span>
+    <h2>精彩案例墙<span class="en">CASE FILES</span></h2>
+  </div>
+  <p class="sec-lede">全部人物名、业务与关键数字忠于笔记原文。点击无交互，纯档案卡——像钉在车库软木板上的战报。</p>
+  <div class="grid g3" style="margin-top:1.4em">
+    <div class="case-card"><span class="case-no">FILE 01</span>
+      <h4>迈克尔·奥斯本 Michael Osborn</h4><div class="biz">房地产咨询顾问 · 第一部</div>
+      <div class="nums">月入 $83,000</div>
+      <p class="small">用百万美元周末流程把房地产兴趣变现成有利可图的顾问业务。</p>
+      <p class="lesson"><b>启示</b> 兴趣 + 流程 = 生意。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 02</span>
+      <h4>珍妮佛·琼斯 Jennifer Jones</h4><div class="biz">饼干斜杠事业 · 第一/二部</div>
+      <div class="nums">年入 $20,000 ／ 月入 $1,000</div>
+      <p class="small">达拉斯小学老师，在 Facebook 发帖说为假期做饼干篮、附 PayPal 连结问谁想订——零风险创业：不需招聘、网站或商业厨房。她自称非常害羞，也完成了咖啡挑战。</p>
+      <p class="lesson"><b>启示</b> 「我要巧克力脆片口味！」小生意也能改变人。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 03</span>
+      <h4>丹尼尔·雷芬伯格 Daniel Reifenberger</h4><div class="biz">科技使用指导 · 第一部</div>
+      <div class="nums">年收入 $2,500,000</div>
+      <p class="small">把苹果专卖店的工作经验变成指导人们使用科技的事业。</p>
+      <p class="lesson"><b>启示</b> 现有技能即可起步。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 04</span>
+      <h4>BetArcade 惨败 → Gambit 逆袭</h4><div class="biz">梦幻体育博彩 / 游戏支付 · 第3章</div>
+      <div class="nums">烧掉 $100,000 开发 + $10,000 律师费 → 逆袭后首年营收 $15,000,000+</div>
+      <p class="small">BetArcade 上线后没有任何访客。最低谷时问三个问题，抓住对支付商 OfferPal 抽成 50% 的集体抱怨，一个周末做出测试版、两周推出 Gambit，更低佣金帮朋友立即多赚 20%。</p>
+      <p class="lesson"><b>启示</b> 绝望时刻的立即成功反衬教训：先验证付费客户，再建事业。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 05</span>
+      <h4>AppSumo 起源</h4><div class="biz">软体折扣市集 · 第3章</div>
+      <div class="nums">建置 48 小时 · 总成本 $50 · 时薪 $12 的开发者 4 小时建站 → 十年后年营业额 $65,000,000+</div>
+      <p class="small">看到 MacHeist 模式移植到 Mac 之外；陌生邮件说服 Imgur 创始人与 Reddit 创始工程师（直接要免费广告）；广告发布几分钟内收到第一笔订单。</p>
+      <p class="lesson"><b>启示</b> 「专注从零到 1 美元。他创办的每一家公司都是从一位客户开始的。」</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 06</span>
+      <h4>Sumo Jerky 肉干 24 小时挑战</h4><div class="biz">肉干订阅 · 第4–5章</div>
+      <div class="nums">总收入 $4,040 · 利润 $1,135 · 凌晨 2:01 还在发邮件</div>
+      <p class="small">学员没人赚到第一个 $1,000，小组长提议加码 24 小时。中途发现定价错误（进价 $10+运费 $5），连夜转向办公室订阅制，只需 33 笔订单。两年后该事业以 $120,000 出售。</p>
+      <p class="lesson"><b>启示</b> 用收入调节器在第 12 小时救火，而不是弃赛。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 07</span>
+      <h4>罗伯特·山缪尔 / SOLD 排队公司</h4><div class="biz">代客排队 · 第4章</div>
+      <div class="nums">首单 15 小时 $325 → 30 名员工 · 2 小时最低 $50 · 年赚 $80,000</div>
+      <p class="small">被解雇后在 Craigslist 发广告验证「是否有人愿意付费请他排队」，从 iPhone 首发排到运动鞋与 DMV。</p>
+      <p class="lesson"><b>启示</b> 找到现有的需求并满足它——开卷饼餐厅，你要的是饥饿的人群。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 08</span>
+      <h4>贾斯汀·马雷斯 / Kettle &amp; Fire 牛骨汤</h4><div class="biz">登陆页验证 · 第5章</div>
+      <div class="nums">域名 $12 + Logo $5 + Bing 广告 $50 → 两周近 $500 → 如今年营收 $100,000,000</div>
+      <p class="small">丑到让网页设计师出冷汗的 Unbounce 页面，16 盎司卖 $29.99、「立即订购」直通 PayPal。</p>
+      <p class="lesson"><b>启示</b> 如果人们愿意花将近 30 美元向陌生人买从没见过的产品，它可能注定会成功。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 09</span>
+      <h4>达娜的马事业</h4><div class="biz">养马知识内容 · 第5章</div>
+      <div class="nums">一周内赚到第一个 $1（实际上是 $1,000）</div>
+      <p class="small">典型「想要创业家」，原计划 4 个月后上线 app。被追问「你要解决的实际问题是什么」逼出真相：YouTube 养马影片很糟糕，马主有钱却得不到丰富知识。</p>
+      <p class="lesson"><b>启示</b> 不需要成熟网站、LLC 或公司银行账户——头几个月只用 PayPal。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 10</span>
+      <h4>山麓油漆的艾瑞克</h4><div class="biz">油漆服务预售 · 第5章</div>
+      <div class="nums">两周预订 $8,000 → 一年 $750,000 生意</div>
+      <p class="small">不断敲门递传单，只用两句推销话术：「我发现你房子这边的漆有点脱落了，我想免费提供一个报价给你参考。」</p>
+      <p class="lesson"><b>启示</b> 直接预售是作者最爱的验证方式。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 11</span>
+      <h4>塔可饼海报 → 塔可饼衬衫</h4><div class="biz">周边商品转折 · 第5章</div>
+      <div class="nums">海报 $25 连环被拒 → 衬衫 $25 收到 15 张订单</div>
+      <p class="small">受限量电影海报公司 Mondo 启发卖塔可饼海报，全军覆没；对每位拒绝者跑四问题脚本，朋友们说「我倒是喜欢你那件塔可饼衬衫」。</p>
+      <p class="lesson"><b>启示</b> 把拒绝转化为改善的机会——它没成为大生意，但这不是重点。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 12</span>
+      <h4>HFG Consulting 学生折扣卡</h4><div class="biz">校园折扣卡 · 第2章</div>
+      <div class="nums">约 20 家商家签约 · 成本 $0.5/张 售价 $10 · 一年 $50,000</div>
+      <p class="small">「学生折扣卡」是商学院学生常试常败的五烂生意之一；诺亚当场走上街头验证，并把卡片当筹款工具卖给社团、收益对半分润。</p>
+      <p class="lesson"><b>启示</b> 不信常识信验证；销售即帮助他人赚钱。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 13</span>
+      <h4>莎拉·布莱克莉 Sara Blakely / Spanx</h4><div class="biz">塑身衣 · 第2章</div>
+      <div class="nums">7 年挨家挨户推销传真机被拒 → 41 岁成美国最年轻白手起家女性亿万富翁</div>
+      <p class="small">父亲每晚问「你们这周收集了哪些失败？」——早早接受失败的习惯帮她撑过几乎所有袜厂的拒绝，直到尼曼百货点头。</p>
+      <p class="lesson"><b>启示</b> 拒绝是履历，不是判决。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 14</span>
+      <h4>诺亚父亲 · 影印机销售</h4><div class="biz">陌生拜访 · 第2章</div>
+      <div class="nums">每周争取 100 次拒绝 · 单日成交 2 台</div>
+      <p class="small">没有 MBA、不懂英语的以色列移民，话术是「你生活在全世界最伟大的国家……但你却仍然使用一台蹩脚的影印机。为什么？我必须帮助你。」口袋里总有一大笔现金。</p>
+      <p class="lesson"><b>启示</b> 设定拒绝目标，热爱拒绝——Noah 名字里就有「NO」。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 15</span>
+      <h4>Mint.com 行销计划</h4><div class="biz">个人理财 · 第1/8章</div>
+      <div class="nums">承诺 6 个月 10 万用户 → 实际 100 万（2007 年九月上线时） · Intuit 以 $170,000,000 收购</div>
+      <p class="small">被拒「你还不够好」后带着详细行销计划回归，提出无法拒绝的提议：达不到目标就不付钱。双引擎：赞助金融部落客 + 写最好的金融内容。同一套计划后来发展了八个不同的百万美元业务。</p>
+      <p class="lesson"><b>启示</b> 产品好则行销易；量化承诺＋聚焦杠杆。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 16</span>
+      <h4>Kernest 发布邮件（纳维尔·梅赫拉）</h4><div class="biz">电子邮件文案 · 第7章</div>
+      <div class="nums">24 小时赚取 $9,563 利润 —— 几乎是之前的 100 倍</div>
+      <p class="small">不再「卖卖卖」而讲贾伯斯痴迷 Helvetica 的傻故事，谈下终身会员价＋48 小时倒计时。「当销售者本身乐在其中时，销售额就会呈现上升的现象。」</p>
+      <p class="lesson"><b>启示</b> 故事＋个性＞硬推销；此后 AppSumo 每封邮件价值从 $100 变 $10,000。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 17</span>
+      <h4>克里斯·冯·威波特 Chris Von Wilpert</h4><div class="biz">内容行销 · 第7章</div>
+      <div class="nums">40 小时研究 → 两周邮件清单 0→1,000+ → 后来获 $100,000 合约</div>
+      <p class="small">逆向剖析 HubSpot 内容行销方法的极详细长文＋文末名单磁铁；该文成为 OkDork 史上分享最多的文章。</p>
+      <p class="lesson"><b>启示</b> 一篇极深的免费内容＋磁铁足以引爆。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 18</span>
+      <h4>LittleThings 之死</h4><div class="biz">数位出版反面教材 · 第7章</div>
+      <div class="nums">流失每月 2,000 万访客中的 75% → 关闭 · CEO 称损失 $100,000,000</div>
+      <p class="small">2018 年 Facebook 改演算法，流量帝国一夜归零。</p>
+      <p class="lesson"><b>启示</b> 不掌控渠道等于把命交给平台——你永远「拥有」自己的邮件清单。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 19</span>
+      <h4>博·杰克森募款 Bo Bikes Bama</h4><div class="biz">慈善骑行募款 · 第6章</div>
+      <div class="nums">目标 $25,000 → 三天募集 $30,000（六级礼物等级 $10 → $10,000）</div>
+      <p class="small">诺亚向多年积累的受众发出求助信；捐款名单上的人他都曾互动过——哪怕只回一句「你做得很好，继续努力」。两天后博亲自来电致谢。</p>
+      <p class="lesson"><b>启示</b> 铁粉社群的号召力来自多年慷慨，不在粉丝总数。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 20</span>
+      <h4>阿里·阿布达尔 Ali Abdaal</h4><div class="biz">知识型 YouTuber · 第6章</div>
+      <div class="nums">剑桥医学生起步 → 440 万+ 订阅 · 月入 $400,000+</div>
+      <p class="small">从英国医学院入学考试 BMAT 备考影片起步的内容圈教科书；标题几乎都是「我如何……」而非「如何……」。</p>
+      <p class="lesson"><b>启示</b> 记录「你」所做的事情，人们想跟随向导，不想听大师说教。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 21</span>
+      <h4>凯尔·拉索塔 Kyle Lasota</h4><div class="biz">生物骇客利基频道 kylegotcamera · 第6章</div>
+      <div class="nums">仅 16,000 订阅 · 影片常只有 400 次观看 → 年联盟销售收入 $1,000,000</div>
+      <p class="small">冷水浴、红光疗法、桑拿、睡眠小工具、补充品——小而紧密的核心圈。</p>
+      <p class="lesson"><b>启示</b> 最小可行受众：质量碾压数量。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 22</span>
+      <h4>丹尼王设计公司 Danny Wang Design</h4><div class="biz">草坪养护短视频 · 第6章</div>
+      <div class="nums">TikTok 230 万追踪者 · 持续 15 万浏览量 · 影片不见丹尼本人</div>
+      <p class="small">每周发 45 秒养护前后对照影片、定向服务区屋主。</p>
+      <p class="lesson"><b>启示</b> 独特角度甚至不必是你本人。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 23</span>
+      <h4>Sumo.com 的 Instagram 教训</h4><div class="biz">行销反例 · 第8章</div>
+      <div class="nums">10 万+ 粉丝 · 6 个月 · $20,000 → 「确确实实创造了零元奇迹」</div>
+      <p class="small">很多赞、「IG 很酷」，但追踪者变不成顾客。</p>
+      <p class="lesson"><b>启示</b> 热门≠适合；30 天时限止损，不追「本月最热门」的策略。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 24</span>
+      <h4>丹尼尔·布利斯 Belay Shades（十年后续）</h4><div class="biz">攀岩确保护目镜 → 品牌经销 · 第8–9章</div>
+      <div class="nums">30 天 6 个实验 · Sierra Trading 单笔 $4,200 · 九成销售来自批发 → 十年后年营收近 $1,000,000</div>
+      <p class="small">当年发明攀岩确保镜的邮政职员，几年内成为欧洲攀岩品牌在美国的主要经销商；创业收入让他投资财富、埃及旅行、自由潜水教练培训。原话：「因为『百万美元周末』，我成为另一个完全不一样的人！」</p>
+      <p class="lesson"><b>启示</b> 小生意的长尾是财富与时间自由。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 25</span>
+      <h4>尼克·贝尔 Nick Bare / BPN</h4><div class="biz">营养补充品 · 第8章</div>
+      <div class="nums">驻韩服役 · 凌晨四点起床经营副业 → 七位数业务</div>
+      <p class="small">特别强调亲自为每一位客户传递讯息。</p>
+      <p class="lesson"><b>启示</b> 服务密度即壁垒。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 26</span>
+      <h4>安德鲁·陈的社交工程</h4><div class="biz">人脉网络 · 第9章</div>
+      <div class="nums">前 6 个月每天认识 5 个新朋友 → 一年内连上 Marc Andreessen 与 Eric Yuan → a16z 合伙人</div>
+      <p class="small">不断向外主动联络、跟进、寻求推荐；致谢邮件含聊天亮点、待办事项与「有没有其他一到两个人是你认为我可以认识的？」</p>
+      <p class="lesson"><b>启示</b> 主动联络＋跟进＋寻求推荐的复利。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 27</span>
+      <h4>哈利·德里 Harry Dry / Marketing Examples</h4><div class="biz">潜力股人脉 · 第9章</div>
+      <div class="nums">爆红前连结 → 如今 10 万邮件订阅 · LinkedIn 3 万 · 推特 14 万追踪者</div>
+      <p class="small">诺亚因喜欢其行销案例研究电子报而在其成名前主动赞美连结。</p>
+      <p class="lesson"><b>启示</b> 投资「潜力股」人脉的最佳时机在其成名前。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 28</span>
+      <h4>诺亚的 Podcast vs Buffer</h4><div class="biz">100 法则对照 · 第7章</div>
+      <div class="nums">50 集 × 约 3 万下载后放弃 vs Buffer 坚持成 $20,000,000 经常性收入</div>
+      <p class="small">讽刺的是：今天 3 万下载已是顶级 Podcast 水准；诺亚重启后每集只剩 7,500 下载。同期实验：佛罗里达大学摄影课上，「数量组」（交 100 张照片）在品质上彻底击败「品质组」。</p>
+      <p class="lesson"><b>启示</b> 先做满 100 次，再决定停不停。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 29</span>
+      <h4>凯尔·麦唐纳 Kyle MacDonald</h4><div class="biz">以物易物 · 第2章</div>
+      <div class="nums">开口要求交换仅 14 次：红色回纹针 → 一栋房子</div>
+      <p class="small">不断开口要求的极端示范。</p>
+      <p class="lesson"><b>启示</b> 开口要求的行为本身就带有一种力量。</p>
+    </div>
+    <div class="case-card"><span class="case-no">FILE 30</span>
+      <h4>纳维尔的两件小事</h4><div class="biz">相机租赁 / 任天堂飞盘 · 第5章</div>
+      <div class="nums">Craigslist 出租相机几小时收 $75 ／ 飞盘预售 20 个 @$20</div>
+      <p class="small">零成本、几分钟，胜过建网站买域名设计 Logo；飞盘案例不找制造商、不做网站、不测样品——先确认有人付钱，再去制造寄送。</p>
+      <p class="lesson"><b>启示</b> 线上市集是最快的付费意愿测试场之一。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 05 工具箱 ================= -->
+<section id="toolbox">
+  <div class="sec-head">
+    <span class="sec-num" aria-hidden="true">05</span>
+    <h2>工具箱<span class="en">TOOLKIT</span></h2>
+  </div>
+  <p class="sec-lede">可直接照做的清单、检查表与模板。剪下来就能用——像贴在车库墙上的作业指导书。</p>
+
+  <!-- T1 48h 清单 -->
+  <div class="card paper-edge" style="margin-top:1.4em">
+    <h3><span class="tagno">T1</span>48 小时挑战执行清单（第5章章末）</h3>
+    <ol class="steps">
+      <li>拿出<strong>十大梦幻准客户名单</strong>（Facebook 好友/社团、LinkedIn、前同事、过往客户、简讯清单、教友、推特追踪者……）。</li>
+      <li>传文字讯息、私讯、电子邮件或打电话给他们——<mark>越即时越好</mark>（主动沟通远胜被动发文）。</li>
+      <li>目标：48 小时内获得<strong>至少三位付费客户</strong>。当场收款（PayPal / Stripe / Cash App / Venmo）。</li>
+      <li>没人购买 → 选另一个想法回到第三章重来；有三位客户 → 「你已经有自己的事业了！」</li>
+    </ol>
+    <pre class="tmpl">可直接复制的脚本范例（肉干版）：
+你：嘿，我记得你很喜欢牛肉干。
+对方：对啊，一直都在吃。
+你：太棒了！我正在研究一个健康牛肉干的新专案，我想你会喜欢它。成为我的第一个客户，每月只要 <span class="fill">20 美元</span>。
+对方：我不确定耶，什么样的肉干？
+你：健康、由我采购的，如果你不喜欢，我很乐意退款。
+对方：听起来不错。我可以稍后再付款吗？
+你：<span class="fill">何不现在就透过 Venmo、PayPal 或汇现金给我</span>，这样可以确保你的名额。我第一批只接十张订单喔。
+对方：钱已汇出。</pre>
+  </div>
+
+  <!-- 交互挂件：48h 模拟器 -->
+  <div class="widget" id="w-48h" data-badge="WIDGET ▸ SIMULATOR">
+    <h3>⏱️ 48 小时金钱挑战模拟器</h3>
+    <p class="w-desc">勾选任务清单，点击「开始」即从 48:00:00 起倒计时（本页本地运行，刷新即重置）。「限制会激发创造力。」</p>
+    <div class="clockface" id="cdFace" aria-live="off">48:00:00</div>
+    <p class="wstatus" id="cdStatus">STANDBY · 待命</p>
+    <div style="text-align:center;margin:.8em 0">
+      <button class="btn" type="button" id="cdStart">▶ 开始挑战</button>
+      <button class="btn ghost" type="button" id="cdPause">⏸ 暂停</button>
+      <button class="btn ghost" type="button" id="cdReset">↺ 重置</button>
+    </div>
+    <ul class="chk" id="chkList">
+      <li><label><input type="checkbox"><span>写下我的自由数字：每月 ______ 美元（不会让我害怕的数字）</span></label></li>
+      <li><label><input type="checkbox"><span>用四大点子挑战写出 ≥ 10 个点子（糟糕的也写下来）</span></label></li>
+      <li><label><input type="checkbox"><span>筛出前 3 个，逐一过百万美元乘法公式（价格 × 客户数 ≥ 100 万美元？）</span></label></li>
+      <li><label><input type="checkbox"><span>选定 1 个点子，写下三个 W：卖给谁 / 解决什么问题 / 客户在哪里</span></label></li>
+      <li><label><input type="checkbox"><span>一分钟商业模式：收入 − 成本 ＝ 利润；目标利润 ÷ 单位利润 ＝ 需售数量</span></label></li>
+      <li><label><input type="checkbox"><span>建立十大梦幻准客户清单（红线：想不出 10 个人就换点子）</span></label></li>
+      <li><label><input type="checkbox"><span>逐个私讯 / 电话 / 上门——用「倾听 → 选项 → 转换」话术开口</span></label></li>
+      <li><label><input type="checkbox"><span>报价句型：价格 ＋ 效益 ＋ 时间；当场请求付款，不说「你有兴趣吗？」</span></label></li>
+      <li><label><input type="checkbox"><span>被拒就跑四问题转化脚本（为什么不要 / 推荐给谁 / 加什么才买 / 你愿意出多少）</span></label></li>
+      <li><label><input type="checkbox"><span>🎯 收到第 3 位付费客户的钱——VALIDATED！发邮件向首批客户要回馈</span></label></li>
+    </ul>
+    <p class="wstatus" id="chkCount">已完成 0 / 10</p>
+  </div>
+
+  <!-- T2-T4 模板 -->
+  <div class="grid g2" style="margin-top:1.6em">
+    <div class="ticket">
+      <h3><span class="tagno">T2</span>1 美元挑战邮件模板（第1章 · 原文照录）</h3>
+      <pre class="tmpl">嘿，〔名字〕
+我正在读《一个周末！打造千万事业》这本书，
+他们告诉我，需要从某人那里得到 1 美元。
+你是我想到的第一个人，
+如果能得到你的支持，对我的意义重大。
+你现在可以寄给我 1 美元吗？
+〔你的名字〕</pre>
+      <p class="small muted">社群动作：贴出第一张 1 美元照片，标记 @noahkagan，话题 #thedollarchallenge。（在台湾可改为 30 元台币。）配套心法引爱默生：「做你害怕的事，恐惧就会消失。」</p>
+    </div>
+    <div class="card">
+      <h3><span class="tagno">T3</span>咖啡挑战官方话术（第2章 · 原文照录）</h3>
+      <pre class="tmpl">你：嗨，你好！
+店员：你好，想要点什么呢？
+你：我想要一杯低脂香草拿铁。
+店员：没问题。这样是 3.5 美元。
+你：<span class="fill">我可以享有九折的折扣吗？</span>
+   （关键：带着微笑把话讲清楚，
+     然后就<span class="fill">不要再说任何话了</span>）
+店员：有什么特别原因吗？
+你：我正在学习一项商业课程，
+    而这是其中一项作业。：）</pre>
+      <p class="small muted">出口分支：得到九折 ✓ ／ 被拒绝 ✓——两者都算赢。已有超过 1 万人完成。最坏情况微不足道，好处是你意识到自己比想象更有能力。「享受恐惧。开口要求吧！」</p>
+    </div>
+    <div class="card">
+      <h3><span class="tagno">T4</span>「梦想十人」私信模板（第7章 · Bryan Harris 用此法涨到 1 万+ 订阅）</h3>
+      <pre class="tmpl">嘿，〔名字〕！这封邮件只是想让你知道，
+我正在开始〔新事业描述〕。
+我将就如何〔某个主题〕发表〔每周一篇文章／每周提示〕。
+这是您感兴趣的事吗？登记方法很简单！
+〔登陆页面网址〕或回信「是的，我愿意」即可！</pre>
+      <p class="small muted">后续两阶段：11–50 懒惰行销（签名档/简介放网址，日均 40 封邮件=40 张彩券，用 Bitly/Linktree 追踪）；51–100 在活跃社区发布＋针对性推荐（例句：「你认识在办公室做出购买决定，并且有幽默感的人吗？」）。</p>
+    </div>
+    <div class="card">
+      <h3><span class="tagno">T5</span>周日回顾与预览邮件（第9章 · 四分区模板）</h3>
+      <ul class="tick small">
+        <li><strong>工作</strong>：上周计划事项的完成情况＋下周计划（AppSumo 行销、一对一谈话、阅读回馈……）</li>
+        <li><strong>健康</strong>：运动记录（如实注记：「以上都完成。没有壁球。赎罪日。」）</li>
+        <li><strong>个人</strong>：要读的书、与家人朋友的安排</li>
+        <li><strong>旅行</strong>：行程研究</li>
+      </ul>
+      <p class="small muted">发给督促伙伴，对方必须追问（示范：「你说仰卧起坐是今年的重要目标，我没有看到它们被列出来。」）。「督促是一种超能力。」</p>
+    </div>
+  </div>
+
+  <div class="grid g2" style="margin-top:1.6em">
+    <div class="card paper-edge">
+      <h3><span class="tagno">T6</span>成长飞轮（第8章 · 留存与推荐循环）</h3>
+      <div class="figure" style="margin-top:.4em;box-shadow:none;border-width:1.5px">
+        <svg viewBox="0 0 700 420" role="img" aria-label="客户留存与推荐成长飞轮">
+          <defs></defs>
+          <path class="sk-dash" d="M350 70 A 140 140 0 1 1 349.9 70"/>
+          <path class="sk" d="M480 105 L497 92 L500 113"/>
+          <rect class="svg-box-a" x="270" y="30" width="160" height="56" rx="6"/>
+          <text class="svg-t-w" x="290" y="64" font-size="14">取悦前 100 位客户</text>
+          <path class="sk" d="M490 210 L520 210"/><path class="sk" d="M511 202 L521 210 L511 218"/>
+          <rect class="svg-box" x="430" y="182" width="150" height="56" rx="6"/>
+          <text class="svg-t-b" x="452" y="216" font-size="14">留存更久</text>
+          <path class="sk" d="M430 300 L455 330"/><path class="sk" d="M443 326 L457 332 L459 315"/>
+          <rect class="svg-box" x="380" y="320" width="170" height="66" rx="6"/>
+          <text class="svg-t-b" x="402" y="348" font-size="14">推荐新客户</text>
+          <text class="svg-t-muted" x="402" y="370" font-size="11.5">刚起步时每次推荐都能让业务翻倍</text>
+          <path class="sk" d="M260 355 L225 340"/><path class="sk" d="M235 330 L222 339 L240 347"/>
+          <rect class="svg-box" x="120" y="300" width="130" height="60" rx="6"/>
+          <text class="svg-t-b" x="142" y="327" font-size="13.5">更多真实客户</text>
+          <text class="svg-t-muted" x="142" y="347" font-size="11.5">＝更多收入机会</text>
+          <path class="sk" d="M185 300 L200 120"/>
+          <rect class="svg-box-hl" x="110" y="180" width="180" height="62" rx="6"/>
+          <text class="svg-t-b" x="128" y="207" font-size="13.5">回馈改进产品</text>
+          <text class="svg-t-b" x="128" y="228" font-size="11">「今天做一件什么事能让满意度加倍？」</text>
+          <path class="sk" d="M200 178 C 220 130 240 95 268 72"/>
+          <text class="svg-t-muted" x="255" y="230" font-size="13">↻ 循环加速</text>
+          <text class="svg-t-b" x="245" y="410" font-size="14">金句点评：「这无法规模化。而这正是重点所在。」</text>
+          <text class="svg-t-muted" x="30" y="30" font-size="12">Gambit 年收 $20,000,000 时诺亚仍向每位客户提供个人电话号码。</text>
+        </svg>
+      </div>
+    </div>
+    <div class="card paper-edge">
+      <h3><span class="tagno">T7</span>52 周机会日历环（第9章 · 后记）</h3>
+      <div class="figure" style="margin-top:.4em;box-shadow:none;border-width:1.5px">
+        <svg viewBox="0 0 700 420" role="img" aria-label="一年52周机会日历环">
+          <g id="yearRing"></g>
+          <circle class="sk-thin" cx="350" cy="210" r="118"/>
+          <circle class="sk" cx="350" cy="210" r="86"/>
+          <text class="svg-t-b" x="306" y="198" font-size="20">一年 52 次</text>
+          <text class="svg-t-b" x="316" y="224" font-size="15">开始的机会</text>
+          <text class="svg-t-a" x="322" y="250" font-size="12">今年你有 52 次机会</text>
+          <rect class="svg-box" x="30" y="360" width="640" height="44" rx="4"/>
+          <text class="svg-t" x="46" y="380" font-size="12.5">年度闭环：梦想之年清单 → 四类目标（工作/健康/个人/旅行）→ 每周行事历着色 → 每周日 15 分钟回顾预览</text>
+          <text class="svg-t-muted" x="46" y="397" font-size="11.5">颜色代码：蓝＝工作 · 绿＝健康 · 紫＝个人 · 黄＝旅行（原书因黑白印刷无法显示颜色，此处补足）</text>
+          <text class="svg-t-m" x="30" y="36" font-size="13" letter-spacing="2">WEEK RING · 52 TICKS</text>
+          <line class="sk-thin" x1="350" y1="16" x2="350" y2="92"/>
+          <text class="svg-t-muted" x="372" y="40" font-size="12">W1 · 新年第一周</text>
+          <text class="svg-t-muted" x="30" y="70" font-size="12.5">验证一次只需一个周末：</text>
+          <text class="svg-t-muted" x="30" y="90" font-size="12.5">理论上每年可轻松测试 52 个想法，</text>
+          <text class="svg-t-muted" x="30" y="110" font-size="12.5">但通常只需 3–5 个周末就能找到黄金。</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- T8 工具一览 -->
+  <div class="card" style="margin-top:1.6em">
+    <h3><span class="tagno">T8</span>书中工具与服务一览</h3>
+    <p class="small mono" style="line-height:2.2">
+      <span class="chip">SendFox.com</span> <span class="chip">Mailchimp.com</span> <span class="chip">ConvertKit.com</span> <span class="chip">Webflow.com</span> <span class="chip">Bitly.com</span> <span class="chip">Linktree.com</span> <span class="chip">AnswerThePublic</span> <span class="chip">SpyFu</span> <span class="chip">Fiverr.com</span> <span class="chip">Craigslist</span> <span class="chip">阿里巴巴</span> <span class="chip">Shopify</span> <span class="chip">eBay / Etsy / Amazon</span> <span class="chip">Instapage / Unbounce / ClickFunnels</span> <span class="chip">mybodytutor.com</span> <span class="chip">Google Trends</span> <span class="chip">Facebook 广告档案库</span>
+    </p>
+    <p class="small muted">用途标注：登陆页/邮件（SendFox、Mailchimp、ConvertKit、Webflow）；流量追踪（Bitly、Linktree）；SEO 关键字（AnswerThePublic、SpyFu）；外包名录录入（Fiverr、Craigslist）；制造（阿里巴巴）；电商站（Shopify）；市集分发（eBay/Etsy/Amazon）；督促服务（mybodytutor.com）。最新工具见 MillionDollarWeekend.com。</p>
+  </div>
+</section>
+
+<!-- ================= 06 金句墙 ================= -->
+<section id="quotes">
+  <div class="sec-head">
+    <span class="sec-num" aria-hidden="true">06</span>
+    <h2>原书金句墙<span class="en">QUOTES WALL</span></h2>
+  </div>
+  <p class="sec-lede">从三份精读笔记的金句摘录中精选 32 条，保持原文措辞并注明章节。</p>
+
+  <div class="widget" id="w-lottery" data-badge="WIDGET ▸ QUOTE DRAW">
+    <h3>🎟️ 金句抽签卡</h3>
+    <p class="w-desc">点击卡片随机翻出一条金句（键盘可用：卡片获得焦点后按 Enter 或空格）。</p>
+    <div class="lottery" id="lottery" tabindex="0" role="button" aria-label="点击抽取一条金句">
+      <div class="lottery-inner">
+        <p class="q" id="lotQ">为什么只用一个周末的时间？因为这样你就没时间胆怯了！</p>
+        <span class="src" id="lotSrc">—— 序二《从这里开始》</span>
+      </div>
+    </div>
+    <p class="wstatus small" id="lotHint">点击抽签 ▲ 已收录 14 条随身金句</p>
+  </div>
+
+  <div class="quotes" style="margin-top:1.8em">
+    <div class="qcard"><p class="q">每天都有普通的一般人在开展有利可图的事业。你不必富有、聪明或经验丰富。</p><span class="src">—— 序一《最常见的借口》</span></div>
+    <div class="qcard"><p class="q">把你的一生花在讨厌的工作上、和你不喜欢的人在一起、解决你根本不关心的问题才是冒险。</p><span class="src">—— 序一 · 借口三的反驳</span></div>
+    <div class="qcard"><p class="q">在赚到第一块钱之前，不要再花一毛钱了。</p><span class="src">—— 序一 · 借口八的反驳</span></div>
+    <div class="qcard"><p class="q">大多数人从不拿起电话，大多数人从不开口问。有时，这就是实行者与梦想者的差别。你必须行动，而且必须愿意失败。</p><span class="src">—— 史蒂夫·贾伯斯 · 引自序二</span></div>
+    <div class="qcard"><p class="q">我们最终的成功是『尝试更多事情』这个事实的副产品。</p><span class="src">—— 序二 · 创造者勇气</span></div>
+    <div class="qcard"><p class="q">为什么只用一个周末的时间？因为这样你就没时间胆怯了！</p><span class="src">—— 序二《从这里开始》</span></div>
+    <div class="qcard"><p class="q">不要害怕采取行动。你该害怕的，是过着像一份履历表的生活，而不是冒险般的生活。</p><span class="src">—— 第1章《别废话，开始吧》</span></div>
+    <div class="qcard"><p class="q">行动前的任何分析都纯粹是猜测。在你完成某件事之前，真的不会完全理解它。</p><span class="src">—— 第1章 · Now, Not How</span></div>
+    <div class="qcard"><p class="q">大部分人是先想太多然后再行动；每一个成功的创业家都是先行动之后再慢慢想通。</p><span class="src">—— 第1章（据原文整理）</span></div>
+    <div class="qcard"><p class="q">做你害怕的事，恐惧就会消失。</p><span class="src">—— 爱默生 · 引自第1章（1 美元挑战）</span></div>
+    <div class="qcard"><p class="q">成功的人都是直接开始动手做。</p><span class="src">—— 第1章章末总结</span></div>
+    <div class="qcard"><p class="q">你是谁、你拥有什么、你现在所知道的一切，都已经足以让你展开行动了。</p><span class="src">—— 第1章章末</span></div>
+    <div class="qcard"><p class="q">向我展示一位实验者，从长期来看，我会向你展现一位未来的获胜者。</p><span class="src">—— 夏恩·普利 · 引自第1章</span></div>
+    <div class="qcard"><p class="q">你要热爱『拒绝』！像收集珍宝一样收集它们！设定『拒绝』目标。……在其中你也会发现一些『同意』。</p><span class="src">—— 诺亚父亲的话 · 第2章</span></div>
+    <div class="qcard"><p class="q">你可能还差 11 次就可以抵达你的第一个 1,000 万，但如果你在第 10 次拒绝时停下来，那么你就已经失败了。</p><span class="src">—— 第2章《开口要求，好处多多》</span></div>
+    <div class="qcard"><p class="q">只有透过开口要求，才能得到你想要的东西。没有开口问，就没有机会得到什么。这适用于生活的方方面面。</p><span class="src">—— 第2章</span></div>
+    <div class="qcard"><p class="q">如果你相信自己的产品或服务能够满足真正的需求，那么，把它卖出去就是你的道德义务。</p><span class="src">—— 金克拉 · 引自第2章</span></div>
+    <div class="qcard"><p class="q">在没有先验证是否有付费客户的情况下就开展事业，是非常致命的。</p><span class="src">—— 第3章《寻找百万美元好点子》</span></div>
+    <div class="qcard"><p class="q">客户不关心你的点子，他们关心你能否解决他们的问题。</p><span class="src">—— 第3章</span></div>
+    <div class="qcard"><p class="q">MVP 和旧式创业方法的问题在于：我们过于专注在想要做的『事情』，而忽略了想要它的『人』。</p><span class="src">—— 第3章 · 客户第一</span></div>
+    <div class="qcard"><p class="q">你的挫败感以及其他人的挫败感，就是你的商机。</p><span class="src">—— 第3章 · 寻求问题者</span></div>
+    <div class="qcard"><p class="q">不要让别人的怀疑阻止你找出真相。唯一重要的意见是客户的意见。</p><span class="src">—— 第3章 · AppSumo 起源</span></div>
+    <div class="qcard"><p class="q">第一块钱永远是最甜蜜的。那是一种动能、一种可能性，是把恐惧踹飞的时刻。</p><span class="src">—— 第3章</span></div>
+    <div class="qcard"><p class="q">市场就是浪潮，而浪潮才是最重要的。</p><span class="src">—— 第4章《一分钟商业模式》</span></div>
+    <div class="qcard"><p class="q">你的计划就是赚钱！</p><span class="src">—— 第4章 · 回应所有请他看商业计划的人</span></div>
+    <div class="qcard"><p class="q">限制会激发创造力。严格的时间限制会打断你内心那个『想要创业家』的种种怀疑，迫使你快速反复进行并发挥创造力，直到你找到可行的东西。</p><span class="src">—— 第5章《48 小时金钱挑战》</span></div>
+    <div class="qcard"><p class="q">付款的『承诺』不代表通过验证，那是一种礼貌的拒绝。</p><span class="src">—— 第5章 · 验证黄金法则</span></div>
+    <div class="qcard"><p class="q">痛苦越大，机会越大！</p><span class="src">—— 第5章 · 倾听三问</span></div>
+    <div class="qcard"><p class="q">几乎每个商业点子在第一次尝试时都注定会失败。</p><span class="src">—— 第5章 · 塔可饼衬衫之后</span></div>
+    <div class="qcard"><p class="q">一个了解你、追随你、支持你的社群是商业中最强大的力量之一，而这是透过『慷慨』创造出来的。不带期望地增加价值。</p><span class="src">—— 第6章《用社群媒体来成长》</span></div>
+    <div class="qcard"><p class="q">你的独门秘方就是让你发光的不公平优势。</p><span class="src">—— 第6章 · 独特角度</span></div>
+    <div class="qcard"><p class="q">人们不想听无所不知的大师说教，他们想跟随向导。</p><span class="src">—— 第6章 · 向导式创作</span></div>
+    <div class="qcard"><p class="q">电子邮件是与客户沟通的王道。</p><span class="src">—— 第7章《用电子邮件来获利》</span></div>
+    <div class="qcard"><p class="q">当销售者本身乐在其中时，销售额就会呈现上升的现象。</p><span class="src">—— 第7章 · Kernest 邮件</span></div>
+    <div class="qcard"><p class="q">无论你投入做什么，都要做 100 次，才去想是否要停下来。</p><span class="src">—— 第7章 · 100 法则</span></div>
+    <div class="qcard"><p class="q">光是复制计划然后希望和祈祷，这是行不通的。那是赌博。那是把运气当作策略。</p><span class="src">—— 第8章《成长机器》</span></div>
+    <div class="qcard"><p class="q">找到有效的方法并加倍投注努力，找到不起作用的部分并终止它。</p><span class="src">—— 第8章 · 行销实验黄金法则</span></div>
+    <div class="qcard"><p class="q">这无法规模化。而这正是重点所在。</p><span class="src">—— 第8章 · 取悦前 100 位客户</span></div>
+    <div class="qcard"><p class="q">从你的目标开始来倒推规划！</p><span class="src">—— 第8章 · 目标倒推公式</span></div>
+    <div class="qcard"><p class="q">要获得你在世界上想要的一切，第一步就是允许自己想要它，并面对获得它所必要的恐惧。</p><span class="src">—— 第9章《今年的 52 次机会》</span></div>
+    <div class="qcard"><p class="q">开创事业的根本就是要回归自由。</p><span class="src">—— 第9章 · 印度之旅顿悟</span></div>
+    <div class="qcard"><p class="q">给我看你的行事历，我就可以告诉你，什么对你来说最重要。</p><span class="src">—— 第9章 · 行事历着色</span></div>
+    <div class="qcard"><p class="q">伟大的企业家有伟大的创业社群。没有什么全靠自己闯出一片天这种事。每个人都是靠团队合作成功的。</p><span class="src">—— 第9章 · 不孤单创业</span></div>
+    <div class="qcard"><p class="q">督促是一种超能力。</p><span class="src">—— 第9章 · 督促伙伴</span></div>
+    <div class="qcard"><p class="q">今年你有 52 次机会这样做。</p><span class="src">—— 第9章／后记</span></div>
+    <div class="qcard"><p class="q">实验、实验、再实验。失败、失败、再失败，直到你成功。尽管开始吧。然后……再开始。</p><span class="src">—— 后记《开始、开始、再开始》</span></div>
+    <div class="qcard"><p class="q">你的人生是由你面对恐惧的意愿所塑造而成的。请记住，无论如何，都要继续前进。</p><span class="src">—— 后记</span></div>
+  </div>
+</section>
+
+</main>
+</div><!-- /layout -->
+
+<footer>
+  <span>▚ READING NOTES · 《一个周末！打造千万事业》Million Dollar Weekend — Noah Kagan &amp; Tahl Raz</span>
+  <span>单文件离线版 · 无外部依赖 · 内容依据三份精读笔记整理</span>
+  <span>NOAH 含「NO」——每天提醒他继续前进 ▙</span>
+</footer>
+
+<script>
+(function(){
+"use strict";
+/* ========== 主题切换 ========== */
+var root=document.documentElement;
+var btn=document.getElementById('themeBtn');
+var KEY='mdw-theme';
+function applyTheme(t){
+  root.setAttribute('data-theme',t);
+  btn.textContent=(t==='dark')?'☀ LIGHT':'◐ DARK';
+}
+var saved=null;
+try{saved=localStorage.getItem(KEY);}catch(e){}
+if(saved==='dark'||saved==='light'){applyTheme(saved);}
+else{
+  applyTheme(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+}
+btn.addEventListener('click',function(){
+  var next=root.getAttribute('data-theme')==='dark'?'light':'dark';
+  applyTheme(next);
+  try{localStorage.setItem(KEY,next);}catch(e){}
+});
+
+/* ========== 滚动进度条 ========== */
+var bar=document.getElementById('progress');
+function updProgress(){
+  var h=document.documentElement;
+  var max=h.scrollHeight-h.clientHeight;
+  var p=max>0?(h.scrollTop/max)*100:0;
+  bar.style.width=p+'%';
+}
+window.addEventListener('scroll',updProgress,{passive:true});
+window.addEventListener('resize',updProgress);
+updProgress();
+
+/* ========== 目录高亮 ========== */
+var tocLinks=[].slice.call(document.querySelectorAll('aside.toc a[href^="#"]'));
+var secMap={};
+tocLinks.forEach(function(a){
+  var id=a.getAttribute('href').slice(1);
+  var el=document.getElementById(id);
+  if(el){secMap[id]=a;}
+});
+if('IntersectionObserver' in window){
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting&&secMap[en.target.id]){
+        tocLinks.forEach(function(a){a.classList.remove('active');});
+        secMap[en.target.id].classList.add('active');
+      }
+    });
+  },{rootMargin:'-20% 0px -65% 0px'});
+  Object.keys(secMap).forEach(function(id){
+    var el=document.getElementById(id);
+    /* 只观察主分区（避免挂件与分区重复触发） */
+    if(el.tagName==='SECTION'){io.observe(el);}
+  });
+}
+
+/* ========== W1 · 一分钟商业模式计算器 ========== */
+var cP=document.getElementById('calcPrice'),
+    cQ=document.getElementById('calcQty'),
+    cC=document.getElementById('calcCycle'),
+    cF=document.getElementById('calcFn'),
+    fnVal=document.getElementById('fnVal'),
+    calcOut=document.getElementById('calcOut');
+function fmt(n){
+  return '$'+Math.round(n).toLocaleString('en-US');
+}
+function runCalc(){
+  var price=parseFloat(cP.value),
+      qty=parseFloat(cQ.value),
+      cycles=parseFloat(cC.value)||1,
+      fn=parseFloat(cF.value)||1;
+  fnVal.textContent=fn.toFixed(1);
+  if(!(price>=0)||!(qty>=0)){
+    calcOut.innerHTML='<p class="verdict">INPUT ERROR</p><p class="small" style="margin-top:.5em">单价与客户数需为非负数字——别急，回到四大点子挑战重新找一个浪潮。</p>';
+    return;
+  }
+  var annual=price*qty*cycles*fn;
+  var html='<div class="big">'+fmt(annual)+'<span class="small mono muted"> / 年</span></div>';
+  html+='<p class="mono small muted" style="margin-top:.2em">'+fmt(price)+' × '+Math.round(qty).toLocaleString()+' 人 × 每年 '+cycles+' 期 × 调节器 '+fn.toFixed(1)+'</p>';
+  if(annual>=1000000){
+    html+='<p class="verdict">✅ VALIDATED · 百万美元机会</p>';
+    html+='<p class="small" style="margin-top:.6em">浪潮够大！按第4章乘法公式（价格 × 理想客户数 ≥ 100 万美元）通过检验。下一步：确认它是「止痛药」而非维生素，然后直接进入 48 小时挑战——记住胡须油要卖 80,000 件听起来很难，但有四个缓冲因素兜底。</p>';
+  }else if(annual>=100000){
+    html+='<p class="verdict">🟡 SOLID · 扎实的小生意</p>';
+    html+='<p class="small" style="margin-top:.6em">未到百万美元线，但足以覆盖大多数人的自由数字。转动六个收入调节器试试：提高平均订单价值、改订阅制、换更富裕的客户类型——Sumo Jerky 就是这样把所需订单从 200 笔降到 33 笔的。</p>';
+  }else if(annual>0){
+    html+='<p class="verdict">🔴 PHO ZONE · 河粉汤区</p>';
+    html+='<p class="small" style="margin-top:.6em">书中河粉汤算例全年只有 $20,000——可以是热情项目，但看不到足够需求。回第三章换一个浪潮更大的点子：「市场就是浪潮，而浪潮才是最重要的。」</p>';
+  }else{
+    html+='<p class="verdict">⚠ NO SIGNAL</p><p class="small" style="margin-top:.6em">填入单价和客户数才会开始计算——「你的计划就是赚钱！」</p>';
+  }
+  calcOut.innerHTML=html;
+}
+[cP,cQ,cC,cF].forEach(function(el){el.addEventListener('input',runCalc);});
+document.getElementById('calcGo').addEventListener('click',runCalc);
+runCalc();
+
+/* ========== W2 · 话术生成器 ========== */
+var sgWho=document.getElementById('sgWho'),sgPain=document.getElementById('sgPain'),
+    sgSol=document.getElementById('sgSol'),sgPrice=document.getElementById('sgPrice'),
+    sgTime=document.getElementById('sgTime'),sgOut=document.getElementById('sgOut');
+function esc(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function genScript(){
+  var who=sgWho.value.trim(),pain=sgPain.value.trim(),
+      sol=sgSol.value.trim(),price=parseFloat(sgPrice.value),time=sgTime.value.trim();
+  if(!who||!pain||!sol||!(price>0)||!time){
+    sgOut.innerHTML='<span style="color:var(--stamp)">⚠ 每个空都要填上（报价须大于 0）——「不要问『你有兴趣吗？』，要带着完整的提议开口。」</span>';
+    return;
+  }
+  var txt='【第一步 · 倾听】（让 '+who+' 谈问题，用「什么 / 如何」提问，避免「为什么」和是非题）\n'
+  +'  1. 「目前发生的事情中，最令人沮丧的是什么？」\n'
+  +'  2. 「如果「'+pain+'」不再困扰您，您的生活会变得如何更好？」\n'
+  +'  3. 「您认为解决它的成本应该是多少？」\n'
+  +'  听完总结复述：「所以您的意思是，'+pain+' 让您很头疼，对吗？」\n'
+  +'  （痛苦越大，机会越大！）\n\n'
+  +'【第二步 · 选项】给出解决方案选项及代价，观察反应——\n'
+  +'  「我可以帮您：'+sol+'。」\n'
+  +'  付钱付得很兴奋＝好信号；翻白眼或无精打采＝兴趣缺缺。\n\n'
+  +'【第三步 · 转换】（报价句型 ＝ 价格 ＋ 效益 ＋ 时间）\n'
+  +'  「只需 '+price+' 美元，我可以在'+time+'为您完成：'+sol+'。这听起来不错吧？」\n'
+  +'  要求付钱：「现在加入可以享有折扣，而且可以永远享有这个价格优惠——这个优惠只在今天有效。」\n'
+  +'  （明确说明何时交付；当场收款，PayPal/Venmo 都可以。）\n\n'
+  +'【若被拒绝 → 四问题转化脚本】\n'
+  +'  ① 为什么不要呢？　② 您认识的人中有谁会真正喜欢这个呢？\n'
+  +'  ③ 什么会让这变成您理所当然愿意付钱的产品？　④ 您愿意为它付出多少？';
+  sgOut.textContent=txt;
+}
+document.getElementById('sgGo').addEventListener('click',genScript);
+genScript();
+
+/* ========== W3 · 48 小时挑战模拟器 ========== */
+var TOTAL=48*3600*1000;
+var face=document.getElementById('cdFace'),statusEl=document.getElementById('cdStatus');
+var endAt=null,remaining=TOTAL,tickId=null,state='idle';
+function pad(n){return (n<10?'0':'')+n;}
+function render(ms){
+  ms=Math.max(0,ms);
+  var s=Math.floor(ms/1000);
+  var hh=Math.floor(s/3600),mm=Math.floor((s%3600)/60),ss=s%60;
+  face.textContent=pad(hh)+':'+pad(mm)+':'+pad(ss);
+}
+function stopTick(){if(tickId){clearInterval(tickId);tickId=null;}}
+function startTimer(){
+  if(state==='running')return;
+  if(state==='paused'){
+    state='running';
+    endAt=Date.now()+remaining;
+  }else{
+    state='running';remaining=TOTAL;endAt=Date.now()+TOTAL;
+  }
+  statusEl.textContent='RUNNING · 限制会激发创造力';
+  face.classList.remove('done');
+  stopTick();
+  tickId=setInterval(function(){
+    remaining=endAt-Date.now();
+    if(remaining<=0){
+      remaining=0;render(0);stopTick();state='done';
+      face.classList.add('done');
+      statusEl.textContent='⏰ 时间到！有 3 位付费客户吗？有 → VALIDATED；没有 → 庆祝胜利性失败，换个点子再来';
+      return;
+    }
+    render(remaining);
+  },250);
+  render(remaining);
+}
+function pauseTimer(){
+  if(state!=='running')return;
+  remaining=Math.max(0,endAt-Date.now());
+  stopTick();state='paused';
+  statusEl.textContent='PAUSED · 暂停中（WWND？纳维尔大概不会暂停）';
+}
+function resetTimer(){
+  stopTick();state='idle';remaining=TOTAL;
+  render(TOTAL);face.classList.remove('done');
+  statusEl.textContent='STANDBY · 待命';
+}
+document.getElementById('cdStart').addEventListener('click',startTimer);
+document.getElementById('cdPause').addEventListener('click',pauseTimer);
+document.getElementById('cdReset').addEventListener('click',resetTimer);
+render(TOTAL);
+
+/* 任务清单计数 */
+var boxes=[].slice.call(document.querySelectorAll('#chkList input[type=checkbox]'));
+var chkCount=document.getElementById('chkCount');
+function updChk(){
+  var done=boxes.filter(function(b){return b.checked;}).length;
+  chkCount.textContent='已完成 '+done+' / '+boxes.length+(done===boxes.length?' · 🎯 全部达成，WEEKEND APPROVED！':'');
+}
+boxes.forEach(function(b){b.addEventListener('change',updChk);});
+updChk();
+
+/* ========== W4 · 金句抽签卡 ========== */
+var lot=[
+  {q:'为什么只用一个周末的时间？因为这样你就没时间胆怯了！',s:'—— 序二'},
+  {q:'在赚到第一块钱之前，不要再花一毛钱了。',s:'—— 序一'},
+  {q:'你要热爱「拒绝」！像收集珍宝一样收集它们！设定「拒绝」目标。',s:'—— 诺亚父亲 · 第2章'},
+  {q:'行动前的任何分析都纯粹是猜测。在你完成某件事之前，真的不会完全理解它。',s:'—— 第1章'},
+  {q:'痛苦越大，机会越大！',s:'—— 第5章'},
+  {q:'市场就是浪潮，而浪潮才是最重要的。',s:'—— 第4章'},
+  {q:'付款的「承诺」不代表通过验证，那是一种礼貌的拒绝。',s:'—— 第5章'},
+  {q:'你的挫败感以及其他人的挫败感，就是你的商机。',s:'—— 第3章'},
+  {q:'第一块钱永远是最甜蜜的。那是一种动能、一种可能性，是把恐惧踹飞的时刻。',s:'—— 第3章'},
+  {q:'找到有效的方法并加倍投注努力，找到不起作用的部分并终止它。',s:'—— 第8章'},
+  {q:'这无法规模化。而这正是重点所在。',s:'—— 第8章'},
+  {q:'无论你投入做什么，都要做 100 次，才去想是否要停下来。',s:'—— 第7章 · 100 法则'},
+  {q:'开创事业的根本就是要回归自由。',s:'—— 第9章'},
+  {q:'今年你有 52 次机会这样做。',s:'—— 第9章／后记'}
+];
+var lotBox=document.getElementById('lottery'),
+    lotQ=document.getElementById('lotQ'),lotSrc=document.getElementById('lotSrc'),
+    lotHint=document.getElementById('lotHint'),curIdx=0;
+function drawQuote(){
+  var i=curIdx;
+  while(i===curIdx){i=Math.floor(Math.random()*lot.length);}
+  curIdx=i;
+  lotBox.classList.add('flipped');
+  setTimeout(function(){
+    lotQ.textContent=lot[i].q;
+    lotSrc.textContent=lot[i].s;
+  },250);
+  setTimeout(function(){lotBox.classList.remove('flipped');},600);
+  lotHint.textContent='点击抽签 ▲ 已随机翻出第 '+(i+1)+' / '+lot.length+' 条';
+}
+lotBox.addEventListener('click',drawQuote);
+lotBox.addEventListener('keydown',function(e){
+  if(e.key==='Enter'||e.key===' '){e.preventDefault();drawQuote();}
+});
+
+/* ========== 52 周环刻度生成 ========== */
+(function(){
+  var g=document.getElementById('yearRing');
+  if(!g)return;
+  var cx=350,cy=210,r=165,NS='http://www.w3.org/2000/svg';
+  for(var i=0;i<52;i++){
+    var ang=(i/52)*Math.PI*2-Math.PI/2;
+    var x1=cx+Math.cos(ang)*(r-10),y1=cy+Math.sin(ang)*(r-10);
+    var x2=cx+Math.cos(ang)*r,y2=cy+Math.sin(ang)*r;
+    var ln=document.createElementNS(NS,'line');
+    ln.setAttribute('x1',x1.toFixed(1));ln.setAttribute('y1',y1.toFixed(1));
+    ln.setAttribute('x2',x2.toFixed(1));ln.setAttribute('y2',y2.toFixed(1));
+    ln.setAttribute('class',(i%13===0)?'sk':'sk-thin');
+    g.appendChild(ln);
+  }
+})();
+})();
+</script>
+</body>
+</html>

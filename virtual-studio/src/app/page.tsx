@@ -4,6 +4,7 @@ import { ArchiveSection } from "@/components/magazine/ArchiveSection";
 import { PauseSection } from "@/components/magazine/PauseSection";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function HomePage() {
   const data = await fetchMagazineData();

@@ -2,12 +2,15 @@ import "server-only";
 import { Client } from "@notionhq/client";
 import { requireEnv } from "@/lib/env";
 
-let cached: Client | null = null;
+let cachedClient: Client | null = null;
+let cachedToken: string | null = null;
 
 export function notion(): Client {
-  if (cached) return cached;
-  cached = new Client({ auth: requireEnv("NOTION_TOKEN") });
-  return cached;
+  const token = requireEnv("NOTION_TOKEN");
+  if (cachedClient && cachedToken === token) return cachedClient;
+  cachedToken = token;
+  cachedClient = new Client({ auth: token });
+  return cachedClient;
 }
 
 export type NotionPage = Extract<

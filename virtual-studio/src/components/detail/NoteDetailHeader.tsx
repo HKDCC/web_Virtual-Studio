@@ -1,4 +1,5 @@
 import { DetailBreadcrumb } from "./DetailBreadcrumb";
+import { TagPill } from "../common/TagPill";
 
 function isObj(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null;
@@ -88,9 +89,9 @@ export function NoteDetailHeader(props: {
           )}
 
           {tags.length > 0 && (
-            <div className="note-detail-tags">
+            <div className="note-tags-wrap" style={{ marginTop: "16px" }}>
               {tags.map((t) => (
-                <span key={t} className="note-tag-pill">#{t}</span>
+                <TagPill key={t} tag={t} />
               ))}
             </div>
           )}

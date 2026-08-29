@@ -2,6 +2,7 @@ import Link from "next/link";
 import { fetchMagazineData } from "@/lib/magazineData";
 import { ArchiveSection } from "@/components/magazine/ArchiveSection";
 import { PauseSection } from "@/components/magazine/PauseSection";
+import { TagPill } from "@/components/common/TagPill";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -151,13 +152,15 @@ export default async function HomePage() {
                 <div className="note-card-meta">
                   <span className="note-date">{noteDate}</span>
                   <span className="note-cat">{noteCat}</span>
-                  {noteTags.length > 0 && (
-                    <span className="note-tags">
-                      {noteTags.map((t) => `#${t}`).join(" ")}
-                    </span>
-                  )}
                   {n?.readTime ? <span className="note-readtime">{n.readTime} 分钟阅读</span> : null}
                 </div>
+                {noteTags.length > 0 && (
+                  <div className="note-tags-wrap">
+                    {noteTags.map((t) => (
+                      <TagPill key={t} tag={t} />
+                    ))}
+                  </div>
+                )}
                 <h3 className="note-title">
                   {n?.htmlContent ? (
                     <a href={n.htmlContent} target="_blank" rel="noopener noreferrer">

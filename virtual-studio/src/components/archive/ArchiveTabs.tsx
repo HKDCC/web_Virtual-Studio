@@ -3,6 +3,7 @@
 import { Suspense, useMemo, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { TagPill } from "../common/TagPill";
 
 export type ArchiveBook = {
   id: string;
@@ -376,12 +377,14 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
                     <div className="note-card-meta">
                       {n.date && <span className="note-date">{n.date}</span>}
                       {n.category && <span className="note-cat">{n.category}</span>}
-                      {n.tags?.map((t) => (
-                        <span key={t} className="note-tags">
-                          #{t}
-                        </span>
-                      ))}
                     </div>
+                    {n.tags && n.tags.length > 0 && (
+                      <div className="note-tags-wrap">
+                        {n.tags.map((t) => (
+                          <TagPill key={t} tag={t} />
+                        ))}
+                      </div>
+                    )}
                     <h3 className="note-title">
                       <Link href={targetUrl} target={n.htmlContent ? "_blank" : undefined}>
                         {n.title}

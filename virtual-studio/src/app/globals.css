@@ -1047,18 +1047,150 @@ details.prompt[open] summary::after {
 .note-cat {
   color: var(--accent);
   border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
-  padding: 1px 7px;
+  padding: 2px 8px;
   border-radius: 999px;
   background: var(--paper);
-}
-
-.note-tags {
-  color: var(--ink-3);
+  font-weight: 500;
 }
 
 .note-readtime {
   color: var(--ink-3);
   margin-left: auto;
+}
+
+/* ═══════════════ 艺术级语义标签系统 (Artistic Tag Pills) ═══════════════ */
+.note-tags-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  margin-top: 10px;
+}
+
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+  user-select: none;
+}
+
+.tag-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+}
+
+.tag-pill-hash {
+  opacity: 0.6;
+  font-size: 10px;
+}
+
+.tag-pill-icon {
+  font-size: 10px;
+  opacity: 0.95;
+}
+
+/* 1. AI 模型型号标签 (Model Badge): 智识科技紫 */
+.tag-pill-model {
+  background: rgba(99, 102, 241, 0.09);
+  color: #4f46e5;
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 1px 3px rgba(99, 102, 241, 0.08);
+  font-weight: 600;
+}
+
+[data-theme="dark"] .tag-pill-model {
+  background: rgba(99, 102, 241, 0.22);
+  color: #c7d2fe;
+  border-color: rgba(165, 180, 252, 0.4);
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.2);
+}
+
+/* 2. 商业/金融/投资 (Finance): 翡翠绿 */
+.tag-pill-finance {
+  background: rgba(16, 185, 129, 0.09);
+  color: #047857;
+  border-color: rgba(16, 185, 129, 0.28);
+}
+
+[data-theme="dark"] .tag-pill-finance {
+  background: rgba(16, 185, 129, 0.2);
+  color: #a7f3d0;
+  border-color: rgba(110, 231, 183, 0.35);
+}
+
+/* 3. 认知/心智/哲学 (Mind/Cognition): 琥珀金/落日黄 */
+.tag-pill-mind {
+  background: rgba(217, 119, 6, 0.09);
+  color: #b45309;
+  border-color: rgba(217, 119, 6, 0.28);
+}
+
+[data-theme="dark"] .tag-pill-mind {
+  background: rgba(217, 119, 6, 0.2);
+  color: #fde68a;
+  border-color: rgba(252, 211, 77, 0.35);
+}
+
+/* 4. 创作/品牌/营销 (Brand/Creative): 珊瑚粉/复古红 */
+.tag-pill-brand {
+  background: rgba(225, 29, 72, 0.09);
+  color: #be123c;
+  border-color: rgba(225, 29, 72, 0.26);
+}
+
+[data-theme="dark"] .tag-pill-brand {
+  background: rgba(225, 29, 72, 0.2);
+  color: #fecdd3;
+  border-color: rgba(253, 164, 175, 0.35);
+}
+
+/* 5. 技术/算法/数据 (Tech/Code): 天空蓝/青出于蓝 */
+.tag-pill-tech {
+  background: rgba(14, 165, 233, 0.09);
+  color: #0369a1;
+  border-color: rgba(14, 165, 233, 0.28);
+}
+
+[data-theme="dark"] .tag-pill-tech {
+  background: rgba(14, 165, 233, 0.2);
+  color: #bae6fd;
+  border-color: rgba(125, 211, 252, 0.35);
+}
+
+/* 6. 个人成长/习惯/生产力 (Growth/Habits): 旷野鼠尾紫 */
+.tag-pill-growth {
+  background: rgba(139, 92, 246, 0.09);
+  color: #6d28d9;
+  border-color: rgba(139, 92, 246, 0.28);
+}
+
+[data-theme="dark"] .tag-pill-growth {
+  background: rgba(139, 92, 246, 0.2);
+  color: #ddd6fe;
+  border-color: rgba(196, 181, 253, 0.35);
+}
+
+/* 7. 默认/通识 (Default): 杂志纸感素色 */
+.tag-pill-default {
+  background: var(--paper-2);
+  color: var(--ink-2);
+  border-color: var(--line);
+}
+
+[data-theme="dark"] .tag-pill-default {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--ink-2);
+  border-color: var(--line);
 }
 
 .note-title {

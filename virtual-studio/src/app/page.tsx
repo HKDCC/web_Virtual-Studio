@@ -139,7 +139,7 @@ export default async function HomePage() {
         <h2 className="sec-title reveal">笔记</h2>
         <p className="sec-lede reveal">来自 Notion 数据库的文章与深度长文。</p>
         <div className="notes-grid sec-body reveal" id="notesList">
-          {safeNotes.map((n, i) => {
+          {safeNotes.slice(0, 6).map((n, i) => {
             const noteTitle = n?.title || "无标题笔记";
             const noteDate = n?.d || "";
             const noteCat = n?.cat || "思考";
@@ -183,7 +183,7 @@ export default async function HomePage() {
                       rel="noopener noreferrer"
                       className="note-link-btn note-link-html"
                     >
-                      独立排版版 ↗
+                      独立排版 ↗
                     </a>
                   )}
                 </div>
@@ -191,6 +191,32 @@ export default async function HomePage() {
             );
           })}
         </div>
+
+        {safeNotes.length > 6 && (
+          <div className="notes-more-row reveal" style={{ textAlign: "center", marginTop: "28px" }}>
+            <Link
+              href="/archive?tab=notes"
+              className="version-pill"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "10px 24px",
+                fontSize: "13px",
+                fontWeight: 500,
+                textDecoration: "none",
+                background: "var(--paper-2)",
+                border: "1px solid var(--line)",
+                color: "var(--ink)",
+                borderRadius: "6px",
+                transition: "all 0.2s"
+              }}
+            >
+              <span>查看全部 {safeNotes.length} 篇深度笔记</span>
+              <span>↗</span>
+            </Link>
+          </div>
+        )}
       </section>
 
       {/* ═══════════ 【输入与记录篇】 ═══════════ */}

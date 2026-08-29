@@ -521,27 +521,45 @@ export const FALLBACK_SITE_DATA = {
 
   notes: [
     {
-        "id": "3cb4b57f-e15a-8122-ac1d-e867cc14ecb8",
-        "d": "2026·08·27",
-        "title": "【读书笔记】Principles of Marketing_市场营销原理_Gemini 3.7 Flash",
+        "id": "3cb4b57f-e15a-81a3-9c33-e0f64c9837f3",
+        "d": "2026·08·29",
+        "title": "【读书笔记】Four Thousand Weeks_四千周",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
-            "市场营销",
-            "商业战略",
-            "品牌定位",
-            "客户价值",
-            "增长方法论"
+            "时间管理",
+            "哲学思考",
+            "人生意义",
+            "生产力反思",
+            "GLM 5.3 Flash"
         ],
-        "readTime": 45,
-        "htmlContent": "https://quaxstudio.xyz/articles/principles-of-marketing-市场营销原理-gemini-3.7-flash.html",
-        "src": "读书笔记 · 【读书笔记】Principles of Marketing_市场营销原理_Gemini 3.7 Flash",
-        "text": "现代营销战略实战全景：打通客户洞察与价值创造闭环，用精准客群细分与全渠道触点引爆增长——把品牌主张转化为消费者心智共鸣。"
+        "readTime": 25,
+        "htmlContent": "https://quaxstudio.xyz/articles/four-thousand-weeks-四千周-glm-5.3-flash.html",
+        "src": "读书笔记 · 【读书笔记】Four Thousand Weeks_四千周",
+        "text": "奥利弗·伯克曼时间哲学之作：假设人能活到80岁，也不过四千个星期。承认有限性，放弃做完所有事的幻想，才能真正掌控属于你的当下。"
+    },
+    {
+        "id": "3cb4b57f-e15a-8125-bd03-fb48082bee96",
+        "d": "2026·08·29",
+        "title": "【读书笔记】Show Your Work!_展现你的作品！",
+        "cat": "读书笔记",
+        "tags": [
+            "读书笔记",
+            "内容创作",
+            "个人品牌",
+            "持续输出",
+            "创作者经济",
+            "GLM 5.3 Flash"
+        ],
+        "readTime": 20,
+        "htmlContent": "https://quaxstudio.xyz/articles/show-your-work-展现你的作品-glm-5.3-flash.html",
+        "src": "读书笔记 · 【读书笔记】Show Your Work!_展现你的作品！",
+        "text": "奥斯汀·克莱恩创意三部曲之一：不必成为天才，展示你的创作过程。从默默无闻到被发现，关键在于让全世界看到你在做什么。"
     },
     {
         "id": "3cb4b57f-e15a-810d-b368-e2f729f90697",
         "d": "2026·08·27",
-        "title": "【读书笔记】Getting to Yes_谈判力_GLM 5.3 Flash",
+        "title": "【读书笔记】Getting to Yes_谈判力",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -549,17 +567,18 @@ export const FALLBACK_SITE_DATA = {
             "商业博弈",
             "沟通心理学",
             "共赢思维",
-            "决策方法论"
+            "决策方法论",
+            "GLM 5.3 Flash"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/getting-to-yes-谈判力-现代智识风.html",
-        "src": "读书笔记 · 【读书笔记】Getting to Yes_谈判力_GLM 5.3 Flash",
+        "src": "读书笔记 · 【读书笔记】Getting to Yes_谈判力",
         "text": "哈佛经典原则谈判法：把人与事彻底剥离，着眼于深层利益而非立场争执；确立最佳替代方案BATNA，在不伤关系的前提下达成共赢破局。"
     },
     {
         "id": "3cb4b57f-e15a-81f0-8d1e-f97ec7578661",
         "d": "2026·08·27",
-        "title": "【读书笔记】Building a Second Brain_打造第二大脑_GLM 5.3 Flash",
+        "title": "【读书笔记】Building a Second Brain_打造第二大脑",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -567,17 +586,18 @@ export const FALLBACK_SITE_DATA = {
             "生产力",
             "个人成长",
             "CODE法则",
-            "工作流"
+            "工作流",
+            "GLM 5.3 Flash"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/building-a-second-brain-打造第二大脑-glm-5.3-flash.html",
-        "src": "读书笔记 · 【读书笔记】Building a Second Brain_打造第二大脑_GLM 5.3 Flash",
+        "src": "读书笔记 · 【读书笔记】Building a Second Brain_打造第二大脑",
         "text": "数字时代的个人知识管理系统：通过CODE四步法（抓取、组织、提炼、表达）释放大脑带宽——将散乱信息沉淀为随时调用的外挂生产力。"
     },
     {
         "id": "3cb4b57f-e15a-81a9-89fc-e4bf30fdbf1a",
         "d": "2026·08·27",
-        "title": "【读书笔记】Atomic Habits_原子习惯_GLM 5.3 Flash",
+        "title": "【读书笔记】Atomic Habits_原子习惯",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -585,17 +605,18 @@ export const FALLBACK_SITE_DATA = {
             "习惯养成",
             "个人成长",
             "生产力",
-            "复利效应"
+            "复利效应",
+            "GLM 5.3 Flash"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/atomic-habits-原子习惯-glm-5.3-flash.html",
-        "src": "读书笔记 · 【读书笔记】Atomic Habits_原子习惯_GLM 5.3 Flash",
+        "src": "读书笔记 · 【读书笔记】Atomic Habits_原子习惯",
         "text": "微小改变带来复利奇迹：系统拆解提示、渴求、反应、奖励四大行为定律——不靠虚无的意志力硬撑，靠环境设计与身份认同重塑长期飞轮。"
     },
     {
         "id": "3cb4b57f-e15a-81be-b521-cad89e87130e",
         "d": "2026·08·26",
-        "title": "【读书笔记】Your Money or Your Life_要钱还是要生活_OX Alpha",
+        "title": "【读书笔记】Your Money or Your Life_要钱还是要生活",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -603,17 +624,18 @@ export const FALLBACK_SITE_DATA = {
             "财务自由",
             "财富观",
             "时间主权",
-            "FIRE生活"
+            "FIRE生活",
+            "OX Alpha"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/your-money-or-your-life-要钱还是要生活-ox-alpha.html",
-        "src": "读书笔记 · 【读书笔记】Your Money or Your Life_要钱还是要生活_OX Alpha",
+        "src": "读书笔记 · 【读书笔记】Your Money or Your Life_要钱还是要生活",
         "text": "金钱是你在生命能量上的明码标价：重塑金钱与时间的主权契约，计算每一笔开支消耗的真实生命，在“刚刚好”的拐点上达成终极财务自由。"
     },
     {
         "id": "3cb4b57f-e15a-8120-8d29-d5e7e708e76a",
         "d": "2026·08·26",
-        "title": "【读书笔记】The Psychology of Money_金钱心理学_OX Alpha",
+        "title": "【读书笔记】The Psychology of Money_金钱心理学",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -621,17 +643,18 @@ export const FALLBACK_SITE_DATA = {
             "投资心理",
             "财富认知",
             "风险管理",
-            "复利思维"
+            "复利思维",
+            "OX Alpha"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/the-psychology-of-money-金钱心理学-ox-alpha.html",
-        "src": "读书笔记 · 【读书笔记】The Psychology of Money_金钱心理学_OX Alpha",
+        "src": "读书笔记 · 【读书笔记】The Psychology of Money_金钱心理学",
         "text": "理财的本质是心智博弈而非数学算术：财富不在于你赚了多少，而在于你保住了多少——管理贪婪与恐惧，在意外开支足以致命的世界里优雅生存。"
     },
     {
         "id": "3cb4b57f-e15a-81ca-8186-f5c90798261d",
         "d": "2026·08·26",
-        "title": "【读书笔记】Million Dollar Weekend_一个周末打造千万事业_OX Alpha",
+        "title": "【读书笔记】Million Dollar Weekend_一个周末打造千万事业",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -639,17 +662,18 @@ export const FALLBACK_SITE_DATA = {
             "需求验证",
             "冷启动",
             "商业变现",
-            "行动力"
+            "行动力",
+            "OX Alpha"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/million-dollar-weekend-一个周末打造千万事业-ox-alpha.html",
-        "src": "读书笔记 · 【读书笔记】Million Dollar Weekend_一个周末打造千万事业_OX Alpha",
+        "src": "读书笔记 · 【读书笔记】Million Dollar Weekend_一个周末打造千万事业",
         "text": "AppSumo创始人诺亚·卡根的极速创业实战：48小时内从零验证付费需求，告别拖延与自我怀疑——先搞定前三个真实买家，再谈规模扩张。"
     },
     {
         "id": "3cb4b57f-e15a-81a0-a451-c5ebff9f21f6",
         "d": "2026·08·26",
-        "title": "【读书笔记】Measure What Matters_这才是OKR_OX Alpha",
+        "title": "【读书笔记】Measure What Matters_这才是OKR",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -657,17 +681,18 @@ export const FALLBACK_SITE_DATA = {
             "OKR",
             "团队协作",
             "企业管理",
-            "战略执行"
+            "战略执行",
+            "OX Alpha"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/measure-what-matters-这才是okr-ox-alpha.html",
-        "src": "读书笔记 · 【读书笔记】Measure What Matters_这才是OKR_OX Alpha",
+        "src": "读书笔记 · 【读书笔记】Measure What Matters_这才是OKR",
         "text": "约翰·杜尔揭秘OKR执行法则：聚焦压倒性关键目标，用可衡量的关键结果焊接团队协作——告别低效KPI，让全员在战略方向上达成绝对共识。"
     },
     {
         "id": "3cb4b57f-e15a-81fc-bb9f-f6d78f4e9789",
         "d": "2026·08·26",
-        "title": "【读书笔记】How to Get Rich_如何不靠运气致富_OX Alpha",
+        "title": "【读书笔记】How to Get Rich_如何不靠运气致富",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -675,17 +700,18 @@ export const FALLBACK_SITE_DATA = {
             "专有知识",
             "杠杆效应",
             "财富自由",
-            "心智模型"
+            "心智模型",
+            "OX Alpha"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/how-to-get-rich-如何不靠运气致富-ox-alpha.html",
-        "src": "读书笔记 · 【读书笔记】How to Get Rich_如何不靠运气致富_OX Alpha",
+        "src": "读书笔记 · 【读书笔记】How to Get Rich_如何不靠运气致富",
         "text": "硅谷投资教父纳瓦尔的财富底层逻辑：拒绝出卖时间，通过专属知识与无许可杠杆占领价值高地——财富不是零和博弈，而是创造正和价值。"
     },
     {
         "id": "3cb4b57f-e15a-816c-8841-f8ddbacd47c8",
         "d": "2026·08·26",
-        "title": "【读书笔记】Deep Learning_深度学习_OX Alpha",
+        "title": "【读书笔记】Deep Learning_深度学习",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -693,17 +719,18 @@ export const FALLBACK_SITE_DATA = {
             "深度学习",
             "神经网络",
             "算法架构",
-            "机器学习"
+            "机器学习",
+            "OX Alpha"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/deep-learning-深度学习-ox-alpha.html",
-        "src": "读书笔记 · 【读书笔记】Deep Learning_深度学习_OX Alpha",
+        "src": "读书笔记 · 【读书笔记】Deep Learning_深度学习",
         "text": "深度阅读笔记与知识图谱重构：系统提炼核心命题与实战方法论，在不确定性中建立结构化认知框架。"
     },
     {
         "id": "3cb4b57f-e15a-81aa-bd7e-eb3298911175",
         "d": "2026·08·26",
-        "title": "【读书笔记】Competing Against Luck_与运气竞争_OX Alpha",
+        "title": "【读书笔记】Competing Against Luck_与运气竞争",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -711,17 +738,18 @@ export const FALLBACK_SITE_DATA = {
             "产品创新",
             "用户需求",
             "破坏式创新",
-            "商业洞察"
+            "商业洞察",
+            "OX Alpha"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/competing-against-luck-与运气竞争-ox-alpha.html",
-        "src": "读书笔记 · 【读书笔记】Competing Against Luck_与运气竞争_OX Alpha",
+        "src": "读书笔记 · 【读书笔记】Competing Against Luck_与运气竞争",
         "text": "克里斯坦森“用户待办任务”（Jobs to Be Done）理论：客户购买的不是产品本身，而是为了让生活取得某种进展——摸清深层动机，彻底摆脱低维同质化内卷。"
     },
     {
         "id": "3cb4b57f-e15a-8147-8692-ef1c029d6147",
         "d": "2026·07·16",
-        "title": "【读书笔记】Obviously Awesome_显然很棒_GLM 5.2",
+        "title": "【读书笔记】Obviously Awesome_显然很棒",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -729,17 +757,18 @@ export const FALLBACK_SITE_DATA = {
             "品类创新",
             "目标客群",
             "B2B营销",
-            "竞争优势"
+            "竞争优势",
+            "GLM 5.2"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/obviously-awesome-显然很棒-glm-5.2.html",
-        "src": "读书笔记 · 【读书笔记】Obviously Awesome_显然很棒_GLM 5.2",
+        "src": "读书笔记 · 【读书笔记】Obviously Awesome_显然很棒",
         "text": "产品定位的核心灵魂在于“一目了然”：摸清买家脑海中的真正替代方案，用压倒性优势锁定最买账的客群，彻底跨越“从这啥玩意到非买不可”。"
     },
     {
         "id": "3cb4b57f-e15a-8139-bf85-eb4c64cb2756",
         "d": "2026·07·06",
-        "title": "【读书笔记】Positioning The Battle for Your Mind_定位：争夺用户心智的战争_GLM 5.2",
+        "title": "【读书笔记】Positioning The Battle for Your Mind_定位：争夺用户心智的战争",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -747,17 +776,18 @@ export const FALLBACK_SITE_DATA = {
             "心智占领",
             "品牌战略",
             "市场营销",
-            "品类策略"
+            "品类策略",
+            "GLM 5.2"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/positioning-the-battle-for-your-mind-定位争夺用户心智的战争-glm-5.2.html",
-        "src": "读书笔记 · 【读书笔记】Positioning The Battle for Your Mind_定位：争夺用户心智的战争_GLM 5.2",
+        "src": "读书笔记 · 【读书笔记】Positioning The Battle for Your Mind_定位：争夺用户心智的战争",
         "text": "商业竞争的终极战场不在货架，而在客户心智：与其正面硬刚行业巨头，不如抢占空位、开创新品类——成为潜在买家认知里的“第一选择”。"
     },
     {
         "id": "3cb4b57f-e15a-81b0-9d19-c1ba4f743615",
         "d": "2026·07·05",
-        "title": "【读书笔记】Ogilvy on Advertising_奥格威谈广告_GLM 5.2",
+        "title": "【读书笔记】Ogilvy on Advertising_奥格威谈广告",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -765,17 +795,18 @@ export const FALLBACK_SITE_DATA = {
             "整合营销",
             "大创意",
             "品牌传播",
-            "商业转化"
+            "商业转化",
+            "GLM 5.2"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/ogilvy-on-advertising-奥格威谈广告-glm-5.2.html",
-        "src": "读书笔记 · 【读书笔记】Ogilvy on Advertising_奥格威谈广告_GLM 5.2",
+        "src": "读书笔记 · 【读书笔记】Ogilvy on Advertising_奥格威谈广告",
         "text": "广告教皇奥格威实战箴言：广告的唯一目的就是销售，摒弃自恋的浮华噱头——靠大创意、精准文案与严密调研把潜在买家直接转化为成交客户。"
     },
     {
         "id": "3cb4b57f-e15a-811b-baf4-c89092ffc8ca",
         "d": "2026·07·03",
-        "title": "【读书笔记】Principles of Marketing_科特勒营销原理_GLM 5.2",
+        "title": "【读书笔记】Principles of Marketing_科特勒营销原理",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -783,17 +814,18 @@ export const FALLBACK_SITE_DATA = {
             "STP理论",
             "4P营销组合",
             "品牌护城河",
-            "客户关系"
+            "客户关系",
+            "GLM 5.2"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/principles-of-marketing-科特勒营销原理-glm-5.2.html",
-        "src": "读书笔记 · 【读书笔记】Principles of Marketing_科特勒营销原理_GLM 5.2",
+        "src": "读书笔记 · 【读书笔记】Principles of Marketing_科特勒营销原理",
         "text": "营销大师科特勒奠基经典：从STP定位到4P组合，以创造客户价值为唯一锚点——在激烈的商业博弈中洞穿需求本质，构建持久品牌护城河。"
     },
     {
         "id": "3cb4b57f-e15a-8114-84d9-e4063a3668c2",
         "d": "2026·06·26",
-        "title": "【读书笔记】$100M Offers_一亿美元报价_GLM 5.2",
+        "title": "【读书笔记】$100M Offers_一亿美元报价",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -801,17 +833,18 @@ export const FALLBACK_SITE_DATA = {
             "定价策略",
             "价值重构",
             "高客单成交",
-            "销售增长"
+            "销售增长",
+            "GLM 5.2"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/100m-offers-一亿美元报价-glm-5.2.html",
-        "src": "读书笔记 · 【读书笔记】$100M Offers_一亿美元报价_GLM 5.2",
+        "src": "读书笔记 · 【读书笔记】$100M Offers_一亿美元报价",
         "text": "从濒临破产到年入过亿：霍莫齐的核心杀手锏只有“大满贯报价”——通过重构价值方程，打造出让目标客群“拒绝就觉得自己蠢”的压倒性交易方案。"
     },
     {
         "id": "3cb4b57f-e15a-81ec-a536-e96744667d41",
         "d": "2026·06·21",
-        "title": "【读书笔记】Thinking, Fast and Slow_思考，快与慢_GLM 5.2",
+        "title": "【读书笔记】Thinking, Fast and Slow_思考，快与慢",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -819,17 +852,18 @@ export const FALLBACK_SITE_DATA = {
             "双系统思维",
             "行为经济学",
             "决策偏差",
-            "启发式直觉"
+            "启发式直觉",
+            "GLM 5.2"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/thinking-fast-and-slow-思考快与慢-glm-5.2.html",
-        "src": "读书笔记 · 【读书笔记】Thinking, Fast and Slow_思考，快与慢_GLM 5.2",
+        "src": "读书笔记 · 【读书笔记】Thinking, Fast and Slow_思考，快与慢",
         "text": "卡尼曼心智双系统引擎：快思考依靠启发式直觉应对日常，慢思考负责严密理性决策——洞穿认知偏差陷阱，建立高维度的判断校准框架。"
     },
     {
         "id": "3cb4b57f-e15a-8145-9eb6-deb3acf86562",
         "d": "2026·06·21",
-        "title": "【读书笔记】Thinking in Systems_系统之美_GLM 5.2",
+        "title": "【读书笔记】Thinking in Systems_系统之美",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -837,17 +871,18 @@ export const FALLBACK_SITE_DATA = {
             "系统思维",
             "杠杆点",
             "复杂科学",
-            "决策模型"
+            "决策模型",
+            "GLM 5.2"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/thinking-in-systems-系统之美-glm-5.2.html",
-        "src": "读书笔记 · 【读书笔记】Thinking in Systems_系统之美_GLM 5.2",
+        "src": "读书笔记 · 【读书笔记】Thinking in Systems_系统之美",
         "text": "系统动力学开山之作：跨越平铺直叙的线性因果，用存量、流量与反馈回路透视全局——在复杂系统的十二大杠杆点上精准施策、引爆变革。"
     },
     {
         "id": "3cb4b57f-e15a-8107-b41c-e2a8fd5822bc",
         "d": "2026·06·21",
-        "title": "【读书笔记】The Lean Startup_精益创业_GLM 5.2",
+        "title": "【读书笔记】The Lean Startup_精益创业",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -855,17 +890,18 @@ export const FALLBACK_SITE_DATA = {
             "MVP最小可行产品",
             "敏捷迭代",
             "商业模式",
-            "科学试错"
+            "科学试错",
+            "GLM 5.2"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/the-lean-startup-精益创业-glm-5.2.html",
-        "src": "读书笔记 · 【读书笔记】The Lean Startup_精益创业_GLM 5.2",
+        "src": "读书笔记 · 【读书笔记】The Lean Startup_精益创业",
         "text": "创业不是赌徒的运气游戏，而是科学试错的工程：通过“构建-衡量-学习”极限反馈循环打造MVP，用最小成本完成商业假设的认知跃迁。"
     },
     {
         "id": "3cb4b57f-e15a-810c-813a-f6be62396e11",
         "d": "2026·06·17",
-        "title": "【读书笔记】High Output Management_高产出管理_GLM 5.2",
+        "title": "【读书笔记】High Output Management_高产出管理",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -873,17 +909,18 @@ export const FALLBACK_SITE_DATA = {
             "高产出管理",
             "团队效能",
             "管理杠杆",
-            "组织执行力"
+            "组织执行力",
+            "GLM 5.2"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/high-output-management-高产出管理-glm-5.2.html",
-        "src": "读书笔记 · 【读书笔记】High Output Management_高产出管理_GLM 5.2",
+        "src": "读书笔记 · 【读书笔记】High Output Management_高产出管理",
         "text": "格鲁夫管理哲学的硬核支柱：把制造业的严密纪律投射到心智生产中，通过高杠杆率行动撬动整个团队产出，以产出为唯一衡量标准。"
     },
     {
         "id": "3cb4b57f-e15a-8146-9fa2-c42f91a20af0",
         "d": "2026·05·23",
-        "title": "【读书笔记】Principles of Microeconomics_微观经济学原理_Claude Sonnet 4.6 Thinking",
+        "title": "【读书笔记】Principles of Microeconomics_微观经济学原理",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -891,17 +928,18 @@ export const FALLBACK_SITE_DATA = {
             "供求机制",
             "边际分析",
             "机会成本",
-            "市场博弈"
+            "市场博弈",
+            "Claude Sonnet 4.6 Thinking"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/principles-of-microeconomics-微观经济学原理-claude-sonnet-4.6-thinking.html",
-        "src": "读书笔记 · 【读书笔记】Principles of Microeconomics_微观经济学原理_Claude Sonnet 4.6 Thinking",
+        "src": "读书笔记 · 【读书笔记】Principles of Microeconomics_微观经济学原理",
         "text": "曼昆微观经济学基石：机会成本、边际分析与供求均衡——用经济学理性透视人类决策与市场博弈，建立分析现实世界运行规则的底层认知框架。"
     },
     {
         "id": "3cb4b57f-e15a-81dd-9936-dd1b92cead06",
         "d": "2026·05·12",
-        "title": "【读书笔记】Influence Science and Practice_影响力_MiMo V2.5 Pro",
+        "title": "【读书笔记】Influence Science and Practice_影响力",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -909,17 +947,18 @@ export const FALLBACK_SITE_DATA = {
             "行为心理学",
             "社会认同",
             "决策诱导",
-            "博弈心理"
+            "博弈心理",
+            "MiMo V2.5 Pro"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/influence-science-and-practice-影响力-mimo-v2.5-pro.html",
-        "src": "读书笔记 · 【读书笔记】Influence Science and Practice_影响力_MiMo V2.5 Pro",
+        "src": "读书笔记 · 【读书笔记】Influence Science and Practice_影响力",
         "text": "人类并非纯理性决策者，而是依赖心智捷径：系统拆解互惠、承诺一致、社会认同等七大说服开关，既是商业营销利器，亦是反操控防御指南。"
     },
     {
         "id": "3cb4b57f-e15a-8157-a824-f9a2c3a49c1d",
         "d": "2026·05·10",
-        "title": "【读书笔记】The Almanack of Naval Ravikant_纳瓦尔宝典_Gemini 3.1 Pro",
+        "title": "【读书笔记】The Almanack of Naval Ravikant_纳瓦尔宝典",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -927,17 +966,18 @@ export const FALLBACK_SITE_DATA = {
             "财富复利",
             "杠杆思维",
             "长期主义",
-            "幸福哲学"
+            "幸福哲学",
+            "Gemini 3.1 Pro"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/the-almanack-of-naval-ravikant-纳瓦尔宝典-gemini-3.1-pro.html",
-        "src": "读书笔记 · 【读书笔记】The Almanack of Naval Ravikant_纳瓦尔宝典_Gemini 3.1 Pro",
+        "src": "读书笔记 · 【读书笔记】The Almanack of Naval Ravikant_纳瓦尔宝典",
         "text": "如何不靠运气致富：用代码、媒体、资本与专长构建杠杆，做复利游戏的长期玩家；提升判断力，在无人懂其妙处的世界里洞穿财富本质。"
     },
     {
         "id": "3cb4b57f-e15a-8177-89eb-c5f438c1b090",
         "d": "2026·04·15",
-        "title": "【读书笔记】The Millionaire Fastlane_百万富翁快车道_MiMo V2 Pro",
+        "title": "【读书笔记】The Millionaire Fastlane_百万富翁快车道",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -945,17 +985,18 @@ export const FALLBACK_SITE_DATA = {
             "系统构建",
             "影响力杠杆",
             "财富自由",
-            "创业思维"
+            "创业思维",
+            "MiMo V2 Pro"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/the-millionaire-fastlane-百万富翁快车道-mimo-v2-pro.html",
-        "src": "读书笔记 · 【读书笔记】The Millionaire Fastlane_百万富翁快车道_MiMo V2 Pro",
+        "src": "读书笔记 · 【读书笔记】The Millionaire Fastlane_百万富翁快车道",
         "text": "打破65岁退休的慢车道谎言：构建拥有自主权与可复制性的系统资产，用影响力杠杆放大价值输出——真正实现财务自由与时间主权。"
     },
     {
         "id": "3cb4b57f-e15a-8186-a96b-ff35ddb5d447",
         "d": "2026·04·11",
-        "title": "【读书笔记】Entrepreneurship_创业学_Claude Sonnet 4.6 Thinking",
+        "title": "【读书笔记】Entrepreneurship_创业学",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -963,17 +1004,18 @@ export const FALLBACK_SITE_DATA = {
             "创业学",
             "商业机会",
             "资源整合",
-            "初创团队"
+            "初创团队",
+            "Claude Sonnet 4.6 Thinking"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/entrepreneurship-创业学-claude-sonnet-4.6-thinking.html",
-        "src": "读书笔记 · 【读书笔记】Entrepreneurship_创业学_Claude Sonnet 4.6 Thinking",
+        "src": "读书笔记 · 【读书笔记】Entrepreneurship_创业学",
         "text": "蒂蒙斯创业模型经典重构：创业不是冒险盲动，而是商机、团队与资源的动态平衡演进——用严密工程化体系管理不确定性，找出破局点。"
     },
     {
         "id": "3cb4b57f-e15a-81a3-b4c7-f9cc79f78cc1",
         "d": "2026·04·11",
-        "title": "【读书笔记】Entrepreneurship Choice and Strategy_创业策略选择_GLM 5 Turbo",
+        "title": "【读书笔记】Entrepreneurship Choice and Strategy_创业策略选择",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -981,17 +1023,18 @@ export const FALLBACK_SITE_DATA = {
             "竞争优势",
             "知识产权",
             "架构模式",
-            "战略指南针"
+            "战略指南针",
+            "GLM 5 Turbo"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/entrepreneurship-choice-and-strategy-创业策略选择-glm-5-turbo.html",
-        "src": "读书笔记 · 【读书笔记】Entrepreneurship Choice and Strategy_创业策略选择_GLM 5 Turbo",
+        "src": "读书笔记 · 【读书笔记】Entrepreneurship Choice and Strategy_创业策略选择",
         "text": "创业战略不是拍脑袋试错，而是关键路径的选择：知识产权、破坏式创新、价值链还是架构模式？用战略指南针锁定最适合团队的竞争生态位。"
     },
     {
         "id": "3cb4b57f-e15a-8162-aebd-e2b1613ec752",
         "d": "2026·04·11",
-        "title": "【读书笔记】Competitive Strategy_竞争战略_Gemini Deep Research",
+        "title": "【读书笔记】Competitive Strategy_竞争战略",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -999,17 +1042,18 @@ export const FALLBACK_SITE_DATA = {
             "五力模型",
             "三大通用战略",
             "行业分析",
-            "竞争壁垒"
+            "竞争壁垒",
+            "Gemini Deep Research"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/competitive-strategy-竞争战略-gemini-deep-research.html",
-        "src": "读书笔记 · 【读书笔记】Competitive Strategy_竞争战略_Gemini Deep Research",
+        "src": "读书笔记 · 【读书笔记】Competitive Strategy_竞争战略",
         "text": "迈克尔·波特战略经典重构：五力模型透视行业利润格局，三大通用战略找出破局点——以结构性壁垒赢得不可撼动的长期竞争优势。"
     },
     {
         "id": "3cb4b57f-e15a-8172-82f9-fb2a1965ef1c",
         "d": "2026·04·11",
-        "title": "【读书笔记】Artificial Intelligence A Modern Approach_人工智能：一种现代的方法_Claude Sonnet 4.6 Thinking",
+        "title": "【读书笔记】Artificial Intelligence A Modern Approach_人工智能：一种现代的方法",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -1017,17 +1061,18 @@ export const FALLBACK_SITE_DATA = {
             "智能Agent",
             "搜索算法",
             "知识表示",
-            "强化学习"
+            "强化学习",
+            "Claude Sonnet 4.6 Thinking"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/artificial-intelligence-a-modern-approach-人工智能一种现代的方法-claude-sonnet-4.6-thinking.html",
-        "src": "读书笔记 · 【读书笔记】Artificial Intelligence A Modern Approach_人工智能：一种现代的方法_Claude Sonnet 4.6 Thinking",
+        "src": "读书笔记 · 【读书笔记】Artificial Intelligence A Modern Approach_人工智能：一种现代的方法",
         "text": "AI领域圣经AIMA核心重构：从理性Agent建模到搜索、知识图谱与强化学习——以目标驱动的智能体框架为线索，统一现代AI的技术底座。"
     },
     {
         "id": "3cb4b57f-e15a-8186-b718-db4104dde8da",
         "d": "2026·04·08",
-        "title": "【读书笔记】The Art and Business of Online Writing_在线写作的艺术与商业_MiniMax M2.7",
+        "title": "【读书笔记】The Art and Business of Online Writing_在线写作的艺术与商业",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -1035,17 +1080,18 @@ export const FALLBACK_SITE_DATA = {
             "内容商业化",
             "注意力捕获",
             "社交媒体",
-            "个人IP"
+            "个人IP",
+            "MiniMax M2.7"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/the-art-and-business-of-online-writing-在线写作的艺术与商业-minimax-m2.7.html",
-        "src": "读书笔记 · 【读书笔记】The Art and Business of Online Writing_在线写作的艺术与商业_MiniMax M2.7",
+        "src": "读书笔记 · 【读书笔记】The Art and Business of Online Writing_在线写作的艺术与商业",
         "text": "数字时代的注意力捕获指南：从大纲钩子到社交飞轮，将高密度思考转化为超级传播内容——不做自嗨型作者，靠文字资产打造个人商业闭环。"
     },
     {
         "id": "3cb4b57f-e15a-813d-ac14-f35d0da3902f",
         "d": "2026·04·08",
-        "title": "【读书笔记】Never Split the Difference_强势谈判_GLM 5.0",
+        "title": "【读书笔记】Never Split the Difference_强势谈判",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -1053,17 +1099,18 @@ export const FALLBACK_SITE_DATA = {
             "战术共情",
             "极限施压",
             "危机公关",
-            "博弈话术"
+            "博弈话术",
+            "GLM 5.0"
         ],
         "readTime": 45,
         "htmlContent": "https://quaxstudio.xyz/articles/never-split-the-difference-强势谈判-glm-5.0.html",
-        "src": "读书笔记 · 【读书笔记】Never Split the Difference_强势谈判_GLM 5.0",
+        "src": "读书笔记 · 【读书笔记】Never Split the Difference_强势谈判",
         "text": "前FBI首席谈判专家的博弈智慧：彻底摒弃妥协式折中，运用战术共情、镜像提问与校准问题掌控谈判主导权——将死局转化为己方胜局。"
     },
     {
         "id": "3cb4b57f-e15a-8144-acbf-c78b0650afbb",
         "d": "2026·04·07",
-        "title": "【读书笔记】The Intelligent Investor_聪明的投资者_MiMo V2 Pro",
+        "title": "【读书笔记】The Intelligent Investor_聪明的投资者",
         "cat": "读书笔记",
         "tags": [
             "读书笔记",
@@ -1071,14 +1118,15 @@ export const FALLBACK_SITE_DATA = {
             "价值投资",
             "安全边际",
             "市场先生",
-            "资产配置"
+            "资产配置",
+            "MiMo V2 Pro"
         ],
         "readTime": 34,
         "htmlContent": "https://quaxstudio.xyz/articles/the-intelligent-investor-聪明的投资者-mimo-v2-pro.html",
-        "src": "读书笔记 · 【读书笔记】The Intelligent Investor_聪明的投资者_MiMo V2 Pro",
+        "src": "读书笔记 · 【读书笔记】The Intelligent Investor_聪明的投资者",
         "text": "格雷厄姆价值投资圣经：在市场先生的癫狂中保持绝对清醒，坚守“安全边际”底线原则——做理性的资产配置者，而非预测波动的赌徒。"
     }
-] as NoteItem[],
+  ] as NoteItem[],
 
   log: [
     {
@@ -1399,28 +1447,30 @@ export async function fetchMagazineData(): Promise<MagazineDataPayload> {
 
   if (notesRes.status === "fulfilled" && notesRes.value && notesRes.value.length > 0) {
     try {
-      notes = notesRes.value.map((p) => {
-        const props = p.properties as Record<string, unknown>;
-        const rawDate = getDate(props, "Date") || "2026·03·19";
-        const category = getSelect(props, "Category") || "思考";
-        const tags = getMultiSelect(props, "Tags");
-        const readTime = getNumber(props, "ReadTime");
-        const htmlContent = getUrl(props, "HTMLContent");
-        const excerpt = getRichText(props, "Excerpt") || getPageTitle(p);
-        const title = getPageTitle(p);
+      notes = notesRes.value
+        .map((p) => {
+          const props = p.properties as Record<string, unknown>;
+          const rawDate = getDate(props, "Date") || "2026·03·19";
+          const category = getSelect(props, "Category") || "读书笔记";
+          const tags = getMultiSelect(props, "Tags");
+          const readTime = getNumber(props, "ReadTime") || 20;
+          const htmlContent = getUrl(props, "HTMLContent");
+          const excerpt = getRichText(props, "Excerpt") || getPageTitle(p);
+          const title = getPageTitle(p);
 
-        return {
-          id: p.id,
-          d: rawDate.replace(/-/g, "·"),
-          title,
-          cat: category,
-          tags,
-          readTime,
-          htmlContent,
-          src: `${category} · ${title}`,
-          text: excerpt,
-        };
-      });
+          return {
+            id: p.id,
+            d: rawDate.replace(/-/g, "·"),
+            title,
+            cat: category,
+            tags,
+            readTime,
+            htmlContent,
+            src: `${category} · ${title}`,
+            text: excerpt,
+          };
+        })
+        .sort((a, b) => (b.d || "").localeCompare(a.d || ""));
     } catch (e) {
       console.warn("Error parsing notes:", e);
     }

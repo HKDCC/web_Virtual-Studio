@@ -417,6 +417,7 @@ export const FALLBACK_SITE_DATA = {
     { d: "2026·08", t: "Grok 4.6", note: "新增 xhigh 极限思考档位，优化百万上下文 Agent 任务" },
     { d: "2026·08", t: "GPT-5.6-Cyber", note: "OpenAI 首款专精网络安全与漏洞挖掘的特化模型" },
     { d: "2026·08", t: "Qwen3.8-Max & 27B", note: "2.4T 参数 MoE 旗舰，强化长程 Agentic 复杂任务" },
+    { d: "2026·07", t: "DeepSeek-V4-Flash (build 0731)", note: "284B 稀疏 MoE 架构，支持 100 万 Context 与 DSpark 推测解码" },
     { d: "2026·07", t: "Claude Opus 5", note: "Claude 5 系列旗舰基座，支持 100 万 Context 与工具热插拔" },
   ] as TimelineItem[],
 

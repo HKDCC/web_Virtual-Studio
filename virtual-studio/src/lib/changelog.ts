@@ -88,6 +88,14 @@ export const MOCK_TIMELINE: TimelineEntry[] = [
     aaIntelligence: 58
   },
   {
+    id: "timeline-2026-07-31-deepseek",
+    name: "DeepSeek-V4-Flash (build 0731)",
+    model: "DeepSeek",
+    date: "2026-07-31",
+    version: "V4-Flash (0731)",
+    highlights: "284B 稀疏 MoE 架构（13B 激活），支持 100 万 Context，引入 DSpark 推测解码模块大幅提升推理吞吐。"
+  },
+  {
     id: "timeline-2026-07-24-claude",
     name: "Claude Opus 5",
     model: "Claude",

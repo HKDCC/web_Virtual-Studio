@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { fetchMagazineData } from "@/lib/magazineData";
 import { ArchiveSection } from "@/components/magazine/ArchiveSection";
+import { WorkflowSection } from "@/components/magazine/WorkflowSection";
 import { PauseSection } from "@/components/magazine/PauseSection";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const data = await fetchMagazineData();
-  const { books, lab, timeline, pause, notes, log } = data;
+  const { books, lab, flow, tools, sites, prompts, timeline, pause, notes, log } = data;
 
   return (
     <>
@@ -26,14 +27,13 @@ export default async function HomePage() {
         </p>
       </section>
 
-      {/* ═══════════ 01 库 · Archive ═══════════ */}
-      <ArchiveSection books={books} />
+      {/* ═══════════ 【成果篇】 ═══════════ */}
 
-      {/* ═══════════ 02 实验室 · Lab ═══════════ */}
+      {/* ═══════════ 01 实验室 · Lab ═══════════ */}
       <section id="lab" className="block wrap">
         <div className="sec-head reveal">
           <p className="kicker">
-            <b>02</b> / 输出层 · OUTPUT
+            <b>01</b> / 输出层 · OUTPUT
           </p>
           <a className="util" href="/lab" title="全部实验室项目">
             全部项目 ↗
@@ -64,41 +64,14 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════ 03 时间线 · Timeline ═══════════ */}
-      <section id="timeline" className="block wrap">
-        <div className="sec-head reveal">
-          <p className="kicker">
-            <b>03</b> / 输出层 · 观测
-          </p>
-          <a className="util" href="/aievolutionlog" title="大模型迭代时间轴">
-            全部更迭 ↗
-          </a>
-        </div>
-        <h2 className="sec-title reveal">模型更迭</h2>
-        <p className="sec-lede reveal">主流大语言模型迭代时间轴，高光时刻精确记录。</p>
-        <div className="tl-list sec-body reveal" id="tlList">
-          {timeline.map((x, i) => (
-            <div key={i} className="tl-row">
-              <span className="tl-date">{x.d}</span>
-              <div className="tl-main">
-                <h3>{x.t}</h3>
-                <span className="tl-note">{x.note}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* ═══════════ 02 工作流 · Workflow ═══════════ */}
+      <WorkflowSection flow={flow} tools={tools} sites={sites} prompts={prompts} />
 
-      {/* ═══════════ 04 隙 · Pause ═══════════ */}
-      <section id="pause-wrap">
-        <PauseSection pause={pause} />
-      </section>
-
-      {/* ═══════════ 05 笔记 · Notes ═══════════ */}
+      {/* ═══════════ 03 笔记 · Notes ═══════════ */}
       <section id="notes" className="block wrap">
         <div className="sec-head reveal">
           <p className="kicker">
-            <b>05</b> / 片段层 · FRAGMENTS
+            <b>03</b> / 片段层 · FRAGMENTS
           </p>
           <a className="util" href="/archive?tab=notes" title="查看全部笔记">
             全部笔记 ↗
@@ -150,11 +123,44 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════ 06 足迹 · Change Log ═══════════ */}
+      {/* ═══════════ 【输入与记录篇】 ═══════════ */}
+
+      {/* ═══════════ 04 库 · Archive ═══════════ */}
+      <ArchiveSection books={books} />
+
+      {/* ═══════════ 05 时间线 · Timeline ═══════════ */}
+      <section id="timeline" className="block wrap">
+        <div className="sec-head reveal">
+          <p className="kicker">
+            <b>05</b> / 观测层 · OBSERVATION
+          </p>
+          <a className="util" href="/aievolutionlog" title="大模型迭代时间轴">
+            全部更迭 ↗
+          </a>
+        </div>
+        <h2 className="sec-title reveal">模型更迭</h2>
+        <p className="sec-lede reveal">主流大语言模型迭代时间轴，高光时刻精确记录。</p>
+        <div className="tl-list sec-body reveal" id="tlList">
+          {timeline.map((x, i) => (
+            <div key={i} className="tl-row">
+              <span className="tl-date">{x.d}</span>
+              <div className="tl-main">
+                <h3>{x.t}</h3>
+                <span className="tl-note">{x.note}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ═══════════ 06 隙 · Pause ═══════════ */}
+      <PauseSection pause={pause} />
+
+      {/* ═══════════ 07 足迹 · Change Log ═══════════ */}
       <section id="changelog" className="block wrap">
         <div className="sec-head reveal">
           <p className="kicker">
-            <b>06</b> / 日志 · LOG
+            <b>07</b> / 日志 · LOG
           </p>
           <a className="util" href="/changelog" title="全部足迹">
             全部足迹 ↗

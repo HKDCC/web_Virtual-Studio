@@ -146,23 +146,26 @@ export function MagazineHeader({
           </div>
         </div>
         <nav className="mainnav" aria-label="栏目导航">
-          <Link href={`${navPrefix}#archive`}>
-            <b>01</b>库
-          </Link>
           <Link href={`${navPrefix}#lab`}>
-            <b>02</b>实验室
+            <b>01</b>实验室
           </Link>
-          <Link href={`${navPrefix}#timeline`}>
-            <b>03</b>时间线
-          </Link>
-          <Link href={`${navPrefix}#pause`}>
-            <b>04</b>隙
+          <Link href={`${navPrefix}#workflow`}>
+            <b>02</b>工作流
           </Link>
           <Link href={`${navPrefix}#notes`}>
-            <b>05</b>笔记
+            <b>03</b>笔记
+          </Link>
+          <Link href={`${navPrefix}#archive`}>
+            <b>04</b>库
+          </Link>
+          <Link href={`${navPrefix}#timeline`}>
+            <b>05</b>时间线
+          </Link>
+          <Link href={`${navPrefix}#pause`}>
+            <b>06</b>隙
           </Link>
           <Link href={`${navPrefix}#changelog`}>
-            <b>06</b>足迹
+            <b>07</b>足迹
           </Link>
         </nav>
       </header>

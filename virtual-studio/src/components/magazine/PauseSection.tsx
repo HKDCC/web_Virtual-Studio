@@ -12,7 +12,7 @@ export function PauseSection({ pause }: PauseSectionProps) {
     <section id="pause" className="block wrap">
       <div className="sec-head reveal">
         <p className="kicker">
-          <b>05</b> / 生活层 · LIFE
+          <b>06</b> / 生活层 · LIFE
         </p>
         <a className="util" href="/pause" title="全部照片墙">
           全部照片 ↗

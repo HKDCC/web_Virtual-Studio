@@ -29,7 +29,7 @@ export function ArchiveSection({ books }: ArchiveSectionProps) {
     <section id="archive" className="block wrap">
       <div className="sec-head reveal">
         <p className="kicker">
-          <b>01</b> / 输入层 · INPUT
+          <b>04</b> / 输入层 · INPUT
         </p>
         <span className="util" id="archCount">
           {filteredBooks.length} 本

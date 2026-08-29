@@ -14,7 +14,7 @@ export function WorkflowSection({ flow, tools, sites, prompts }: WorkflowSection
     <section id="workflow" className="block wrap">
       <div className="sec-head reveal">
         <p className="kicker">
-          <b>03</b> / 效率层 · EFFICIENCY
+          <b>02</b> / 效率层 · EFFICIENCY
         </p>
         <a className="util" href="/workflow" title="查看完整工作流">
           全部工作流 ↗

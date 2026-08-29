@@ -8,7 +8,6 @@ import {
   getDate,
   getUrl,
   getNumber,
-  findPropertyKeyByType,
 } from "./notionHelpers";
 import { getTimelineEntries } from "./changelog";
 
@@ -83,6 +82,8 @@ export interface LogItem {
   id?: string;
   d: string;
   t: string;
+  desc?: string;
+  type?: string;
 }
 
 export const FALLBACK_SITE_DATA = {
@@ -211,11 +212,36 @@ export const FALLBACK_SITE_DATA = {
   ] as NoteItem[],
 
   log: [
-    { d: "05·25", t: "AI 日报功能下线，模型更迭时间轴与工作流节点展示上线。" },
-    { d: "03·20", t: "AI 日报功能上线，日报模块由 AI Agent 全权负责。" },
-    { d: "03·19", t: "「库」功能基本实现，黑暗模式上线。" },
-    { d: "03·18", t: "照片墙功能恢复正常。" },
-    { d: "03·17", t: "12 小时网站速成，本刊创刊。" },
+    {
+      d: "05·25",
+      t: "AI日报功能下线，全球知名模型型号更迭记录、工作流节点展示上线~",
+      desc: "MiniMax M2.7即将下岗，Gemini 3.5 Flash辅助功能和前端重构！",
+      type: "Content",
+    },
+    {
+      d: "03·20",
+      t: "AI日报功能上线~",
+      desc: "日报模块100%由MiniMaxM2.7-powered AI Agent芙宁娜大人负责！",
+      type: "Content",
+    },
+    {
+      d: "03·19",
+      t: "库功能基本实现了~",
+      desc: "增加了黑暗模式；修复了彩蛋触发条件！",
+      type: "Feature",
+    },
+    {
+      d: "03·18",
+      t: "照片墙功能正常了~",
+      desc: "折腾了几个小时后，我对AI说：我们还是用第一版吧！",
+      type: "Feature",
+    },
+    {
+      d: "03·17",
+      t: "12小时网站速成，上线大吉~",
+      desc: "又活了一天，很了不起了！",
+      type: "Feature",
+    },
   ] as LogItem[],
 };
 
@@ -443,15 +469,17 @@ export async function fetchMagazineData() {
       });
       if (res.length > 0) {
         log = res.map((p) => {
-          const props = p.properties;
-          const dateKey = findPropertyKeyByType(props, "date");
-          const descKey = findPropertyKeyByType(props, "rich_text");
-          const rawDate = dateKey ? getDate(props, dateKey) : null;
-          const desc = descKey ? getRichText(props, descKey) : null;
+          const props = p.properties as Record<string, unknown>;
+          const rawDate = getDate(props, "Date") || "";
+          const title = getPageTitle(p) || "";
+          const desc = getRichText(props, "Description") || "";
+          const type = getSelect(props, "Type") || "Feature";
           return {
             id: p.id,
             d: rawDate ? rawDate.replace(/.*-(\d\d)-(\d\d).*/, "$1·$2") : "05·25",
-            t: (getPageTitle(p) ? getPageTitle(p) + "：" : "") + (desc || getPageTitle(p)),
+            t: title,
+            desc: desc,
+            type: type,
           };
         });
       }

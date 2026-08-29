@@ -148,7 +148,15 @@ export default async function HomePage() {
             const row = (
               <div className="log-row">
                 <span className="log-date">{l.d}</span>
-                <p>{l.t}</p>
+                <div className="log-main">
+                  <div className="log-title-row">
+                    <h3 className="log-title">{l.t}</h3>
+                    {l.type && (
+                      <span className={`log-tag log-tag-${(l.type || "").toLowerCase()}`}>{l.type}</span>
+                    )}
+                  </div>
+                  {l.desc && <p className="log-desc">{l.desc}</p>}
+                </div>
               </div>
             );
 

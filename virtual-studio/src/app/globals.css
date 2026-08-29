@@ -1020,26 +1020,84 @@ details.prompt[open] summary::after {
 /* ═══════════════ 07 足迹 ═══════════════ */
 .log {
   border-top: 1px solid var(--line);
-  margin-top: 6px;
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
 }
 
 .log-row {
   display: grid;
-  grid-template-columns: 64px 1fr;
+  grid-template-columns: 56px 1fr;
   gap: 16px;
-  padding: 12px 2px;
+  padding: 16px 8px;
   border-bottom: 1px solid var(--line);
   align-items: baseline;
+  border-radius: 4px;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.log-row:hover {
+  background: var(--card);
 }
 
 .log-date {
   font-family: var(--mono);
-  font-size: 11.5px;
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.log-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.log-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.log-title {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.4;
+  color: var(--ink);
+  transition: color 0.2s;
+}
+
+.log-row:hover .log-title {
   color: var(--accent);
 }
 
-.log-row p {
-  font-size: 0.92rem;
+.log-tag {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+  background: var(--paper);
+}
+
+.log-tag-feature {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 30%, var(--line));
+}
+
+.log-tag-content {
+  color: #0284c7;
+  border-color: color-mix(in srgb, #0284c7 30%, var(--line));
+}
+
+.log-desc {
+  font-size: 0.88rem;
+  color: var(--ink-2);
+  line-height: 1.6;
 }
 
 /* ═══════════════ 页脚 · 版权页 ═══════════════ */

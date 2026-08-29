@@ -338,6 +338,15 @@ export const FALLBACK_SITE_DATA = {
 
   lab: [
     {
+      id: "3cb4b57f-e15a-816c-8b23-c17f92e8e5cd",
+      tag: "AI 实践",
+      t: "WhisperX GUI",
+      d: "高精度、本地优先的 WhisperX 语音识别与智能字幕桌面客户端，支持角色分离、词级时间戳对齐与多格式导出。",
+      links: [["GitHub", "https://github.com/HKDCC/WhisperX-GUI"], ["Demo", "https://github.com/HKDCC/WhisperX-GUI"]],
+      iconUrl: "/lab/whisperx_gui.png",
+      appIcon: { type: "emoji", value: "🎙️" },
+    },
+    {
       tag: "Vibe Coding",
       t: "MiniReader",
       d: "极简、无干扰的本地优先桌面阅读器，支持 TXT / EPUB / PDF，基于 IndexedDB 离线存储。",

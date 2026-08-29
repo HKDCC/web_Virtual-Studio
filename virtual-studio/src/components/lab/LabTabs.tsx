@@ -18,6 +18,7 @@ export type LabItem = {
 function LabCard(props: { item: LabItem }) {
   const { item } = props;
   const localFallback =
+    item.title.includes("WhisperX") || item.title.includes("Whisper") ? "/lab/whisperx_gui.png" :
     item.title.includes("MiniReader") || item.title.includes("Reader") ? "/lab/minireader.gif" :
     item.title.includes("Retro") || item.title.includes("Snake") ? "/lab/retro_pixel_snake.gif" :
     item.title.includes("MuseTodo") ? "/lab/musetodo_pink.gif" :

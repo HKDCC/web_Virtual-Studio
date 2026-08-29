@@ -55,6 +55,7 @@ export default async function HomePage() {
             const links = Array.isArray(p?.links) ? p.links : [];
 
             const localFallback =
+              title.includes("WhisperX") || title.includes("Whisper") ? "/lab/whisperx_gui.png" :
               title.includes("MiniReader") || title.includes("Reader") ? "/lab/minireader.gif" :
               title.includes("Retro") || title.includes("Snake") ? "/lab/retro_pixel_snake.gif" :
               title.includes("MuseTodo") ? "/lab/musetodo_pink.gif" :
@@ -63,6 +64,7 @@ export default async function HomePage() {
             const imgSrc = localFallback || p?.iconUrl;
 
             const appIcon = p?.appIcon || (
+              title.includes("WhisperX") || title.includes("Whisper") ? { type: "emoji" as const, value: "🎙️" } :
               title.includes("MiniReader") || title.includes("Reader") ? { type: "emoji" as const, value: "📖" } :
               title.includes("Cassette") ? { type: "emoji" as const, value: "📼" } :
               title.includes("SwiftMemo") ? { type: "emoji" as const, value: "📝" } :

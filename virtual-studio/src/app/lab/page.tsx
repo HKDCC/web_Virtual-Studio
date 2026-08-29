@@ -57,7 +57,8 @@ export default async function LabPage() {
     }
     if (!appIcon) {
       const t = title.toLowerCase();
-      if (t.includes("reader")) appIcon = { type: "emoji", value: "📖" };
+      if (t.includes("whisper")) appIcon = { type: "emoji", value: "🎙️" };
+      else if (t.includes("reader")) appIcon = { type: "emoji", value: "📖" };
       else if (t.includes("cassette")) appIcon = { type: "emoji", value: "📼" };
       else if (t.includes("memo")) appIcon = { type: "emoji", value: "📝" };
       else if (t.includes("muse")) appIcon = { type: "emoji", value: "🌸" };

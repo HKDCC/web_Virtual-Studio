@@ -12,7 +12,6 @@ export function MagazineFooter() {
 
   return (
     <footer className="wrap">
-      <p className="signoff">体验更多的奇妙。</p>
       <div className="foot-row">
         <a href="https://github.com" target="_blank" rel="noopener noreferrer">
           GITHUB ↗

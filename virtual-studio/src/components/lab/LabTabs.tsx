@@ -16,14 +16,31 @@ export type LabItem = {
 
 function LabCard(props: { item: LabItem }) {
   const { item } = props;
-  const thumbStyle = item.iconUrl
-    ? { backgroundImage: `url(${item.iconUrl})`, backgroundSize: "contain", backgroundPosition: "center", backgroundRepeat: "no-repeat" }
-    : undefined;
+  const localFallback =
+    item.title.includes("Retro") || item.title.includes("Snake") ? "/lab/retro_pixel_snake.gif" :
+    item.title.includes("MuseTodo") ? "/lab/musetodo_pink.gif" :
+    item.title.includes("Cassette") ? "/lab/cassettecutter.jpg" :
+    item.title.includes("SwiftMemo") ? "/lab/swiftmemo.jpg" : null;
+
+  const imgSrc = item.iconUrl || localFallback;
 
   return (
     <div className="lab-card">
-      <Link href={`/p/${item.id}`} className="lab-card-thumb" style={thumbStyle}>
-        {!item.iconUrl && (
+      <Link href={`/p/${item.id}`} className="lab-card-thumb" style={{ overflow: "hidden", position: "relative" }}>
+        {imgSrc ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={imgSrc}
+            alt={item.title}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            onError={(e) => {
+              const target = e.currentTarget as HTMLImageElement;
+              if (localFallback && target.src !== localFallback) {
+                target.src = localFallback;
+              }
+            }}
+          />
+        ) : (
           <div className={`lab-badge ${item.type === "vibe" ? "earth" : "blue"}`}>
             {item.badge ?? (item.type === "vibe" ? "Vibe" : "Lab")}
           </div>

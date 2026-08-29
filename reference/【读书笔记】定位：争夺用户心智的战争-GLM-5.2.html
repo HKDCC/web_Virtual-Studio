@@ -1,0 +1,2837 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>定位 · 争夺用户心智的战争 | 知识库</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,700&family=Space+Mono:wght@400;700&family=Noto+Serif+SC:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+
+    :root {
+      --bg: #f1e7cf;
+      --bg-2: #e8dcb8;
+      --paper: rgba(255,250,235,0.85);
+      --paper-2: rgba(245,235,210,0.7);
+      --paper-solid: #fffcf0;
+      --ink: #1a1410;
+      --ink-2: #3d3326;
+      --muted: #7a6a4f;
+      --rust: #c1440e;
+      --rust-deep: #8e2d07;
+      --teal: #0d7377;
+      --gold: #a8780f;
+      --magenta: #a02c5e;
+      --olive: #3a4a8f;
+      --line: #1a1410;
+      --shadow: rgba(80,40,10,0.18);
+      --grid: rgba(193,68,14,0.06);
+      --halftone: rgba(193,68,14,0.08);
+
+      --accent-1: var(--teal);
+      --accent-2: var(--rust);
+      --accent-3: var(--gold);
+      --accent-4: var(--magenta);
+      --accent-5: var(--olive);
+      --fg-0: var(--ink);
+      --fg-1: var(--ink);
+      --fg-2: var(--ink-2);
+
+      --svg-fill-1: rgba(13, 115, 119, 0.06);
+      --svg-fill-2: rgba(193, 68, 14, 0.06);
+      --svg-fill-3: rgba(168, 120, 15, 0.06);
+      --svg-fill-4: rgba(160, 44, 94, 0.06);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0a0d18;
+      --bg-2: #11162a;
+      --paper: rgba(20,26,50,0.72);
+      --paper-2: rgba(26,34,66,0.75);
+      --paper-solid: #101525;
+      --ink: #f3e8c8;
+      --ink-2: #d4c8a8;
+      --muted: #8c8a7a;
+      --rust: #ff8a3d;
+      --rust-deep: #d15d1b;
+      --teal: #36e2c5;
+      --gold: #ffd24a;
+      --magenta: #ff5d73;
+      --olive: #7c8cff;
+      --line: rgba(255,210,74,0.22);
+      --shadow: rgba(0,0,0,0.55);
+      --grid: rgba(255,210,74,0.05);
+      --halftone: rgba(255,210,74,0.04);
+
+      --accent-1: var(--teal);
+      --accent-2: var(--rust);
+      --accent-3: var(--gold);
+      --accent-4: var(--magenta);
+      --accent-5: var(--olive);
+      --fg-0: var(--ink);
+      --fg-1: var(--ink);
+      --fg-2: var(--ink-2);
+
+      --svg-fill-1: rgba(54, 226, 197, 0.12);
+      --svg-fill-2: rgba(255, 138, 61, 0.12);
+      --svg-fill-3: rgba(255, 210, 74, 0.12);
+      --svg-fill-4: rgba(255, 93, 115, 0.12);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Noto Sans SC', 'Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.75;
+      overflow-x: hidden;
+      transition: background-color .5s ease, color .5s ease;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+
+    /* Global textures */
+    body::before {
+      content: "";
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+      opacity: .7;
+    }
+    body::after {
+      content: "";
+      position: fixed; inset: 0;
+      background-image: radial-gradient(var(--halftone) 1px, transparent 1px);
+      background-size: 6px 6px;
+      pointer-events: none;
+      z-index: 0;
+      opacity: .4;
+      mix-blend-mode: multiply;
+    }
+    [data-theme="dark"] body::after {
+      mix-blend-mode: screen;
+      opacity: .3;
+    }
+
+    /* Preloader */
+    #preloader {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--bg);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      transition: opacity .8s ease, visibility .8s ease;
+    }
+    #preloader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    .pre-frame {
+      border: 2px solid var(--ink);
+      padding: 48px 64px;
+      background: var(--paper);
+      position: relative;
+      box-shadow: 8px 8px 0 var(--ink);
+      max-width: 520px; width: 90%;
+    }
+    .pre-frame::before {
+      content: ""; position: absolute; inset: 6px;
+      border: 1px solid var(--ink); pointer-events: none;
+    }
+    .pre-label {
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 11px; letter-spacing: .3em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 18px; text-align: center;
+    }
+    .pre-title {
+      font-family: 'Noto Serif SC', 'Playfair Display', Georgia, 'Songti SC', 'STSong', serif;
+      font-weight: 900; font-size: 42px;
+      text-align: center; line-height: 1;
+      color: var(--ink);
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+    .pre-sub {
+      font-family: 'Noto Sans SC', 'Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      font-weight: 600; font-size: 18px;
+      text-align: center; color: var(--rust);
+      letter-spacing: .4em; margin-bottom: 28px;
+    }
+    .pre-bar {
+      height: 6px; background: var(--bg-2);
+      border: 1px solid var(--ink);
+      position: relative; overflow: hidden;
+    }
+    .pre-bar-fill {
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 0%; background: repeating-linear-gradient(45deg, var(--rust) 0 6px, var(--rust-deep) 6px 12px);
+      transition: width .2s ease;
+    }
+    .pre-pct {
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 12px; text-align: right;
+      margin-top: 8px; color: var(--muted);
+    }
+
+    /* Main Layout */
+    .layout {
+      position: relative; z-index: 1;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: sticky; top: 0;
+      height: 100vh;
+      border-right: 2px solid var(--line);
+      background: var(--paper);
+      overflow-y: auto;
+      padding: 24px 0;
+      z-index: 50;
+    }
+    .sidebar::-webkit-scrollbar { width: 6px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--ink); border-radius: 0; }
+
+    .brand {
+      padding: 0 24px 24px;
+      border-bottom: 2px solid var(--line);
+      margin-bottom: 18px;
+      position: relative;
+    }
+    .brand-mark {
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 10px; letter-spacing: .3em;
+      color: var(--muted); text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .brand-title {
+      font-family: 'Noto Serif SC', 'Playfair Display', Georgia, 'Songti SC', 'STSong', serif;
+      font-weight: 900; font-style: italic;
+      font-size: 28px; line-height: 1;
+      color: var(--ink);
+    }
+    .brand-sub {
+      font-family: 'Noto Sans SC', 'Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      font-weight: 600; font-size: 14px;
+      color: var(--rust); letter-spacing: .12em;
+      margin-top: 6px;
+    }
+    .brand-deco {
+      position: absolute; top: 8px; right: 24px;
+      width: 32px; height: 32px;
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 9px; font-weight: 700;
+      background: var(--rust); color: var(--paper-solid);
+    }
+
+    .toc-label {
+      padding: 0 24px;
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 10px; letter-spacing: .3em;
+      color: var(--muted); text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .toc { list-style: none; padding: 0 16px; }
+    .toc-item { margin-bottom: 2px; }
+    .toc-link {
+      display: flex; align-items: baseline; gap: 10px;
+      padding: 8px 10px;
+      text-decoration: none;
+      color: var(--ink-2);
+      font-size: 13.5px;
+      font-weight: 500;
+      border-left: 2px solid transparent;
+      transition: all .25s ease;
+      position: relative;
+      will-change: transform;
+    }
+    .toc-link:hover {
+      background: var(--paper-2);
+      border-left-color: var(--rust);
+      color: var(--rust);
+    }
+    .toc-link.active {
+      background: var(--ink);
+      color: var(--paper-solid);
+      border-left-color: var(--rust);
+    }
+    .toc-num {
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 10px; color: var(--muted);
+      min-width: 24px;
+    }
+    .toc-link.active .toc-num { color: var(--gold); }
+
+    /* Main Content Area */
+    .main {
+      position: relative;
+      min-width: 0;
+    }
+
+    /* Floating control */
+    .fab-stack {
+      position: fixed;
+      bottom: 32px; right: 32px;
+      display: flex; flex-direction: column; gap: 12px;
+      z-index: 80;
+    }
+    .fab {
+      width: 48px; height: 48px;
+      border: 2px solid var(--ink);
+      background: var(--paper);
+      color: var(--ink);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 18px; font-weight: 700;
+      box-shadow: 4px 4px 0 var(--ink);
+      transition: all .2s ease;
+      position: relative;
+      will-change: transform;
+    }
+    .fab:hover {
+      background: var(--rust); color: var(--paper-solid);
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 var(--ink);
+    }
+    .fab:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--ink); }
+
+    /* Mobile view hamburger */
+    .mobile-toggle { display: none; }
+
+    /* HERO Section */
+    .hero {
+      min-height: 100vh;
+      padding: 64px 80px;
+      position: relative;
+      display: flex; flex-direction: column; justify-content: space-between;
+      background:
+        radial-gradient(ellipse at 80% 20%, rgba(255,138,61,.08), transparent 50%),
+        radial-gradient(ellipse at 20% 80%, rgba(54,226,197,.08), transparent 50%),
+        var(--bg);
+      border-bottom: 2px solid var(--line);
+      overflow: hidden;
+    }
+    .hero-top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 11px; letter-spacing: .2em;
+      color: var(--muted); text-transform: uppercase;
+      margin-bottom: 48px;
+    }
+    .hero-stamp {
+      border: 1.5px solid var(--ink);
+      padding: 6px 14px;
+      transform: rotate(-3deg);
+      background: var(--gold);
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .hero-center {
+      flex: 1; display: flex; flex-direction: column; justify-content: center;
+      position: relative; z-index: 2;
+    }
+    .hero-eyebrow {
+      font-family: 'Noto Sans SC', 'Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      font-size: 12px; letter-spacing: .4em;
+      color: var(--rust); text-transform: uppercase;
+      margin-bottom: 24px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .hero-eyebrow::before, .hero-eyebrow::after {
+      content: ""; flex: 0 0 60px; height: 1.5px; background: var(--rust);
+    }
+    .hero-title {
+      font-family: 'Noto Serif SC', 'Playfair Display', Georgia, 'Songti SC', 'STSong', serif;
+      font-weight: 900; font-style: italic;
+      font-size: clamp(64px, 10vw, 150px);
+      line-height: .9;
+      color: var(--ink);
+      letter-spacing: -.02em;
+      margin-bottom: 8px;
+    }
+        .hero-title-cn {
+      font-family: 'Noto Serif SC', 'Playfair Display', Georgia, 'Songti SC', 'STSong', serif;
+      font-weight: 900;
+      font-size: clamp(32px, 4.5vw, 64px);
+      line-height: 1;
+      color: var(--rust);
+      letter-spacing: .08em;
+      margin-bottom: 40px;
+      text-shadow: 3px 3px 0 var(--bg-2), 6px 6px 0 var(--line);
+    }
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      max-width: 900px;
+      margin-top: 32px;
+      border-top: 1.5px solid var(--ink);
+      padding-top: 24px;
+    }
+    .hero-meta-item { position: relative; }
+    .hero-meta-key {
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 10px; letter-spacing: .25em;
+      color: var(--muted); text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .hero-meta-val {
+      font-family: 'Noto Serif SC', 'Playfair Display', Georgia, 'Songti SC', 'STSong', serif;
+      font-weight: 700; font-size: 15px;
+      color: var(--ink); line-height: 1.4;
+    }
+    .hero-meta-val em {
+      font-family: 'Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      font-style: italic; color: var(--teal);
+    }
+    .hero-bottom {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-top: 48px;
+    }
+    .hero-quote {
+      max-width: 560px;
+      font-family: 'Noto Serif SC', 'Playfair Display', Georgia, 'Songti SC', 'STSong', serif;
+      font-weight: 400; font-size: 18px;
+      line-height: 1.6; color: var(--ink-2);
+      font-style: italic;
+      border-left: 3px solid var(--rust);
+      padding-left: 20px;
+    }
+    .hero-quote-author {
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 11px; letter-spacing: .2em;
+      color: var(--muted);
+      margin-top: 10px;
+      text-transform: uppercase;
+    }
+    .hero-pageno {
+      font-family: 'Noto Serif SC', 'Playfair Display', Georgia, 'Songti SC', 'STSong', serif;
+      font-weight: 900; font-style: italic;
+      font-size: 120px; line-height: .8;
+      color: var(--ink);
+      opacity: .12;
+    }
+    .hero-deco-1 {
+      position: absolute; top: 120px; right: 80px;
+      width: 200px; height: 200px;
+      pointer-events: none;
+      opacity: .5;
+    }
+
+    /* Chapter Generic Style */
+    .chapter {
+      padding: 80px 80px 100px;
+      position: relative;
+      border-bottom: 1.5px solid var(--line);
+    }
+    .chapter:last-of-type { border-bottom: none; }
+    .chapter-header { margin-bottom: 48px; position: relative; }
+    .chapter-num {
+      font-family: 'Noto Sans SC', 'Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      font-size: 11px; letter-spacing: .3em;
+      color: var(--rust); text-transform: uppercase;
+      margin-bottom: 14px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .chapter-num::before {
+      content: ""; width: 40px; height: 1.5px; background: var(--rust);
+    }
+    .chapter-title {
+      font-family: 'Noto Serif SC', 'Playfair Display', Georgia, 'Songti SC', 'STSong', serif;
+      font-weight: 900;
+      font-size: clamp(32px, 4vw, 52px);
+      line-height: 1.05;
+      color: var(--ink);
+      margin-bottom: 14px;
+      letter-spacing: -.01em;
+    }
+    .chapter-title em {
+      font-family: inherit;
+      font-style: normal;
+      color: var(--teal);
+      font-weight: inherit;
+    }
+    .chapter-deck {
+      font-family: 'Noto Serif SC', 'Playfair Display', Georgia, 'Songti SC', 'STSong', serif;
+      font-size: 18px; line-height: 1.6;
+      color: var(--ink-2);
+      max-width: 720px;
+      font-style: italic;
+    }
+    .chapter-rule {
+      display: flex; align-items: center; gap: 8px;
+      margin-top: 24px;
+    }
+    .chapter-rule-line { flex: 1; height: 1.5px; background: var(--ink); }
+    .chapter-rule-dot { width: 8px; height: 8px; background: var(--rust); border-radius: 50%; }
+
+    p.lead {
+      font-family: 'Noto Serif SC', 'Playfair Display', Georgia, 'Songti SC', 'STSong', serif;
+      font-size: 17px; line-height: 1.8;
+      color: var(--ink-2);
+      margin-bottom: 32px;
+      max-width: 780px;
+      border-left: 3px solid var(--rust);
+      padding-left: 20px;
+    }
+
+    /* Card Layouts */
+    .card-grid {
+      display: grid;
+      gap: 24px;
+      margin-top: 32px;
+    }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+    @media (max-width: 1024px) {
+      .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .metric-row { grid-template-columns: repeat(2, 1fr); }
+      .metric:nth-child(2) { border-right: none; }
+      .metric:nth-child(1), .metric:nth-child(2) { border-bottom: 1.5px solid var(--line); }
+    }
+    @media (max-width: 768px) {
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .metric-row { grid-template-columns: 1fr; }
+      .metric { border-right: none !important; border-bottom: 1.5px solid var(--line) !important; }
+      .metric:last-child { border-bottom: none !important; }
+    }
+
+    .card {
+      background: var(--paper);
+      border: 2px solid var(--line);
+      padding: 28px;
+      position: relative;
+      box-shadow: 6px 6px 0 var(--line);
+      transition: transform .3s ease, box-shadow .3s ease;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    .card.in-view { opacity: 1; transform: translateY(0); }
+    .card:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--line); }
+    .card-tag {
+      position: absolute; top: -12px; left: 20px;
+      background: var(--ink); color: var(--paper-solid);
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 10px; letter-spacing: .2em;
+      padding: 4px 10px; text-transform: uppercase;
+      font-weight: 700;
+    }
+    .card-tag.rust { background: var(--rust); color: var(--paper-solid); }
+    .card-tag.teal { background: var(--teal); color: var(--paper-solid); }
+    .card-tag.gold { background: var(--gold); color: var(--ink); }
+    .card-title {
+      font-family: 'Noto Serif SC', 'Playfair Display', Georgia, 'Songti SC', 'STSong', serif;
+      font-weight: 900; font-size: 20px;
+      line-height: 1.2;
+      margin-bottom: 12px;
+      color: var(--ink);
+    }
+    .card-title em {
+      font-family: 'Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      font-style: italic; color: var(--rust);
+    }
+    .card-body {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--ink-2);
+    }
+    .card-body p + p { margin-top: 10px; }
+    .card-body strong { color: var(--ink); font-weight: 700; }
+    .card-num {
+      font-family: 'Noto Serif SC', 'Playfair Display', Georgia, 'Songti SC', 'STSong', serif;
+      font-weight: 900; font-style: italic;
+      font-size: 48px; line-height: 1;
+      color: var(--rust);
+      opacity: .3;
+      position: absolute; top: 16px; right: 20px;
+    }
+
+    /* Timeline styling */
+    .tl-year {
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 11px; letter-spacing: 0.25em;
+      color: var(--accent-1);
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+    .tl-title {
+      font-family: 'Noto Serif SC', 'Playfair Display', Georgia, 'Songti SC', 'STSong', serif;
+      font-size: 18px; color: var(--fg-0);
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .tl-desc {
+      font-size: 13.5px; color: var(--fg-1);
+      line-height: 1.75;
+    }
+
+    /* Fancy List */
+    .fancy-list { list-style: none; padding: 0; }
+    .fancy-list li {
+      padding: 10px 0 10px 32px;
+      position: relative;
+      font-size: 14px;
+      color: var(--fg-1);
+      line-height: 1.75;
+      border-bottom: 1px dotted var(--line);
+    }
+    .fancy-list li:last-child { border-bottom: none; }
+    .fancy-list li::before {
+      content: counter(item, decimal-leading-zero);
+      counter-increment: item;
+      position: absolute; left: 0; top: 10px;
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 11px;
+      color: var(--accent-1);
+      font-weight: bold;
+      letter-spacing: .1em;
+    }
+
+    /* SVG Elements Styling */
+    .svg-title {
+      fill: var(--accent-2);
+      font-family: 'Noto Serif SC', 'Playfair Display', Georgia, 'Songti SC', 'STSong', serif;
+      font-size: 15px; font-weight: bold;
+    }
+    .svg-num {
+      fill: var(--accent-1);
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 11px; font-weight: bold;
+    }
+    .svg-label {
+      fill: var(--fg-1);
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 10px; letter-spacing: 0.1em;
+    }
+    .svg-grid line {
+      stroke: var(--line); stroke-width: 0.5;
+    }
+    .svg-axis {
+      stroke: var(--fg-2); stroke-width: 1;
+    }
+    .svg-stroke {
+      stroke: var(--accent-2); stroke-width: 2; fill: none;
+    }
+    .svg-stroke-2 {
+      stroke: var(--accent-1); stroke-width: 2; fill: none;
+    }
+    .svg-stroke-3 {
+      stroke: var(--accent-3); stroke-width: 2; fill: none;
+    }
+    .svg-fill-1 { fill: var(--svg-fill-1); }
+    .svg-fill-2 { fill: var(--svg-fill-2); }
+    .svg-fill-3 { fill: var(--svg-fill-3); }
+    .svg-fill-4 { fill: var(--svg-fill-4); }
+
+    /* Data Metrics */
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border: 2px solid var(--line);
+      margin: 24px 0 32px;
+      background: var(--paper);
+      box-shadow: 6px 6px 0 var(--line);
+    }
+    .metric {
+      padding: 24px;
+      border-right: 1.5px solid var(--line);
+      position: relative;
+    }
+    .metric:last-child { border-right: none; }
+    .metric-num {
+      font-family: 'Noto Serif SC', 'Playfair Display', Georgia, 'Songti SC', 'STSong', serif;
+      font-weight: 900; font-style: italic;
+      font-size: 48px; line-height: 1;
+      color: var(--rust);
+    }
+    .metric-label {
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 11px; letter-spacing: .25em;
+      color: var(--muted);
+      margin-top: 8px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .metric-desc {
+      font-size: 12.5px;
+      color: var(--ink-2);
+      margin-top: 6px;
+      line-height: 1.6;
+    }
+
+    /* Pullquote */
+    .pullquote {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 40px 48px;
+      margin: 40px 0;
+      position: relative;
+      border: 2px solid var(--line);
+      box-shadow: 8px 8px 0 var(--rust);
+    }
+    .pullquote::before {
+      content: "";
+      position: absolute; top: 12px; left: 12px; right: 12px; bottom: 12px;
+      border: 1px solid var(--paper-solid);
+      pointer-events: none;
+    }
+    .pullquote-text {
+      font-family: 'Noto Serif SC', 'Playfair Display', Georgia, 'Songti SC', 'STSong', serif;
+      font-weight: 700; font-size: 22px;
+      line-height: 1.6;
+      font-style: italic;
+      position: relative;
+      z-index: 1;
+    }
+    .pullquote-text::before {
+      content: "\201C";
+      font-family: 'Noto Serif SC', 'Playfair Display', Georgia, 'Songti SC', 'STSong', serif;
+      font-size: 80px;
+      position: absolute;
+      top: -30px; left: -20px;
+      color: var(--rust);
+      opacity: .6;
+      line-height: 1;
+    }
+    .pullquote-author {
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 11px; letter-spacing: .25em;
+      color: var(--gold);
+      margin-top: 18px;
+      text-transform: uppercase;
+    }
+
+    .prose {
+      max-width: 780px;
+      font-size: 15px;
+      line-height: 1.85;
+      color: var(--ink-2);
+    }
+    .prose p + p { margin-top: 16px; }
+    .prose strong { color: var(--ink); font-weight: 700; }
+    .prose em { font-style: normal; color: var(--rust); border-bottom: 1px dashed var(--rust); }
+
+    .fade-text {
+      opacity: 0;
+      transition: opacity .6s ease;
+    }
+    .fade-text.in-view { opacity: 1; }
+
+    /* SVG Containers */
+    .svg-frame {
+      background: var(--paper);
+      border: 2px solid var(--line);
+      padding: 32px;
+      margin: 32px 0;
+      box-shadow: 8px 8px 0 var(--line);
+      position: relative;
+      overflow-x: auto;
+    }
+    .svg-frame-label {
+      position: absolute; top: -12px; left: 24px;
+      background: var(--rust); color: var(--paper-solid);
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 10px; letter-spacing: .25em;
+      padding: 4px 12px; text-transform: uppercase;
+    }
+    .svg-caption {
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 11px; letter-spacing: .15em;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 16px;
+      text-transform: uppercase;
+    }
+
+    /* SVG Diagram Styling */
+    .svg-title {
+      font-family: 'Noto Serif SC', 'Playfair Display', Georgia, 'Songti SC', 'STSong', serif;
+      font-weight: 700;
+      font-size: 16px;
+      fill: var(--ink);
+    }
+    .svg-num {
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .svg-label {
+      font-family: 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    }
+    .svg-fill-1 { fill: var(--svg-fill-1); }
+    .svg-fill-2 { fill: var(--svg-fill-2); }
+    .svg-fill-3 { fill: var(--svg-fill-3); }
+    .svg-fill-4 { fill: var(--svg-fill-4); }
+
+    /* Lists */
+    .list-styled { list-style: none; margin: 20px 0; }
+    .list-styled li {
+      position: relative;
+      padding-left: 32px;
+      margin-bottom: 12px;
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--ink-2);
+    }
+    .list-styled li::before {
+      content: "";
+      position: absolute; left: 0; top: 11px;
+      width: 18px; height: 2px;
+      background: var(--rust);
+    }
+    .list-styled li strong { color: var(--ink); }
+    
+    .list-numbered { list-style: none; counter-reset: ln; margin: 20px 0; }
+    .list-numbered li {
+      counter-increment: ln;
+      position: relative;
+      padding-left: 40px;
+      margin-bottom: 14px;
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--ink-2);
+    }
+    .list-numbered li::before {
+      content: counter(ln, decimal-leading-zero);
+      position: absolute; left: 0; top: 0;
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 11px; font-weight: 700;
+      color: var(--paper); background: var(--ink);
+      padding: 2px 6px;
+      letter-spacing: .1em;
+    }
+
+    /* Callout */
+    .callout {
+      background: var(--paper);
+      border: 2px solid var(--line);
+      padding: 32px;
+      margin: 32px 0;
+      box-shadow: 8px 8px 0 var(--line);
+      position: relative;
+    }
+    .callout-title {
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 12px; font-weight: bold;
+      letter-spacing: .25em;
+      color: var(--rust);
+      margin-bottom: 14px;
+      text-transform: uppercase;
+    }
+
+    /* Double Column text */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin: 24px 0;
+    }
+    @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* Table */
+    .tbl {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      border: 2px solid var(--line);
+      background: var(--paper);
+      font-size: 13.5px;
+    }
+    .tbl th {
+      background: var(--ink); color: var(--paper-solid);
+      padding: 12px 14px;
+      text-align: left;
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 11px; letter-spacing: .15em;
+      text-transform: uppercase;
+      border-right: 1px solid var(--paper-solid);
+    }
+    .tbl th:last-child { border-right: none; }
+    .tbl td {
+      padding: 12px 14px;
+      border-top: 1.5px solid var(--line);
+      border-right: 1px solid var(--line);
+      color: var(--ink-2);
+      vertical-align: top;
+      line-height: 1.6;
+    }
+    .tbl td:last-child { border-right: none; }
+    .tbl tr:nth-child(even) td { background: var(--paper-2); }
+    .tbl td strong { color: var(--ink); }
+
+    /* Footer styling */
+    footer {
+      background: var(--paper);
+      border-top: 2px solid var(--line);
+      padding: 48px 80px;
+      position: relative; z-index: 10;
+    }
+    .foot-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    .foot-label {
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 11px; letter-spacing: .2em;
+      color: var(--muted); text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .foot-grid div div:last-child {
+      font-size: 13.5px; color: var(--ink-2); line-height: 1.5;
+    }
+    .foot-bottom {
+      border-top: 1.5px solid var(--line);
+      padding-top: 24px;
+      display: flex; justify-content: space-between;
+      font-family: 'Space Mono', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 10px; color: var(--muted);
+      letter-spacing: .1em;
+    }
+    @media (max-width: 1024px) {
+      footer { padding: 36px 40px; }
+      .foot-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    }
+    @media (max-width: 768px) {
+      .foot-grid { grid-template-columns: 1fr; }
+      .foot-bottom { flex-direction: column; gap: 8px; }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1100px) {
+      .hero { padding: 48px 40px; }
+      .chapter { padding: 60px 40px 80px; }
+      .hero-meta { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar {
+        position: fixed; top: 0; left: -300px;
+        width: 280px; height: 100vh;
+        transition: left .35s cubic-bezier(.7, 0, .3, 1);
+        box-shadow: 8px 0 32px rgba(0,0,0,.3);
+      }
+      .sidebar.open { left: 0; }
+      .mobile-toggle {
+        display: flex;
+        position: fixed; top: 20px; left: 20px;
+        width: 48px; height: 48px;
+        border: 2px solid var(--ink);
+        background: var(--paper);
+        align-items: center; justify-content: center;
+        cursor: pointer; z-index: 90;
+        box-shadow: 4px 4px 0 var(--ink);
+      }
+      .mobile-toggle span {
+        display: block; width: 22px; height: 2px;
+        background: var(--ink);
+        position: relative;
+      }
+      .mobile-toggle span::before, .mobile-toggle span::after {
+        content: ""; position: absolute; left: 0;
+        width: 22px; height: 2px; background: var(--ink);
+        transition: transform .3s;
+      }
+      .mobile-toggle span::before { top: -7px; }
+      .mobile-toggle span::after { top: 7px; }
+      .mobile-toggle.open span { background: transparent; }
+      .mobile-toggle.open span::before { transform: rotate(45deg) translate(5px,5px); }
+      .mobile-toggle.open span::after { transform: rotate(-45deg) translate(5px,-5px); }
+      
+      .hero { padding: 100px 24px 48px; }
+      .hero-top { font-size: 9px; }
+      .hero-meta { grid-template-columns: 1fr; gap: 16px; }
+      .chapter { padding: 48px 24px 64px; }
+      .chapter-title { font-size: 32px; }
+      .fab-stack { bottom: 20px; right: 20px; }
+      .pullquote { padding: 28px 24px; }
+      .pullquote-text { font-size: 18px; }
+      .svg-frame { padding: 20px; overflow-x: auto; }
+      .hero-pageno { display: none; }
+    }
+
+    /* View transition wave effect variables */
+    ::view-transition-old(root), ::view-transition-new(root) {
+      animation: none; mix-blend-mode: normal;
+    }
+    ::view-transition-old(root) { z-index: 1; }
+    ::view-transition-new(root) { z-index: 9999; }
+    
+    .ripple-clip {
+      position: fixed; border-radius: 50%;
+      pointer-events: none; z-index: 99999;
+    }
+
+    ::selection { background: var(--rust); color: var(--paper-solid); }
+  </style>
+</head>
+<body>
+  <!-- Preloader Screen -->
+  <div id="preloader">
+    <div class="pre-frame">
+      <div class="pre-label">GLM-5.2 KNOWLEDGE ENGINE</div>
+      <div class="pre-title">POSITIONING</div>
+      <div class="pre-sub">定位：争夺心智的战争</div>
+      <div class="pre-bar">
+        <div class="pre-bar-fill" id="preFill"></div>
+      </div>
+      <div class="pre-pct" id="prePct">00%</div>
+    </div>
+  </div>
+
+  <!-- Mobile Toggle Button -->
+  <div class="mobile-toggle" id="mobileToggle" aria-label="目录">
+    <span></span>
+  </div>
+
+  <div class="layout">
+    <!-- TOC Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">KB</div>
+        <div class="brand-title">Positioning</div>
+        <div class="brand-sub">争夺用户心智的战争</div>
+        <div class="brand-deco">P.O.</div>
+      </div>
+      <div class="toc-label">目录</div>
+      <ul class="toc" id="toc">
+        <li class="toc-item"><a class="toc-link active" href="#ch00" data-toc="ch00"><span class="toc-num">00</span><span>首页</span></a></li>
+        <li class="toc-item"><a class="toc-link" href="#ch01" data-toc="ch01"><span class="toc-num">01</span><span>三次生产力革命</span></a></li>
+        <li class="toc-item"><a class="toc-link" href="#ch02" data-toc="ch02"><span class="toc-num">02</span><span>传播过度的社会</span></a></li>
+        <li class="toc-item"><a class="toc-link" href="#ch03" data-toc="ch03"><span class="toc-num">03</span><span>心智的运行机制</span></a></li>
+        <li class="toc-item"><a class="toc-link" href="#ch04" data-toc="ch04"><span class="toc-num">04</span><span>定位四步法</span></a></li>
+        <li class="toc-item"><a class="toc-link" href="#ch05" data-toc="ch05"><span class="toc-num">05</span><span>成为第一</span></a></li>
+        <li class="toc-item"><a class="toc-link" href="#ch06" data-toc="ch06"><span class="toc-num">06</span><span>领导者的定位</span></a></li>
+        <li class="toc-item"><a class="toc-link" href="#ch07" data-toc="ch07"><span class="toc-num">07</span><span>跟随者的定位</span></a></li>
+        <li class="toc-item"><a class="toc-link" href="#ch08" data-toc="ch08"><span class="toc-num">08</span><span>重新定位竞争对手</span></a></li>
+        <li class="toc-item"><a class="toc-link" href="#ch09" data-toc="ch09"><span class="toc-num">09</span><span>名字的威力</span></a></li>
+        <li class="toc-item"><a class="toc-link" href="#ch10" data-toc="ch10"><span class="toc-num">10</span><span>无名陷阱</span></a></li>
+        <li class="toc-item"><a class="toc-link" href="#ch11" data-toc="ch11"><span class="toc-num">11</span><span>搭便车陷阱</span></a></li>
+        <li class="toc-item"><a class="toc-link" href="#ch12" data-toc="ch12"><span class="toc-num">12</span><span>品牌延伸陷阱</span></a></li>
+        <li class="toc-item"><a class="toc-link" href="#ch13" data-toc="ch13"><span class="toc-num">13</span><span>孟山都企业定位</span></a></li>
+        <li class="toc-item"><a class="toc-link" href="#ch14" data-toc="ch14"><span class="toc-num">14</span><span>比利时国家定位</span></a></li>
+        <li class="toc-item"><a class="toc-link" href="#ch15" data-toc="ch15"><span class="toc-num">15</span><span>奶球产品定位</span></a></li>
+        <li class="toc-item"><a class="toc-link" href="#ch16" data-toc="ch16"><span class="toc-num">16</span><span>邮递电报服务定位</span></a></li>
+        <li class="toc-item"><a class="toc-link" href="#ch17" data-toc="ch17"><span class="toc-num">17</span><span>个人及事业定位</span></a></li>
+        <li class="toc-item"><a class="toc-link" href="#ch18" data-toc="ch18"><span class="toc-num">18</span><span>成功六步曲</span></a></li>
+        <li class="toc-item"><a class="toc-link" href="#ch19" data-toc="ch19"><span class="toc-num">19</span><span>定位素养</span></a></li>
+        <li class="toc-item"><a class="toc-link" href="#ch20" data-toc="ch20"><span class="toc-num">20</span><span>原书金句</span></a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main">
+
+      <!-- ========== HERO 首页 ========== -->
+      <section class="hero" id="ch00">
+        <div class="hero-top">
+          <div>KNOWLEDGE BASE · 读书笔记</div>
+          <div class="hero-stamp">经典重译版</div>
+        </div>
+        
+        <!-- Glowing background decoration -->
+        <div class="hero-deco-1">
+          <svg viewBox="0 0 200 200" style="width:100%; height:100%;">
+            <circle cx="100" cy="100" r="80" fill="none" stroke="var(--rust)" stroke-width="1" opacity="0.3" stroke-dasharray="4 4"/>
+            <circle cx="100" cy="100" r="60" fill="none" stroke="var(--teal)" stroke-width="1.5" opacity="0.4"/>
+            <polygon points="100,20 170,140 30,140" fill="none" stroke="var(--gold)" stroke-width="1" opacity="0.3"/>
+          </svg>
+        </div>
+
+        <div class="hero-center">
+          <div class="hero-eyebrow">THE BATTLE FOR YOUR MIND</div>
+          <h1 class="hero-title">POSITIONING</h1>
+          <div class="hero-title-cn">定位：争夺用户心智的战争</div>
+          
+          <div class="hero-meta">
+            <div class="hero-meta-item">
+              <div class="hero-meta-key">作者</div>
+              <div class="hero-meta-val">【美】艾·里斯 <em>Al Ries</em><br>杰克·特劳特 <em>Jack Trout</em></div>
+            </div>
+            <div class="hero-meta-item">
+              <div class="hero-meta-key">译者</div>
+              <div class="hero-meta-val">陈奇 / 顾洁</div>
+            </div>
+            <div class="hero-meta-item">
+              <div class="hero-meta-key">出版信息</div>
+              <div class="hero-meta-val">机械工业出版社<br>华章图文 · 2017</div>
+            </div>
+            <div class="hero-meta-item">
+              <div class="hero-meta-key">知识驱动</div>
+              <div class="hero-meta-val">双主题架构 · 响应式<br>16:9 终极屏幕适配</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-bottom">
+          <div class="hero-quote">
+            “定位的第一法则：要想赢得心智之战，不能和已经在心智中牢牢占据强有力位置的企业正面交锋。你可以从各个方向迂回出击，但绝不要迎面而上。”
+            <div class="hero-quote-author">— 艾·里斯 & 杰克·特劳特</div>
+          </div>
+          <div class="hero-pageno">P.01</div>
+        </div>
+      </section>
+
+<section class="chapter" id="ch01">
+      <div class="chapter-header">
+        <div class="chapter-num">CH.01</div>
+        <div>
+          <h2 class="chapter-title">三次<em>生产力革命</em></h2>
+          <div class="chapter-sub">FROM TAYLOR TO DRUCKER TO TROUT</div>
+        </div>
+      </div>
+
+      <p class="lead">马克思指出，<strong>以生产工具为标志的生产力发展</strong>，是社会存在的根本柱石。从唯物史观看，人类已经历三次生产力革命——每一次都从根本上重塑了社会的"上层建筑"。</p>
+
+      <div class="card-grid grid-3">
+        <div class="card reveal">
+          <div class="card-label">第一次 / 1880—</div>
+          <h3>泰勒 · 科学管理</h3>
+          <p>《科学管理原理》将复杂工艺解构为简单零部件再组装，使体力工作者生产力爆炸式提升。催生<strong style="color:var(--accent-2)">中产阶级</strong>，"哑铃型社会"转向"橄榄型社会"。</p>
+          <div style="margin-top:14px;font-family:'Courier New',monospace;font-size:11px;color:var(--accent-1);letter-spacing:0.15em">→ 缔造发达国家</div>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">第二次 / 1943—</div>
+          <h3>德鲁克 · 现代管理学</h3>
+          <p>《公司的概念》《管理实践》开创管理学，让组织这个"生产单位"创造应有成果。消化海量<strong style="color:var(--accent-2)">知识群体</strong>，从工业社会平稳转型为知识社会。</p>
+          <div style="margin-top:14px;font-family:'Courier New',monospace;font-size:11px;color:var(--accent-1);letter-spacing:0.15em">→ 缔造竞争型社会</div>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">第三次 / 1969—</div>
+          <h3>特劳特 · 定位</h3>
+          <p>1969 年发现"定位"这一新生产工具，在顾客心智中针对竞争对手确定最具优势的位置。竞争重心由<strong style="color:var(--accent-2)">工厂→市场→心智</strong>，开启品牌时代。</p>
+          <div style="margin-top:14px;font-family:'Courier New',monospace;font-size:11px;color:var(--accent-1);letter-spacing:0.15em">→ 缔造品牌社会</div>
+        </div>
+      </div>
+
+      <div class="svg-frame reveal">
+        <svg viewBox="0 0 900 320" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="revGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="var(--accent-1)" stop-opacity="0.8"/>
+              <stop offset="50%" stop-color="var(--accent-2)" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="var(--accent-3)" stop-opacity="0.8"/>
+            </linearGradient>
+          </defs>
+          <g class="svg-grid">
+            <line x1="40" y1="240" x2="860" y2="240"/>
+            <line x1="40" y1="40" x2="40" y2="240"/>
+          </g>
+          <path class="svg-stroke" d="M 80 220 Q 200 200 280 150 T 480 100 T 720 60" stroke-dasharray="800" stroke-dashoffset="800" id="revPath"/>
+          <g>
+            <circle cx="80" cy="220" r="8" class="svg-fill-1" stroke="var(--accent-1)" stroke-width="2"/>
+            <text x="80" y="260" text-anchor="middle" class="svg-num">1880</text>
+            <text x="80" y="278" text-anchor="middle" class="svg-label">泰勒</text>
+            <text x="80" y="200" text-anchor="middle" class="svg-label" fill="var(--accent-1)">体力工作者</text>
+          </g>
+          <g>
+            <circle cx="400" cy="130" r="8" class="svg-fill-2" stroke="var(--accent-2)" stroke-width="2"/>
+            <text x="400" y="260" text-anchor="middle" class="svg-num">1943</text>
+            <text x="400" y="278" text-anchor="middle" class="svg-label">德鲁克</text>
+            <text x="400" y="110" text-anchor="middle" class="svg-label" fill="var(--accent-2)">组织</text>
+          </g>
+          <g>
+            <circle cx="720" cy="60" r="8" class="svg-fill-3" stroke="var(--accent-3)" stroke-width="2"/>
+            <text x="720" y="260" text-anchor="middle" class="svg-num">1969</text>
+            <text x="720" y="278" text-anchor="middle" class="svg-label">特劳特</text>
+            <text x="720" y="40" text-anchor="middle" class="svg-label" fill="var(--accent-3)">品牌</text>
+          </g>
+          <text x="450" y="30" text-anchor="middle" class="svg-title">三次生产力革命 · 竞争重心转移路径</text>
+          <text x="200" y="305" text-anchor="middle" class="svg-label" fill="var(--fg-2)">工厂 →</text>
+          <text x="500" y="305" text-anchor="middle" class="svg-label" fill="var(--fg-2)">市场 →</text>
+          <text x="780" y="305" text-anchor="middle" class="svg-label" fill="var(--fg-2)">心智</text>
+        </svg>
+        <div class="svg-caption">FIG.1.1 · 竞争重心由工厂转移至心智，经济权力同步转移</div>
+      </div>
+
+      <div class="quote fade-text">
+        每一次生产力革命都对应着一种"更聪明地工作"的方式。泰勒让体力工作者更聪明，德鲁克让组织更聪明，特劳特则让品牌更聪明。
+        <span class="pullquote-author">— 序一 · 邓德隆</span>
+      </div>
+    </section>
+
+    <!-- ========== 第2章 传播过度的社会 ========== -->
+    
+<section class="chapter" id="ch02">
+      <div class="chapter-header">
+        <div class="chapter-num">CH.02</div>
+        <div>
+          <h2 class="chapter-title">传播过度的<em>社会</em></h2>
+          <div class="chapter-sub">THE OVERCOMMUNICATED SOCIETY</div>
+        </div>
+      </div>
+
+      <p class="lead">美国已成为全世界信息传播最为过度的社会。年人均广告消费近 <strong>200 美元</strong>，且这一数字仍在攀升。在如此嘈杂的传播环境中，提高有效性的唯一希望，是要对信息进行<strong>选择和取舍</strong>——进行"定位"。</p>
+
+      <div class="metric-row">
+        <div class="stat reveal">
+          <div class="metric-num" data-count="40000">0</div>
+          <div class="metric-desc">SKU</div>
+          <div class="metric-label">一家普通超市陈列商品数</div>
+        </div>
+        <div class="stat reveal">
+          <div class="metric-num" data-count="176">0</div>
+          <div class="metric-desc">BRANDS</div>
+          <div class="metric-label">美国香烟品牌数</div>
+        </div>
+        <div class="stat reveal">
+          <div class="metric-num" data-count="300">0</div>
+          <div class="metric-desc">MODELS</div>
+          <div class="metric-label">底特律在售汽车型号</div>
+        </div>
+        <div class="stat reveal">
+          <div class="metric-num" data-count="50">0</div>
+          <div class="metric-desc">TYLENOL</div>
+          <div class="metric-label">"泰诺"品种数量</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="prose reveal">
+          <h3 style="color:var(--accent-2);margin-bottom:14px;font-size:20px">三大暴增</h3>
+          <p><strong>媒体暴增</strong>　电视、广播、户外、报纸、杂志，任何能够移动的物体都带有"赞助商的信息"。媒体更像一个<strong>过滤器</strong>，而非传递系统。</p>
+          <p><strong>产品暴增</strong>　美国专利局注册在用的商标约 45 万个，每年新增 2.5 万个。纽约证券交易所上市的公司一年推出 5000 种"重要的"新产品。</p>
+          <p><strong>广告暴增</strong>　医师、律师、牙医、会计师都开始做广告。随着广告效果减弱，广告的应用反而增加了——这是一种讽刺的螺旋。</p>
+        </div>
+        <div class="callout reveal">
+          <div class="callout-title">关 键 启 示</div>
+          <p style="font-size:14px;color:var(--fg-1);line-height:1.75">在传播过度的社会中，<strong style="color:var(--accent-2)">心智就是战场</strong>。广告战就在这 15 厘米宽的大脑里打响，战争残暴，毫不留情。</p>
+          <p style="font-size:14px;color:var(--fg-1);line-height:1.75;margin-top:10px">应对传播过度的社会，最好的方法就是<strong style="color:var(--accent-1)">极度简化信息</strong>。"少即多"，你必须"削尖"你的信息，使其能切入人们的心智。</p>
+        </div>
+      </div>
+
+      <div class="callout reveal">
+        <div class="callout-label">核 心 定 义</div>
+        <h3>定位的最新定义</h3>
+        <p><strong style="color:var(--accent-2)">"如何在潜在顾客的心智中做到与众不同。"</strong></p>
+        <p style="margin-top:12px">定位始于产品，但定位并非要改变产品，而是要调整潜在顾客的心智。也就是说，在潜在顾客的心智中对产品进行定位。称其为"产品定位"是不正确的——定位确实会涉及产品改变（名字、价格、包装），但那些都是为了在潜在顾客的心智中确保一个有价值的位置而做的表面改变。</p>
+      </div>
+    </section>
+
+    <!-- ========== 第3章 心智的运行机制 ========== -->
+    
+<section class="chapter" id="ch03">
+      <div class="chapter-header">
+        <div class="chapter-num">CH.03</div>
+        <div>
+          <h2 class="chapter-title">心智的<em>运行机制</em></h2>
+          <div class="chapter-sub">HOW THE MIND WORKS</div>
+        </div>
+      </div>
+
+      <p class="lead">心智就像电脑的内存条，但有一个重要的不同点：电脑会接受你输入的一切信息，而<strong>心智不会</strong>。心智会拒绝那些"运算"不了的信息，只接受与心智现状相符的新信息。</p>
+
+      <div class="card-grid grid-3">
+        <div class="card reveal">
+          <div class="card-label">原 则 一</div>
+          <h3>见你所想见</h3>
+          <p>把一瓶嘉露葡萄酒倒进法国勃艮第 50 年陈酿的空瓶里，朋友会尝出他<strong style="color:var(--accent-2)">期望</strong>尝到的味道。可口可乐"新可乐"盲测时 3:1 取胜，贴上标签后 1:4 落败——你尝到的是你想尝到的。</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">原 则 二</div>
+          <h3>容量有限</h3>
+          <p>哈佛心理学家乔治·米勒研究：普通人的心智不能同时处理<strong style="color:var(--accent-2)">七个以上</strong>单位的信息。这就是为什么必须牢记的事项通常只有七个——七位电话号码、七大世界奇迹、七个小矮人。</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">原 则 三</div>
+          <h3>极度简化</h3>
+          <p>应对传播过度社会的唯一方法是<strong style="color:var(--accent-2)">极度简化信息</strong>。一词占领心智：沃尔沃=安全，宝马=驾驶，联邦快递=隔夜送达，佳洁士=防蛀。一旦拥有了一个词，就得利用它，否则就会失去它。</p>
+        </div>
+      </div>
+
+      <div class="svg-frame reveal">
+        <svg viewBox="0 0 900 360" preserveAspectRatio="xMidYMid meet">
+          <text x="450" y="24" text-anchor="middle" class="svg-title">心智中的产品阶梯 · LADDER IN THE MIND</text>
+          
+          <!-- 租车阶梯 -->
+          <g transform="translate(80,60)">
+            <text x="80" y="-8" text-anchor="middle" class="svg-label" fill="var(--accent-3)">租车品类</text>
+            <rect x="0" y="0" width="160" height="40" class="svg-fill-2" stroke="var(--accent-2)" stroke-width="1.5"/>
+            <text x="80" y="25" text-anchor="middle" class="svg-label" fill="var(--fg-0)" style="font-size:13px;font-weight:bold">赫兹 HERTZ</text>
+            <rect x="10" y="50" width="150" height="36" class="svg-fill-1" stroke="var(--accent-1)" stroke-width="1"/>
+            <text x="85" y="73" text-anchor="middle" class="svg-label">安飞士 AVIS</text>
+            <rect x="20" y="96" width="140" height="32" fill="rgba(124,140,255,0.15)" stroke="var(--accent-5)" stroke-width="1"/>
+            <text x="90" y="117" text-anchor="middle" class="svg-label">全美租车</text>
+            <text x="80" y="150" text-anchor="middle" class="svg-num">第一层 = 领导者</text>
+          </g>
+
+          <!-- 可乐阶梯 -->
+          <g transform="translate(370,60)">
+            <text x="80" y="-8" text-anchor="middle" class="svg-label" fill="var(--accent-3)">可乐品类</text>
+            <rect x="0" y="0" width="160" height="40" class="svg-fill-4" stroke="var(--accent-4)" stroke-width="1.5"/>
+            <text x="80" y="25" text-anchor="middle" class="svg-label" fill="var(--fg-0)" style="font-size:13px;font-weight:bold">可口可乐</text>
+            <rect x="10" y="50" width="150" height="36" class="svg-fill-1" stroke="var(--accent-1)" stroke-width="1"/>
+            <text x="85" y="73" text-anchor="middle" class="svg-label">百事可乐</text>
+            <rect x="20" y="96" width="140" height="32" class="svg-fill-3" stroke="var(--accent-3)" stroke-width="1"/>
+            <text x="90" y="117" text-anchor="middle" class="svg-label">七喜（非可乐）</text>
+            <text x="80" y="150" text-anchor="middle" class="svg-num">关联定位</text>
+          </g>
+
+          <!-- 空位阶梯 -->
+          <g transform="translate(660,60)">
+            <text x="80" y="-8" text-anchor="middle" class="svg-label" fill="var(--accent-3)">高价啤酒</text>
+            <rect x="0" y="0" width="160" height="40" class="svg-fill-2" stroke="var(--accent-2)" stroke-width="1.5"/>
+            <text x="80" y="25" text-anchor="middle" class="svg-label" fill="var(--fg-0)" style="font-size:13px;font-weight:bold">米狮龙</text>
+            <rect x="10" y="50" width="150" height="36" fill="none" stroke="var(--fg-2)" stroke-width="1" stroke-dasharray="4 3"/>
+            <text x="85" y="73" text-anchor="middle" class="svg-label" fill="var(--fg-2)">？空 位？</text>
+            <rect x="20" y="96" width="140" height="32" fill="none" stroke="var(--fg-2)" stroke-width="1" stroke-dasharray="4 3"/>
+            <text x="90" y="117" text-anchor="middle" class="svg-label" fill="var(--fg-2)">？空 位？</text>
+            <text x="80" y="150" text-anchor="middle" class="svg-num">寻找空位</text>
+          </g>
+
+          <!-- 底部说明 -->
+          <g transform="translate(0,250)">
+            <line x1="80" y1="0" x2="820" y2="0" stroke="var(--line)" stroke-dasharray="2 3"/>
+            <text x="450" y="24" text-anchor="middle" class="svg-label" fill="var(--fg-1)">每个品类在心智中都有一个阶梯，品牌需占据阶梯上的某一层</text>
+            <text x="450" y="44" text-anchor="middle" class="svg-label" fill="var(--fg-2)">层级越上 → 心智份额越大 → 选择力量越强</text>
+            <text x="450" y="74" text-anchor="middle" class="svg-num" fill="var(--accent-1)">二元法则：每个品类最终只会由两个品牌主导</text>
+          </g>
+        </svg>
+        <div class="svg-caption">FIG.3.1 · 心智阶梯模型 · 顾客以品类思考，以品牌表达</div>
+      </div>
+
+      <div class="quote fade-text">
+        在政治上，认知就是现实。在广告、商业以及生活上也都一样。<br>事实无关紧要，重要的是人们心智中已有的认知。定位思维的精髓在于，把<strong style="color:var(--accent-2)">认知当作现实</strong>来接受，然后重构这些认知。
+        <span class="pullquote-author">— 第1章 · 定位的本质</span>
+      </div>
+    </section>
+
+    <!-- ========== 第4章 定位四步法 ========== -->
+    
+<section class="chapter" id="ch04">
+      <div class="chapter-header">
+        <div class="chapter-num">CH.04</div>
+        <div>
+          <h2 class="chapter-title">定位<em>四步法</em></h2>
+          <div class="chapter-sub">THE FOUR-STEP METHOD</div>
+        </div>
+      </div>
+
+      <p class="lead">特劳特与里斯花了 20 多年验证与发展定位，在具体运用上形成<strong>四步工作法</strong>。这是一套"由外而内"的思维方式——从潜在顾客心智出发，而非从企业自身出发。</p>
+
+      <div class="svg-frame reveal">
+        <svg viewBox="0 0 900 380" preserveAspectRatio="xMidYMid meet">
+          <text x="450" y="28" text-anchor="middle" class="svg-title">定位四步法 · THE POSITIONING PROCESS</text>
+          
+          <!-- 四个步骤 -->
+          <g transform="translate(60,80)">
+            <rect x="0" y="0" width="180" height="120" class="svg-fill-1" stroke="var(--accent-1)" stroke-width="2"/>
+            <text x="90" y="30" text-anchor="middle" class="svg-num" fill="var(--accent-1)" style="font-size:14px">STEP 01</text>
+            <text x="90" y="58" text-anchor="middle" class="svg-label" fill="var(--fg-0)" style="font-size:13px;font-weight:bold">分析外部环境</text>
+            <text x="90" y="80" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">确定竞争对手是谁</text>
+            <text x="90" y="95" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">竞争对手的价值是什么</text>
+            <text x="90" y="110" text-anchor="middle" class="svg-label" fill="var(--accent-1)" style="font-size:9px">竞争导向</text>
+          </g>
+
+          <g transform="translate(260,80)">
+            <rect x="0" y="0" width="180" height="120" class="svg-fill-2" stroke="var(--accent-2)" stroke-width="2"/>
+            <text x="90" y="30" text-anchor="middle" class="svg-num" fill="var(--accent-2)" style="font-size:14px">STEP 02</text>
+            <text x="90" y="58" text-anchor="middle" class="svg-label" fill="var(--fg-0)" style="font-size:13px;font-weight:bold">确立优势位置</text>
+            <text x="90" y="80" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">避开对手强势</text>
+            <text x="90" y="95" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">利用强势中的弱点</text>
+            <text x="90" y="110" text-anchor="middle" class="svg-label" fill="var(--accent-2)" style="font-size:9px">→ 定位</text>
+          </g>
+
+          <g transform="translate(460,80)">
+            <rect x="0" y="0" width="180" height="120" class="svg-fill-3" stroke="var(--accent-3)" stroke-width="2"/>
+            <text x="90" y="30" text-anchor="middle" class="svg-num" fill="var(--accent-3)" style="font-size:14px">STEP 03</text>
+            <text x="90" y="58" text-anchor="middle" class="svg-label" fill="var(--fg-0)" style="font-size:13px;font-weight:bold">寻求信任状</text>
+            <text x="90" y="80" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">为定位寻找</text>
+            <text x="90" y="95" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">可靠的证明</text>
+            <text x="90" y="110" text-anchor="middle" class="svg-label" fill="var(--accent-3)" style="font-size:9px">证据支撑</text>
+          </g>
+
+          <g transform="translate(660,80)">
+            <rect x="0" y="0" width="180" height="120" class="svg-fill-4" stroke="var(--accent-4)" stroke-width="2"/>
+            <text x="90" y="30" text-anchor="middle" class="svg-num" fill="var(--accent-4)" style="font-size:14px">STEP 04</text>
+            <text x="90" y="58" text-anchor="middle" class="svg-label" fill="var(--fg-0)" style="font-size:13px;font-weight:bold">整合内部运营</text>
+            <text x="90" y="80" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">将定位植入</text>
+            <text x="90" y="95" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">企业运营的方方面面</text>
+            <text x="90" y="110" text-anchor="middle" class="svg-label" fill="var(--accent-4)" style="font-size:9px">传播植入心智</text>
+          </g>
+
+          <!-- 箭头 -->
+          <g stroke="var(--accent-2)" stroke-width="2" fill="var(--accent-2)">
+            <path d="M 244 140 L 256 140 M 250 134 L 256 140 L 250 146" fill="none"/>
+            <path d="M 444 140 L 456 140 M 450 134 L 456 140 L 450 146" fill="none"/>
+            <path d="M 644 140 L 656 140 M 650 134 L 656 140 L 650 146" fill="none"/>
+          </g>
+
+          <!-- 底部对照 -->
+          <g transform="translate(60,240)">
+            <rect x="0" y="0" width="780" height="100" fill="rgba(255,93,115,0.06)" stroke="var(--accent-4)" stroke-width="1" stroke-dasharray="4 3"/>
+            <text x="20" y="26" class="svg-label" fill="var(--accent-4)" style="font-size:11px;letter-spacing:0.2em">⚠ 与传统营销的对照</text>
+            <text x="20" y="52" class="svg-label" fill="var(--fg-1)">德鲁克经典之问："我们的顾客是谁，顾客的价值是什么？"</text>
+            <text x="20" y="72" class="svg-label" fill="var(--accent-1)">定位之问："我们的竞争对手是谁，竞争对手的价值是什么？"</text>
+            <text x="20" y="90" class="svg-label" fill="var(--fg-2)" style="font-size:10px">经营方式已由顾客导向递进为竞争导向</text>
+          </g>
+        </svg>
+        <div class="svg-caption">FIG.4.1 · 定位四步工作法 · 由外而内的战略路径</div>
+      </div>
+
+      <div class="two-col">
+        <div class="prose reveal">
+          <h3 style="color:var(--accent-2);margin-bottom:14px;font-size:20px">品牌成为主体</h3>
+          <p>正因为竞争是在心智中展开的，我们不可能将一个组织、一个企业实体塞入顾客心智，只能将代表企业产品或服务的符号——<strong>品牌</strong>植入顾客心智。</p>
+          <p>所以，定位的主体不是企业而是品牌，这意味着<strong>竞争的基本单位不是企业，而是品牌</strong>。</p>
+        </div>
+        <div class="prose reveal">
+          <h3 style="color:var(--accent-2);margin-bottom:14px;font-size:20px">夺取心智资源</h3>
+          <p>企业最有价值的资源不再是土地、资本，甚至不是人力资源、知识资源——而是组织外部的<strong>心智资源</strong>（占据一个定位）。</p>
+          <p>没有心智资源的牵引，其他所有资源都只是成本。巴菲特长期持有可口可乐，因为可口可乐就是<strong>可乐的代名词</strong>——这就是"深深的护城河"。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 第5章 成为第一 ========== -->
+    
+<section class="chapter" id="ch05">
+      <div class="chapter-header">
+        <div class="chapter-num">CH.05</div>
+        <div>
+          <h2 class="chapter-title">成为<em>第一</em></h2>
+          <div class="chapter-sub">BEING FIRST · 第一胜过更好</div>
+        </div>
+      </div>
+
+      <p class="lead"><strong>成为第一是进入心智的捷径。</strong>第一个单独驾驶飞机飞越北大西洋的人是查尔斯·林德伯格——第二个人是谁？第一个在月球上漫步的是尼尔·阿姆斯特朗——第二个人呢？世界第一高峰是珠穆朗玛峰——第二座呢？</p>
+
+      <div class="card-grid grid-3">
+        <div class="card reveal">
+          <div class="card-label">原 则</div>
+          <h3>第一胜过更好</h3>
+          <p>这是迄今为止最有威力的定位观念。<strong style="color:var(--accent-2)">占据心智的第一个人、第一座高峰、第一家公司</strong>，是很难从记忆中抹掉的。柯达相机、IBM 电脑、施乐复印机、赫兹租车、可口可乐——它们都是所属品类中第一个进入心智的品牌。</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">印 刻 现 象</div>
+          <h3>动物学与婚姻</h3>
+          <p>动物学家用"印刻现象"描述新生动物第一次见到生母时的情景——仅需几秒钟，幼小的动物就能<strong style="color:var(--accent-2)">永远记住</strong>母亲的形象。婚姻作为人类制度，同样建立在"第一胜过最好"的观念上。</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">第二法则</div>
+          <h3>开创品类第一</h3>
+          <p>阿梅莉亚·埃尔哈特是第三个独自飞越大西洋的人，但她出名是因为她是<strong style="color:var(--accent-2)">第一个完成此举的女性</strong>。<br>"如果你不能在某一品类中争得第一，那么就开创一个你可以成为第一的新品类"——这是第二个最有效的定位观念。</p>
+        </div>
+      </div>
+
+      <div class="svg-frame reveal">
+        <svg viewBox="0 0 900 360" preserveAspectRatio="xMidYMid meet">
+          <text x="450" y="28" text-anchor="middle" class="svg-title">广告业三个时代 · THREE ERAS OF ADVERTISING</text>
+          
+          <g transform="translate(40,70)">
+            <rect x="0" y="0" width="260" height="240" class="svg-fill-1" stroke="var(--accent-1)" stroke-width="1.5"/>
+            <text x="130" y="32" text-anchor="middle" class="svg-num" fill="var(--accent-1)" style="font-size:13px">1950s</text>
+            <text x="130" y="60" text-anchor="middle" class="svg-label" fill="var(--fg-0)" style="font-size:16px;font-weight:bold">产品时代</text>
+            <line x1="40" y1="76" x2="220" y2="76" stroke="var(--accent-1)" stroke-width="1"/>
+            <text x="130" y="104" text-anchor="middle" class="svg-label" fill="var(--fg-1)">USP</text>
+            <text x="130" y="122" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">独特卖点</text>
+            <text x="130" y="156" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:11px">"更好捕鼠器"</text>
+            <text x="130" y="176" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:11px">+ 少量推广资金</text>
+            <text x="130" y="210" text-anchor="middle" class="svg-label" fill="var(--accent-1)" style="font-size:10px">→ 跟风产品终结</text>
+          </g>
+
+          <g transform="translate(320,70)">
+            <rect x="0" y="0" width="260" height="240" class="svg-fill-2" stroke="var(--accent-2)" stroke-width="1.5"/>
+            <text x="130" y="32" text-anchor="middle" class="svg-num" fill="var(--accent-2)" style="font-size:13px">1960s</text>
+            <text x="130" y="60" text-anchor="middle" class="svg-label" fill="var(--fg-0)" style="font-size:16px;font-weight:bold">形象时代</text>
+            <line x1="40" y1="76" x2="220" y2="76" stroke="var(--accent-2)" stroke-width="1"/>
+            <text x="130" y="104" text-anchor="middle" class="svg-label" fill="var(--fg-1)">大卫·奥格威</text>
+            <text x="130" y="122" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">声誉 / 形象</text>
+            <text x="130" y="156" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:11px">"每一则广告都是</text>
+            <text x="130" y="176" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:11px">对品牌形象的长期投资"</text>
+            <text x="130" y="210" text-anchor="middle" class="svg-label" fill="var(--accent-2)" style="font-size:10px">→ 跟风公司毁灭</text>
+          </g>
+
+          <g transform="translate(600,70)">
+            <rect x="0" y="0" width="260" height="240" class="svg-fill-3" stroke="var(--accent-3)" stroke-width="2"/>
+            <text x="130" y="32" text-anchor="middle" class="svg-num" fill="var(--accent-3)" style="font-size:13px">1970s →</text>
+            <text x="130" y="60" text-anchor="middle" class="svg-label" fill="var(--fg-0)" style="font-size:16px;font-weight:bold">定位时代</text>
+            <line x1="40" y1="76" x2="220" y2="76" stroke="var(--accent-3)" stroke-width="1"/>
+            <text x="130" y="104" text-anchor="middle" class="svg-label" fill="var(--fg-1)">里斯 &amp; 特劳特</text>
+            <text x="130" y="122" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">心智 / 战略</text>
+            <text x="130" y="156" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:11px">在心智中创建</text>
+            <text x="130" y="176" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:11px">独一无二的位置</text>
+            <text x="130" y="210" text-anchor="middle" class="svg-label" fill="var(--accent-3)" style="font-size:10px;font-weight:bold">→ 第一个进入心智</text>
+          </g>
+
+          <text x="450" y="340" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:10px">电脑是 Sperry-Rand 发明的，但 IBM 是第一家在顾客心智中建立电脑定位的公司</text>
+        </svg>
+        <div class="svg-caption">FIG.5.1 · 广告业三个时代演进 · 创意不再是成功的关键</div>
+      </div>
+
+      <div class="quote fade-text">
+        在体育竞赛中，机会青睐最快的赛马、最强的团队和最好的选手。但在心智之战中，机会青睐进入潜在顾客心智的<strong>第一个人</strong>、第一款产品和第一位政治家。
+        <span class="pullquote-author">— 第3章 · 进入心智</span>
+      </div>
+    </section>
+
+    <!-- ========== 第6章 领导者的定位 ========== -->
+    
+<section class="chapter" id="ch06">
+      <div class="chapter-header">
+        <div class="chapter-num">CH.06</div>
+        <div>
+          <h2 class="chapter-title">领导者的<em>定位</em></h2>
+          <div class="chapter-sub">THE LEADER'S POSITION</div>
+        </div>
+      </div>
+
+      <p class="lead">像安飞士和七喜这样的公司都针对市场领导者找到了可行的替代性定位。但是，无论成功与否，大多数公司都想成为像赫兹或可口可乐那样的领导者。<strong>如何成为领导者？只需率先出击，并且全力以赴。</strong></p>
+
+      <div class="callout reveal">
+        <div class="callout-label">领 导 者 份 额 法 则</div>
+        <h3>第一品牌的份额通常是第二品牌的 2 倍</h3>
+        <p>第一个进入心智的品牌所占据的长期市场份额通常是第二品牌的 <strong style="color:var(--accent-2)">2 倍</strong>，是第三品牌的 <strong style="color:var(--accent-2)">4 倍</strong>，且这种比例关系不会轻易改变。可口可乐每卖出 6 瓶，百事可乐才能卖出 4 瓶。赫兹超过安飞士，通用汽车超过福特，麦当劳超过汉堡王。</p>
+      </div>
+
+      <h3 style="color:var(--accent-2);margin:32px 0 16px;font-size:22px">领导者该做什么 / 不该做什么</h3>
+      <div class="two-col">
+        <div class="reveal">
+          <div class="callout" style="border-color:var(--accent-3);background:rgba(54,226,197,0.06);padding-left:48px">
+            <div class="callout-title" style="color:var(--accent-3)">✓ 应 该 做 的</div>
+            <ul class="fancy-list">
+              <li><strong>强化品类价值</strong>　IBM 的广告通常忽略竞争，只宣传电脑的价值</li>
+              <li><strong>"正宗货"策略</strong>　一旦代表正宗货，其他品牌就被重新定位成仿冒品</li>
+              <li><strong>全面拦截</strong>　一旦发现有潜力的新产品立即跟进，抢在对手扎根前狙击</li>
+              <li><strong>多品牌战略</strong>　每个品牌独立定位，宝洁、吉列、丰田雷克萨斯</li>
+              <li><strong>用更宽泛名称</strong>　《销售管理》→《销售管理与市场营销》</li>
+            </ul>
+          </div>
+        </div>
+        <div class="reveal">
+          <div class="callout">
+            <div class="callout-title">✗ 不 该 做 的</div>
+            <ul class="fancy-list">
+              <li><strong>高呼"我们是第一"</strong>　潜在顾客会疑惑：为什么这么缺乏安全感非要说出来？</li>
+              <li><strong>用自己的标准</strong>　不能用"密西西比河以东、1000 美元以下最畅销"这种界定</li>
+              <li><strong>等待观望</strong>　"等等看吧"是领导者典型且致命的反应</li>
+              <li><strong>误信实力来自企业</strong>　企业的实力来自产品的实力，而非相反</li>
+              <li><strong>品牌延伸</strong>　可口可乐 Mr.Pibb 远远落后胡椒博士</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="svg-frame reveal">
+        <svg viewBox="0 0 900 320" preserveAspectRatio="xMidYMid meet">
+          <text x="450" y="28" text-anchor="middle" class="svg-title">领导者的拦截战略 · MULTI-BRAND INTERDICTION</text>
+          
+          <!-- 中心：领导者 -->
+          <g transform="translate(370,80)">
+            <rect x="0" y="0" width="160" height="80" class="svg-fill-2" stroke="var(--accent-2)" stroke-width="2"/>
+            <text x="80" y="32" text-anchor="middle" class="svg-label" fill="var(--fg-0)" style="font-size:14px;font-weight:bold">领导者品牌</text>
+            <text x="80" y="52" text-anchor="middle" class="svg-label" fill="var(--accent-2)" style="font-size:10px">已占据心智</text>
+            <text x="80" y="68" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:9px">如：吉列 / 宝洁</text>
+          </g>
+
+          <!-- 拦截箭头：从领导者射向各挑战者 -->
+          <g stroke="var(--accent-1)" stroke-width="1.5" fill="none" stroke-dasharray="4 2">
+            <path d="M 370 120 Q 240 180 130 220"/>
+            <path d="M 450 120 Q 410 180 360 220"/>
+            <path d="M 530 120 Q 600 180 640 220"/>
+            <path d="M 530 100 Q 700 120 800 200"/>
+          </g>
+
+          <!-- 挑战者：被拦截 -->
+          <g transform="translate(60,210)">
+            <rect x="0" y="0" width="140" height="60" fill="rgba(255,93,115,0.1)" stroke="var(--accent-4)" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <text x="70" y="26" text-anchor="middle" class="svg-label" fill="var(--accent-4)" style="font-size:11px;font-weight:bold">挑战者 A</text>
+            <text x="70" y="44" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:9px">用新品牌拦截</text>
+          </g>
+          <g transform="translate(290,210)">
+            <rect x="0" y="0" width="140" height="60" fill="rgba(255,93,115,0.1)" stroke="var(--accent-4)" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <text x="70" y="26" text-anchor="middle" class="svg-label" fill="var(--accent-4)" style="font-size:11px;font-weight:bold">挑战者 B</text>
+            <text x="70" y="44" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:9px">用降价拦截</text>
+          </g>
+          <g transform="translate(570,210)">
+            <rect x="0" y="0" width="140" height="60" fill="rgba(255,93,115,0.1)" stroke="var(--accent-4)" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <text x="70" y="26" text-anchor="middle" class="svg-label" fill="var(--accent-4)" style="font-size:11px;font-weight:bold">挑战者 C</text>
+            <text x="70" y="44" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:9px">用技术拦截</text>
+          </g>
+          <g transform="translate(750,180)">
+            <rect x="0" y="0" width="120" height="60" fill="rgba(255,93,115,0.1)" stroke="var(--accent-4)" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <text x="60" y="26" text-anchor="middle" class="svg-label" fill="var(--accent-4)" style="font-size:11px;font-weight:bold">挑战者 D</text>
+            <text x="60" y="44" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:9px">用并购拦截</text>
+          </g>
+
+          <!-- 底部案例 -->
+          <g transform="translate(40,290)">
+            <text x="0" y="0" class="svg-label" fill="var(--accent-1)" style="font-size:10px">案例：泰诺 vs 达特利 → 强生立即降价拦截　|　吉列"好消息"牌一次性双刃剃须刀拦截 BIC</text>
+          </g>
+        </svg>
+        <div class="svg-caption">FIG.6.1 · 领导者必须全面拦截所有成功的可能性</div>
+      </div>
+
+      <div class="quote fade-text">
+        成为第一很难，<strong>保持第一要简单得多</strong>。一旦取得领导地位，公司就可以在今后的很多年里安享其成。<br>领导地位本身是最有效的营销战略，<strong>领导地位是最好的"差异化"</strong>。
+        <span class="pullquote-author">— 第6章 · 领导者的定位</span>
+      </div>
+    </section>
+
+    <!-- ========== 第7章 跟随者的定位 ========== -->
+    
+<section class="chapter" id="ch07">
+      <div class="chapter-header">
+        <div class="chapter-num">CH.07</div>
+        <div>
+          <h2 class="chapter-title">跟随者的<em>定位</em></h2>
+          <div class="chapter-sub">FOLLOWER'S POSITIONING · 寻找空位</div>
+        </div>
+      </div>
+
+      <p class="lead">对领导者行之有效的方法并不一定适用于跟随者。跟随者模仿领导者的行为，根本不算拦截，而是<strong>跟风</strong>。法国人有一个营销短语：<em>cherchez le creneau</em>——寻找空位。找出空位，然后填上。</p>
+
+      <div class="card-grid grid-3">
+        <div class="card reveal">
+          <div class="card-label">空位 01</div>
+          <h3>尺寸空位</h3>
+          <p>大众甲壳虫："Think Small 想想小车"。在底特律热衷加长车身、降低底盘的年代，甲壳虫反其道而行——车身短、车形臃肿、外观丑陋，却<strong style="color:var(--accent-2)">准确无误地阐述了定位</strong>。</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">空位 02</div>
+          <h3>高价空位</h3>
+          <p>米狮龙："第一流就是米狮龙"。成功秘诀：①必须是第一个建立高价定位；②必须有有效的品牌故事；③选择顾客能接受高价的品类。还有皇家芝华士、都彭打火机、Orville Redenbacher 爆米花。</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">空位 03</div>
+          <h3>低价空位</h3>
+          <p>Qwip 传真机租金 29 美元/月 vs 施乐 45 美元/月。<strong style="color:var(--accent-2)">对于新产品，低价往往是不错的选择</strong>（尝新心态）；对于成熟品类，高价则更佳。</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">空位 04</div>
+          <h3>性别空位</h3>
+          <p>万宝路：第一个建立男子汉香烟定位的全国性品牌，从全国第五升至第一。维珍妮：女性化路线同样夺取巨大份额。查理香水：第一个男性化命名的女士香水，成为销量最大的香水。</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">空位 05</div>
+          <h3>年龄空位</h3>
+          <p>巨力多营养液专为老年人；Aim 牙膏针对孩子赢得 10% 市场份额。但当 Aim 放弃孩子战略后，份额从 10% 滑落到 0.8%——<strong style="color:var(--accent-2)">定位不用，就会失去</strong>。</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">空位 06</div>
+          <h3>时段空位</h3>
+          <p>奈奎尔：第一个夜间服用的感冒药。"夜间感冒药"的定位让 Nyquil 成了它近些年推出的最成功的新产品。重定位竞争者：康泰克和 Dristan 去争夺日用市场。</p>
+        </div>
+      </div>
+
+      <div class="callout reveal">
+        <div class="callout-title">⚠ 三 大 陷 阱</div>
+        <div style="font-size:14px;color:var(--fg-1);line-height:1.85">
+          <p><strong style="color:var(--accent-2)">工厂空位陷阱</strong>　福特埃德塞尔从企业内部定位，填补林肯、水星、福特之间的空缺——但市场上根本没有它的位置。</p>
+          <p><strong style="color:var(--accent-2)">技术陷阱</strong>　Frost 8/80 "干白威士忌"在产品上是第一，但心智中的威士忌是棕色的——两年内败北。</p>
+          <p><strong style="color:var(--accent-2)">满足所有人需求陷阱</strong>　不树敌或想满足所有人需求，在当今竞争中不可能成功。你必须切取一个细分的利基市场。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 第8章 重新定位竞争对手 ========== -->
+    
+<section class="chapter" id="ch08">
+      <div class="chapter-header">
+        <div class="chapter-num">CH.08</div>
+        <div>
+          <h2 class="chapter-title">重新定位<em>竞争对手</em></h2>
+          <div class="chapter-sub">REPOSITIONING THE COMPETITION</div>
+        </div>
+      </div>
+
+      <p class="lead">当市场上每个品类都有成百上千种产品，发现空位的机会十分渺茫。<strong>基本的营销战略是"重新定位竞争对手"</strong>——通过重新定位已经占据心智的竞争对手，来创建空位。要想把一个新概念移入心智，必须首先把心智中原有的相关概念清除。</p>
+
+      <table class="fancy-table reveal">
+        <thead>
+          <tr><th>挑战者</th><th>战略</th><th>被重新定位者</th><th>核心动作</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong style="color:var(--accent-2)">泰诺</strong></td><td>副作用定位</td><td>阿司匹林</td><td>"为了千千万万不应服用阿司匹林的人"</td></tr>
+          <tr><td><strong style="color:var(--accent-2)">皇家道尔顿</strong></td><td>产地真相</td><td>雷诺克斯</td><td>揭示对手真实产地：美国新泽西州波莫纳</td></tr>
+          <tr><td><strong style="color:var(--accent-2)">红牌伏特加</strong></td><td>原产地</td><td>美国伏特加</td><td>"大部分美国伏特加看似产自俄罗斯"</td></tr>
+          <tr><td><strong style="color:var(--accent-2)">智慧薯片</strong></td><td>成分对比</td><td>品客薯片</td><td>宣读标签：土豆植物油盐 vs 脱水土豆甘油二酸酯</td></tr>
+          <tr><td><strong style="color:var(--accent-2)">Scope</strong></td><td>口感标签</td><td>李施德林</td><td>两个字："药味"——破坏"清新口气之王"</td></tr>
+          <tr><td><strong style="color:var(--accent-2)">汉堡王</strong></td><td>制作方式</td><td>麦当劳</td><td>"烤制非油炸"——重新定义差异化</td></tr>
+        </tbody>
+      </table>
+
+      <div class="two-col">
+        <div class="prose reveal">
+          <h3 style="color:var(--accent-2);margin-bottom:14px;font-size:20px">重新定位 ≠ 比较性广告</h3>
+          <p>"我们比竞争对手更好"不是重新定位，而是比较性广告，效果不佳。潜在顾客很快会察觉到心理漏洞：<strong>"既然你那么聪明，怎么还没飞黄腾达？"</strong></p>
+          <p>重新定位的关键是<strong>揭示竞争对手产品的弱点</strong>，以改变潜在顾客对竞争对手产品的<strong>认知</strong>，而不只是说自己有多好。</p>
+        </div>
+        <div class="prose reveal">
+          <h3 style="color:var(--accent-2);margin-bottom:14px;font-size:20px">人们喜欢看到泡沫破灭</h3>
+          <p>拜耳公司试图通过广告抗议泰诺的说法——结果反而<strong>证实了</strong>泰诺的广告词。潜在顾客会想：既然拜耳不惜百万美元来驳斥，那关于阿司匹林导致胃出血的说法<strong>并非空穴来风</strong>。</p>
+          <p>报纸把坏消息放头版，好消息放尾版。传媒业靠坏消息为生。<strong>人们很容易相信负面消息，却不敢相信好消息</strong>。</p>
+        </div>
+      </div>
+
+      <div class="quote fade-text">
+        拿破仑打破了文明战争的规则，历史却把他歌颂为一位军事天才。教养与高尚也许是值得钦佩的品质，但在广告战中不是。<br>从长远来看，对竞争对手的少许"贬低"要比过去大量的"自吹自擂"<strong>更有意义</strong>。
+        <span class="pullquote-author">— 第8章 · 重新定位竞争对手</span>
+      </div>
+    </section>
+
+    <!-- ========== 第9章 名字的威力 ========== -->
+    
+<section class="chapter" id="ch09">
+      <div class="chapter-header">
+        <div class="chapter-num">CH.09</div>
+        <div>
+          <h2 class="chapter-title">名字的<em>威力</em></h2>
+          <div class="chapter-sub">THE POWER OF THE NAME</div>
+        </div>
+      </div>
+
+      <p class="lead">名字就像钩子，利用它把品牌挂在潜在顾客心智中的产品阶梯上。在定位时代，你唯一能做的最重要的营销决策就是<strong>给产品起名</strong>。莎士比亚错了——玫瑰如果叫别的名字，闻起来就不会那么芬芳。</p>
+
+      <div class="two-col">
+        <div class="reveal">
+          <h3 style="color:var(--accent-2);margin-bottom:14px;font-size:20px">✓ 好名字的特征</h3>
+          <ul class="fancy-list">
+            <li><strong>海飞丝</strong> Head &amp; Shoulders　去屑</li>
+            <li><strong>倍护</strong> Intensive Care　润肤乳</li>
+            <li><strong>纤体</strong> Slender　低热量饮料</li>
+            <li><strong>永久</strong> DieHard　电池"电力更持久"</li>
+            <li><strong>锋利</strong> Edge　剃须膏"刮得更干净"</li>
+            <li><strong>皓清</strong> Close-up　牙膏</li>
+            <li><strong>《人物》</strong> People　娱乐杂志</li>
+          </ul>
+          <p style="margin-top:14px;font-size:13px;color:var(--fg-2);font-style:italic">名字不应"突破边界"——太过接近产品本身，就会变成通用名称，如"米勒公司的莱特啤酒"。</p>
+        </div>
+        <div class="reveal">
+          <h3 style="color:var(--accent-4);margin-bottom:14px;font-size:20px">✗ 差名字的典型</h3>
+          <ul class="fancy-list">
+            <li><strong>《时代》</strong> Time　含糊隐晦，可指钟表行业杂志</li>
+            <li><strong>东方航空</strong> Eastern　地方性名字，倒数第一</li>
+            <li><strong>埃德塞尔</strong> Edsel　本身就是"失败者"的名字</li>
+            <li><strong>Alka-Seltzer Plus</strong>　延伸名吞噬老产品市场</li>
+            <li><strong>零卡路里</strong> NO-Cal　餐厅点单尴尬</li>
+            <li><strong>门侬维生素 E 除臭剂</strong>　"不可思议"</li>
+            <li><strong>适高</strong> Scott　过度延伸，从第一跌至第三</li>
+          </ul>
+          <p style="margin-top:14px;font-size:13px;color:var(--fg-2);font-style:italic">差名字只有负资产。改名字——世界上没有恒久不变的东西。</p>
+        </div>
+      </div>
+
+      <div class="callout reveal">
+        <div class="callout-label">负 面 名 字 → 正 面 名 字</div>
+        <h3>揭示产品本源，扭转局势</h3>
+        <p><strong>人造黄油</strong> margarine 被当作"假黄油"——本源被掩盖，顾客怀疑含不好的成分。改名为<strong style="color:var(--accent-2)">"大豆黄油"</strong>，突出"以产品本源为荣"。</p>
+        <p style="margin-top:10px"><strong>高果糖玉米糖浆</strong> 被认为是仿冒蔗糖——改名为<strong style="color:var(--accent-2)">"玉米糖"</strong>，让玉米与甘蔗、甜菜处于平等地位："考虑下所有三种糖，甘蔗、甜菜和玉米"。</p>
+        <p style="margin-top:10px"><strong>"黑鬼" → "有色人种" → "黑人" → "非裔美国人"</strong>　名字的演变是把注意力从肤色转移到血统上——对战略的又一次改进。</p>
+      </div>
+
+      <div class="svg-frame reveal">
+        <svg viewBox="0 0 900 280" preserveAspectRatio="xMidYMid meet">
+          <text x="450" y="28" text-anchor="middle" class="svg-title">阿克伦市的双胞胎 · 固特里奇 vs 固特异</text>
+          
+          <g transform="translate(150,80)">
+            <rect x="0" y="0" width="160" height="120" class="svg-fill-1" stroke="var(--accent-1)" stroke-width="2"/>
+            <text x="80" y="32" text-anchor="middle" class="svg-label" fill="var(--accent-1)" style="font-size:13px;font-weight:bold">固特里奇</text>
+            <text x="80" y="54" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">Goodrich</text>
+            <text x="80" y="80" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:9px">发明钢带子午线轮胎</text>
+            <text x="80" y="96" text-anchor="middle" class="svg-label" fill="var(--accent-4)" style="font-size:9px">56% 顾客误认为是</text>
+            <text x="80" y="110" text-anchor="middle" class="svg-label" fill="var(--accent-4)" style="font-size:9px">固特异生产的</text>
+          </g>
+
+          <g transform="translate(590,80)">
+            <rect x="0" y="0" width="160" height="120" class="svg-fill-2" stroke="var(--accent-2)" stroke-width="2"/>
+            <text x="80" y="32" text-anchor="middle" class="svg-label" fill="var(--accent-2)" style="font-size:13px;font-weight:bold">固特异</text>
+            <text x="80" y="54" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">Goodyear</text>
+            <text x="80" y="80" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:9px">因相似名字获益</text>
+            <text x="80" y="96" text-anchor="middle" class="svg-label" fill="var(--accent-3)" style="font-size:9px">销售额从 29 亿 → 74 亿</text>
+            <text x="80" y="110" text-anchor="middle" class="svg-label" fill="var(--accent-3)" style="font-size:9px">10 年比例 2.2:1 → 2.9:1</text>
+          </g>
+
+          <!-- 中间连接 -->
+          <g transform="translate(310,140)">
+            <line x1="0" y1="0" x2="280" y2="0" stroke="var(--accent-4)" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <text x="140" y="-8" text-anchor="middle" class="svg-label" fill="var(--accent-4)" style="font-size:10px">名字相似 → 心智混淆</text>
+            <text x="140" y="20" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:9px">"固特里奇发明一项技术，风驰通会完善，</text>
+            <text x="140" y="34" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:9px">而固特异会因这项技术获得最大销量"</text>
+          </g>
+
+          <text x="450" y="250" text-anchor="middle" class="svg-label" fill="var(--accent-1)" style="font-size:11px">教训：一个糟糕的名字会带来不好的认知。"你只能看到你想看到的"</text>
+        </svg>
+        <div class="svg-caption">FIG.9.1 · 名字相似性导致的认知灾难</div>
+      </div>
+    </section>
+
+    <!-- ========== 第10章 无名陷阱 ========== -->
+    
+<section class="chapter" id="ch10">
+      <div class="chapter-header">
+        <div class="chapter-num">CH.10</div>
+        <div>
+          <h2 class="chapter-title">无名<em>陷阱</em></h2>
+          <div class="chapter-sub">THE NO-NAME TRAP</div>
+        </div>
+      </div>
+
+      <p class="lead">为什么人们称洛杉矶为"L.A."，却少有人称纽约为"N.Y."？为什么通用电气被称为"GE"，而西联公司却极少被叫作"WU"？背后是<strong>音节缩写</strong>的原则——如果不能减少音节，大多数人就不会使用首字母缩写。</p>
+
+      <div class="two-col">
+        <div class="reveal">
+          <h3 style="color:var(--accent-2);margin-bottom:14px;font-size:20px">心智靠耳朵运转</h3>
+          <p>小时候，你先学习说话，再学习阅读。长大以后，你学会将书面文字快速转换成大脑所需的<strong>听觉语言</strong>，甚至都意识不到这一过程。</p>
+          <p style="margin-top:12px"><strong style="color:var(--accent-2)">"心智靠耳朵而不是眼睛运转。"</strong> 这是本书最有用的认知学概念之一。在将图像存入心智之前，必须先用语言表达出来。</p>
+          <p style="margin-top:12px">这就是为什么不光名字，还包括标题、口号和主题都应该从听觉上加以检验，即使你只打算用于印刷材料。</p>
+        </div>
+        <div class="reveal">
+          <h3 style="color:var(--accent-2);margin-bottom:14px;font-size:20px">混淆因果</h3>
+          <p>IBM 如此闻名遐迩又财力雄厚（<strong>因</strong>），以至于只要提到 IBM，人人都知道是哪家公司（<strong>果</strong>）。</p>
+          <p style="margin-top:12px">想要把这个过程颠倒过来，就无效了。你不能指望一家不是很成功的公司使用了缩略名（因），然后就会名利双收（果）。<strong style="color:var(--accent-4)">因果关系不能倒置</strong>。</p>
+          <p style="margin-top:12px">公司得先获得成功，然后才能使用缩略名。这就像买豪华汽车——只有成功了，才有资金购买附加福利。</p>
+        </div>
+      </div>
+
+      <div class="callout reveal">
+        <div class="callout-title">⚠ TWA 的代价</div>
+        <p style="font-size:14px;color:var(--fg-1);line-height:1.8">环球航空公司 Trans World Airlines（4 音节）其实比它使用的 TWA（T-Double-U-A，<strong style="color:var(--accent-4)">5 音节</strong>）还要少一个音节。尽管 TWA 每年花 3000 万美元广告费，调研却表明优先选择 TWA 的旅客只有另外两家的一半。1988 年是该公司最后一个盈利年，1992 年申请破产。<strong style="color:var(--accent-2)">以缩略名打造品牌如同在沙地上盖房子</strong>。</p>
+      </div>
+    </section>
+
+    <!-- ========== 第11章 搭便车陷阱 ========== -->
+    
+<section class="chapter" id="ch11">
+      <div class="chapter-header">
+        <div class="chapter-num">CH.11</div>
+        <div>
+          <h2 class="chapter-title">搭便车<em>陷阱</em></h2>
+          <div class="chapter-sub">THE FREE-RIDER TRAP</div>
+        </div>
+      </div>
+
+      <p class="lead">当企业内部开发出一种产品时，通常会冠以公司名。"一个熟悉的名字能让顾客立即接受"——这个逻辑似乎很有说服力。然而<strong>历史打破了这种错误看法</strong>。新产品要想获得成功，需要在心智中建立一个新的产品阶梯。新阶梯就应该有新名字。</p>
+
+      <div class="callout reveal">
+        <div class="callout-label">跷 跷 板 法 则</div>
+        <h3>一个名字不能代表两个截然不同的产品</h3>
+        <p>当其中一个上升，另一个就会下降。</p>
+        <p style="margin-top:10px"><strong style="color:var(--accent-1)">亨氏</strong> Heinz 曾经代表腌菜。后来亨氏转而代表番茄酱，非常成功——但腌菜行业的领导地位输给了 Vlasic。</p>
+        <p style="margin-top:10px"><strong style="color:var(--accent-1)">施乐</strong> Xerox 代表复印机。施乐花了近 10 亿美元买下"科学数据系统"并改名为"施乐数据系统"——结果在电脑业务上亏损数十亿美元。"任何一台不能复印的施乐机器一定会出问题。"</p>
+      </div>
+
+      <div class="card-grid grid-3">
+        <div class="card reveal">
+          <div class="card-label">案 例 · 永久 vs 彭尼</div>
+          <h3>名字是刀尖</h3>
+          <p>西尔斯推出<strong style="color:var(--accent-2)">永久</strong> DieHard 蓄电池——名字挂在"耐用"特性上，成为美国最畅销的汽车蓄电池。若叫"彭尼" Penny，潜在顾客心智中会是一个<strong>非常弱的钩子</strong>，且公司名与产品名混淆。</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">案 例 · 宝洁 vs 高露洁</div>
+          <h3>分而治之</h3>
+          <p>高露洁-棕榄大量以公司名命名产品。宝洁<strong style="color:var(--accent-2)">没有</strong>一个以公司名命名的品牌。宝洁品牌数 51 < 高露洁 65，但营业额是 2 倍，利润是 3 倍。每个品牌独立定位：汰渍"洁白"，Cheer"白上加白"，Bold"亮白增艳"。</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">案 例 · 匿名资源</div>
+          <h3>无名之辈的优势</h3>
+          <p>"无名之辈"吉米·卡特在一群大人物中声名鹊起。<strong style="color:var(--accent-2)">匿名也是一种资源</strong>，过多的宣传很容易浪费它的价值。一家拥有不出名产品的不出名公司，能从公关宣传中获益更多。当你的 15 分钟来临时，充分利用好每分每秒。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 第12章 品牌延伸陷阱 ========== -->
+    
+<section class="chapter" id="ch12">
+      <div class="chapter-header">
+        <div class="chapter-num">CH.12</div>
+        <div>
+          <h2 class="chapter-title">品牌延伸<em>陷阱</em></h2>
+          <div class="chapter-sub">THE LINE-EXTENSION TRAP</div>
+        </div>
+      </div>
+
+      <p class="lead">在过去 10 年的营销史上，最突出的潮流是品牌延伸——把一个知名产品的品牌名用于一个新产品。在逻辑上讲得通：经济学有论证，行业认可，消费者接受，广告成本降低。不幸的是<strong>在现实中行不通</strong>。</p>
+
+      <div class="two-col">
+        <div class="reveal">
+          <h3 style="color:var(--accent-4);margin-bottom:14px;font-size:20px">由内而外的思维</h3>
+          <p>"我们生产的 Dial 牌肥皂在固体皂市场上份额最大。Dial 是一种除臭香皂，因此顾客会期望我们生产除臭剂。"</p>
+          <p style="margin-top:10px">"拜耳发明了阿司匹林。买过泰诺的人会回头购买拜耳对乙酰氨基酚，因为它是治疗头痛的领导品牌。"</p>
+          <p style="margin-top:10px;color:var(--accent-4);font-style:italic">两个战略都无效。Dial 拥有固体皂大份额，除臭剂份额很小。拜耳非阿司匹林份额微不足道。</p>
+        </div>
+        <div class="reveal">
+          <h3 style="color:var(--accent-2);margin-bottom:14px;font-size:20px">由外而内的思维</h3>
+          <p>从潜在顾客的角度看，Dial 和拜耳在心智中拥有强大的定位——品牌名变成了<strong>产品通用名</strong>的代名词。</p>
+          <p style="margin-top:10px">"给我一瓶可口可乐"、"拜耳在哪里？"——一旦拥有了通用品牌名，就可以忽略品牌，直接宣传品类。</p>
+          <p style="margin-top:10px">但品牌延伸使得品牌在心智中<strong>失去清晰焦点</strong>。顾客想：拜耳就是阿司匹林，又怎么会是非阿司匹林呢？</p>
+        </div>
+      </div>
+
+      <div class="svg-frame reveal">
+        <svg viewBox="0 0 900 320" preserveAspectRatio="xMidYMid meet">
+          <text x="450" y="28" text-anchor="middle" class="svg-title">品牌延伸三大悲剧 · THREE TRAGEDIES OF LINE EXTENSION</text>
+          
+          <!-- 蛋白质21 -->
+          <g transform="translate(40,70)">
+            <rect x="0" y="0" width="260" height="220" class="svg-fill-1" stroke="var(--accent-1)" stroke-width="1.5"/>
+            <text x="130" y="28" text-anchor="middle" class="svg-num" fill="var(--accent-1)">CASE 01</text>
+            <text x="130" y="52" text-anchor="middle" class="svg-label" fill="var(--fg-0)" style="font-size:14px;font-weight:bold">蛋白质 21</text>
+            <line x1="40" y1="64" x2="220" y2="64" stroke="var(--accent-1)"/>
+            <text x="130" y="88" text-anchor="middle" class="svg-label" fill="var(--accent-3)" style="font-size:11px">初始份额：13%</text>
+            <text x="130" y="112" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:10px">↓ 延伸出</text>
+            <text x="130" y="132" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">定型喷雾（普通/加强）</text>
+            <text x="130" y="148" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">护发素（两种配方）</text>
+            <text x="130" y="164" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">精华素</text>
+            <text x="130" y="180" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">男士蛋白质 29</text>
+            <text x="130" y="204" text-anchor="middle" class="svg-label" fill="var(--accent-4)" style="font-size:12px;font-weight:bold">份额跌至 2%</text>
+          </g>
+
+          <!-- 适高 -->
+          <g transform="translate(320,70)">
+            <rect x="0" y="0" width="260" height="220" class="svg-fill-2" stroke="var(--accent-2)" stroke-width="1.5"/>
+            <text x="130" y="28" text-anchor="middle" class="svg-num" fill="var(--accent-2)">CASE 02</text>
+            <text x="130" y="52" text-anchor="middle" class="svg-label" fill="var(--fg-0)" style="font-size:14px;font-weight:bold">适高 Scott</text>
+            <line x1="40" y1="64" x2="220" y2="64" stroke="var(--accent-2)"/>
+            <text x="130" y="88" text-anchor="middle" class="svg-label" fill="var(--accent-3)" style="font-size:11px">曾是卫生纸第一品牌</text>
+            <text x="130" y="112" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:10px">↓ 延伸出</text>
+            <text x="130" y="132" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">ScotTowels 纸巾</text>
+            <text x="130" y="148" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">Scotties 面巾纸</text>
+            <text x="130" y="164" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">Scotkins 餐巾纸</text>
+            <text x="130" y="180" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">BabyScott 婴儿纸尿布</text>
+            <text x="130" y="204" text-anchor="middle" class="svg-label" fill="var(--accent-4)" style="font-size:12px;font-weight:bold">退居第三</text>
+          </g>
+
+          <!-- 大众 -->
+          <g transform="translate(600,70)">
+            <rect x="0" y="0" width="260" height="220" class="svg-fill-3" stroke="var(--accent-3)" stroke-width="1.5"/>
+            <text x="130" y="28" text-anchor="middle" class="svg-num" fill="var(--accent-3)">CASE 03</text>
+            <text x="130" y="52" text-anchor="middle" class="svg-label" fill="var(--fg-0)" style="font-size:14px;font-weight:bold">大众 VW</text>
+            <line x1="40" y1="64" x2="220" y2="64" stroke="var(--accent-3)"/>
+            <text x="130" y="88" text-anchor="middle" class="svg-label" fill="var(--accent-3)" style="font-size:11px">1965 占进口车 67%</text>
+            <text x="130" y="112" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:10px">↓ 延伸出</text>
+            <text x="130" y="132" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">冲击者 Dasher 豪华车</text>
+            <text x="130" y="148" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">"优雅的大众车"</text>
+            <text x="130" y="164" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">巴士 / 吉普车</text>
+            <text x="130" y="180" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:10px">"不同的大众给不同民众"</text>
+            <text x="130" y="204" text-anchor="middle" class="svg-label" fill="var(--accent-4)" style="font-size:12px;font-weight:bold">1993 份额不足 3%</text>
+          </g>
+        </svg>
+        <div class="svg-caption">FIG.12.1 · 品牌延伸三大经典失败 · 短期有利，长期不利</div>
+      </div>
+
+      <div class="callout reveal">
+        <div class="callout-label">何 时 品 牌 延 伸 有 效</div>
+        <h3>五项原则</h3>
+        <ol class="fancy-list" style="padding:0">
+          <li><strong>预期销量</strong>　销售潜力大的产品<strong style="color:var(--accent-2)">不应该</strong>使用公司名，销量小的应该用</li>
+          <li><strong>竞争格局</strong>　无竞争的市场<strong style="color:var(--accent-2)">不应该</strong>使用公司名，竞争激烈的应该用</li>
+          <li><strong>广告资源</strong>　有大广告预算支持的品牌<strong style="color:var(--accent-2)">不应该</strong>使用公司名，预算小的应该用</li>
+          <li><strong>产品凸显性</strong>　突破型创新产品<strong style="color:var(--accent-2)">不应该</strong>使用公司名，货品化产品应该使用</li>
+          <li><strong>分销渠道</strong>　在货架上销售的产品<strong style="color:var(--accent-2)">不应该</strong>使用公司名，由销售代表推销的产品应该使用</li>
+        </ol>
+      </div>
+
+      <div class="quote fade-text">
+        品牌延伸就像一种<strong>慢性病</strong>，潜伏多年才会爆发，过程漫长而不易察觉。一个过度膨胀的星体，品牌延伸出来的品牌最终会变成一副燃烧殆尽的残骸，也就是成为营销上的庞大废物。
+        <span class="pullquote-author">— 第12章 · 品牌延伸陷阱</span>
+      </div>
+    </section>
+
+    <!-- ========== 第13章 孟山都 ========== -->
+    
+<section class="chapter" id="ch13">
+      <div class="chapter-header">
+        <div class="chapter-num">CH.13</div>
+        <div>
+          <h2 class="chapter-title">孟山都<em>企业定位</em></h2>
+          <div class="chapter-sub">CASE · MONSANTO</div>
+        </div>
+      </div>
+
+      <p class="lead"><span class="case-tag">CASE 01 / ENTERPRISE</span>企业买进卖出每天都在上演。当新员工接受一份工作，就等于"买下"了雇主企业。人们购买股票其实就是在为企业现在和未来的定位买单。<strong>为企业定位</strong>绝非易事——孟山都的案例展示了如何通过<strong>占据一个概念</strong>建立领导地位。</p>
+
+      <div class="svg-frame reveal">
+        <svg viewBox="0 0 900 360" preserveAspectRatio="xMidYMid meet">
+          <text x="450" y="28" text-anchor="middle" class="svg-title">孟山都的三条路径 · THREE PATHS TO LEADERSHIP</text>
+          
+          <!-- 路径1：产品领先 -->
+          <g transform="translate(40,70)">
+            <rect x="0" y="0" width="260" height="100" fill="rgba(255,93,115,0.1)" stroke="var(--accent-4)" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <text x="130" y="26" text-anchor="middle" class="svg-num" fill="var(--accent-4)">PATH 01 ✗</text>
+            <text x="130" y="48" text-anchor="middle" class="svg-label" fill="var(--fg-0)" style="font-size:13px;font-weight:bold">产品领先</text>
+            <text x="130" y="70" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:10px">杜邦已是化工界 IBM</text>
+            <text x="130" y="86" text-anchor="middle" class="svg-label" fill="var(--accent-4)" style="font-size:10px">正面交锋毫无胜算</text>
+          </g>
+          
+          <!-- 路径2：商界领先 -->
+          <g transform="translate(320,70)">
+            <rect x="0" y="0" width="260" height="100" fill="rgba(255,93,115,0.1)" stroke="var(--accent-4)" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <text x="130" y="26" text-anchor="middle" class="svg-num" fill="var(--accent-4)">PATH 02 ✗</text>
+            <text x="130" y="48" text-anchor="middle" class="svg-label" fill="var(--fg-0)" style="font-size:13px;font-weight:bold">商界领先</text>
+            <text x="130" y="70" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:10px">自由企业制度已被宣传</text>
+            <text x="130" y="86" text-anchor="middle" class="svg-label" fill="var(--accent-4)" style="font-size:10px">"不知所云的经济类广告"</text>
+          </g>
+          
+          <!-- 路径3：行业领先 -->
+          <g transform="translate(600,70)">
+            <rect x="0" y="0" width="260" height="100" class="svg-fill-3" stroke="var(--accent-3)" stroke-width="2"/>
+            <text x="130" y="26" text-anchor="middle" class="svg-num" fill="var(--accent-3)">PATH 03 ✓</text>
+            <text x="130" y="48" text-anchor="middle" class="svg-label" fill="var(--fg-0)" style="font-size:13px;font-weight:bold">行业领先</text>
+            <text x="130" y="70" text-anchor="middle" class="svg-label" fill="var(--accent-2)" style="font-size:10px">为化工产品辩护</text>
+            <text x="130" y="86" text-anchor="middle" class="svg-label" fill="var(--accent-3)" style="font-size:10px;font-weight:bold">"离开化学物质，生命无法存在"</text>
+          </g>
+
+          <!-- 成果 -->
+          <g transform="translate(40,200)">
+            <rect x="0" y="0" width="820" height="130" class="svg-fill-2" stroke="var(--accent-2)" stroke-width="1.5"/>
+            <text x="20" y="28" class="svg-label" fill="var(--accent-2)" style="font-size:12px;letter-spacing:0.2em">▶ 结 果 · OUTCOME</text>
+            <text x="20" y="56" class="svg-label" fill="var(--fg-0)" style="font-size:13px">两年内公众对化工行业的支持率从 <tspan fill="var(--accent-1)" font-weight="bold">36%</tspan> 上升到 <tspan fill="var(--accent-3)" font-weight="bold">42%</tspan></text>
+            <text x="20" y="78" class="svg-label" fill="var(--fg-1)" style="font-size:12px">同期公众对石油行业支持率从 37% 下降为 22%</text>
+            <text x="20" y="100" class="svg-label" fill="var(--fg-2)" style="font-size:11px">《商业周刊》："净化了化工产品的形象"</text>
+            <text x="20" y="118" class="svg-label" fill="var(--accent-1)" style="font-size:11px">杜邦随后投入 400 万美元用于公司形象宣传——孟山都成了领头羊</text>
+          </g>
+        </svg>
+        <div class="svg-caption">FIG.13.1 · 孟山都定位战略 · 避开人人都在谈论的内容，开创新领域</div>
+      </div>
+
+      <div class="prose reveal">
+        <p><strong>关键洞察</strong>　一家企业之所以成为领导者，是因为它率先做了某些事情，而不是靠自封为领导者。IBM 第一个推出电脑，施乐第一个推出普通纸复印机，杜邦第一个推出尼龙。孟山都决定为化工产品辩护——做领导者应该做的事情：<strong>为全行业说话</strong>。</p>
+      </div>
+    </section>
+
+    <!-- ========== 第14章 比利时 ========== -->
+    
+<section class="chapter" id="ch14">
+      <div class="chapter-header">
+        <div class="chapter-num">CH.14</div>
+        <div>
+          <h2 class="chapter-title">比利时<em>国家定位</em></h2>
+          <div class="chapter-sub">CASE · BELGIUM</div>
+        </div>
+      </div>
+
+      <p class="lead"><span class="case-tag">CASE 02 / COUNTRY</span>比利时航空公司最有效的战略不是为自己定位，而是<strong>为国家定位</strong>。若没有进入心智，就没有业务。在人们心智中，伦敦、巴黎、罗马是前三首选城市，比利时几乎毫无胜算——除非找到一个独特的角度。</p>
+
+      <div class="callout reveal">
+        <div class="callout-label">三 星 城 市 战 略</div>
+        <h3>"在美丽的比利时，有五个阿姆斯特丹"</h3>
+        <p>《米其林指南》比荷卢合版评出六个"值得专程旅游"的三星城市，<strong style="color:var(--accent-2)">其中五个在比利时</strong>（布鲁日、根特、安特卫普、布鲁塞尔、图尔奈），而旅游大国荷兰只有阿姆斯特丹一个。</p>
+        <p style="margin-top:12px">这一定位之所以奏效，得益于三方面支持：</p>
+        <ol class="fancy-list" style="margin-top:10px">
+          <li>把比利时和<strong>已进入心智的目的地</strong>阿姆斯特丹关联</li>
+          <li>《米其林指南》<strong>早已深入游客心智</strong>，增加可信度</li>
+          <li>"值得一游的五大城市"使比利时成为<strong>真正热门的旅游胜地</strong></li>
+        </ol>
+      </div>
+
+      <div class="callout reveal">
+        <div class="callout-title">⚠ 教 训</div>
+        <p style="font-size:14px;color:var(--fg-1);line-height:1.85">该定位<strong style="color:var(--accent-4)">未能全面执行</strong>。新管理层未全力执行方案，比利时旅游局出于政治考虑无法理解为何非三星城市不能纳入。<strong style="color:var(--accent-2)">成功的定位项目需要负责人长期全力执行</strong>。争夺游客心智如同发动战争，全军上下必须目标一致。<br><br>定位需要<strong style="color:var(--accent-1)">极度简化信息</strong>。混淆是大敌，简单是制胜法宝。</p>
+      </div>
+    </section>
+
+    <!-- ========== 第15章 奶球 ========== -->
+    
+<section class="chapter" id="ch15">
+      <div class="chapter-header">
+        <div class="chapter-num">CH.15</div>
+        <div>
+          <h2 class="chapter-title">奶球<em>产品定位</em></h2>
+          <div class="chapter-sub">CASE · MILK DUDS</div>
+        </div>
+      </div>
+
+      <p class="lead"><span class="case-tag">CASE 03 / PRODUCT</span>比阿特丽斯食品公司的奶球想从"电影糖果"拓展到爱吃糖的小朋友市场。定位第一步：<strong>了解潜在顾客的心智</strong>。奶球最适合的潜在顾客是 10 岁左右经验丰富的糖果买家——谨慎、多疑、精明，对性价比十分看重。</p>
+
+      <div class="svg-frame reveal">
+        <svg viewBox="0 0 900 340" preserveAspectRatio="xMidYMid meet">
+          <text x="450" y="28" text-anchor="middle" class="svg-title">奶球定位路径 · MILK DUDS POSITIONING</text>
+          
+          <!-- 步骤1 -->
+          <g transform="translate(40,70)">
+            <rect x="0" y="0" width="180" height="100" class="svg-fill-1" stroke="var(--accent-1)" stroke-width="2"/>
+            <text x="90" y="24" text-anchor="middle" class="svg-num" fill="var(--accent-1)">STEP 1</text>
+            <text x="90" y="48" text-anchor="middle" class="svg-label" fill="var(--fg-0)" style="font-size:11px;font-weight:bold">了解心智</text>
+            <text x="90" y="68" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:9px">潜在顾客：10岁孩子</text>
+            <text x="90" y="84" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:9px">心智代表：糖果棒</text>
+          </g>
+
+          <!-- 步骤2 -->
+          <g transform="translate(240,70)">
+            <rect x="0" y="0" width="180" height="100" class="svg-fill-2" stroke="var(--accent-2)" stroke-width="2"/>
+            <text x="90" y="24" text-anchor="middle" class="svg-num" fill="var(--accent-2)">STEP 2</text>
+            <text x="90" y="48" text-anchor="middle" class="svg-label" fill="var(--fg-0)" style="font-size:11px;font-weight:bold">找到弱点</text>
+            <text x="90" y="68" text-anchor="middle" class="svg-label" fill="var(--accent-4)" style="font-size:9px">糖果棒不耐吃</text>
+            <text x="90" y="84" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:9px">30美分 2.3秒吃完</text>
+          </g>
+
+          <!-- 步骤3 -->
+          <g transform="translate(440,70)">
+            <rect x="0" y="0" width="180" height="100" class="svg-fill-3" stroke="var(--accent-3)" stroke-width="2"/>
+            <text x="90" y="24" text-anchor="middle" class="svg-num" fill="var(--accent-3)">STEP 3</text>
+            <text x="90" y="48" text-anchor="middle" class="svg-label" fill="var(--fg-0)" style="font-size:11px;font-weight:bold">重新定位</text>
+            <text x="90" y="68" text-anchor="middle" class="svg-label" fill="var(--accent-3)" style="font-size:9px">奶球：耐吃</text>
+            <text x="90" y="84" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:9px">15粒装 · 慢慢吃</text>
+          </g>
+
+          <!-- 步骤4 -->
+          <g transform="translate(640,70)">
+            <rect x="0" y="0" width="180" height="100" class="svg-fill-4" stroke="var(--accent-4)" stroke-width="2"/>
+            <text x="90" y="24" text-anchor="middle" class="svg-num" fill="var(--accent-4)">STEP 4</text>
+            <text x="90" y="48" text-anchor="middle" class="svg-label" fill="var(--fg-0)" style="font-size:11px;font-weight:bold">戏剧化呈现</text>
+            <text x="90" y="68" text-anchor="middle" class="svg-label" fill="var(--fg-1)" style="font-size:9px">"大嘴"广告片</text>
+            <text x="90" y="84" text-anchor="middle" class="svg-label" fill="var(--fg-2)" style="font-size:9px">糖果棒已成追忆</text>
+          </g>
+
+          <!-- 广告文案 -->
+          <g transform="translate(40,200)">
+            <rect x="0" y="0" width="820" height="120" fill="rgba(255,210,74,0.06)" stroke="var(--accent-2)" stroke-width="1"/>
+            <text x="20" y="28" class="svg-label" fill="var(--accent-2)" style="font-size:11px;letter-spacing:0.2em">▶ 30秒电视广告场景</text>
+            <text x="20" y="54" class="svg-label" fill="var(--fg-1)" style="font-size:12px;font-style:italic">"从前，有一个小孩，他有一张大嘴……爱吃糖果棒……</text>
+            <text x="20" y="74" class="svg-label" fill="var(--fg-1)" style="font-size:12px;font-style:italic">然而，那些糖很快就吃完了……</text>
+            <text x="20" y="94" class="svg-label" fill="var(--fg-1)" style="font-size:12px;font-style:italic">后来，小孩发现了奶球焦糖巧克力……大嘴爱上了奶球，因为可以吃很久。"</text>
+            <text x="20" y="112" class="svg-label" fill="var(--accent-1)" style="font-size:11px">结果：扭转销量下滑，创下历史新高</text>
+          </g>
+        </svg>
+        </div> <!-- Closes svg-frame -->
+      <div class="svg-caption">FIG.15.1 · 奶球定位案例 · 电视广告创意示意</div>
+      </section>
+
+
+      <!-- ========== 第16章 服务定位：邮递电报 ========== -->
+      <section class="chapter" id="ch16">
+        <div class="chapter-header">
+          <div class="chapter-num">CH.16</div>
+          <div>
+            <h2 class="chapter-title">服务<em>定位</em>：邮递电报</h2>
+            <div class="chapter-sub">CASE 04 / SERVICE</div>
+          </div>
+        </div>
+        <p class="lead">为产品定位与为服务定位有何差别？以西联公司与美国邮政联合开发的<strong>邮递电报（Mailgram）</strong>为例，其战略成功的关键在于与心智中已有的“电报”既有认知建立联系。</p>
+        
+        <div class="svg-frame reveal">
+          <div class="svg-frame-label">SATELLITE TRANSMISSION</div>
+          <svg viewBox="0 0 900 360" id="svg-mailgram" preserveAspectRatio="xMidYMid meet" style="width:100%; height:auto;">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 2 L 8 5 L 0 8 z" fill="var(--line)"/>
+              </marker>
+              <marker id="arrow-dash" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 2 L 8 5 L 0 8 z" fill="var(--rust)"/>
+              </marker>
+            </defs>
+
+            <text x="450" y="32" text-anchor="middle" class="svg-title" fill="var(--ink)" style="font-size:16px;font-weight:700;font-family:'Noto Serif SC',serif">邮递电报卫星传送流程图 · MAILGRAM TRANSMISSION PATH</text>
+            
+            <!-- Connection Lines -->
+            <!-- Step 1 -> 2 -->
+            <line x1="330" y1="94" x2="362" y2="94" stroke="var(--line)" stroke-width="2" marker-end="url(#arrow)"/>
+            <!-- Step 2 -> 3 -->
+            <line x1="530" y1="94" x2="562" y2="94" stroke="var(--line)" stroke-width="2" marker-end="url(#arrow)"/>
+            
+            <!-- Step 3 -> 4 (Uplink) -->
+            <line x1="650" y1="118" x2="480" y2="158" stroke="var(--rust)" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrow-dash)"/>
+            
+            <!-- Step 4 -> 5 (Downlink) -->
+            <line x1="450" y1="226" x2="638" y2="255" stroke="var(--rust)" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrow-dash)"/>
+            
+            <!-- Step 5 -> 6 -->
+            <line x1="570" y1="284" x2="538" y2="284" stroke="var(--line)" stroke-width="2" marker-end="url(#arrow)"/>
+            <!-- Step 6 -> 7 -->
+            <line x1="370" y1="284" x2="338" y2="284" stroke="var(--line)" stroke-width="2" marker-end="url(#arrow)"/>
+
+            <!-- Node 1 -->
+            <g transform="translate(170, 70)">
+              <rect x="4" y="4" width="160" height="48" rx="4" fill="var(--line)" opacity="0.15"/>
+              <rect x="0" y="0" width="160" height="48" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.5"/>
+              <!-- Badge -->
+              <rect x="-8" y="-8" width="22" height="16" rx="2" fill="var(--rust)" stroke="var(--line)" stroke-width="1.5"/>
+              <text x="3" y="4" text-anchor="middle" fill="var(--paper-solid)" style="font-size:9px;font-family:'Space Mono';font-weight:700">01</text>
+              <text x="80" y="28" text-anchor="middle" fill="var(--ink)" class="svg-label" style="font-size:12px;font-weight:bold">纽约顾客电话发信</text>
+            </g>
+
+            <!-- Node 2 -->
+            <g transform="translate(370, 70)">
+              <rect x="4" y="4" width="160" height="48" rx="4" fill="var(--line)" opacity="0.15"/>
+              <rect x="0" y="0" width="160" height="48" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.5"/>
+              <!-- Badge -->
+              <rect x="-8" y="-8" width="22" height="16" rx="2" fill="var(--rust)" stroke="var(--line)" stroke-width="1.5"/>
+              <text x="3" y="4" text-anchor="middle" fill="var(--paper-solid)" style="font-size:9px;font-family:'Space Mono';font-weight:700">02</text>
+              <text x="80" y="28" text-anchor="middle" fill="var(--ink)" class="svg-label" style="font-size:12px;font-weight:bold">客服录入电脑终端</text>
+            </g>
+
+            <!-- Node 3 -->
+            <g transform="translate(570, 70)">
+              <rect x="4" y="4" width="160" height="48" rx="4" fill="var(--line)" opacity="0.15"/>
+              <rect x="0" y="0" width="160" height="48" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.5"/>
+              <!-- Badge -->
+              <rect x="-8" y="-8" width="22" height="16" rx="2" fill="var(--rust)" stroke="var(--line)" stroke-width="1.5"/>
+              <text x="3" y="4" text-anchor="middle" fill="var(--paper-solid)" style="font-size:9px;font-family:'Space Mono';font-weight:700">03</text>
+              <text x="80" y="28" text-anchor="middle" fill="var(--ink)" class="svg-label" style="font-size:12px;font-weight:bold">传至新泽西地面站</text>
+            </g>
+            
+            <!-- Satellite Node 4 -->
+            <g transform="translate(450, 190)">
+              <!-- Orbit Rings -->
+              <circle cx="0" cy="0" r="48" fill="none" stroke="var(--rust)" stroke-width="1" stroke-dasharray="4 4" opacity="0.4"/>
+              <circle cx="0" cy="0" r="42" fill="none" stroke="var(--teal)" stroke-width="0.75" opacity="0.3"/>
+              
+              <!-- Offset Shadow Circle -->
+              <circle cx="4" cy="4" r="36" fill="var(--line)" opacity="0.15"/>
+              <!-- Satellite Main Body -->
+              <circle cx="0" cy="0" r="36" fill="var(--gold)" stroke="var(--line)" stroke-width="1.5"/>
+              
+              <!-- Badge -->
+              <rect x="-14" y="-46" width="28" height="16" rx="2" fill="var(--rust)" stroke="var(--line)" stroke-width="1.5"/>
+              <text x="0" y="-34" text-anchor="middle" fill="var(--paper-solid)" style="font-size:9px;font-family:'Space Mono';font-weight:700">04</text>
+              
+              <!-- Label Text inside Circle -->
+              <text x="0" y="-4" text-anchor="middle" fill="var(--paper-solid)" style="font-size:10px;font-family:'Space Mono';font-weight:700;letter-spacing:1px">WESTAR</text>
+              <text x="0" y="10" text-anchor="middle" fill="var(--paper-solid)" class="svg-label" style="font-size:10px;font-weight:bold">通信卫星</text>
+            </g>
+            
+            <!-- Node 5 -->
+            <g transform="translate(570, 260)">
+              <rect x="4" y="4" width="160" height="48" rx="4" fill="var(--line)" opacity="0.15"/>
+              <rect x="0" y="0" width="160" height="48" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.5"/>
+              <!-- Badge -->
+              <rect x="-8" y="-8" width="22" height="16" rx="2" fill="var(--rust)" stroke="var(--line)" stroke-width="1.5"/>
+              <text x="3" y="4" text-anchor="middle" fill="var(--paper-solid)" style="font-size:9px;font-family:'Space Mono';font-weight:700">05</text>
+              <text x="80" y="28" text-anchor="middle" fill="var(--ink)" class="svg-label" style="font-size:12px;font-weight:bold">加州地面接收站</text>
+            </g>
+
+            <!-- Node 6 -->
+            <g transform="translate(370, 260)">
+              <rect x="4" y="4" width="160" height="48" rx="4" fill="var(--line)" opacity="0.15"/>
+              <rect x="0" y="0" width="160" height="48" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.5"/>
+              <!-- Badge -->
+              <rect x="-8" y="-8" width="22" height="16" rx="2" fill="var(--rust)" stroke="var(--line)" stroke-width="1.5"/>
+              <text x="3" y="4" text-anchor="middle" fill="var(--paper-solid)" style="font-size:9px;font-family:'Space Mono';font-weight:700">06</text>
+              <text x="80" y="28" text-anchor="middle" fill="var(--ink)" class="svg-label" style="font-size:12px;font-weight:bold">最近邮局打字机</text>
+            </g>
+
+            <!-- Node 7 -->
+            <g transform="translate(170, 260)">
+              <rect x="4" y="4" width="160" height="48" rx="4" fill="var(--line)" opacity="0.15"/>
+              <rect x="0" y="0" width="160" height="48" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.5"/>
+              <!-- Badge -->
+              <rect x="-8" y="-8" width="22" height="16" rx="2" fill="var(--rust)" stroke="var(--line)" stroke-width="1.5"/>
+              <text x="3" y="4" text-anchor="middle" fill="var(--paper-solid)" style="font-size:9px;font-family:'Space Mono';font-weight:700">07</text>
+              <text x="80" y="28" text-anchor="middle" fill="var(--ink)" class="svg-label" style="font-size:12px;font-weight:bold">蓝白专用信封送达</text>
+            </g>
+          </svg>
+          <div class="svg-caption">FIG.16.1 · 邮递电报卫星传送路径图</div>
+        </div>
+
+        <div class="card-grid grid-2">
+          <div class="card reveal">
+            <span class="card-tag rust">路径一 (失败)</span>
+            <div class="card-title">速递信件定位</div>
+            <div class="card-body">
+              <p>定位为<strong>“速递一类信件”</strong>。一类信件的盘子巨大（每年高达580亿封），但心智中对此缺乏痛感。市场测试显示，消费者对邮递电报的认知度在宣传后反而微降（从27%降到25%），因为此举没能建立有力的心智关联。</p>
+            </div>
+          </div>
+          <div class="card reveal">
+            <span class="card-tag teal">路径二 (成功)</span>
+            <div class="card-title">低价电报定位</div>
+            <div class="card-body">
+              <p>定位为<strong>“电报的效果，费用低很多”</strong>。这紧密扣联了潜在顾客心智中对西联和“电报”的强烈既有认知。两者的格式与即时度相同，但电报价格是其3倍。测试显示，消费者认知度直接翻倍（从23%提升到47%），销量大幅提升。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="metric-row reveal">
+          <div class="metric">
+            <div class="metric-num">8000万</div>
+            <div class="metric-label">最终年营收</div>
+            <div class="metric-desc">年营业额从300万美元暴增至8000万美元（8年增长26倍）</div>
+          </div>
+          <div class="metric">
+            <div class="metric-num">47%</div>
+            <div class="metric-label">品牌认知度</div>
+            <div class="metric-desc">“低价电报”战略使消费者品牌认知度从23%骤增至47%</div>
+          </div>
+          <div class="metric">
+            <div class="metric-num">1/3</div>
+            <div class="metric-label">费用比率</div>
+            <div class="metric-desc">与黄色传统老电报效力相同，但资费仅为其三分之一</div>
+          </div>
+          <div class="metric">
+            <div class="metric-num">580亿</div>
+            <div class="metric-label">信件盘子</div>
+            <div class="metric-desc">全美一类信件的巨大总量，但在定位上是“错误的参考系”</div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========== 第17章 个人及事业定位 ========== -->
+      <section class="chapter" id="ch17">
+        <div class="chapter-header">
+          <div class="chapter-num">CH.17</div>
+          <div>
+            <h2 class="chapter-title">个人及<em>事业定位</em></h2>
+            <div class="chapter-sub">PERSONAL POSITIONING</div>
+          </div>
+        </div>
+        <p class="lead">无论你多聪明，完全靠自己努力在商业或生活中获得成功是极难的。商业是一项社会化合作，最好的骑师赢不了比赛，<strong>赢得比赛的往往是骑着最好马的那位</strong>。你必须走入外部世界，为自己寻找一匹好马。</p>
+        
+        <div class="card-grid grid-3">
+          <!-- Card 1 -->
+          <div class="card reveal">
+            <span class="card-tag rust">第 一 匹 马</span>
+            <div class="card-title">你的公司</div>
+            <div class="card-body">
+              <p>选择具有<strong>成长性的行业与企业</strong>。在夕阳行业中逆势努力是没有前途的。要选择有潜力的朝阳行业，为能快速发展的企业效力。</p>
+            </div>
+          </div>
+          
+          <!-- Card 2 -->
+          <div class="card reveal">
+            <span class="card-tag teal">第 二 匹 马</span>
+            <div class="card-title">你的老板</div>
+            <div class="card-body">
+              <p>问自己：老板有没有前途？如果没有，谁会有？要永远争取为你能找到的最聪明和最有能力的人工作。读成功人士传记，有很多人是紧跟别人后面爬上成功阶梯的。爱默生说："把你的马车系在星星上。"</p>
+            </div>
+          </div>
+          
+          <!-- Card 3 -->
+          <div class="card reveal">
+            <span class="card-tag gold">第 三 匹 马</span>
+            <div class="card-title">朋友</div>
+            <div class="card-body">
+              <p>一个人事业上的大多数重大突破，往往是因为有<strong style="color:var(--accent-2)">商界朋友</strong>的推荐。骑好友谊这匹马的方法，是要经常与所有商界朋友保持联络——剪报、祝贺信、文章转发。</p>
+            </div>
+          </div>
+          
+          <!-- Card 4 -->
+          <div class="card reveal">
+            <span class="card-tag rust">第 四 匹 马</span>
+            <div class="card-title">一个想法</div>
+            <div class="card-body">
+              <p>维克多·雨果："当一个想法到了该出现的时候，什么也阻挡不了它。"<strong style="color:var(--accent-2)">绝不要害怕冲突</strong>。一个想法或观念如果没有冲突，那就根本不是一个想法。</p>
+            </div>
+          </div>
+          
+          <!-- Card 5 -->
+          <div class="card reveal">
+            <span class="card-tag teal">第 五 匹 马</span>
+            <div class="card-title">信心</div>
+            <div class="card-body">
+              <p>雷·克洛克在年纪很大、很落魄时碰到麦克唐纳兄弟——他们有想法没信心，以低价卖给克洛克。如今克洛克身价数亿美元。<strong style="color:var(--accent-2)">对别人以及别人的想法要有信心。</strong></p>
+            </div>
+          </div>
+          
+          <!-- Card 6 -->
+          <div class="card reveal">
+            <span class="card-tag gold">第 六 匹 马</span>
+            <div class="card-title">你自己</div>
+            <div class="card-body">
+              <p>完全靠自己要获得成功是可能的，但并非易事。获胜次数最多的未必是体重最轻、最聪明或最强壮的骑师——<strong style="color:var(--accent-2)">赢得比赛的骑师通常是所骑的马最好的那位</strong>。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout reveal">
+          <div class="callout-title">⚠ 敢 于 犯 错</div>
+          <p style="font-size:14px;color:var(--fg-1);line-height:1.85">任何值得做的事情，<strong style="color:var(--accent-2)">即便做得很差也值得做</strong>。如果一件值得做的事情，你想等到能够做得完美时再去做，迟迟不动手，就有失去机会的风险，永远都做不了。<br><br>泰·柯布偷垒 134 次成功 96 次（70% 成功率），名留青史；麦克斯·凯里偷垒 53 次成功 51 次（96% 成功率）——却几乎没人记得。<br><br>埃迪·阿尔卡罗是最伟大的赛马骑师之一，但他<strong style="color:var(--accent-2)">连着输了 250 次后</strong>才获得第一次胜利。</p>
+        </div>
+      </section>
+
+<section class="chapter" id="ch18">
+      <div class="chapter-header">
+        <div class="chapter-num">CH.18</div>
+        <div>
+          <h2 class="chapter-title">成功<em>六步曲</em></h2>
+          <div class="chapter-sub">SIX STEPS TO SUCCESS</div>
+        </div>
+      </div>
+
+      <p class="lead">做一个定位项目，该如何开始？不要小看这些问题——它们问得简单，但不容易回答，往往引出一些让你自我反省的问题，需要考验你的<strong>勇气和信念</strong>。</p>
+
+      <div class="timeline">
+        <div class="tl-item reveal">
+          <div class="tl-year">STEP 01</div>
+          <div class="tl-title">你已经拥有什么定位？</div>
+          <div class="tl-desc">定位是逆向思维，从潜在顾客的心智开始。不要问自己是什么，要问自己在潜在顾客心智中已经拥有什么定位。答案应该<strong style="color:var(--accent-2)">从市场上去获取</strong>，而不是问公司营销经理。思路要开阔，抓住大形势——比利时航空公司的问题不是航空公司本身，而是比利时这个国家。</div>
+        </div>
+        <div class="tl-item reveal">
+          <div class="tl-year">STEP 02</div>
+          <div class="tl-title">你想拥有什么定位？</div>
+          <div class="tl-desc">"拥有"是关键词。很多公司传递的定位是不可能有效的，因为那个定位已经被别人抢占了。福特埃德塞尔失败，因为购车者心智中根本没有空间再容纳一个有大量镀铬的中档价位轿车。<strong style="color:var(--accent-2)">Nyquil 占据"夜间感冒药"定位</strong>，让康泰克和 Dristan 去争夺日用市场。</div>
+        </div>
+        <div class="tl-item reveal">
+          <div class="tl-year">STEP 03</div>
+          <div class="tl-title">你必须超越谁？</div>
+          <div class="tl-desc">如果要和市场领导者硬碰硬，那就算了。从自身角度看橄榄球很容易——抱着球冲过得分线即可。难点是 11 个对手阻挡你。<strong style="color:var(--accent-2)">对付竞争对手是大多数营销局势中的主要问题</strong>。</div>
+        </div>
+        <div class="tl-item reveal">
+          <div class="tl-year">STEP 04</div>
+          <div class="tl-title">你有足够的钱吗？</div>
+          <div class="tl-desc">建立定位需要花钱，保住定位同样需要花钱。一个普通人一年接触约 <strong style="color:var(--accent-2)">20 万条</strong>广告信息。宝洁公司在押注新产品时会在桌上放 2000 万美元。资金有限时，<strong style="color:var(--accent-2)">一个市场接一个市场</strong>地推出，比一次铺开要强得多。</div>
+        </div>
+        <div class="tl-item reveal">
+          <div class="tl-year">STEP 05</div>
+          <div class="tl-title">你能坚持到底吗？</div>
+          <div class="tl-desc">定位是积淀而成的概念。牛仔骑马走入夕阳的万宝路广告播了多少年？佳洁士长久以来坚持防蛀，已针对第二代孩子。<strong style="color:var(--accent-2)">企业几乎永远不应该改变基本的定位战略</strong>，能改变的只能是战术。在心智中拥有定位如同拥有高价值不动产——一旦放弃，就再也拿不回来。</div>
+        </div>
+        <div class="tl-item reveal">
+          <div class="tl-year">STEP 06</div>
+          <div class="tl-title">你的传播体现了自己的定位吗？</div>
+          <div class="tl-desc">创意人通常不接受定位思维，因为他们相信定位束缚了创意——确实如此。但创意本身毫无价值，只有当创意是为了<strong style="color:var(--accent-2)">戏剧化呈现定位</strong>时才能有所贡献。"安飞士只是第二"听上去不像广告，更像营销战略的陈述——这既是广告，又是营销战略。</div>
+        </div>
+      </div>
+
+      <div class="callout reveal">
+        <div class="callout-label">局 外 人 的 价 值</div>
+        <h3>无知即客观性</h3>
+        <p>局外人不提供奇迹——他们提供的是<strong style="color:var(--accent-2)">客观性</strong>。局外人不知道公司的内部运作，因此更有能力看清楚外部形势。局外人天生会从外部视角看问题，而公司内部的人则习惯于从内部视角看问题。</p>
+        <p style="margin-top:10px">广告公司无法让稻草变黄金。如果它们能的话，早就去从事稻草变黄金业务了。<strong style="color:var(--accent-2)">如今创意已死，广告公司需要做定位。</strong></p>
+      </div>
+    </section>
+
+    <!-- ========== 第19章 定位素养 ========== -->
+    
+<section class="chapter" id="ch19">
+      <div class="chapter-header">
+        <div class="chapter-num">CH.19</div>
+        <div>
+          <h2 class="chapter-title">定位<em>素养</em></h2>
+          <div class="chapter-sub">THE POSITIONING MINDSET</div>
+        </div>
+      </div>
+
+      <p class="lead">要做好定位，需要哪些素养？通用语义学家已说了好几十年：<strong>词语没有含义</strong>。含义不在词语里，而是在人们对词语的使用中。糖碗在放糖之前只是个空碗——一个词语在人们使用它并赋予其含义之前，也是没有含义的。</p>
+
+      <div class="card-grid grid-3">
+        <div class="card reveal">
+          <div class="card-label">素 养 01</div>
+          <h3>必须理解词语</h3>
+          <p>"大众"Volkswagen 这个词无法包含中型豪华轿车这个概念——你得放弃这个糖碗，用另一个能容纳这个概念的糖碗"<strong style="color:var(--accent-2)">奥迪</strong>"。思维僵化是成功定位的障碍。</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">素 养 02</div>
+          <h3>必须理解人</h3>
+          <p>大多数人不是完全理智的，也不是完全精神失常的，而是介于二者之间。精神失常的人想让现实世界顺应他们头脑中的认知。<strong style="color:var(--accent-2)">不太理智的人先有看法，再去寻找事实"证实"自己的看法。</strong></p>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">素 养 03</div>
+          <h3>必须警惕变化</h3>
+          <p>变化之于时间，就像大海里的波浪。短期引起动荡，长期暗流才重要。<strong style="color:var(--accent-2)">必须对企业未来 5 年、10 年的业务做出决策</strong>，而不是对下个月或明年的业务做决策。</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">素 养 04</div>
+          <h3>要有远见</h3>
+          <p>把定位建立在狭隘技术、即将淘汰产品或有缺陷名字之上都是错误的。最重要的是<strong style="color:var(--accent-2)">辨别出什么可行、什么不可行</strong>。许多营销专家的成功，是有幸碰上了好的经济形势。</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">素 养 05</div>
+          <h3>要有勇气</h3>
+          <p>领导者的共通点不是营销技巧，甚至不是产品创新，而是在竞争对手有机会建立定位之前<strong style="color:var(--accent-2)">抢占先机</strong>。市场领导者是"率先出击，全力以赴"。在别人后退观望时全力以赴的决心。</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">素 养 06</div>
+          <h3>要客观</h3>
+          <p>做定位最重要的一个方面，是要能够<strong style="color:var(--accent-2)">客观地评价产品</strong>，了解现有顾客和潜在顾客是如何看待这些产品的。没有篮板打不了篮球——你需要一个搭档进行思想碰撞。定位像打乒乓球，最适合两个人对打。</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">素 养 07</div>
+          <h3>要简单</h3>
+          <p>如今只有<strong style="color:var(--accent-2)">显而易见</strong>的定位概念才可行。凯特林在通用汽车研究大楼的标语牌："解决问题的答案将是简单的。"如果一个定位概念显得高级或者复杂，就要质疑了——它很可能行不通，因为不够简单。</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">素 养 08</div>
+          <h3>要敏锐</h3>
+          <p>在政界，建立极右或极左定位很容易，但你必定败选。你必须在<strong style="color:var(--accent-2)">中间地带附近</strong>找到一个空位——自由中带点保守，或保守中带点自由。商场上和生活中的大赢家，都是这样找到空位的人。</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">素 养 09</div>
+          <h3>要有耐心</h3>
+          <p>鲜有企业有条件在全国范围内推行一款新产品。按<strong style="color:var(--accent-2)">地域、人群、年龄段、分销渠道</strong>逐步展开。万宝路先成为大学校园第一品牌，很久之后才变成全国第一。百事可乐通过"百事一代"在年轻人中建立品牌，伴随他们成长获利。</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">素 养 10</div>
+          <h3>要有全球视角</h3>
+          <p>IBM 一半以上利润来自美国境外。企业如果只关注本国市场，就会错失国际机会。营销正快速演变为一场<strong style="color:var(--accent-2)">全球性角逐</strong>——在一个国家拥有定位之后，可以利用这一定位开辟下一个国家的市场。</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">素 养 11</div>
+          <h3>要有"外部"导向</h3>
+          <p>内部导向型营销人员相信"只要有决心，一切皆有可能"。外部导向型营销人员像将军巡视战场那样扫描市场环境，<strong style="color:var(--accent-2)">找出竞争对手的弱点加以利用，并学会避其锋芒</strong>。"卓越的员工是成功的关键"是最大的幻想。</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-label">最 终 法 则</div>
+          <h3>不要正面冲突</h3>
+          <p>定位的第一法则：要想赢得心智之战，<strong style="color:var(--accent-4)">不能和已经在顾客心智中牢牢占据强有力位置的企业正面交锋</strong>。你可以从各个方向迂回出击，但绝不要迎面而上。如果不是领导者，那就<strong style="color:var(--accent-2)">开创一个能够让你成为领导者的新品类</strong>。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 第20章 原书金句 ========== -->
+    
+<section class="chapter" id="ch20">
+      <div class="chapter-header">
+        <div class="chapter-num">CH.20</div>
+        <div>
+          <h2 class="chapter-title">原书<em>金句</em></h2>
+          <div class="chapter-sub">SELECTED QUOTES</div>
+        </div>
+      </div>
+
+      <p class="lead">从这部 1981 年首次出版、影响全球营销 40 余年的经典中，提炼出最值得铭记的核心金句——它们是定位思维的<strong>精华结晶</strong>。</p>
+
+      <div class="quote fade-text">
+        定位的最新定义：<strong>如何在潜在顾客的心智中做到与众不同。</strong>
+        <span class="pullquote-author">— 前言</span>
+      </div>
+
+      <div class="quote fade-text">
+        在传播过度的社会中，<strong>你看到的是你想看到的，你尝到的是你想尝到的。</strong>
+        <span class="pullquote-author">— 第4章 · 心智中的小阶梯</span>
+      </div>
+
+      <div class="quote fade-text">
+        <strong>第一胜过更好。</strong>这是迄今为止最有威力的定位观念。
+        <span class="pullquote-author">— 第3章 · 进入心智</span>
+      </div>
+
+      <div class="quote fade-text">
+        如果你不能在某一品类中争得第一，那么就<strong>开创一个你可以成为第一的新品类</strong>。
+        <span class="pullquote-author">— 第3章 · 进入心智</span>
+      </div>
+
+      <div class="quote fade-text">
+        不要试图改变人们的心智，成了定位理论最重要的原则之一。
+        <span class="pullquote-author">— 第1章 · 定位的本质</span>
+      </div>
+
+      <div class="quote fade-text">
+        在政治上，<strong>认知就是现实</strong>。在广告、商业以及生活上也都一样。
+        <span class="pullquote-author">— 第1章 · 定位的本质</span>
+      </div>
+
+      <div class="quote fade-text">
+        应对传播过度的社会，最好的方法就是<strong>极度简化信息</strong>。少即多。
+        <span class="pullquote-author">— 第1章 · 定位的本质</span>
+      </div>
+
+      <div class="quote fade-text">
+        一个名字不能代表两个截然不同的产品；<strong>当其中一个上升，另一个就会下降。</strong>
+        <span class="pullquote-author">— 第11章 · 搭便车陷阱 / 跷跷板法则</span>
+      </div>
+
+      <div class="quote fade-text">
+        企业的实力来自产品的实力，<strong>即产品在潜在顾客心智中所占据的定位</strong>。
+        <span class="pullquote-author">— 第6章 · 领导者的定位</span>
+      </div>
+
+      <div class="quote fade-text">
+        心智靠耳朵而不是眼睛运转。这是本书中<strong>最有用的认知学概念之一</strong>。
+        <span class="pullquote-author">— 第10章 · 无名陷阱</span>
+      </div>
+
+      <div class="quote fade-text">
+        最好的骑师赢不了比赛，<strong>赢得比赛的骑师通常是所骑的马最好的那位</strong>。
+        <span class="pullquote-author">— 第20章 · 个人及事业定位</span>
+      </div>
+
+      <div class="quote fade-text">
+        任何值得做的事情，<strong>即便做得很差也值得做</strong>。
+        <span class="pullquote-author">— 第20章 · 个人及事业定位</span>
+      </div>
+
+      <div class="quote fade-text">
+        显而易见的东西并非总是那么明显。<strong>解决问题的答案将是简单的。</strong>
+        <span class="pullquote-author">— 第22章 · 定位素养</span>
+      </div>
+
+      <div class="quote fade-text">
+        定位的第一法则：要想赢得心智之战，<strong>不能和已经在顾客心智中牢牢占据强有力位置的企业正面交锋</strong>。你可以从各个方向迂回出击，但绝不要迎面而上。
+        <span class="pullquote-author">— 第22章 · 定位素养</span>
+      </div>
+
+      <div class="quote fade-text">
+        在我们这个传播过度的社会里，<strong>定位是制胜之道</strong>。只有更好地运用定位的企业，才能生存。
+        <span class="pullquote-author">— 第22章 · 定位素养</span>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+
+
+  <!-- Floating Buttons Stack -->
+  <div class="fab-stack">
+    <button class="fab" id="themeToggle" title="切换主题">☀</button>
+    <button class="fab" id="toTop" title="返回顶部">↑</button>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="foot-grid">
+      <div>
+        <div class="foot-label">著 作</div>
+        <div>定位：争夺用户心智的战争<br>经典重译版 · 2017</div>
+      </div>
+      <div>
+        <div class="foot-label">作 者</div>
+        <div>艾·里斯 AL RIES<br>杰克·特劳特 JACK TROUT</div>
+      </div>
+      <div>
+        <div class="foot-label">设 计</div>
+        <div>Zhexi Wu & Antigravity<br>Z.AI & Google DeepMind</div>
+      </div>
+      <div>
+        <div class="foot-label">驱 动</div>
+        <div>GLM-5.2 & Antigravity<br>Z.AI & Google DeepMind</div>
+      </div>
+      <div>
+        <div class="foot-label">出 版</div>
+        <div>机械工业出版社<br>华章图文</div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>KNOWLEDGE BASE · v1.0 · SINGLE-FILE HTML</span>
+      <span>© 1981 — 2024 · POSITIONING · ALL RIGHTS RESERVED</span>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    /* ========== 预加载屏 ========== */
+    (() => {
+      var preloader = document.getElementById('preloader');
+      var fill = document.getElementById('preFill');
+      var pct = document.getElementById('prePct');
+      var progress = 0;
+      var timer = setInterval(function() {
+        progress += Math.random() * 18 + 5;
+        if (progress >= 100) {
+          progress = 100;
+          clearInterval(timer);
+          finish();
+        }
+        fill.style.width = progress + '%';
+        pct.textContent = (progress < 10 ? '0' : '') + Math.floor(progress) + '%';
+      }, 120);
+      function finish() {
+        setTimeout(function() {
+          preloader.classList.add('hidden');
+        }, 300);
+      }
+      // 超时兜底
+      setTimeout(function() {
+        if (!preloader.classList.contains('hidden')) {
+          clearInterval(timer);
+          fill.style.width = '100%';
+          pct.textContent = '100%';
+          preloader.classList.add('hidden');
+        }
+      }, 2500);
+      // 加载状态即时检查
+      if (document.readyState === 'complete') {
+        setTimeout(function() {
+          progress = 100; fill.style.width = '100%'; pct.textContent = '100%';
+          preloader.classList.add('hidden');
+        }, 500);
+      } else {
+        window.addEventListener('load', function() {
+          setTimeout(function() {
+            progress = Math.max(progress, 90);
+          }, 100);
+        });
+      }
+    })();
+
+    /* ========== 主题切换（波纹扩散） ========== */
+    (() => {
+      var btn = document.getElementById('themeToggle');
+      var root = document.documentElement;
+      btn.addEventListener('click', function(e) {
+        var rect = btn.getBoundingClientRect();
+        var x = e.clientX, y = e.clientY;
+        var maxR = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+        var dark = root.getAttribute('data-theme') === 'dark';
+        if (!document.startViewTransition) {
+          root.setAttribute('data-theme', dark ? 'light' : 'dark');
+          return;
+        }
+        var transition = document.startViewTransition(function() {
+          root.setAttribute('data-theme', dark ? 'light' : 'dark');
+        });
+        transition.ready.then(function() {
+          var clip = [
+            'circle(0px at ' + x + 'px ' + y + 'px)',
+            'circle(' + maxR + 'px at ' + x + 'px ' + y + 'px)'
+          ];
+          document.documentElement.animate(
+            { clipPath: clip },
+            { duration: 600, easing: 'cubic-bezier(.7,0,.3,1)', pseudoElement: '::view-transition-new(root)' }
+          );
+        });
+      });
+    })();
+
+    /* ========== 返回顶部 ========== */
+    (() => {
+      var btn = document.getElementById('toTop');
+      btn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    })();
+
+    /* ========== 移动端抽屉 ========== */
+    (() => {
+      var toggle = document.getElementById('mobileToggle');
+      var sidebar = document.getElementById('sidebar');
+      toggle.addEventListener('click', function() {
+        toggle.classList.toggle('open');
+        sidebar.classList.toggle('open');
+      });
+      sidebar.querySelectorAll('.toc-link').forEach(function(link) {
+        link.addEventListener('click', function() {
+          toggle.classList.remove('open');
+          sidebar.classList.remove('open');
+        });
+      });
+    })();
+
+    /* ========== 卡片渐入 ========== */
+    (() => {
+      var cards = document.querySelectorAll('.card, .tl-item, .metric');
+      if ('IntersectionObserver' in window) {
+        var cardIo = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              var el = entry.target;
+              var delay = Array.from(el.parentNode.children).indexOf(el) * 60;
+              setTimeout(function() { el.classList.add('in-view'); }, delay);
+              cardIo.unobserve(el);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+        cards.forEach(function(c) { cardIo.observe(c); });
+      } else {
+        cards.forEach(function(c) { c.classList.add('in-view'); });
+      }
+    })();
+
+    /* ========== SVG 滚动绘制 ========== */
+    (() => {
+      var svgs = document.querySelectorAll('svg');
+      if ('IntersectionObserver' in window) {
+        var svgIo = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              var svg = entry.target;
+              var paths = svg.querySelectorAll('.draw-path, .draw-line, .draw-circle');
+              paths.forEach(function(p, i) {
+                if (p.tagName === 'circle') {
+                  var r = parseFloat(p.getAttribute('r')) || 50;
+                  var c = 2 * Math.PI * r;
+                  p.style.strokeDasharray = c;
+                  p.style.strokeDashoffset = c;
+                  p.style.transition = 'stroke-dashoffset 1.4s ease ' + (i * 0.1) + 's';
+                  requestAnimationFrame(function() { p.style.strokeDashoffset = 0; });
+                } else if (p.tagName === 'line') {
+                  var x1 = parseFloat(p.getAttribute('x1')), y1 = parseFloat(p.getAttribute('y1'));
+                  var x2 = parseFloat(p.getAttribute('x2')), y2 = parseFloat(p.getAttribute('y2'));
+                  var len = Math.hypot(x2 - x1, y2 - y1);
+                  p.style.strokeDasharray = len;
+                  p.style.strokeDashoffset = len;
+                  p.style.transition = 'stroke-dashoffset 1s ease ' + (i * 0.08) + 's';
+                  requestAnimationFrame(function() { p.style.strokeDashoffset = 0; });
+                } else {
+                  var len = p.getTotalLength ? p.getTotalLength() : 1000;
+                  p.style.strokeDasharray = len;
+                  p.style.strokeDashoffset = len;
+                  p.style.transition = 'stroke-dashoffset 1.8s ease ' + (i * 0.1) + 's';
+                  requestAnimationFrame(function() { p.style.strokeDashoffset = 0; });
+                }
+              });
+              svgIo.unobserve(svg);
+            }
+          });
+        }, { threshold: 0.25 });
+        svgs.forEach(function(s) { svgIo.observe(s); });
+      }
+    })();
+
+    /* ========== 磁吸 hover ========== */
+    (() => {
+      var els = document.querySelectorAll('.toc-link, .fab, .card');
+      if (window.matchMedia('(pointer: coarse)').matches) return;
+      els.forEach(function(el) {
+        el.addEventListener('mousemove', function(e) {
+          var rect = el.getBoundingClientRect();
+          var x = e.clientX - rect.left - rect.width / 2;
+          var y = e.clientY - rect.top - rect.height / 2;
+          var strength = el.classList.contains('card') ? 0.03 : 0.15;
+          el.style.transform = 'translate(' + (x * strength) + 'px,' + (y * strength) + 'px)';
+        });
+        el.addEventListener('mouseleave', function() {
+          el.style.transform = '';
+        });
+      });
+    })();
+
+    /* ========== ScrollSpy ========== */
+    (() => {
+      var links = Array.from(document.querySelectorAll('.toc-link[data-toc]'));
+      var sections = links.map(function(l) { return document.querySelector(l.getAttribute('href')); });
+      var activeLink = null;
+      function update() {
+        var scrollY = window.scrollY + 120;
+        var current = null;
+        for (var i = 0; i < sections.length; i++) {
+          if (sections[i] && sections[i].offsetTop <= scrollY) {
+            current = sections[i];
+          }
+        }
+        if (!current) return;
+        var id = current.id;
+        if (activeLink && activeLink.getAttribute('href') === '#' + id) return;
+        links.forEach(function(l) { l.classList.remove('active'); });
+        var match = links.filter(function(l) { return l.getAttribute('href') === '#' + id; })[0];
+        if (match) {
+          match.classList.add('active');
+          activeLink = match;
+          var sidebar = document.getElementById('sidebar');
+          var linkRect = match.getBoundingClientRect();
+          var sbRect = sidebar.getBoundingClientRect();
+          if (linkRect.top < sbRect.top || linkRect.bottom > sbRect.bottom) {
+            match.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+          }
+        }
+      }
+      var ticking = false;
+      window.addEventListener('scroll', function() {
+        if (!ticking) {
+          requestAnimationFrame(function() { update(); ticking = false; });
+          ticking = true;
+        }
+      });
+      update();
+    })();
+
+    /* ========== 文本渐进淡显 ========== */
+    (() => {
+      var els = document.querySelectorAll('.fade-text');
+      if ('IntersectionObserver' in window) {
+        var fadeIo = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+              fadeIo.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.4 });
+        els.forEach(function(e) { fadeIo.observe(e); });
+      } else {
+        els.forEach(function(e) { e.classList.add('in-view'); });
+      }
+    })();
+  </script>
+</body>
+</html>

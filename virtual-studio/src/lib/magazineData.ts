@@ -336,18 +336,21 @@ export const FALLBACK_SITE_DATA = {
       t: "SwiftMemo",
       d: "一款 MUJI 无印良品风格的桌面便签应用，专为捕捉日常碎想法而设计。",
       links: [["GitHub", "https://github.com/HKDCC/swift-memo"], ["Demo", "https://github.com/HKDCC/swift-memo/releases"]],
+      iconUrl: "/lab/swiftmemo.jpg",
     },
     {
       tag: "AI 实践",
       t: "CassetteCutter",
       d: "专为解决大文件视频传输难题而设计的桌面工具。",
       links: [["查看详情", "#lab"]],
+      iconUrl: "/lab/cassettecutter.jpg",
     },
     {
       tag: "Vibe Coding",
       t: "Retro Pixel Snake",
       d: "磁带未来主义 + 复古像素风贪吃蛇小游戏。Claude + Antigravity。",
       links: [["GitHub", "https://github.com/HKDCC/snake-game"], ["Demo", "https://github.com/HKDCC/snake-game/releases"]],
+      iconUrl: "/lab/retro_pixel_snake.gif",
     },
     {
       tag: "AI 实践",
@@ -366,6 +369,7 @@ export const FALLBACK_SITE_DATA = {
       t: "MuseTodo Pink",
       d: "粉粉的 Todolist，给待办清单一点情绪价值。",
       links: [["查看详情", "#notes"]],
+      iconUrl: "/lab/musetodo_pink.gif",
     },
     {
       tag: "Vibe Coding",

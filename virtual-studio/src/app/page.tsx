@@ -42,25 +42,50 @@ export default async function HomePage() {
         <h2 className="sec-title reveal">实验室</h2>
         <p className="sec-lede reveal">AI 实践记录与 Vibe Coding 成果。每个项目都是一次认知迭代。</p>
         <div className="lab-grid sec-body reveal" id="labGrid">
-          {lab.map((p, i) => (
-            <article key={p.id || i} className={`p-card${i === 0 ? " p-featured" : ""}`}>
-              <p className="p-tag">{p.tag}</p>
-              <h3>{p.t}</h3>
-              <p className="p-desc">{p.d}</p>
-              <div className="p-links">
-                {p.links.map((l, li) => (
-                  <a
-                    key={li}
-                    href={l[1]}
-                    target={l[1].startsWith("http") ? "_blank" : undefined}
-                    rel={l[1].startsWith("http") ? "noopener noreferrer" : undefined}
-                  >
-                    {l[0]} ↗
-                  </a>
-                ))}
-              </div>
-            </article>
-          ))}
+          {lab.map((p, i) => {
+            const localFallback =
+              p.t.includes("Retro") || p.t.includes("Snake") ? "/lab/retro_pixel_snake.gif" :
+              p.t.includes("MuseTodo") ? "/lab/musetodo_pink.gif" :
+              p.t.includes("Cassette") ? "/lab/cassettecutter.jpg" :
+              p.t.includes("SwiftMemo") ? "/lab/swiftmemo.jpg" : null;
+            const imgSrc = p.iconUrl || localFallback;
+
+            return (
+              <article key={p.id || i} className={`p-card${i === 0 ? " p-featured" : ""}`}>
+                {imgSrc && (
+                  <div className="p-card-media-wrapper">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={imgSrc}
+                      alt={p.t}
+                      className="p-card-media-img"
+                      onError={(e) => {
+                        const target = e.currentTarget as HTMLImageElement;
+                        if (localFallback && target.src !== localFallback) {
+                          target.src = localFallback;
+                        }
+                      }}
+                    />
+                  </div>
+                )}
+                <p className="p-tag">{p.tag}</p>
+                <h3>{p.t}</h3>
+                <p className="p-desc">{p.d}</p>
+                <div className="p-links">
+                  {p.links.map((l, li) => (
+                    <a
+                      key={li}
+                      href={l[1]}
+                      target={l[1].startsWith("http") ? "_blank" : undefined}
+                      rel={l[1].startsWith("http") ? "noopener noreferrer" : undefined}
+                    >
+                      {l[0]} ↗
+                    </a>
+                  ))}
+                </div>
+              </article>
+            );
+          })}
         </div>
       </section>
 

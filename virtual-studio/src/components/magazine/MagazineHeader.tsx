@@ -17,6 +17,15 @@ interface MagazineHeaderProps {
   log?: LogItem[];
 }
 
+const SECTIONS = [
+  { id: "lab", num: "01", name: "实验室", icon: "⚗️" },
+  { id: "notes", num: "02", name: "笔记", icon: "📝" },
+  { id: "archive", num: "03", name: "库", icon: "📚" },
+  { id: "timeline", num: "04", name: "时间线", icon: "⏳" },
+  { id: "pause", num: "05", name: "隙", icon: "🌿" },
+  { id: "changelog", num: "06", name: "足迹", icon: "👣" },
+];
+
 export function MagazineHeader({
   books,
   lab,
@@ -30,6 +39,8 @@ export function MagazineHeader({
   const pathname = usePathname();
   const [searchOpen, setSearchOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>("");
 
   useEffect(() => {
     try {
@@ -42,10 +53,37 @@ export function MagazineHeader({
         setTheme("light");
         document.documentElement.removeAttribute("data-theme");
       }
-    } catch {
-      // ignore
-    }
+    } catch {}
   }, []);
+
+  // Scroll listener for sticky dock and active section tracking
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setIsScrolled(scrollY > 200);
+
+      // Section scrollspy
+      if (pathname === "/") {
+        const sectionElements = SECTIONS.map((s) => ({
+          id: s.id,
+          el: document.getElementById(s.id),
+        })).filter((s) => s.el !== null);
+
+        const scrollPosition = scrollY + 250;
+        let current = "";
+        for (const s of sectionElements) {
+          if (s.el && s.el.offsetTop <= scrollPosition) {
+            current = s.id;
+          }
+        }
+        setActiveSection(current);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [pathname]);
 
   function toggleTheme() {
     const nextTheme = theme === "dark" ? "light" : "dark";
@@ -63,8 +101,23 @@ export function MagazineHeader({
     }
   }
 
-  // Do not render this header on retro or demo_0 routes
-  if (pathname.startsWith("/retro") || pathname.startsWith("/demo_0")) {
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function scrollToSection(id: string, e: React.MouseEvent) {
+    if (pathname === "/") {
+      e.preventDefault();
+      const el = document.getElementById(id);
+      if (el) {
+        const top = el.offsetTop - 32;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+    }
+  }
+
+  // Do not render this header on demo_0 routes
+  if (pathname.startsWith("/demo_0")) {
     return null;
   }
 
@@ -73,6 +126,7 @@ export function MagazineHeader({
 
   return (
     <>
+      {/* ═══════════ 原生顶栏导航（首屏展示） ═══════════ */}
       <header className="masthead wrap">
         <div className="brand-row">
           <div>
@@ -98,22 +152,6 @@ export function MagazineHeader({
                 }}
               >
                 demo_0 备份
-              </Link>
-              <Link
-                href="/retro"
-                className="version-pill"
-                title="切换至赛博档案局复古方案"
-                style={{
-                  fontFamily: "var(--mono)",
-                  fontSize: "11px",
-                  padding: "4px 8px",
-                  border: "1px solid var(--line)",
-                  borderRadius: "999px",
-                  color: "var(--ink-2)",
-                  textDecoration: "none",
-                }}
-              >
-                赛博档案版
               </Link>
             </div>
             <button
@@ -146,26 +184,101 @@ export function MagazineHeader({
           </div>
         </div>
         <nav className="mainnav" aria-label="栏目导航">
-          <Link href={`${navPrefix}#lab`}>
-            <b>01</b>实验室
-          </Link>
-          <Link href={`${navPrefix}#notes`}>
-            <b>02</b>笔记
-          </Link>
-          <Link href={`${navPrefix}#archive`}>
-            <b>03</b>库
-          </Link>
-          <Link href={`${navPrefix}#timeline`}>
-            <b>04</b>时间线
-          </Link>
-          <Link href={`${navPrefix}#pause`}>
-            <b>05</b>隙
-          </Link>
-          <Link href={`${navPrefix}#changelog`}>
-            <b>06</b>足迹
-          </Link>
+          {SECTIONS.map((s) => (
+            <Link
+              key={s.id}
+              href={`${navPrefix}#${s.id}`}
+              onClick={(e) => scrollToSection(s.id, e)}
+            >
+              <b>{s.num}</b>
+              {s.name}
+            </Link>
+          ))}
         </nav>
       </header>
+
+      {/* ═══════════ 丝滑侧边栏悬浮导航（滚动遮挡时动态滑出） ═══════════ */}
+      <aside
+        className={`magazine-side-dock ${isScrolled ? "dock-active" : ""}`}
+        aria-label="侧边快速导航"
+      >
+        <div className="dock-inner">
+          <div className="dock-brand" onClick={scrollToTop} title="回到顶部">
+            <span className="dock-logo">tl;</span>
+          </div>
+
+          <div className="dock-divider" />
+
+          {/* 01~06 章节链接 */}
+          <nav className="dock-nav">
+            {SECTIONS.map((s) => {
+              const isActive = activeSection === s.id;
+              return (
+                <Link
+                  key={s.id}
+                  href={`${navPrefix}#${s.id}`}
+                  onClick={(e) => scrollToSection(s.id, e)}
+                  className={`dock-item ${isActive ? "active" : ""}`}
+                  title={`${s.num} ${s.name}`}
+                >
+                  <span className="dock-num">{s.num}</span>
+                  <span className="dock-label">{s.name}</span>
+                  {isActive && <span className="dock-active-dot" />}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div className="dock-divider" />
+
+          {/* 快捷工具区 */}
+          <div className="dock-tools">
+            <button
+              type="button"
+              className="dock-tool-btn"
+              onClick={() => setSearchOpen(true)}
+              aria-label="全局搜索"
+              title="全局搜索 (⌘K)"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <circle cx="11" cy="11" r="7" />
+                <path d="M21 21l-4.3-4.3" />
+              </svg>
+            </button>
+
+            <button
+              type="button"
+              className="dock-tool-btn"
+              onClick={toggleTheme}
+              aria-label="切换深浅主题"
+              title="切换主题"
+            >
+              {theme === "dark" ? (
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2M12 20v2M2 12h2M20 12h2" />
+                </svg>
+              ) : (
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z" />
+                </svg>
+              )}
+            </button>
+
+            <button
+              type="button"
+              className="dock-tool-btn dock-top-btn"
+              onClick={scrollToTop}
+              aria-label="回到顶部"
+              title="回到顶部"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M12 19V5M5 12l7-7 7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </aside>
 
       <SearchOverlay
         isOpen={searchOpen}

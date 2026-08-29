@@ -500,43 +500,93 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
             <div className="notes-archive-grid">
               {filteredNotes.map((n) => {
                 const targetUrl = n.htmlContent || `/p/${n.id}`;
+                const heroLight = `/notes_heroes/${n.id}_light.png`;
+                const heroDark = `/notes_heroes/${n.id}_dark.png`;
+                const isExternal = Boolean(n.htmlContent);
+
                 return (
                   <article key={n.id} className="note-card">
-                    <div className="note-card-meta">
-                      {n.date && <span className="note-date">{n.date}</span>}
-                      {n.category && <span className="note-cat">{n.category}</span>}
+                    <div className="note-card-hero-wrap">
+                      {isExternal ? (
+                        <a href={targetUrl} target="_blank" rel="noopener noreferrer">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={heroLight}
+                            alt={n.title}
+                            className="note-hero-img theme-light-only"
+                            loading="lazy"
+                          />
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={heroDark}
+                            alt={n.title}
+                            className="note-hero-img theme-dark-only"
+                            loading="lazy"
+                          />
+                        </a>
+                      ) : (
+                        <Link href={targetUrl}>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={heroLight}
+                            alt={n.title}
+                            className="note-hero-img theme-light-only"
+                            loading="lazy"
+                          />
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={heroDark}
+                            alt={n.title}
+                            className="note-hero-img theme-dark-only"
+                            loading="lazy"
+                          />
+                        </Link>
+                      )}
                     </div>
 
-                    {n.tags && n.tags.length > 0 && (
-                      <div className="note-tags-wrap">
-                        {n.tags.map((t) => (
-                          <TagPill key={t} tag={t} />
-                        ))}
+                    <div className="note-card-content">
+                      <div className="note-card-meta">
+                        {n.date && <span className="note-date">{n.date}</span>}
+                        {n.category && <span className="note-cat">{n.category}</span>}
                       </div>
-                    )}
 
-                    <h3 className="note-title">
-                      <Link href={targetUrl} target={n.htmlContent ? "_blank" : undefined}>
-                        {n.title}
-                      </Link>
-                    </h3>
-
-                    {n.excerpt && <p className="note-excerpt">{n.excerpt}</p>}
-
-                    <div className="note-links">
-                      <Link href={`/p/${n.id}`} className="note-link-btn">
-                        阅读笔记 ↗
-                      </Link>
-                      {n.htmlContent && (
-                        <a
-                          href={n.htmlContent}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="note-link-btn note-link-html"
-                        >
-                          独立排版 ↗
-                        </a>
+                      {n.tags && n.tags.length > 0 && (
+                        <div className="note-tags-wrap">
+                          {n.tags.map((t) => (
+                            <TagPill key={t} tag={t} />
+                          ))}
+                        </div>
                       )}
+
+                      <h3 className="note-title">
+                        {isExternal ? (
+                          <a href={targetUrl} target="_blank" rel="noopener noreferrer">
+                            {n.title}
+                          </a>
+                        ) : (
+                          <Link href={targetUrl}>
+                            {n.title}
+                          </Link>
+                        )}
+                      </h3>
+
+                      {n.excerpt && <p className="note-excerpt">{n.excerpt}</p>}
+
+                      <div className="note-links">
+                        <Link href={`/p/${n.id}`} className="note-link-btn">
+                          阅读笔记 ↗
+                        </Link>
+                        {n.htmlContent && (
+                          <a
+                            href={n.htmlContent}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="note-link-btn note-link-html"
+                          >
+                            独立排版 ↗
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </article>
                 );

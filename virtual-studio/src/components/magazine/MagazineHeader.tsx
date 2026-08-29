@@ -44,14 +44,16 @@ export function MagazineHeader({
 
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("tl-theme");
-      const isDark = saved === "dark" || document.documentElement.dataset.theme === "dark";
+      const saved = localStorage.getItem("tl-theme") || localStorage.getItem("theme");
+      const isDark = saved === "dark" || document.documentElement.dataset.theme === "dark" || document.documentElement.getAttribute("data-theme") === "dark";
       if (isDark) {
         setTheme("dark");
         document.documentElement.dataset.theme = "dark";
+        document.documentElement.setAttribute("data-theme", "dark");
       } else {
         setTheme("light");
-        document.documentElement.removeAttribute("data-theme");
+        document.documentElement.dataset.theme = "light";
+        document.documentElement.setAttribute("data-theme", "light");
       }
     } catch {}
   }, []);
@@ -88,17 +90,12 @@ export function MagazineHeader({
   function toggleTheme() {
     const nextTheme = theme === "dark" ? "light" : "dark";
     setTheme(nextTheme);
-    if (nextTheme === "dark") {
-      document.documentElement.dataset.theme = "dark";
-      try {
-        localStorage.setItem("tl-theme", "dark");
-      } catch {}
-    } else {
-      document.documentElement.removeAttribute("data-theme");
-      try {
-        localStorage.setItem("tl-theme", "light");
-      } catch {}
-    }
+    document.documentElement.dataset.theme = nextTheme;
+    document.documentElement.setAttribute("data-theme", nextTheme);
+    try {
+      localStorage.setItem("tl-theme", nextTheme);
+      localStorage.setItem("theme", nextTheme);
+    } catch {}
   }
 
   function scrollToTop() {

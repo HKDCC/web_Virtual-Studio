@@ -17,10 +17,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
-    const saved = localStorage.getItem("theme") as Theme | null;
+    const saved = (localStorage.getItem("tl-theme") || localStorage.getItem("theme")) as Theme | null;
     if (saved) {
       setTheme(saved);
       document.documentElement.setAttribute("data-theme", saved);
+      document.documentElement.dataset.theme = saved;
     }
   }, []);
 
@@ -28,7 +29,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const next = theme === "light" ? "dark" : "light";
     setTheme(next);
     localStorage.setItem("theme", next);
+    localStorage.setItem("tl-theme", next);
     document.documentElement.setAttribute("data-theme", next);
+    document.documentElement.dataset.theme = next;
   };
 
   return (

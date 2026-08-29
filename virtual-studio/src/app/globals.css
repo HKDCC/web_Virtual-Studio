@@ -1282,25 +1282,33 @@ details.prompt[open] summary::after {
   transform: scale(1.03);
 }
 
-/* 昼夜主题自适应控制 */
-[data-theme="light"] .theme-dark-only {
+/* 昼夜主题自适应控制：默认 Light，暗色下 Dark */
+.theme-dark-only {
   display: none !important;
 }
 
+.theme-light-only {
+  display: block !important;
+}
+
+html[data-theme="dark"] .theme-dark-only,
+[data-theme="dark"] .theme-dark-only {
+  display: block !important;
+}
+
+html[data-theme="dark"] .theme-light-only,
 [data-theme="dark"] .theme-light-only {
   display: none !important;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .theme-light-only {
-    display: none !important;
-  }
+html[data-theme="light"] .theme-dark-only,
+[data-theme="light"] .theme-dark-only {
+  display: none !important;
 }
 
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) .theme-dark-only {
-    display: none !important;
-  }
+html[data-theme="light"] .theme-light-only,
+[data-theme="light"] .theme-light-only {
+  display: block !important;
 }
 
 .note-card-content {
@@ -1772,8 +1780,9 @@ details.prompt[open] summary::after {
   flex-direction: column;
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 24px 26px;
+  border-radius: 12px;
+  padding: 0;
+  overflow: hidden;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
   height: 100%;
 }

@@ -189,6 +189,7 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
   const initialTab = searchParams?.get("tab") === "notes" ? "notes" : "books";
   const [activeTab, setActiveTab] = useState<"books" | "notes">(initialTab);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [selectedBook, setSelectedBook] = useState<ArchiveBook | null>(null);
   const [activeNote, setActiveNote] = useState<MappedNote | null>(null);
   const [markdownContent, setMarkdownContent] = useState("");
@@ -232,28 +233,67 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
     }
   }, [activeNote]);
 
+  // Extract all unique tags for active tab
+  const noteTagsList = useMemo(() => {
+    const map = new Map<string, number>();
+    props.notes.forEach((n) => {
+      n.tags?.forEach((t) => {
+        map.set(t, (map.get(t) || 0) + 1);
+      });
+    });
+    return Array.from(map.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map(([tag, count]) => ({ tag, count }));
+  }, [props.notes]);
+
+  const bookTagsList = useMemo(() => {
+    const map = new Map<string, number>();
+    props.books.forEach((b) => {
+      b.tags?.forEach((t) => {
+        map.set(t, (map.get(t) || 0) + 1);
+      });
+    });
+    return Array.from(map.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map(([tag, count]) => ({ tag, count }));
+  }, [props.books]);
+
+  const currentTagsList = activeTab === "books" ? bookTagsList : noteTagsList;
+
   const filteredBooks = useMemo(() => {
-    if (!searchQuery.trim()) return props.books;
-    const q = searchQuery.toLowerCase();
-    return props.books.filter(
-      (b) =>
-        b.title.toLowerCase().includes(q) ||
-        (b.author || "").toLowerCase().includes(q) ||
-        b.tags.some((t) => t.toLowerCase().includes(q))
-    );
-  }, [props.books, searchQuery]);
+    let list = props.books;
+    if (selectedTag) {
+      list = list.filter((b) => b.tags?.includes(selectedTag));
+    }
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      list = list.filter(
+        (b) =>
+          b.title.toLowerCase().includes(q) ||
+          (b.author || "").toLowerCase().includes(q) ||
+          b.tags.some((t) => t.toLowerCase().includes(q))
+      );
+    }
+    return list;
+  }, [props.books, selectedTag, searchQuery]);
 
   const filteredNotes = useMemo(() => {
-    if (!searchQuery.trim()) return props.notes;
-    const q = searchQuery.toLowerCase();
-    return props.notes.filter(
-      (n) =>
-        n.title.toLowerCase().includes(q) ||
-        (n.category || "").toLowerCase().includes(q) ||
-        (n.excerpt || "").toLowerCase().includes(q) ||
-        n.tags.some((t) => t.toLowerCase().includes(q))
-    );
-  }, [props.notes, searchQuery]);
+    let list = props.notes;
+    if (selectedTag) {
+      list = list.filter((n) => n.tags?.includes(selectedTag));
+    }
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      list = list.filter(
+        (n) =>
+          n.title.toLowerCase().includes(q) ||
+          (n.category || "").toLowerCase().includes(q) ||
+          (n.excerpt || "").toLowerCase().includes(q) ||
+          n.tags.some((t) => t.toLowerCase().includes(q))
+      );
+    }
+    return list;
+  }, [props.notes, selectedTag, searchQuery]);
 
   const relatedNotes = useMemo(() => {
     if (!selectedBook) return [];
@@ -269,70 +309,128 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
     });
   };
 
+  const handleClearFilters = () => {
+    setSearchQuery("");
+    setSelectedTag(null);
+  };
+
+  const totalCount = activeTab === "books" ? props.books.length : props.notes.length;
+  const currentCount = activeTab === "books" ? filteredBooks.length : filteredNotes.length;
+
   return (
-    <>
-      <div className="section-header">
-        <div>
-          <p className="section-eyebrow">Archive · 档案库</p>
-          <h1 className="section-title">
-            {activeTab === "books" ? "书库" : "全部笔记"}
-          </h1>
-        </div>
-        <p className="section-desc">
-          收藏、深度阅读与知识沉淀。这里存放所有经过思考并值得反复研读的智识资产。
+    <div className="archive-page-wrap">
+      {/* Breadcrumb Navigation */}
+      <nav className="archive-breadcrumb-nav">
+        <Link href="/" className="archive-breadcrumb-link">
+          首页
+        </Link>
+        <span>/</span>
+        <Link href="/#archive" className="archive-breadcrumb-link">
+          03 库 · 书架
+        </Link>
+        <span>/</span>
+        <span style={{ color: "var(--ink)" }}>
+          {activeTab === "books" ? "书架归档" : "全部深度笔记"}
+        </span>
+      </nav>
+
+      {/* Header Box */}
+      <div className="archive-header-box">
+        <h1 className="archive-page-title">
+          {activeTab === "books" ? "书库 · 藏书与精选" : "全部笔记 · 智识资产"}
+        </h1>
+        <p className="archive-page-desc">
+          收藏、深度阅读与知识沉淀。这里存放所有经过系统化思考并值得反复研读的智识资产。
         </p>
       </div>
 
-      {/* Tab Switcher */}
-      <div
-        className="archive-tab-bar"
-        style={{
-          display: "flex",
-          gap: "12px",
-          margin: "0 auto 28px",
-          maxWidth: "1200px",
-          padding: "0 24px",
-        }}
-      >
+      {/* Segmented Tab Switcher */}
+      <div className="archive-tab-switcher">
         <button
-          className={`chip ${activeTab === "books" ? "active" : ""}`}
+          className={`archive-tab-btn ${activeTab === "books" ? "active" : ""}`}
           onClick={() => {
             setActiveTab("books");
+            setSelectedTag(null);
             closeDrawer();
           }}
           type="button"
-          style={{ fontSize: "13px", padding: "6px 16px" }}
         >
-          📚 书库 · Books ({props.books.length})
+          <span>📚 书库 · Books</span>
+          <span className="archive-tab-count">{props.books.length}</span>
         </button>
         <button
-          className={`chip ${activeTab === "notes" ? "active" : ""}`}
+          className={`archive-tab-btn ${activeTab === "notes" ? "active" : ""}`}
           onClick={() => {
             setActiveTab("notes");
+            setSelectedTag(null);
             closeDrawer();
           }}
           type="button"
-          style={{ fontSize: "13px", padding: "6px 16px" }}
         >
-          📝 全部笔记 · Notes ({props.notes.length})
+          <span>📝 全部笔记 · Notes</span>
+          <span className="archive-tab-count">{props.notes.length}</span>
         </button>
       </div>
 
+      {/* Search & Tag Filter Bar */}
+      <div className="archive-filter-bar">
+        <div className="archive-search-box">
+          <span className="archive-search-icon">🔍</span>
+          <input
+            type="text"
+            placeholder={activeTab === "books" ? "搜索书名、作者、标签、主题..." : "搜索笔记标题、标签、关键词、核心摘要..."}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="archive-search-input-field"
+          />
+          {searchQuery && (
+            <button
+              className="archive-search-clear"
+              onClick={() => setSearchQuery("")}
+              title="清空搜索"
+              type="button"
+            >
+              ✕
+            </button>
+          )}
+          <span className="archive-search-stats">
+            显示 {currentCount} / 共 {totalCount} 篇
+          </span>
+        </div>
+
+        {/* Dynamic Tag Filter Cloud */}
+        {currentTagsList.length > 0 && (
+          <div className="archive-tag-cloud">
+            <button
+              className={`archive-tag-filter-btn ${selectedTag === null ? "active" : ""}`}
+              onClick={() => setSelectedTag(null)}
+              type="button"
+            >
+              <span>全部</span>
+              <span className="tag-badge-num">({totalCount})</span>
+            </button>
+
+            {currentTagsList.map(({ tag, count }) => {
+              const isSelected = selectedTag === tag;
+              return (
+                <button
+                  key={tag}
+                  className={`archive-tag-filter-btn ${isSelected ? "active" : ""}`}
+                  onClick={() => setSelectedTag(isSelected ? null : tag)}
+                  type="button"
+                >
+                  <span>{tag}</span>
+                  <span className="tag-badge-num">({count})</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Main Content Area */}
       <div className={`archive-container ${selectedBook ? "drawer-open" : ""}`}>
         <div className="archive-main-content">
-          <div className="archive-search-container">
-            <div className="search-box-wrapper">
-              <span className="search-icon">🔍</span>
-              <input
-                type="text"
-                placeholder={activeTab === "books" ? "搜索书籍、作者、标签..." : "搜索笔记、关键词、分类..."}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="archive-search-input"
-              />
-            </div>
-          </div>
-
           {activeTab === "books" ? (
             <div className="shelf-grid">
               {filteredBooks.map((b, idx) => (
@@ -365,11 +463,16 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
                 </div>
               ))}
               {filteredBooks.length === 0 && (
-                <div className="shelf-empty">无匹配的书籍。</div>
+                <div className="archive-empty-state">
+                  <p>没有找到与当前筛选条件匹配的书籍。</p>
+                  <button className="archive-empty-reset-btn" onClick={handleClearFilters} type="button">
+                    清空筛选条件
+                  </button>
+                </div>
               )}
             </div>
           ) : (
-            <div className="notes-archive-grid" style={{ display: "grid", gap: "20px" }}>
+            <div className="notes-archive-grid">
               {filteredNotes.map((n) => {
                 const targetUrl = n.htmlContent || `/p/${n.id}`;
                 return (
@@ -378,6 +481,7 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
                       {n.date && <span className="note-date">{n.date}</span>}
                       {n.category && <span className="note-cat">{n.category}</span>}
                     </div>
+
                     {n.tags && n.tags.length > 0 && (
                       <div className="note-tags-wrap">
                         {n.tags.map((t) => (
@@ -385,12 +489,15 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
                         ))}
                       </div>
                     )}
+
                     <h3 className="note-title">
                       <Link href={targetUrl} target={n.htmlContent ? "_blank" : undefined}>
                         {n.title}
                       </Link>
                     </h3>
+
                     {n.excerpt && <p className="note-excerpt">{n.excerpt}</p>}
+
                     <div className="note-links">
                       <Link href={`/p/${n.id}`} className="note-link-btn">
                         阅读笔记 ↗
@@ -402,7 +509,7 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
                           rel="noopener noreferrer"
                           className="note-link-btn note-link-html"
                         >
-                          独立排版版 ↗
+                          独立排版 ↗
                         </a>
                       )}
                     </div>
@@ -410,7 +517,12 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
                 );
               })}
               {filteredNotes.length === 0 && (
-                <div className="shelf-empty">无匹配的笔记。</div>
+                <div className="archive-empty-state" style={{ gridColumn: "1 / -1" }}>
+                  <p>没有找到与当前筛选条件匹配的笔记。</p>
+                  <button className="archive-empty-reset-btn" onClick={handleClearFilters} type="button">
+                    清空筛选条件
+                  </button>
+                </div>
               )}
             </div>
           )}
@@ -567,7 +679,7 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

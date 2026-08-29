@@ -15,8 +15,9 @@ export type LabItem = {
   appIcon?: { type: "emoji" | "image"; value: string } | null;
 };
 
-function LabCard(props: { item: LabItem }) {
-  const { item } = props;
+function LabCard(props: { item: LabItem; index?: number }) {
+  const { item, index = 0 } = props;
+  const isReverse = index % 2 === 1;
   const localFallback =
     item.title.includes("WhisperX") || item.title.includes("Whisper") ? "/lab/whisperx_gui.mp4" :
     item.title.includes("MiniReader") || item.title.includes("Reader") ? "/lab/minireader.gif" :
@@ -28,7 +29,7 @@ function LabCard(props: { item: LabItem }) {
   const imgSrc = localFallback || item.iconUrl;
 
   return (
-    <div className="lab-card">
+    <div className={`lab-card ${isReverse ? "is-reverse" : ""}`}>
       <Link href={`/p/${item.id}`} className="lab-card-thumb" style={{ overflow: "hidden", position: "relative" }}>
         {imgSrc ? (
           imgSrc.endsWith(".mp4") ? (
@@ -106,11 +107,11 @@ function LabCard(props: { item: LabItem }) {
               target="_blank"
               rel="noreferrer"
             >
-              Demo
+              Demo ↗
             </a>
           ) : (
             <Link href={`/p/${item.id}`} className="lab-link demo">
-              查看笔记
+              查看笔记 ↗
             </Link>
           )}
         </div>
@@ -142,17 +143,17 @@ export function LabTabs(props: { ai: LabItem[]; vibe: LabItem[] }) {
       </div>
 
       <div className={`wf-panel ${tab === "ai" ? "active" : ""}`} id="lab-ai">
-        <div className="lab-grid">
-          {props.ai.map((item) => (
-            <LabCard key={item.id} item={item} />
+        <div className="lab-list">
+          {props.ai.map((item, idx) => (
+            <LabCard key={item.id} item={item} index={idx} />
           ))}
         </div>
       </div>
 
       <div className={`wf-panel ${tab === "vibe" ? "active" : ""}`} id="lab-vibe">
-        <div className="lab-grid">
-          {props.vibe.map((item) => (
-            <LabCard key={item.id} item={item} />
+        <div className="lab-list">
+          {props.vibe.map((item, idx) => (
+            <LabCard key={item.id} item={item} index={idx} />
           ))}
         </div>
       </div>

@@ -47,7 +47,7 @@ export default async function HomePage() {
         </div>
         <h2 className="sec-title reveal">实验室</h2>
         <p className="sec-lede reveal">AI 实践记录与 Vibe Coding 成果。每个项目都是一次认知迭代。</p>
-        <div className="lab-grid sec-body reveal" id="labGrid">
+        <div className="lab-list sec-body reveal" id="labGrid">
           {safeLab.map((p, i) => {
             const title = p?.t || "";
             const desc = p?.d || "";
@@ -72,8 +72,10 @@ export default async function HomePage() {
               title.includes("MuseTodo") ? { type: "emoji" as const, value: "🌸" } : null
             );
 
+            const isReverse = i % 2 === 1;
+
             return (
-              <article key={p?.id || i} className={`p-card${i === 0 ? " p-featured" : ""}`}>
+              <article key={p?.id || i} className={`lab-row-card ${isReverse ? "is-reverse" : ""}`}>
                 {imgSrc && (
                   <div className="p-card-media-wrapper">
                     {imgSrc.endsWith(".mp4") ? (

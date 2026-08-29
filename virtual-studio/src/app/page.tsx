@@ -70,12 +70,7 @@ export default async function HomePage() {
                       src={imgSrc}
                       alt={title}
                       className="p-card-media-img"
-                      onError={(e) => {
-                        const target = e.currentTarget as HTMLImageElement;
-                        if (localFallback && target.src !== localFallback) {
-                          target.src = localFallback;
-                        }
-                      }}
+                      loading="lazy"
                     />
                   </div>
                 )}

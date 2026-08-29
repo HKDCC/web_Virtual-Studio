@@ -40,12 +40,7 @@ export default async function PausePage() {
                     alt={title || "摄影作品"}
                     className="pause-img"
                     referrerPolicy="no-referrer"
-                    onError={(e) => {
-                      const target = e.currentTarget as HTMLImageElement;
-                      if (!target.src.includes("/photos/")) {
-                        target.src = `/photos/photo_${(idx % 10) + 1}_.jpeg`;
-                      }
-                    }}
+                    loading="lazy"
                   />
                 ) : (
                   <div className="pause-block-inner">{emoji}</div>

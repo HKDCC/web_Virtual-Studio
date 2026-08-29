@@ -55,7 +55,7 @@ export default async function HomePage() {
             const links = Array.isArray(p?.links) ? p.links : [];
 
             const localFallback =
-              title.includes("WhisperX") || title.includes("Whisper") ? "/lab/whisperx_gui.png" :
+              title.includes("WhisperX") || title.includes("Whisper") ? "/lab/whisperx_gui.mp4" :
               title.includes("MiniReader") || title.includes("Reader") ? "/lab/minireader.gif" :
               title.includes("Retro") || title.includes("Snake") ? "/lab/retro_pixel_snake.gif" :
               title.includes("MuseTodo") ? "/lab/musetodo_pink.gif" :
@@ -76,13 +76,25 @@ export default async function HomePage() {
               <article key={p?.id || i} className={`p-card${i === 0 ? " p-featured" : ""}`}>
                 {imgSrc && (
                   <div className="p-card-media-wrapper">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={imgSrc}
-                      alt={title}
-                      className="p-card-media-img"
-                      loading="lazy"
-                    />
+                    {imgSrc.endsWith(".mp4") ? (
+                      <video
+                        src={imgSrc}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="p-card-media-img"
+                        style={{ objectFit: "cover", width: "100%", height: "100%" }}
+                      />
+                    ) : (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img
+                        src={imgSrc}
+                        alt={title}
+                        className="p-card-media-img"
+                        loading="lazy"
+                      />
+                    )}
                   </div>
                 )}
                 <div className="p-card-body">

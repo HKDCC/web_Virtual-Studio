@@ -343,7 +343,7 @@ export const FALLBACK_SITE_DATA = {
       t: "WhisperX GUI",
       d: "高精度、本地优先的 WhisperX 语音识别与智能字幕桌面客户端，支持角色分离、词级时间戳对齐与多格式导出。",
       links: [["GitHub", "https://github.com/HKDCC/WhisperX-GUI"], ["Demo", "https://github.com/HKDCC/WhisperX-GUI/releases"]],
-      iconUrl: "/lab/whisperx_gui.png",
+      iconUrl: "/lab/whisperx_gui.mp4",
       appIcon: { type: "emoji", value: "🎙️" },
     },
     {

@@ -18,7 +18,7 @@ export type LabItem = {
 function LabCard(props: { item: LabItem }) {
   const { item } = props;
   const localFallback =
-    item.title.includes("WhisperX") || item.title.includes("Whisper") ? "/lab/whisperx_gui.png" :
+    item.title.includes("WhisperX") || item.title.includes("Whisper") ? "/lab/whisperx_gui.mp4" :
     item.title.includes("MiniReader") || item.title.includes("Reader") ? "/lab/minireader.gif" :
     item.title.includes("Retro") || item.title.includes("Snake") ? "/lab/retro_pixel_snake.gif" :
     item.title.includes("MuseTodo") ? "/lab/musetodo_pink.gif" :
@@ -31,23 +31,35 @@ function LabCard(props: { item: LabItem }) {
     <div className="lab-card">
       <Link href={`/p/${item.id}`} className="lab-card-thumb" style={{ overflow: "hidden", position: "relative" }}>
         {imgSrc ? (
-          <>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+          imgSrc.endsWith(".mp4") ? (
+            <video
               src={imgSrc}
-              alt=""
-              aria-hidden="true"
-              className="p-card-media-backdrop"
-              loading="lazy"
-            />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={imgSrc}
-              alt={item.title}
+              autoPlay
+              loop
+              muted
+              playsInline
               className="lab-thumb-img"
-              loading="lazy"
+              style={{ objectFit: "cover", width: "100%", height: "100%" }}
             />
-          </>
+          ) : (
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={imgSrc}
+                alt=""
+                aria-hidden="true"
+                className="p-card-media-backdrop"
+                loading="lazy"
+              />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={imgSrc}
+                alt={item.title}
+                className="lab-thumb-img"
+                loading="lazy"
+              />
+            </>
+          )
         ) : (
           <div className={`lab-badge ${item.type === "vibe" ? "earth" : "blue"}`}>
             {item.badge ?? (item.type === "vibe" ? "Vibe" : "Lab")}

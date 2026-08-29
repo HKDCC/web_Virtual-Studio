@@ -74,7 +74,12 @@ export interface PauseItem {
 export interface NoteItem {
   id?: string;
   d: string;
-  src: string;
+  title: string;
+  cat: string;
+  src?: string;
+  tags?: string[];
+  readTime?: number | null;
+  htmlContent?: string | null;
   text: string;
 }
 
@@ -207,8 +212,28 @@ export const FALLBACK_SITE_DATA = {
   ] as PauseItem[],
 
   notes: [
-    { d: "2026·03·17", src: "足迹 · 创刊", text: "12 小时网站速成，上线大吉。又活了一天，很了不起了。" },
-    { d: "2026·05·25", src: "手记 · 关于本刊", text: "每一个模块都是一种思维方式的入口，而不是内容的抽屉。" },
+    {
+      id: "32a4b57f-e15a-8021-aa4b-e86161596601",
+      title: "【AI应用】AI 编程产品全景地图",
+      cat: "信息",
+      d: "2026·03·08",
+      tags: ["AI", "教程"],
+      readTime: 15,
+      text: "一个实用的入门路径：从 GitHub Copilot 免费版开始，感受 AI 辅助编程的基本体验（零成本）。如果觉得有价值，再升级到 Cursor Pro（$20/月），体验多文件 Agent 工作流。处理大型项目时，考虑叠加 Claude Code（可与 Claude.ai Pro 共用订阅）。",
+      htmlContent: "https://quaxstudio.xyz/articles/ai-coding-tools.html",
+      src: "信息 · 【AI应用】AI 编程产品全景地图",
+    },
+    {
+      id: "3294b57f-e15a-8069-ad16-c6c24a0621c6",
+      title: "【AI应用】Notion+AI：第二大脑自动化搭建指南",
+      cat: "思考",
+      d: "2026·03·19",
+      tags: ["AI", "教程"],
+      readTime: 20,
+      text: "用 CODE 四阶段原则，搭一套真正能用的 Notion + AI 第二大脑系统——从”为什么要这么做”，到”每一步怎么操作”。",
+      htmlContent: null,
+      src: "思考 · 【AI应用】Notion+AI：第二大脑自动化搭建指南",
+    },
   ] as NoteItem[],
 
   log: [
@@ -434,22 +459,33 @@ export async function fetchMagazineData() {
   // 6. Notes
   try {
     if (env.NOTION_TOKEN && env.NOTION_NOTES_DB_ID) {
-      const res = await queryDatabaseAll({ databaseId: env.NOTION_NOTES_DB_ID, pageSize: 50, maxPages: 6 });
+      const res = await queryDatabaseAll({
+        databaseId: env.NOTION_NOTES_DB_ID,
+        pageSize: 50,
+        maxPages: 6,
+        sorts: [{ property: "Date", direction: "descending" }],
+      });
       if (res.length > 0) {
         notes = res.map((p) => {
           const props = p.properties as Record<string, unknown>;
-          const rawDate = getDate(props, "Date") || "2026·05·25";
-          const categoryProp = props["Category"];
-          let category = "手记";
-          if (isObj(categoryProp) && categoryProp["type"] === "select") {
-            const select = categoryProp["select"];
-            if (isObj(select) && typeof select["name"] === "string") category = select["name"];
-          }
+          const rawDate = getDate(props, "Date") || "2026·03·19";
+          const category = getSelect(props, "Category") || "思考";
+          const tags = getMultiSelect(props, "Tags");
+          const readTime = getNumber(props, "ReadTime");
+          const htmlContent = getUrl(props, "HTMLContent");
+          const excerpt = getRichText(props, "Excerpt") || getPageTitle(p);
+          const title = getPageTitle(p);
+
           return {
             id: p.id,
             d: rawDate.replace(/-/g, "·"),
-            src: `${category} · ${getPageTitle(p)}`,
-            text: getRichText(props, "Excerpt") || getPageTitle(p),
+            title,
+            cat: category,
+            tags,
+            readTime,
+            htmlContent,
+            src: `${category} · ${title}`,
+            text: excerpt,
           };
         });
       }

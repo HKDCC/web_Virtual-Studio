@@ -46,7 +46,12 @@ export function SearchOverlay({
     ...sites.map((x) => ({ k: "站点", t: x.t, s: x.d, href: "#workflow" })),
     ...pause.map((x) => ({ k: "隙", t: x.t, s: `${x.loc} · ${x.d}`, href: x.id ? `/p/${x.id}` : "#pause" })),
     ...timeline.map((x) => ({ k: "模型", t: x.t, s: x.note, href: "#timeline" })),
-    ...notes.map((x) => ({ k: "笔记", t: x.text, s: x.src, href: x.id ? `/p/${x.id}` : "#notes" })),
+    ...notes.map((x) => ({
+      k: "笔记",
+      t: x.title || x.text,
+      s: x.src || x.cat || x.d,
+      href: x.htmlContent || (x.id ? `/p/${x.id}` : "#notes"),
+    })),
     ...log.map((x) => ({ k: "足迹", t: x.t, s: x.d, href: x.id ? `/p/${x.id}` : "#changelog" })),
   ];
 

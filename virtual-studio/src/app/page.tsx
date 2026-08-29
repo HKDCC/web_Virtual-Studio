@@ -107,26 +107,47 @@ export default async function HomePage() {
           </a>
         </div>
         <h2 className="sec-title reveal">笔记</h2>
-        <p className="sec-lede reveal">来自 Notion 数据库的文章与片段。</p>
-        <div className="sec-body reveal" id="notesList">
+        <p className="sec-lede reveal">来自 Notion 数据库的文章与深度长文。</p>
+        <div className="notes-grid sec-body reveal" id="notesList">
           {notes.map((n, i) => {
-            const noteContent = (
-              <blockquote className="note">
-                <p className="note-text">{n.text}</p>
-                <footer className="note-meta">
-                  {n.d} — {n.src}
-                </footer>
-              </blockquote>
+            const targetUrl = n.htmlContent || (n.id ? `/p/${n.id}` : "#notes");
+            return (
+              <article key={n.id || i} className="note-card">
+                <div className="note-card-meta">
+                  <span className="note-date">{n.d}</span>
+                  <span className="note-cat">{n.cat}</span>
+                  {n.tags && n.tags.length > 0 && (
+                    <span className="note-tags">
+                      {n.tags.map((t) => `#${t}`).join(" ")}
+                    </span>
+                  )}
+                  {n.readTime && <span className="note-readtime">{n.readTime} 分钟阅读</span>}
+                </div>
+                <h3 className="note-title">
+                  <Link href={targetUrl} target={n.htmlContent ? "_blank" : undefined}>
+                    {n.title}
+                  </Link>
+                </h3>
+                <p className="note-excerpt">{n.text}</p>
+                <div className="note-links">
+                  {n.id && (
+                    <Link href={`/p/${n.id}`} className="note-link-btn">
+                      阅读笔记 ↗
+                    </Link>
+                  )}
+                  {n.htmlContent && (
+                    <a
+                      href={n.htmlContent}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="note-link-btn note-link-html"
+                    >
+                      独立排版版 ↗
+                    </a>
+                  )}
+                </div>
+              </article>
             );
-
-            if (n.id) {
-              return (
-                <Link key={n.id || i} href={`/p/${n.id}`} style={{ textDecoration: "none", color: "inherit" }}>
-                  {noteContent}
-                </Link>
-              );
-            }
-            return <div key={i}>{noteContent}</div>;
           })}
         </div>
       </section>

@@ -1325,7 +1325,7 @@ export async function fetchMagazineData() {
   try {
     if (env.NOTION_TOKEN && env.NOTION_BOOKS_DB_ID) {
       const res = await queryDatabaseAll({ databaseId: env.NOTION_BOOKS_DB_ID, pageSize: 50, maxPages: 4 });
-      if (res.length > 0) {
+      if (res) {
         books = res.map((p) => {
           const props = p.properties as Record<string, unknown>;
           const tags = getMultiSelect(props, "Tags");
@@ -1357,7 +1357,7 @@ export async function fetchMagazineData() {
   try {
     if (env.NOTION_TOKEN && env.NOTION_LAB_DB_ID) {
       const res = await queryDatabaseAll({ databaseId: env.NOTION_LAB_DB_ID, pageSize: 50, maxPages: 6 });
-      if (res.length > 0) {
+      if (res) {
         lab = res.map((p) => {
           const props = p.properties as Record<string, unknown>;
           const type = (getSelect(props, "Type") ?? "").toLowerCase();
@@ -1387,7 +1387,7 @@ export async function fetchMagazineData() {
   try {
     if (env.NOTION_TOKEN && env.NOTION_WORKFLOW_DB_ID) {
       const res = await queryDatabaseAll({ databaseId: env.NOTION_WORKFLOW_DB_ID, pageSize: 50, maxPages: 10 });
-      if (res.length > 0) {
+      if (res) {
         const fetchedTools: ToolItem[] = [];
         const fetchedSites: SiteItem[] = [];
         const fetchedPrompts: PromptItem[] = [];
@@ -1443,10 +1443,10 @@ export async function fetchMagazineData() {
   try {
     if (env.NOTION_TOKEN && env.NOTION_PAUSE_DB_ID) {
       const res = await queryDatabaseAll({ databaseId: env.NOTION_PAUSE_DB_ID, pageSize: 60, maxPages: 8 });
-      if (res.length > 0) {
+      if (res) {
         pause = res.map((p) => {
           const props = p.properties as Record<string, unknown>;
-          const coverUrl = extractFileUrl(p, "Cover") || "https://picsum.photos/seed/" + p.id + "/640/480";
+          const coverUrl = extractFileUrl(p, "Cover") || "/photos/photo_1_.jpeg";
           const rawDate = getDate(props, "Date") || "2026·05";
           return {
             id: p.id,
@@ -1471,7 +1471,7 @@ export async function fetchMagazineData() {
         maxPages: 10,
         sorts: [{ property: "Date", direction: "descending" }],
       });
-      if (res.length > 0) {
+      if (res) {
         notes = res.map((p) => {
           const props = p.properties as Record<string, unknown>;
           const rawDate = getDate(props, "Date") || "2026·03·19";
@@ -1509,7 +1509,7 @@ export async function fetchMagazineData() {
         maxPages: 10,
         sorts: [{ property: "Date", direction: "descending" }],
       });
-      if (res.length > 0) {
+      if (res) {
         log = res.map((p) => {
           const props = p.properties as Record<string, unknown>;
           const rawDate = getDate(props, "Date") || "";

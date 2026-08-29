@@ -68,38 +68,32 @@ export default async function HomePage() {
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={imgSrc}
-                      alt=""
-                      aria-hidden="true"
-                      className="p-card-media-backdrop"
-                      loading="lazy"
-                    />
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={imgSrc}
                       alt={title}
                       className="p-card-media-img"
                       loading="lazy"
                     />
                   </div>
                 )}
-                <p className="p-tag">{tag}</p>
-                <h3>{title}</h3>
-                <p className="p-desc">{desc}</p>
-                <div className="p-links">
-                  {links.map((l, li) => {
-                    const linkText = l?.[0] || "链接";
-                    const linkUrl = l?.[1] || "#";
-                    return (
-                      <a
-                        key={li}
-                        href={linkUrl}
-                        target={linkUrl.startsWith("http") ? "_blank" : undefined}
-                        rel={linkUrl.startsWith("http") ? "noopener noreferrer" : undefined}
-                      >
-                        {linkText} ↗
-                      </a>
-                    );
-                  })}
+                <div className="p-card-body">
+                  <p className="p-tag">{tag}</p>
+                  <h3>{title}</h3>
+                  <p className="p-desc">{desc}</p>
+                  <div className="p-links">
+                    {links.map((l, li) => {
+                      const linkText = l?.[0] || "链接";
+                      const linkUrl = l?.[1] || "#";
+                      return (
+                        <a
+                          key={li}
+                          href={linkUrl}
+                          target={linkUrl.startsWith("http") ? "_blank" : undefined}
+                          rel={linkUrl.startsWith("http") ? "noopener noreferrer" : undefined}
+                        >
+                          {linkText} ↗
+                        </a>
+                      );
+                    })}
+                  </div>
                 </div>
               </article>
             );

@@ -233,12 +233,16 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
     }
   }, [activeNote]);
 
+  const [isExpandedTags, setIsExpandedTags] = useState(false);
+
   // Extract all unique tags for active tab
   const noteTagsList = useMemo(() => {
     const map = new Map<string, number>();
     props.notes.forEach((n) => {
       n.tags?.forEach((t) => {
-        map.set(t, (map.get(t) || 0) + 1);
+        if (t !== "读书笔记") { // filter redundant category tag
+          map.set(t, (map.get(t) || 0) + 1);
+        }
       });
     });
     return Array.from(map.entries())
@@ -259,6 +263,7 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
   }, [props.books]);
 
   const currentTagsList = activeTab === "books" ? bookTagsList : noteTagsList;
+  const visibleTagsList = isExpandedTags ? currentTagsList : currentTagsList.slice(0, 12);
 
   const filteredBooks = useMemo(() => {
     let list = props.books;
@@ -410,7 +415,7 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
               <span className="tag-badge-num">({totalCount})</span>
             </button>
 
-            {currentTagsList.map(({ tag, count }) => {
+            {visibleTagsList.map(({ tag, count }) => {
               const isSelected = selectedTag === tag;
               return (
                 <button
@@ -424,6 +429,26 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
                 </button>
               );
             })}
+
+            {currentTagsList.length > 12 && (
+              <button
+                className="archive-tag-filter-btn"
+                onClick={() => setIsExpandedTags(!isExpandedTags)}
+                type="button"
+                style={{
+                  background: "var(--accent-soft)",
+                  borderColor: "rgba(194, 65, 12, 0.2)",
+                  color: "var(--accent)",
+                  fontWeight: 600,
+                }}
+              >
+                <span>
+                  {isExpandedTags
+                    ? "收起 ▴"
+                    : `更多标签 (+${currentTagsList.length - 12}) ▾`}
+                </span>
+              </button>
+            )}
           </div>
         )}
       </div>

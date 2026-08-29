@@ -113,15 +113,31 @@ export function SearchOverlay({
         </div>
         <div className="results">
           {results.length > 0 ? (
-            results.map((r, i) => (
-              <Link key={i} className="result-row" href={r.href} onClick={onClose}>
-                <span className="r-k">{r.k}</span>
-                <span className="r-t">{r.t}</span>
-                <span className="r-s">{r.s}</span>
-              </Link>
-            ))
+            results.map((r, i) => {
+              const isExternal = r.href.startsWith("http://") || r.href.startsWith("https://");
+              return isExternal ? (
+                <a
+                  key={i}
+                  className="result-row"
+                  href={r.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={onClose}
+                >
+                  <span className="r-k">{r.k}</span>
+                  <span className="r-t">{r.t} ↗</span>
+                  <span className="r-s">{r.s}</span>
+                </a>
+              ) : (
+                <Link key={i} className="result-row" href={r.href} onClick={onClose}>
+                  <span className="r-k">{r.k}</span>
+                  <span className="r-t">{r.t}</span>
+                  <span className="r-s">{r.s}</span>
+                </Link>
+              );
+            })
           ) : (
-            <p className="r-empty">{trimmed ? "没有找到相关条目。" : "试试：翻译 / 便签 / 上海 / Gemini"}</p>
+            <p className="r-empty">{trimmed ? "没有找到相关条目。" : "试试：深度学习 / 纳瓦尔 / WhisperX / 谈判力"}</p>
           )}
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { NotionBlocks } from "@/components/NotionBlocks";
 import { getPageTitle } from "@/lib/notionHelpers";
-import { listBlockChildrenAll, notion } from "@/lib/notion";
+import { listBlockChildrenAll, notion, type NotionFullBlock } from "@/lib/notion";
 import Link from "next/link";
 import { TableOfContentsWrapper } from "@/components/TableOfContentsWrapper";
 import { BookDetailHeader } from "@/components/detail/BookDetailHeader";
@@ -8,6 +8,7 @@ import { LabDetailHeader } from "@/components/detail/LabDetailHeader";
 import { PauseDetailHeader } from "@/components/detail/PauseDetailHeader";
 import { NoteDetailHeader } from "@/components/detail/NoteDetailHeader";
 import { DetailBreadcrumb } from "@/components/detail/DetailBreadcrumb";
+import { FALLBACK_SITE_DATA } from "@/lib/magazineData";
 
 type RichText = {
   plain_text: string;
@@ -32,13 +33,13 @@ function getHtmlContent(props: Record<string, unknown>): string | null {
   return null;
 }
 
-function extractHeadings(blocks: { type: string; [key: string]: unknown }[]) {
+function extractHeadings(blocks: NotionFullBlock[]) {
   const headings: { id: string; text: string; level: number }[] = [];
 
   blocks.forEach((block) => {
     const type = block.type as string;
     if (type === "heading_1" || type === "heading_2" || type === "heading_3") {
-      const h = block[type] as { rich_text?: RichText[] } | undefined;
+      const h = (block as unknown as Record<string, unknown>)[type] as { rich_text?: RichText[] } | undefined;
       const rt = h?.rich_text ?? [];
       const text = rt.map((r) => r.plain_text).join("");
       const level = parseInt(type.replace("heading_", ""));
@@ -58,51 +59,109 @@ export default async function NotionPageRoute(props: {
   const { from, embed } = await props.searchParams;
 
   let page: Record<string, unknown> | null = null;
+  let blocks: NotionFullBlock[] = [];
+
   try {
     const client = notion();
     const res = await client.pages.retrieve({ page_id: id });
     if ("properties" in res) {
       page = res as unknown as Record<string, unknown>;
+      blocks = await listBlockChildrenAll({ blockId: id });
     }
   } catch (e) {
     console.warn("Could not retrieve Notion page:", id, e);
   }
 
-  if (!page) {
-    return (
-      <div className="wrap" style={{ padding: "80px 24px", textAlign: "center" }}>
-        <h2 style={{ fontFamily: "var(--serif)", fontSize: "1.5rem", marginBottom: "16px" }}>内容未找到或已归档</h2>
-        <p style={{ color: "var(--ink-2)", marginBottom: "24px" }}>该条目可能已被移除或暂未发布。</p>
-        <Link href="/" className="version-pill" style={{ display: "inline-block", padding: "8px 18px" }}>
-          ← 返回首页
-        </Link>
-      </div>
-    );
-  }
-
-  const pageWithProps = page as unknown as { properties: Record<string, unknown> };
-  const title = getPageTitle(pageWithProps);
-  const blocks = await listBlockChildrenAll({ blockId: id });
-  const headings = extractHeadings(blocks);
-
-  const propsRecord = pageWithProps.properties ?? {};
-
-  // Extract Page Icon
+  let title = "";
+  let propsRecord: Record<string, unknown> = {};
   let pageIcon: { type: "emoji" | "image"; value: string } | null = null;
-  if (isObj(page.icon)) {
-    const ic = page.icon as Record<string, unknown>;
-    if (ic.type === "emoji" && typeof ic.emoji === "string") pageIcon = { type: "emoji", value: ic.emoji };
-    else if (ic.type === "file" && isObj(ic.file) && typeof ic.file.url === "string") pageIcon = { type: "image", value: ic.file.url };
-    else if (ic.type === "external" && isObj(ic.external) && typeof ic.external.url === "string") pageIcon = { type: "image", value: ic.external.url };
+  let pageCover: string | null = null;
+
+  if (page) {
+    const pageWithProps = page as unknown as { properties: Record<string, unknown> };
+    title = getPageTitle(pageWithProps);
+    propsRecord = pageWithProps.properties ?? {};
+
+    // Extract Page Icon
+    if (isObj(page.icon)) {
+      const ic = page.icon as Record<string, unknown>;
+      if (ic.type === "emoji" && typeof ic.emoji === "string") pageIcon = { type: "emoji", value: ic.emoji };
+      else if (ic.type === "file" && isObj(ic.file) && typeof ic.file.url === "string") pageIcon = { type: "image", value: ic.file.url };
+      else if (ic.type === "external" && isObj(ic.external) && typeof ic.external.url === "string") pageIcon = { type: "image", value: ic.external.url };
+    }
+
+    // Extract Page Cover
+    if (isObj(page.cover)) {
+      const cov = page.cover as Record<string, unknown>;
+      if (cov.type === "file" && isObj(cov.file) && typeof cov.file.url === "string") pageCover = cov.file.url;
+      else if (cov.type === "external" && isObj(cov.external) && typeof cov.external.url === "string") pageCover = cov.external.url;
+    }
+  } else {
+    // ✦ 容灾兜底：从本地静态知识库中查找对应条目
+    const decodedId = decodeURIComponent(id);
+    const fbNote = FALLBACK_SITE_DATA.notes.find((n) => n.id === id || n.title === decodedId);
+    const fbBook = FALLBACK_SITE_DATA.books.find((b) => b.id === id || b.t === decodedId);
+    const fbLab = FALLBACK_SITE_DATA.lab.find((l) => l.id === id || l.t === decodedId);
+    const fbPause = FALLBACK_SITE_DATA.pause.find((p) => p.id === id || p.t === decodedId);
+
+    if (fbNote) {
+      title = fbNote.title;
+      propsRecord = {
+        Category: { type: "select", select: { name: fbNote.cat } },
+        Date: { type: "date", date: { start: fbNote.d } },
+        ReadTime: { type: "number", number: fbNote.readTime },
+        Excerpt: { type: "rich_text", rich_text: [{ plain_text: fbNote.text }] },
+        Tags: { type: "multi_select", multi_select: (fbNote.tags || []).map((t) => ({ name: t })) },
+        HTMLContent: fbNote.htmlContent ? { type: "url", url: fbNote.htmlContent } : undefined,
+      };
+      pageIcon = { type: "emoji", value: "📝" };
+    } else if (fbBook) {
+      title = fbBook.t;
+      propsRecord = {
+        Author: { type: "rich_text", rich_text: [{ plain_text: fbBook.a }] },
+        Tagline: { type: "rich_text", rich_text: [{ plain_text: fbBook.tagline || "" }] },
+        MyRating: { type: "number", number: fbBook.rating || 5 },
+        DownloadURL: { type: "url", url: fbBook.downloadUrl || "" },
+        Cover: { type: "files", files: fbBook.coverUrl ? [{ type: "external", external: { url: fbBook.coverUrl } }] : [] },
+        Category: { type: "select", select: { name: fbBook.c || "书架" } },
+        Tags: { type: "multi_select", multi_select: (fbBook.tags || [fbBook.c]).map((t) => ({ name: t })) },
+      };
+      pageIcon = { type: "emoji", value: "📚" };
+    } else if (fbLab) {
+      title = fbLab.t;
+      const ghUrl = fbLab.links?.find(([name]) => name.toLowerCase().includes("github") || name.toLowerCase().includes("源码"))?.[1] || "";
+      const demoUrl = fbLab.links?.find(([name]) => name.toLowerCase().includes("demo") || name.toLowerCase().includes("演示") || name.toLowerCase().includes("在线") || name.toLowerCase().includes("下载"))?.[1] || fbLab.links?.[0]?.[1] || "";
+      propsRecord = {
+        Badge: { type: "rich_text", rich_text: [{ plain_text: fbLab.tag || "Vibe Coding" }] },
+        Description: { type: "rich_text", rich_text: [{ plain_text: fbLab.d }] },
+        GitHubURL: { type: "url", url: ghUrl },
+        DemoURL: { type: "url", url: demoUrl },
+      };
+      pageIcon = fbLab.appIcon || { type: "emoji", value: "🧪" };
+    } else if (fbPause) {
+      title = fbPause.t;
+      propsRecord = {
+        Location: { type: "rich_text", rich_text: [{ plain_text: fbPause.loc }] },
+        Date: { type: "date", date: { start: fbPause.d } },
+        Description: { type: "rich_text", rich_text: [{ plain_text: fbPause.loc }] },
+        Cover: { type: "files", files: [{ type: "external", external: { url: fbPause.img } }] },
+      };
+      pageCover = fbPause.img;
+      pageIcon = { type: "emoji", value: "🌿" };
+    } else {
+      return (
+        <div className="wrap" style={{ padding: "80px 24px", textAlign: "center" }}>
+          <h2 style={{ fontFamily: "var(--serif)", fontSize: "1.5rem", marginBottom: "16px" }}>内容未找到或已归档</h2>
+          <p style={{ color: "var(--ink-2)", marginBottom: "24px" }}>该条目可能已被移除或暂未发布。</p>
+          <Link href="/" className="version-pill" style={{ display: "inline-block", padding: "8px 18px" }}>
+            ← 返回首页
+          </Link>
+        </div>
+      );
+    }
   }
 
-  // Extract Page Cover
-  let pageCover: string | null = null;
-  if (isObj(page.cover)) {
-    const cov = page.cover as Record<string, unknown>;
-    if (cov.type === "file" && isObj(cov.file) && typeof cov.file.url === "string") pageCover = cov.file.url;
-    else if (cov.type === "external" && isObj(cov.external) && typeof cov.external.url === "string") pageCover = cov.external.url;
-  }
+  const headings = extractHeadings(blocks);
 
   const isBook =
     Object.prototype.hasOwnProperty.call(propsRecord, "Author") ||

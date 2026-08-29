@@ -11,11 +11,22 @@ export default async function PausePage() {
   const bg = ["bg-warm", "bg-cool", "bg-forest", "bg-dusk", "bg-stone", "bg-ink"] as const;
 
   return (
-    <div className="magazine-layout wrap" style={{ paddingTop: "32px", paddingBottom: "80px" }}>
-      <div className="section-header">
+    <div className="magazine-layout wrap" style={{ paddingTop: "24px", paddingBottom: "80px" }}>
+      <nav className="detail-breadcrumb" aria-label="面包屑导航" style={{ marginBottom: "20px" }}>
+        <Link href="/" className="detail-breadcrumb-link">
+          首页
+        </Link>
+        <span className="detail-breadcrumb-sep">/</span>
+        <span className="detail-breadcrumb-current">
+          <span className="detail-breadcrumb-icon">🌿</span>
+          05 隙 · 随想与胶片
+        </span>
+      </nav>
+
+      <div className="section-header" style={{ marginBottom: "28px" }}>
         <div>
           <p className="section-eyebrow">PAUSE · 05 隙</p>
-          <h1 className="section-title">隙</h1>
+          <h1 className="section-title">隙 · 随想与胶片</h1>
         </div>
         <p className="section-desc">想要一个 Happy End。</p>
       </div>

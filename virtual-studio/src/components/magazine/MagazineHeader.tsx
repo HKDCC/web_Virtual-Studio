@@ -58,6 +58,18 @@ export function MagazineHeader({
     } catch {}
   }, []);
 
+  // Global ⌘K / Ctrl+K keyboard shortcut to open search
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && (e.key === "k" || e.key === "K")) {
+        e.preventDefault();
+        setSearchOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleGlobalKeyDown);
+    return () => window.removeEventListener("keydown", handleGlobalKeyDown);
+  }, []);
+
   // Scroll listener for sticky dock and active section tracking
   useEffect(() => {
     const handleScroll = () => {

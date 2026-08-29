@@ -10,7 +10,9 @@ export const metadata: Metadata = {
   title: "tl; // lab — Virtual Studio · 杂志版",
   description: "基于 Next.js + Notion 的杂志编辑式个人站（方案 C）",
   icons: {
-    icon: "https://minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com/ccv2%2F2026-03-20%2FMiniMax-M2.7%2F2029533552822984939%2F38a2b695c497258d0db824a605fcd4aa353e1f4d8835ac9c1f9d0599ff5ed18f..png?Expires=1774084924&OSSAccessKeyId=LTAI5tGLnRTkBjLuYPjNcKQ8&Signature=DWJZ269NaR%2FmAIu%2Fwxp9mzHmeVg%3D",
+    icon: "/icon.png",
+    shortcut: "/favicon.ico",
+    apple: "/icon.png",
   },
 };
 
@@ -26,7 +28,7 @@ export default async function RootLayout({
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{if(localStorage.getItem('tl-theme')==='dark')document.documentElement.dataset.theme='dark'}catch(e){}`,
+            __html: `(function(){try{var s=localStorage.getItem('tl-theme')||localStorage.getItem('theme');var d=s==='dark'||(!s&&window.matchMedia('(prefers-color-scheme: dark)').matches);var t=d?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.dataset.theme=t;}catch(e){}})()`,
           }}
         />
         <link rel="preconnect" href="https://fonts.googleapis.com" />

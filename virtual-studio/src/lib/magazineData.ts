@@ -577,12 +577,12 @@ export const FALLBACK_SITE_DATA = {
             "沟通心理学",
             "共赢思维",
             "决策方法论",
-            "GLM 5.3 Flash"
+            "GLM 5.3"
         ],
         "readTime": 45,
-        "htmlContent": "https://quaxstudio.xyz/articles/getting-to-yes-谈判力-现代智识风.html",
+        "htmlContent": "https://quaxstudio.xyz/articles/getting-to-yes-谈判力-glm-5.3.html",
         "src": "读书笔记 · 【读书笔记】Getting to Yes_谈判力",
-        "text": "哈佛经典原则谈判法：把人与事彻底剥离，着眼于深层利益而非立场争执；确立最佳替代方案BATNA，在不伤关系的前提下达成共赢破局。"
+        "text": "《谈判力》（Getting to Yes）读书笔记——哈佛谈判项目原则谈判法完全指南：核心观点、四要素模型、案例、工具箱与金句。"
     },
     {
         "id": "3cb4b57f-e15a-81f0-8d1e-f97ec7578661",

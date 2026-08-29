@@ -86,6 +86,8 @@ export interface NoteItem {
   tags?: string[];
   readTime?: number | null;
   htmlContent?: string | null;
+  heroLight?: string | null;
+  heroDark?: string | null;
   text: string;
 }
 
@@ -1474,6 +1476,8 @@ export async function fetchMagazineData(): Promise<MagazineDataPayload> {
           const tags = getMultiSelect(props, "Tags");
           const readTime = getNumber(props, "ReadTime") || 20;
           const htmlContent = getUrl(props, "HTMLContent");
+          const heroLight = p.id ? `/notes_heroes/${p.id}_light.png` : null;
+          const heroDark = p.id ? `/notes_heroes/${p.id}_dark.png` : null;
           const excerpt = getRichText(props, "Excerpt") || getPageTitle(p);
           const title = getPageTitle(p);
 
@@ -1485,6 +1489,8 @@ export async function fetchMagazineData(): Promise<MagazineDataPayload> {
             tags,
             readTime,
             htmlContent,
+            heroLight,
+            heroDark,
             src: `${category} · ${title}`,
             text: excerpt,
           };

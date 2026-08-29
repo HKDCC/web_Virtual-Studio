@@ -1220,26 +1220,94 @@ details.prompt[open] summary::after {
   margin-top: 8px;
 }
 
-/* ═══════════════ 06 笔记 ═══════════════ */
+/* ═══════════════ 06 笔记 · 双列杂志网格 ═══════════════ */
 .notes-grid {
   display: grid;
-  gap: 20px;
-  margin-top: 24px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px 24px;
+  margin-top: 28px;
+}
+
+@media (max-width: 860px) {
+  .notes-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
 }
 
 .note-card {
   border: 1px solid var(--line);
   background: var(--card);
-  padding: 24px;
-  border-radius: 4px;
+  padding: 0;
+  border-radius: 12px;
   box-sizing: border-box;
-  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
 }
 
 .note-card:hover {
   border-color: var(--accent);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+/* 16:9 高清双模自适应封面视窗 */
+.note-card-hero-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--paper-2);
+  border-bottom: 1px solid var(--line);
+  position: relative;
+}
+
+.note-card-hero-wrap a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.note-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.note-card:hover .note-hero-img {
+  transform: scale(1.03);
+}
+
+/* 昼夜主题自适应控制 */
+[data-theme="light"] .theme-dark-only {
+  display: none !important;
+}
+
+[data-theme="dark"] .theme-light-only {
+  display: none !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-light-only {
+    display: none !important;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .theme-dark-only {
+    display: none !important;
+  }
+}
+
+.note-card-content {
+  padding: 20px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .note-card-meta {

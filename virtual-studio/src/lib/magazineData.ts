@@ -1354,16 +1354,22 @@ export async function fetchMagazineData() {
     console.warn("Using fallback log data:", e);
   }
 
-  return {
-    books,
-    lab,
-    flow,
-    tools,
-    sites,
-    prompts,
-    timeline,
-    pause,
-    notes,
-    log,
+  const result = {
+    books: Array.isArray(books) ? books : [],
+    lab: Array.isArray(lab) ? lab : [],
+    flow: flow || {},
+    tools: Array.isArray(tools) ? tools : [],
+    sites: Array.isArray(sites) ? sites : [],
+    prompts: Array.isArray(prompts) ? prompts : [],
+    timeline: Array.isArray(timeline) ? timeline : [],
+    pause: Array.isArray(pause) ? pause : [],
+    notes: Array.isArray(notes) ? notes : [],
+    log: Array.isArray(log) ? log : [],
   };
+
+  try {
+    return JSON.parse(JSON.stringify(result)) as typeof result;
+  } catch {
+    return result;
+  }
 }

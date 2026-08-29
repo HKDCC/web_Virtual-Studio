@@ -40,9 +40,9 @@ export default async function HomePage() {
           <p className="kicker">
             <b>01</b> / 输出层 · OUTPUT
           </p>
-          <a className="util" href="/lab" title="全部实验室项目">
+          <Link className="util" href="/lab" title="全部实验室项目">
             全部项目 ↗
-          </a>
+          </Link>
         </div>
         <h2 className="sec-title reveal">实验室</h2>
         <p className="sec-lede reveal">AI 实践记录与 Vibe Coding 成果。每个项目都是一次认知迭代。</p>
@@ -110,15 +110,14 @@ export default async function HomePage() {
           <p className="kicker">
             <b>02</b> / 片段层 · FRAGMENTS
           </p>
-          <a className="util" href="/archive?tab=notes" title="查看全部笔记">
+          <Link className="util" href="/archive?tab=notes" title="查看全部笔记">
             全部笔记 ↗
-          </a>
+          </Link>
         </div>
         <h2 className="sec-title reveal">笔记</h2>
         <p className="sec-lede reveal">来自 Notion 数据库的文章与深度长文。</p>
         <div className="notes-grid sec-body reveal" id="notesList">
           {safeNotes.map((n, i) => {
-            const targetUrl = n?.htmlContent || (n?.id ? `/p/${n.id}` : "#notes");
             const noteTitle = n?.title || "无标题笔记";
             const noteDate = n?.d || "";
             const noteCat = n?.cat || "思考";
@@ -138,9 +137,15 @@ export default async function HomePage() {
                   {n?.readTime ? <span className="note-readtime">{n.readTime} 分钟阅读</span> : null}
                 </div>
                 <h3 className="note-title">
-                  <Link href={targetUrl} target={n?.htmlContent ? "_blank" : undefined}>
-                    {noteTitle}
-                  </Link>
+                  {n?.htmlContent ? (
+                    <a href={n.htmlContent} target="_blank" rel="noopener noreferrer">
+                      {noteTitle}
+                    </a>
+                  ) : (
+                    <Link href={n?.id ? `/p/${n.id}` : "#notes"}>
+                      {noteTitle}
+                    </Link>
+                  )}
                 </h3>
                 <p className="note-excerpt">{noteText}</p>
                 <div className="note-links">
@@ -177,9 +182,9 @@ export default async function HomePage() {
           <p className="kicker">
             <b>04</b> / 观测层 · OBSERVATION
           </p>
-          <a className="util" href="/aievolutionlog" title="大模型迭代时间轴">
+          <Link className="util" href="/aievolutionlog" title="大模型迭代时间轴">
             全部更迭 ↗
-          </a>
+          </Link>
         </div>
         <h2 className="sec-title reveal">模型更迭</h2>
         <p className="sec-lede reveal">主流大语言模型迭代时间轴，高光时刻精确记录。</p>
@@ -205,9 +210,9 @@ export default async function HomePage() {
           <p className="kicker">
             <b>06</b> / 日志 · LOG
           </p>
-          <a className="util" href="/changelog" title="全部足迹">
+          <Link className="util" href="/changelog" title="全部足迹">
             全部足迹 ↗
-          </a>
+          </Link>
         </div>
         <h2 className="sec-title reveal">足迹</h2>
         <p className="sec-lede reveal">这个虚拟空间的迭代记录。</p>

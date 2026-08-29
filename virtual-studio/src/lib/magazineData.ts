@@ -343,6 +343,7 @@ export const FALLBACK_SITE_DATA = {
       d: "极简、无干扰的本地优先桌面阅读器，支持 TXT / EPUB / PDF，基于 IndexedDB 离线存储。",
       links: [["GitHub", "https://github.com/HKDCC/MiniReader"], ["Demo", "https://github.com/HKDCC/MiniReader/releases"]],
       iconUrl: "/lab/minireader.gif",
+      appIcon: { type: "emoji", value: "📖" },
     },
     {
       tag: "AI 实践",
@@ -350,6 +351,7 @@ export const FALLBACK_SITE_DATA = {
       d: "一款 MUJI 无印良品风格的桌面便签应用，专为捕捉日常碎想法而设计。",
       links: [["GitHub", "https://github.com/HKDCC/swift-memo"], ["Demo", "https://github.com/HKDCC/swift-memo/releases"]],
       iconUrl: "/lab/swiftmemo.jpg",
+      appIcon: { type: "emoji", value: "📝" },
     },
     {
       tag: "AI 实践",
@@ -357,6 +359,7 @@ export const FALLBACK_SITE_DATA = {
       d: "专为解决大文件视频传输难题而设计的桌面工具。",
       links: [["查看详情", "#lab"]],
       iconUrl: "/lab/cassettecutter.jpg",
+      appIcon: { type: "emoji", value: "📼" },
     },
     {
       tag: "Vibe Coding",
@@ -364,18 +367,21 @@ export const FALLBACK_SITE_DATA = {
       d: "磁带未来主义 + 复古像素风贪吃蛇小游戏。Claude + Antigravity。",
       links: [["GitHub", "https://github.com/HKDCC/snake-game"], ["Demo", "https://github.com/HKDCC/snake-game/releases"]],
       iconUrl: "/lab/retro_pixel_snake.gif",
+      appIcon: { type: "emoji", value: "🐍" },
     },
     {
       tag: "AI 实践",
       t: "ClaudeCode 新手安装教程",
       d: "还有更简单的方法：遇到困难，直接问 AI。",
       links: [["查看详情", "#notes"]],
+      appIcon: { type: "emoji", value: "🤖" },
     },
     {
       tag: "AI 实践",
       t: "OpenClaw 新手部署教程",
       d: "同样有更简单的方法：遇到困难，直接问 AI。",
       links: [["查看详情", "#notes"]],
+      appIcon: { type: "emoji", value: "🐾" },
     },
     {
       tag: "AI 实践",
@@ -383,12 +389,14 @@ export const FALLBACK_SITE_DATA = {
       d: "粉粉的 Todolist，给待办清单一点情绪价值。",
       links: [["查看详情", "#notes"]],
       iconUrl: "/lab/musetodo_pink.gif",
+      appIcon: { type: "emoji", value: "🌸" },
     },
     {
       tag: "Vibe Coding",
       t: "Virtual Studio",
       d: "基于 Next.js + Notion 的极简主义个人网站。",
       links: [["GitHub", "https://github.com/HKDCC/web_Virtual-Studio"], ["Demo", "#"]],
+      appIcon: { type: "emoji", value: "✨" },
     },
   ] as LabItem[],
 

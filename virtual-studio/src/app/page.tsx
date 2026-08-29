@@ -61,6 +61,14 @@ export default async function HomePage() {
               title.includes("SwiftMemo") ? "/lab/swiftmemo.jpg" : null;
             const imgSrc = localFallback || p?.iconUrl;
 
+            const appIcon = p?.appIcon || (
+              title.includes("MiniReader") || title.includes("Reader") ? { type: "emoji" as const, value: "📖" } :
+              title.includes("Cassette") ? { type: "emoji" as const, value: "📼" } :
+              title.includes("SwiftMemo") ? { type: "emoji" as const, value: "📝" } :
+              title.includes("MuseTodo") ? { type: "emoji" as const, value: "🌸" } :
+              title.includes("Retro") || title.includes("Snake") ? { type: "emoji" as const, value: "🐍" } : null
+            );
+
             return (
               <article key={p?.id || i} className={`p-card${i === 0 ? " p-featured" : ""}`}>
                 {imgSrc && (
@@ -77,15 +85,15 @@ export default async function HomePage() {
                 <div className="p-card-body">
                   <p className="p-tag">{tag}</p>
                   <h3>
-                    {p?.appIcon?.type === "emoji" && (
+                    {appIcon?.type === "emoji" && (
                       <span className="p-app-icon emoji" aria-hidden="true">
-                        {p.appIcon.value}
+                        {appIcon.value}
                       </span>
                     )}
-                    {p?.appIcon?.type === "image" && (
+                    {appIcon?.type === "image" && (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
-                        src={p.appIcon.value}
+                        src={appIcon.value}
                         alt=""
                         className="p-app-icon img"
                         aria-hidden="true"

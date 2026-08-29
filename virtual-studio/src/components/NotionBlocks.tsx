@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { NotionFullBlock } from "@/lib/notion";
 import { listBlockChildrenAll } from "@/lib/notion";
 import { NotionToggle } from "@/components/NotionToggle";
+import { CodeBlock } from "@/components/CodeBlock";
 
 type RichText = {
   plain_text: string;
@@ -89,14 +90,11 @@ async function RenderBlock({ block }: { block: NotionFullBlock }) {
       return <p>{renderRichText(rt)}</p>;
     }
     case "code": {
-      const c = b["code"] as unknown as { rich_text?: RichText[] } | undefined;
+      const c = b["code"] as unknown as { rich_text?: RichText[]; language?: string } | undefined;
       const rt = c?.rich_text ?? [];
       const code = rt.map((t) => t.plain_text).join("");
-      return (
-        <pre>
-          <code>{code}</code>
-        </pre>
-      );
+      const lang = c?.language || "plain text";
+      return <CodeBlock code={code} language={lang} />;
     }
     case "image": {
       const imgObj = b["image"] as unknown as {

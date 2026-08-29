@@ -13,14 +13,11 @@ export function MagazineFooter() {
   return (
     <footer className="wrap">
       <div className="foot-row">
-        <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+        <a href="https://github.com/HKDCC/web_Virtual-Studio" target="_blank" rel="noopener noreferrer">
           GITHUB ↗
         </a>
         <a href="/demo_0" title="demo_0 原版备份方案">
           DEMO_0 备份 ↗
-        </a>
-        <a href="/retro" title="赛博档案局复古方案">
-          RETRO 赛博版 ↗
         </a>
         <a href="#main" title="返回顶部">
           TOP ↑

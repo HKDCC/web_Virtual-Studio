@@ -2,12 +2,20 @@ import { NotionBlocks } from "@/components/NotionBlocks";
 import { getPageTitle } from "@/lib/notionHelpers";
 import { listBlockChildrenAll, notion } from "@/lib/notion";
 import Link from "next/link";
-import { BookOverviewHeader } from "@/components/BookOverviewHeader";
 import { TableOfContentsWrapper } from "@/components/TableOfContentsWrapper";
+import { BookDetailHeader } from "@/components/detail/BookDetailHeader";
+import { LabDetailHeader } from "@/components/detail/LabDetailHeader";
+import { PauseDetailHeader } from "@/components/detail/PauseDetailHeader";
+import { NoteDetailHeader } from "@/components/detail/NoteDetailHeader";
+import { DetailBreadcrumb } from "@/components/detail/DetailBreadcrumb";
 
 type RichText = {
   plain_text: string;
 };
+
+function isObj(v: unknown): v is Record<string, unknown> {
+  return typeof v === "object" && v !== null;
+}
 
 function getHtmlContent(props: Record<string, unknown>): string | null {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -42,7 +50,10 @@ function extractHeadings(blocks: { type: string; [key: string]: unknown }[]) {
   return headings;
 }
 
-export default async function NotionPageRoute(props: { params: Promise<{ id: string }>; searchParams: Promise<{ from?: string; embed?: string }> }) {
+export default async function NotionPageRoute(props: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ from?: string; embed?: string }>;
+}) {
   const { id } = await props.params;
   const { from, embed } = await props.searchParams;
 
@@ -75,9 +86,45 @@ export default async function NotionPageRoute(props: { params: Promise<{ id: str
   const headings = extractHeadings(blocks);
 
   const propsRecord = pageWithProps.properties ?? {};
-  const isBook = Object.prototype.hasOwnProperty.call(propsRecord, "Author") || Object.prototype.hasOwnProperty.call(propsRecord, "DownloadURL");
+
+  // Extract Page Icon
+  let pageIcon: { type: "emoji" | "image"; value: string } | null = null;
+  if (isObj(page.icon)) {
+    const ic = page.icon as Record<string, unknown>;
+    if (ic.type === "emoji" && typeof ic.emoji === "string") pageIcon = { type: "emoji", value: ic.emoji };
+    else if (ic.type === "file" && isObj(ic.file) && typeof ic.file.url === "string") pageIcon = { type: "image", value: ic.file.url };
+    else if (ic.type === "external" && isObj(ic.external) && typeof ic.external.url === "string") pageIcon = { type: "image", value: ic.external.url };
+  }
+
+  // Extract Page Cover
+  let pageCover: string | null = null;
+  if (isObj(page.cover)) {
+    const cov = page.cover as Record<string, unknown>;
+    if (cov.type === "file" && isObj(cov.file) && typeof cov.file.url === "string") pageCover = cov.file.url;
+    else if (cov.type === "external" && isObj(cov.external) && typeof cov.external.url === "string") pageCover = cov.external.url;
+  }
+
+  const isBook =
+    Object.prototype.hasOwnProperty.call(propsRecord, "Author") ||
+    Object.prototype.hasOwnProperty.call(propsRecord, "DownloadURL") ||
+    Object.prototype.hasOwnProperty.call(propsRecord, "MyRating");
+
+  const isLab =
+    Object.prototype.hasOwnProperty.call(propsRecord, "GitHubURL") ||
+    Object.prototype.hasOwnProperty.call(propsRecord, "DemoURL") ||
+    Object.prototype.hasOwnProperty.call(propsRecord, "Badge");
+
+  const isPause =
+    Object.prototype.hasOwnProperty.call(propsRecord, "Location") ||
+    (from === "pause") ||
+    (Object.prototype.hasOwnProperty.call(propsRecord, "Cover") && !isBook && !isLab);
+
+  const isNote =
+    Object.prototype.hasOwnProperty.call(propsRecord, "HTMLContent") ||
+    Object.prototype.hasOwnProperty.call(propsRecord, "ReadTime") ||
+    Object.prototype.hasOwnProperty.call(propsRecord, "Excerpt");
+
   const htmlContent = getHtmlContent(propsRecord);
-  const backUrl = from === "news" ? "/aievolutionlog" : "/archive";
 
   if (embed === "true") {
     return (
@@ -86,7 +133,7 @@ export default async function NotionPageRoute(props: { params: Promise<{ id: str
           <iframe
             src={htmlContent}
             style={{ width: "100%", height: "100vh", border: "none", display: "block" }}
-            sandbox="allow-same-origin"
+            sandbox="allow-same-origin allow-scripts"
             title={title}
           />
         ) : (
@@ -97,37 +144,54 @@ export default async function NotionPageRoute(props: { params: Promise<{ id: str
   }
 
   return (
-    <>
+    <article className="detail-page-wrapper">
+      {/* 1. 动态专属详情页头部 */}
       {isBook ? (
-        <BookOverviewHeader title={title} properties={propsRecord} />
+        <BookDetailHeader title={title} properties={propsRecord} pageIcon={pageIcon} />
+      ) : isLab ? (
+        <LabDetailHeader title={title} properties={propsRecord} pageIcon={pageIcon} />
+      ) : isPause ? (
+        <PauseDetailHeader title={title} properties={propsRecord} pageCover={pageCover} />
+      ) : isNote ? (
+        <NoteDetailHeader title={title} properties={propsRecord} htmlContent={htmlContent} pageIcon={pageIcon} />
       ) : (
-        <div style={{ maxWidth: 900, margin: "0 auto", padding: "40px 48px 0" }}>
-          <div style={{ marginBottom: 20 }}>
-            <Link href={backUrl} style={{ textDecoration: "none", color: "var(--ink-2)", fontSize: 13 }}>
-              ← 返回
-            </Link>
+        <div className="generic-detail-header-wrapper">
+          <div className="generic-detail-container">
+            <DetailBreadcrumb
+              sectionTitle="03 归档"
+              sectionHref="/archive"
+              itemTitle={title}
+              icon={pageIcon?.type === "emoji" ? pageIcon.value : "✦"}
+            />
+            <h1 className="generic-detail-title">{title}</h1>
           </div>
-          <h1 style={{ fontFamily: "var(--serif)", fontSize: 32, fontWeight: 300, lineHeight: 1.3, marginBottom: 16 }}>
-            {title}
-          </h1>
         </div>
       )}
 
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: "0 48px 80px", position: "relative" }}>
+      {/* 2. 详情页正文内容区 (Markdown Blocks 或 HTML 嵌入) */}
+      <div className="detail-body-container">
         {htmlContent ? (
-          <iframe
-            src={htmlContent}
-            style={{ width: "100%", height: "100vh", border: "none", display: "block" }}
-            sandbox="allow-same-origin"
-            title={title}
-          />
-        ) : (
-          <NotionBlocks blocks={blocks} />
-        )}
+          <div className="detail-iframe-frame">
+            <iframe
+              src={htmlContent}
+              style={{ width: "100%", height: "85vh", border: "none", display: "block", borderRadius: "8px" }}
+              sandbox="allow-same-origin allow-scripts"
+              title={title}
+            />
+          </div>
+        ) : blocks.length > 0 ? (
+          <div className="detail-notion-blocks-frame">
+            <NotionBlocks blocks={blocks} />
+          </div>
+        ) : !isPause ? (
+          <div className="detail-empty-note">
+            <p>✦ 暂无更多正文内容</p>
+          </div>
+        ) : null}
       </div>
 
-      <TableOfContentsWrapper headings={headings} />
-    </>
+      {headings.length > 1 && <TableOfContentsWrapper headings={headings} />}
+    </article>
   );
 }
 

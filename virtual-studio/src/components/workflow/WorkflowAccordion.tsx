@@ -12,8 +12,6 @@ interface WorkflowAccordionProps {
   onScrollToAppendix: () => void;
 }
 
-const CATEGORIES = ["全部", "学术本地化", "代码工程", "视觉生成", "日常效率", "AI研究"] as const;
-
 export function WorkflowAccordion({
   workflows,
   activeWorkflowId,
@@ -26,6 +24,11 @@ export function WorkflowAccordion({
   const [expandedIds, setExpandedIds] = useState<Set<string>>(
     new Set(activeWorkflowId ? [activeWorkflowId] : [workflows[0]?.id || ""])
   );
+
+  const categories = useMemo(() => {
+    const set = new Set(workflows.map((w) => w.category).filter(Boolean));
+    return ["全部", ...Array.from(set)];
+  }, [workflows]);
 
   // Filter workflows by category & search
   const filteredWorkflows = useMemo(() => {
@@ -132,7 +135,7 @@ export function WorkflowAccordion({
       >
         {/* Category Pills */}
         <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-          {CATEGORIES.map((cat) => {
+          {categories.map((cat) => {
             const isSelected = selectedCategory === cat;
             return (
               <button

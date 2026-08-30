@@ -65,23 +65,20 @@ async function RenderBlock({ block }: { block: NotionFullBlock }) {
     case "heading_1": {
       const h = b["heading_1"] as unknown as { rich_text?: RichText[] } | undefined;
       const rt = h?.rich_text ?? [];
-      const text = rt.map((r) => r.plain_text).join("");
-      const id = text.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
-      return <h2 id={id}>{renderRichText(rt)}</h2>;
+      const headingId = `heading-${block.id}`;
+      return <h2 id={headingId} style={{ scrollMarginTop: "24px" }}>{renderRichText(rt)}</h2>;
     }
     case "heading_2": {
       const h = b["heading_2"] as unknown as { rich_text?: RichText[] } | undefined;
       const rt = h?.rich_text ?? [];
-      const text = rt.map((r) => r.plain_text).join("");
-      const id = text.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
-      return <h2 id={id}>{renderRichText(rt)}</h2>;
+      const headingId = `heading-${block.id}`;
+      return <h2 id={headingId} style={{ scrollMarginTop: "24px" }}>{renderRichText(rt)}</h2>;
     }
     case "heading_3": {
       const h = b["heading_3"] as unknown as { rich_text?: RichText[] } | undefined;
       const rt = h?.rich_text ?? [];
-      const text = rt.map((r) => r.plain_text).join("");
-      const id = text.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
-      return <h3 id={id}>{renderRichText(rt)}</h3>;
+      const headingId = `heading-${block.id}`;
+      return <h3 id={headingId} style={{ scrollMarginTop: "24px" }}>{renderRichText(rt)}</h3>;
     }
     case "paragraph": {
       const p = b["paragraph"] as unknown as { rich_text?: RichText[] } | undefined;

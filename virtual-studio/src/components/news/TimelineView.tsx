@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useMemo, useState } from "react";
 import type { TimelineEntry } from "@/lib/changelog";
@@ -81,9 +81,9 @@ function formatDate(dateStr: string) {
 }
 
 export function TimelineView({ entries = [] }: TimelineViewProps) {
-  const [benchmarkSource, setBenchmarkSource] = useState<"arena" | "aa">("arena");
   const [selectedModel, setSelectedModel] = useState<string>("全部");
   const [showAllLeaderboard, setShowAllLeaderboard] = useState<boolean>(false);
+  const [activeBoard, setActiveBoard] = useState<"arena" | "aa">("arena");
 
   const filteredEntries = useMemo(() => {
     const sorted = [...entries].sort((a, b) => b.date.localeCompare(a.date));
@@ -100,22 +100,23 @@ export function TimelineView({ entries = [] }: TimelineViewProps) {
 
   return (
     <div className="model-evolution-container">
-      {/* ═══════════════ 1. Benchmark 权威基准评测榜单 ═══════════════ */}
+      {/* ═══════════════ 1. 官方权威评测榜单 ═══════════════ */}
       <section className="aa-leaderboard-section">
         <div className="aa-leaderboard-header">
           <div className="aa-header-left">
             <div style={{ display: "flex", gap: "8px", marginBottom: "8px", flexWrap: "wrap" }}>
               <button
-                onClick={() => setBenchmarkSource("arena")}
+                type="button"
+                onClick={() => setActiveBoard("arena")}
                 style={{
                   padding: "4px 12px",
                   fontSize: "11.5px",
                   fontFamily: "var(--mono)",
                   fontWeight: 700,
                   borderRadius: "20px",
-                  border: `1px solid ${benchmarkSource === "arena" ? "var(--accent)" : "var(--line)"}`,
-                  background: benchmarkSource === "arena" ? "var(--accent)" : "var(--card)",
-                  color: benchmarkSource === "arena" ? "#ffffff" : "var(--ink-2)",
+                  border: `1px solid ${activeBoard === "arena" ? "var(--accent)" : "var(--line)"}`,
+                  background: activeBoard === "arena" ? "var(--accent)" : "var(--card)",
+                  color: activeBoard === "arena" ? "#ffffff" : "var(--ink-2)",
                   cursor: "pointer",
                   transition: "all 0.15s ease",
                 }}
@@ -123,16 +124,17 @@ export function TimelineView({ entries = [] }: TimelineViewProps) {
                 Arena.ai WebDev 编程竞技榜
               </button>
               <button
-                onClick={() => setBenchmarkSource("aa")}
+                type="button"
+                onClick={() => setActiveBoard("aa")}
                 style={{
                   padding: "4px 12px",
                   fontSize: "11.5px",
                   fontFamily: "var(--mono)",
                   fontWeight: 700,
                   borderRadius: "20px",
-                  border: `1px solid ${benchmarkSource === "aa" ? "var(--accent)" : "var(--line)"}`,
-                  background: benchmarkSource === "aa" ? "var(--accent)" : "var(--card)",
-                  color: benchmarkSource === "aa" ? "#ffffff" : "var(--ink-2)",
+                  border: `1px solid ${activeBoard === "aa" ? "var(--accent)" : "var(--line)"}`,
+                  background: activeBoard === "aa" ? "var(--accent)" : "var(--card)",
+                  color: activeBoard === "aa" ? "#ffffff" : "var(--ink-2)",
                   cursor: "pointer",
                   transition: "all 0.15s ease",
                 }}
@@ -142,9 +144,9 @@ export function TimelineView({ entries = [] }: TimelineViewProps) {
             </div>
 
             <h2 className="aa-title">
-              {benchmarkSource === "arena" ? "Arena.ai WebDev 代码竞技榜" : "Artificial Analysis 官方智力榜单"}
+              {activeBoard === "arena" ? "Arena.ai WebDev 官方代码榜" : "Artificial Analysis 官方智力榜单"}
               <a
-                href={benchmarkSource === "arena" ? "https://arena.ai/leaderboard/code/webdev" : "https://artificialanalysis.ai/evaluations/artificial-analysis-intelligence-index"}
+                href={activeBoard === "arena" ? "https://arena.ai/leaderboard/code/webdev" : "https://artificialanalysis.ai/evaluations/artificial-analysis-intelligence-index"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="aa-outlink"
@@ -154,9 +156,9 @@ export function TimelineView({ entries = [] }: TimelineViewProps) {
               </a>
             </h2>
             <p className="aa-subtitle">
-              {benchmarkSource === "arena"
+              {activeBoard === "arena"
                 ? "LMSYS / Arena.ai 官方前沿 Web 开发与多步 Agentic Coding 盲测 Elo 评分。"
-                : "整合 GDPval-AA v2、Terminal-Bench v2.1、SciCode、GPQA Diamond 等 9 大权威基准综合智力值。"}
+                : "整合 GDPval-AA v2、Terminal-Bench v2.1、SciCode、GPQA Diamond 等 9 大权威基准测试综合智力值。"}
             </p>
           </div>
           <button
@@ -170,7 +172,7 @@ export function TimelineView({ entries = [] }: TimelineViewProps) {
 
         {/* 柱状榜单 */}
         <div className="aa-chart-grid">
-          {benchmarkSource === "arena"
+          {activeBoard === "arena"
             ? displayedArena.map((item, idx) => {
                 const percentage = ((item.score - 1450) / (1691 - 1450)) * 100;
                 const isTop3 = idx < 3;
@@ -256,84 +258,105 @@ export function TimelineView({ entries = [] }: TimelineViewProps) {
       </section>
 
       {/* ═══════════════ 2. 模型筛选器 ═══════════════ */}
-      <div className="model-filter-bar">
-        <div className="filter-title-wrap">
-          <span className="filter-icon">⚡</span>
-          <span className="filter-title">模型家族速选：</span>
+      <div className="filter-bar">
+        <div className="filter-title">
+          <span>⚡</span>
+          <span>模型家族速选：</span>
         </div>
-        <div className="filter-pills-wrap">
+        <div className="filter-chips">
           {FILTER_MODELS.map((model) => (
             <button
               key={model}
               type="button"
-              className={`filter-pill ${selectedModel === model ? "filter-pill-active" : ""}`}
+              className={`filter-chip ${selectedModel === model ? "active" : ""}`}
               onClick={() => setSelectedModel(model)}
             >
-              {model}
+              {model !== "全部" && getModelLogoUrl(model) && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={getModelLogoUrl(model)!}
+                  alt=""
+                  className="filter-chip-logo"
+                />
+              )}
+              <span>{model}</span>
+              {selectedModel === model && <span className="chip-dot" />}
             </button>
           ))}
         </div>
       </div>
 
-      {/* ═══════════════ 3. 时间轴展示区 ═══════════════ */}
-      <div className="timeline-section">
-        {filteredEntries.length === 0 ? (
-          <div className="timeline-empty">暂无匹配的模型更迭记录。</div>
-        ) : (
-          <div className="timeline-list">
-            {filteredEntries.map((entry, index) => {
-              const logo = getModelLogoUrl(entry.model || entry.name);
-              const formattedDate = formatDate(entry.date);
+      {/* ═══════════════ 3. 中轴实时模型树 ═══════════════ */}
+      <section className="model-tree-section">
+        <div className="model-tree-wrapper">
+          {/* 中央竖向主干线 */}
+          <div className="tree-central-spine" />
 
-              return (
-                <article key={entry.id || index} className="timeline-card">
-                  {/* 左侧时间线节点 */}
-                  <div className="timeline-node-col">
-                    <div className="timeline-dot" />
-                    <div className="timeline-line" />
-                  </div>
+          {filteredEntries.length === 0 ? (
+            <div className="tree-empty-state">未找到匹配的模型更迭记录</div>
+          ) : (
+            <div className="tree-nodes-list">
+              {filteredEntries.map((entry, index) => {
+                const isLeft = index % 2 === 0;
+                const logo = getModelLogoUrl(entry.model);
+                const hasAAScore = typeof entry.aaIntelligence === "number";
 
-                  {/* 右侧卡片内容 */}
-                  <div className="timeline-card-content">
-                    {/* 卡片头部：日期与 Logo */}
-                    <div className="timeline-card-header">
-                      <div className="timeline-meta-left">
-                        <span className="timeline-date-badge">{formattedDate}</span>
-                        {entry.version && (
-                          <span className="timeline-version-tag">{entry.version}</span>
-                        )}
-                        {entry.model && (
-                          <span className="timeline-model-tag">{entry.model}</span>
-                        )}
-                      </div>
-
-                      {logo && (
-                        <div className="timeline-logo-wrap">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={logo}
-                            alt={entry.model || entry.name}
-                            className="timeline-model-logo"
-                            loading="lazy"
-                          />
-                        </div>
-                      )}
+                return (
+                  <div
+                    key={entry.id || `${entry.date}-${entry.model}-${index}`}
+                    className={`tree-node-row ${isLeft ? "node-left" : "node-right"}`}
+                  >
+                    {/* 中央节点锚点 */}
+                    <div className="tree-spine-anchor">
+                      <div className="spine-dot" />
                     </div>
 
-                    {/* 标题 */}
-                    <h3 className="timeline-title">{entry.name}</h3>
+                    {/* 模型内容卡片 */}
+                    <div className="tree-card-shell">
+                      <div className="tree-model-card">
+                        {/* 头部元信息 */}
+                        <div className="tree-card-header">
+                          <div className="tree-date-chip">
+                            <span>📅</span>
+                            <span>{formatDate(entry.date)}</span>
+                          </div>
 
-                    {/* 关键亮点/特性 */}
-                    {entry.highlights && (
-                      <p className="timeline-summary">{entry.highlights}</p>
-                    )}
+                          <div className="tree-model-badge">
+                            {logo && (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img src={logo} alt="" className="badge-logo" />
+                            )}
+                            <span>{entry.model}</span>
+                          </div>
+
+                          {entry.version && (
+                            <span className="tree-version-tag">{entry.version}</span>
+                          )}
+
+                          {hasAAScore && (
+                            <div className="tree-aa-pill" title="Artificial Analysis 智力值">
+                              <span className="pill-prefix">AA 智力值</span>
+                              <span className="pill-score">{entry.aaIntelligence}</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* 模型主标题 */}
+                        <h3 className="tree-model-title">{entry.name}</h3>
+
+                        {/* 亮点与突破摘要 */}
+                        {entry.highlights && (
+                          <p className="tree-model-desc">{entry.highlights}</p>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </article>
-              );
-            })}
-          </div>
-        )}
-      </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </section>
     </div>
   );
 }

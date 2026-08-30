@@ -2,6 +2,7 @@ import Link from "next/link";
 import { fetchMagazineData } from "@/lib/magazineData";
 import { WorkflowSection } from "@/components/magazine/WorkflowSection";
 import { ArchiveSection } from "@/components/magazine/ArchiveSection";
+import { ModelEvolutionSection } from "@/components/magazine/ModelEvolutionSection";
 import { PauseSection } from "@/components/magazine/PauseSection";
 import { TagPill } from "@/components/common/TagPill";
 
@@ -13,7 +14,6 @@ export default async function HomePage() {
   const {
     books = [],
     lab = [],
-    timeline = [],
     pause = [],
     notes = [],
     log = [],
@@ -21,7 +21,6 @@ export default async function HomePage() {
 
   const safeLab = Array.isArray(lab) ? lab : [];
   const safeNotes = Array.isArray(notes) ? notes : [];
-  const safeTimeline = Array.isArray(timeline) ? timeline : [];
   const safeLog = Array.isArray(log) ? log : [];
 
   return (
@@ -313,30 +312,8 @@ export default async function HomePage() {
       {/* ═══════════ 03 库 · Archive ═══════════ */}
       <ArchiveSection books={books} />
 
-      {/* ═══════════ 04 时间线 · Timeline ═══════════ */}
-      <section id="timeline" className="block wrap">
-        <div className="sec-head reveal">
-          <p className="kicker">
-            <b>04</b> / 观测层 · OBSERVATION
-          </p>
-          <Link className="util" href="/aievolutionlog" title="大模型迭代时间轴">
-            全部更迭 ↗
-          </Link>
-        </div>
-        <h2 className="sec-title reveal">模型更迭</h2>
-        <p className="sec-lede reveal">主流大语言模型迭代时间轴，高光时刻精确记录。</p>
-        <div className="tl-list sec-body reveal" id="tlList">
-          {safeTimeline.map((x, i) => (
-            <div key={i} className="tl-row">
-              <span className="tl-date">{x?.d || ""}</span>
-              <div className="tl-main">
-                <h3>{x?.t || ""}</h3>
-                <span className="tl-note">{x?.note || ""}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* ═══════════ 04 时间线 · Timeline / 模型更迭 ═══════════ */}
+      <ModelEvolutionSection />
 
       {/* ═══════════ 05 隙 · Pause ═══════════ */}
       <PauseSection pause={pause} />

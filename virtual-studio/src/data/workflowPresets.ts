@@ -37,15 +37,10 @@ export const WORKFLOW_PRESETS: PresetWorkflow[] = [
     appendixNoteTitle: "Obviously Awesome本地化项目笔记",
     appendixNoteId: "3a11d5da-bc25-80b2-8e28-e4f51fcb5e76",
     keyEntities: [
-      "Antigravity",
-      "Python 正则清洗脚本",
-      "/grill-me 意图拷问",
-      "本地化三大法则",
+      "Google Antigravity",
       "Gemini 3.5 Flash",
       "DeepSeek V4 Pro",
-      "walkthrough 错题本",
-      "Pandoc",
-      "verify.py 校验脚本"
+      "Notion"
     ],
     phases: [
       {

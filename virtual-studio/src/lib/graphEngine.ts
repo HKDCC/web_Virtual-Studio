@@ -221,55 +221,26 @@ export function buildWorkflowGraph(
       color: ASTROLABE_PALETTE.workflow,
     });
 
-    // Make sure all keyEntities exist as nodes
+    // 3. Link Workflow Hub to its real key entities in Notion
     wf.keyEntities.forEach((entName) => {
-      const key = entName.toLowerCase().trim();
-      if (!nodesMap.has(key)) {
-        let type: GraphNodeType = "tool";
-        if (entName.includes("Gemini") || entName.includes("DeepSeek") || entName.includes("Claude") || entName.includes("模型")) {
-          type = "model";
-        } else if (entName.includes("提示词") || entName.includes("法则") || entName.includes("拷问") || entName.includes("模板") || entName.includes("错题本")) {
-          type = "prompt";
-        } else if (entName.includes("脚本") || entName.includes(".py")) {
-          type = "script";
-        }
+      const targetNode = Array.from(nodesMap.values()).find(
+        (n) =>
+          n.type !== "workflow" &&
+          (n.name.toLowerCase().trim() === entName.toLowerCase().trim() ||
+            n.name.toLowerCase().includes(entName.toLowerCase().trim()) ||
+            entName.toLowerCase().includes(n.name.toLowerCase().trim()))
+      );
 
-        const count = entityFrequencyMap[key] || 1;
-        nodesMap.set(key, {
-          id: `entity-${key.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, "-")}`,
-          name: entName,
-          type,
-          category: type === "model" ? "AI模型" : type === "prompt" ? "提示词" : "效率工具",
-          description: `在工作流《${wf.title}》中作为核心生产力要素参与协作。`,
-          iconUrl: getLogoForNode(entName),
-          tags: [wf.category],
-          workflowCount: count,
-          relatedWorkflowIds: [wf.id],
-          relatedEntityNames: [wf.title],
-          x: 0,
-          y: 0,
-          z: 0,
-          radius: Math.min(8, Math.max(4, 4 + count * 1.2)),
-          color: ASTROLABE_PALETTE[type] || ASTROLABE_PALETTE.tool,
-        });
-      } else {
-        const existing = nodesMap.get(key)!;
-        if (!existing.relatedWorkflowIds.includes(wf.id)) {
-          existing.relatedWorkflowIds.push(wf.id);
-        }
-        if (!existing.relatedEntityNames.includes(wf.title)) {
-          existing.relatedEntityNames.push(wf.title);
-        }
-        existing.workflowCount = Math.max(existing.workflowCount, existing.relatedWorkflowIds.length);
-        existing.radius = Math.min(24, Math.max(10, 10 + existing.workflowCount * 3));
-      }
-    });
-
-    // 4. Build sequential and star links for the workflow
-    // A. Link Workflow Hub to its key entities
-    wf.keyEntities.forEach((entName) => {
-      const targetNode = nodesMap.get(entName.toLowerCase().trim());
       if (targetNode) {
+        if (!targetNode.relatedWorkflowIds.includes(wf.id)) {
+          targetNode.relatedWorkflowIds.push(wf.id);
+        }
+        if (!targetNode.relatedEntityNames.includes(wf.title)) {
+          targetNode.relatedEntityNames.push(wf.title);
+        }
+        targetNode.workflowCount = Math.max(targetNode.workflowCount, targetNode.relatedWorkflowIds.length);
+        targetNode.radius = Math.min(24, Math.max(10, 10 + targetNode.workflowCount * 3));
+
         links.push({
           id: `link-${wf.id}-${targetNode.id}`,
           source: wfNodeId,
@@ -281,27 +252,33 @@ export function buildWorkflowGraph(
       }
     });
 
-    // B. Link Sequential Steps along the phases
-    let previousStepEntity: string | null = null;
+    // 4. Link Sequential Steps along the phases if nodes exist
+    let previousStepNodeId: string | null = null;
     wf.phases.forEach((phase) => {
       phase.steps.forEach((step) => {
         if (step.entityName) {
-          const currentEntityKey = step.entityName.toLowerCase().trim();
-          const currNode = nodesMap.get(currentEntityKey);
-          if (previousStepEntity && currNode) {
-            const prevNode = nodesMap.get(previousStepEntity);
-            if (prevNode && prevNode.id !== currNode.id) {
-              links.push({
-                id: `seq-${wf.id}-${prevNode.id}-${currNode.id}`,
-                source: prevNode.id,
-                target: currNode.id,
-                workflowId: wf.id,
-                workflowTitle: wf.title,
-                strength: 2,
-              });
-            }
+          const stepEntName = step.entityName.toLowerCase().trim();
+          const currNode = Array.from(nodesMap.values()).find(
+            (n) =>
+              n.type !== "workflow" &&
+              (n.name.toLowerCase().trim() === stepEntName ||
+                n.name.toLowerCase().includes(stepEntName) ||
+                stepEntName.includes(n.name.toLowerCase().trim()))
+          );
+
+          if (previousStepNodeId && currNode && previousStepNodeId !== currNode.id) {
+            links.push({
+              id: `seq-${wf.id}-${previousStepNodeId}-${currNode.id}`,
+              source: previousStepNodeId,
+              target: currNode.id,
+              workflowId: wf.id,
+              workflowTitle: wf.title,
+              strength: 2,
+            });
           }
-          previousStepEntity = currentEntityKey;
+          if (currNode) {
+            previousStepNodeId = currNode.id;
+          }
         }
       });
     });

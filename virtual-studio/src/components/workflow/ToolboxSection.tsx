@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useMemo } from "react";
 import { GraphNode } from "@/lib/graphEngine";
@@ -190,15 +190,15 @@ export function ToolboxSection({
   }, [nonWorkflowNodes, activeTab, searchFilter, sortBy]);
 
   return (
-    <section style={{ marginTop: "50px" }}>
+    <section style={{ marginTop: "44px" }}>
       {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "16px", marginBottom: "20px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "16px", marginBottom: "16px" }}>
         <div>
-          <div style={{ fontSize: "12px", fontFamily: "var(--mono)", color: "var(--accent)", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>
-            PRODUCTIVITY ELEMENTS · 要素图鉴
+          <div style={{ fontSize: "11px", fontFamily: "var(--mono)", color: "var(--accent)", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+            ELEMENTS
           </div>
-          <h2 style={{ fontSize: "22px", fontFamily: "var(--serif)", fontWeight: 700, color: "var(--ink)", margin: "4px 0 0" }}>
-            生产力要素与热度图鉴
+          <h2 style={{ fontSize: "20px", fontFamily: "var(--serif)", fontWeight: 700, color: "var(--ink)", margin: "4px 0 0" }}>
+            工具与模型列表
           </h2>
         </div>
 
@@ -220,9 +220,9 @@ export function ToolboxSection({
               cursor: "pointer",
             }}
           >
-            <option value="frequency">🔥 参与工作流频次</option>
-            <option value="rating">⭐ 评分高低</option>
-            <option value="name">🔤 名称字母序</option>
+            <option value="frequency">按参与工作流频次</option>
+            <option value="rating">按评分</option>
+            <option value="name">按名称字母序</option>
           </select>
         </div>
       </div>
@@ -237,16 +237,16 @@ export function ToolboxSection({
           gap: "12px",
           borderBottom: "1px solid var(--line)",
           paddingBottom: "12px",
-          marginBottom: "24px",
+          marginBottom: "20px",
         }}
       >
         {/* Element Tabs */}
         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
           {[
-            { key: "tools", label: "🛠️ 效率工具 & 脚本", count: nonWorkflowNodes.filter((n) => n.type === "tool" || n.type === "script").length },
-            { key: "models", label: "🧠 AI 模型 & Agent", count: nonWorkflowNodes.filter((n) => n.type === "model").length },
-            { key: "websites", label: "🌐 精选网站 & 数据源", count: nonWorkflowNodes.filter((n) => n.type === "website").length },
-            { key: "prompts", label: "📜 提示词库 & 规范", count: nonWorkflowNodes.filter((n) => n.type === "prompt").length },
+            { key: "tools", label: "效率工具与脚本", count: nonWorkflowNodes.filter((n) => n.type === "tool" || n.type === "script").length },
+            { key: "models", label: "AI 模型", count: nonWorkflowNodes.filter((n) => n.type === "model").length },
+            { key: "websites", label: "精选网站", count: nonWorkflowNodes.filter((n) => n.type === "website").length },
+            { key: "prompts", label: "提示词库", count: nonWorkflowNodes.filter((n) => n.type === "prompt").length },
           ].map((tab) => {
             const isActive = activeTab === tab.key;
             return (
@@ -254,11 +254,11 @@ export function ToolboxSection({
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key as typeof activeTab)}
                 style={{
-                  padding: "6px 14px",
-                  fontSize: "12px",
+                  padding: "5px 12px",
+                  fontSize: "11.5px",
                   fontFamily: "var(--mono)",
                   fontWeight: isActive ? 700 : 500,
-                  borderRadius: "8px",
+                  borderRadius: "6px",
                   border: `1px solid ${isActive ? "var(--accent)" : "var(--line)"}`,
                   background: isActive ? "var(--accent-soft)" : "var(--card)",
                   color: isActive ? "var(--accent)" : "var(--ink-2)",
@@ -333,8 +333,6 @@ export function ToolboxSection({
                   {node.iconUrl ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
                     <img src={node.iconUrl} alt="" style={{ width: "22px", height: "22px", borderRadius: "4px", objectFit: "cover" }} />
-                  ) : node.emoji ? (
-                    <span style={{ fontSize: "18px" }}>{node.emoji}</span>
                   ) : (
                     <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: node.color }} />
                   )}
@@ -372,9 +370,9 @@ export function ToolboxSection({
                       borderRadius: "4px",
                       cursor: "pointer",
                     }}
-                    title="点击在工作流列表中反查"
+                    title="点击在工作流列表中筛选"
                   >
-                    🔥 参与 {node.workflowCount} 个工作流
+                    参与 {node.workflowCount} 个工作流
                   </button>
                 ) : (
                   <span style={{ fontSize: "10px", color: "var(--ink-3)", fontFamily: "var(--mono)" }}>通用要素</span>

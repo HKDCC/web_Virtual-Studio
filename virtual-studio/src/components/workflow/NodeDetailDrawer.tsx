@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { GraphNode } from "@/lib/graphEngine";
 import { PresetWorkflow } from "@/data/workflowPresets";
@@ -109,8 +109,6 @@ export function NodeDetailDrawer({
               {node.iconUrl ? (
                 /* eslint-disable-next-line @next/next/no-img-element */
                 <img src={node.iconUrl} alt="" style={{ width: "28px", height: "28px", borderRadius: "6px", objectFit: "cover" }} />
-              ) : node.emoji ? (
-                <span style={{ fontSize: "24px" }}>{node.emoji}</span>
               ) : null}
               <h2 style={{ fontSize: "20px", fontWeight: 700, fontFamily: "var(--serif)", color: "var(--ink)", margin: 0 }}>
                 {node.name}
@@ -134,7 +132,7 @@ export function NodeDetailDrawer({
           {/* Frequency & Degree Stats */}
           <div style={{ background: "var(--paper)", border: "1px solid var(--line)", borderRadius: "8px", padding: "12px" }}>
             <div style={{ fontSize: "11px", fontFamily: "var(--mono)", color: "var(--accent)", fontWeight: 700, marginBottom: "2px" }}>
-              🔥 生产力中心度统计
+              关联统计
             </div>
             <div style={{ fontSize: "12px", color: "var(--ink)", fontWeight: 600 }}>
               参与 {node.workflowCount} 个核心工作流

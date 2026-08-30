@@ -1,4 +1,4 @@
-﻿import { queryDatabaseAll } from "@/lib/notion";
+import { queryDatabaseAll } from "@/lib/notion";
 import { env } from "@/lib/env";
 import { getMultiSelect, getPageTitle, getRichText, getSelect, getUrl, getDate } from "@/lib/notionHelpers";
 import { WorkflowTabs } from "@/components/workflow/WorkflowTabs";
@@ -107,22 +107,22 @@ export default async function WorkflowPage() {
 
   return (
     <div className="wrap" style={{ paddingTop: "24px", paddingBottom: "80px" }}>
-      {/* Editorial Masthead Banner */}
-      <div style={{ marginBottom: "32px", borderBottom: "1px solid var(--line)", paddingBottom: "20px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
-          <span style={{ fontSize: "11px", fontFamily: "var(--mono)", color: "var(--accent)", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase" }}>
-            VOL. 04 · WORKFLOW HUB
+      {/* 顶部标题栏 */}
+      <div style={{ marginBottom: "28px", borderBottom: "1px solid var(--line)", paddingBottom: "18px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
+          <span style={{ fontSize: "11px", fontFamily: "var(--mono)", color: "var(--accent)", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+            WORKFLOW
           </span>
           <span style={{ fontSize: "11px", color: "var(--ink-3)" }}>|</span>
           <span style={{ fontSize: "11px", fontFamily: "var(--mono)", color: "var(--ink-3)" }}>
-            THREE.JS 3D ASTROLABE · 双链知识星系
+            关系图谱与自动化实践
           </span>
         </div>
-        <h1 style={{ fontSize: "clamp(26px, 4vw, 36px)", fontFamily: "var(--serif)", fontWeight: 900, color: "var(--ink)", margin: 0, letterSpacing: "-0.02em" }}>
-          工作流与生产力星象仪
+        <h1 style={{ fontSize: "clamp(26px, 4vw, 34px)", fontFamily: "var(--serif)", fontWeight: 900, color: "var(--ink)", margin: 0, letterSpacing: "-0.02em" }}>
+          工作流
         </h1>
-        <p style={{ fontSize: "14px", color: "var(--ink-2)", maxWidth: "720px", margin: "10px 0 0", lineHeight: 1.7 }}>
-          工具是思维的延伸，工作流是人机协同的实践结晶。在此探索正在运行的自动化链路、高频工具拓扑网络，以及由这些工作流沉淀出的深度复盘笔记。
+        <p style={{ fontSize: "13.5px", color: "var(--ink-2)", maxWidth: "720px", margin: "8px 0 0", lineHeight: 1.6 }}>
+          呈现生产力工具、大模型、提示词与工作流之间的双向关联关系图谱。
         </p>
       </div>
 

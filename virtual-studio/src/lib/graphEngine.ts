@@ -163,7 +163,7 @@ export function buildWorkflowGraph(
       x: 0,
       y: 0,
       z: 0,
-      radius: Math.min(24, Math.max(10, 10 + count * 3)),
+      radius: Math.min(8, Math.max(4, 4 + count * 1.2)),
       color: ASTROLABE_PALETTE[type] || ASTROLABE_PALETTE.tool,
     });
   });
@@ -184,7 +184,7 @@ export function buildWorkflowGraph(
       type: "workflow",
       category: wf.category,
       description: wf.tagline,
-      emoji: "🌀",
+      emoji: "",
       badge: wf.badge,
       tags: wf.tags,
       workflowCount: wf.phases.reduce((acc, p) => acc + p.steps.length, 0),
@@ -195,7 +195,7 @@ export function buildWorkflowGraph(
       x: 0,
       y: 0,
       z: 0,
-      radius: 28, // Major Astrolabe Hub
+      radius: 12, // Workflow Hub
       color: ASTROLABE_PALETTE.workflow,
     });
 

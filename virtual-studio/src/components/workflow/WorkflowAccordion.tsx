@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { PresetWorkflow } from "@/data/workflowPresets";
+import { WorkflowFlowchartSvg } from "./WorkflowFlowchartSvg";
 
 interface WorkflowAccordionProps {
   workflows: PresetWorkflow[];
@@ -65,15 +66,15 @@ export function WorkflowAccordion({
   };
 
   return (
-    <section className="workflow-accordion-section" style={{ marginTop: "40px" }}>
+    <section className="workflow-accordion-section" style={{ marginTop: "36px" }}>
       {/* Section Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "16px", marginBottom: "20px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "16px", marginBottom: "16px" }}>
         <div>
-          <div style={{ fontSize: "12px", fontFamily: "var(--mono)", color: "var(--accent)", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>
-            WORKFLOW CONSOLE · 2D 控制台
+          <div style={{ fontSize: "11px", fontFamily: "var(--mono)", color: "var(--accent)", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+            WORKFLOWS
           </div>
-          <h2 style={{ fontSize: "22px", fontFamily: "var(--serif)", fontWeight: 700, color: "var(--ink)", margin: "4px 0 0" }}>
-            生产力工作流枢纽
+          <h2 style={{ fontSize: "20px", fontFamily: "var(--serif)", fontWeight: 700, color: "var(--ink)", margin: "4px 0 0" }}>
+            工作流列表
           </h2>
         </div>
 
@@ -93,7 +94,7 @@ export function WorkflowAccordion({
               fontWeight: 500,
             }}
           >
-            ＋ 全部展开
+            全部展开
           </button>
           <button
             onClick={handleCollapseAll}
@@ -109,7 +110,7 @@ export function WorkflowAccordion({
               fontWeight: 500,
             }}
           >
-            － 全部收起
+            全部收起
           </button>
         </div>
       </div>
@@ -287,9 +288,16 @@ export function WorkflowAccordion({
                           color: isFocusedIn3D ? "#ffffff" : "var(--accent)",
                           border: "1px solid var(--accent)",
                           cursor: "pointer",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: "4px",
                         }}
                       >
-                        🌌 3D 星系聚焦
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                          <circle cx="11" cy="11" r="8" />
+                          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                        在图谱中聚焦
                       </button>
                       {wf.appendixNoteTitle && (
                         <button
@@ -307,101 +315,19 @@ export function WorkflowAccordion({
                             color: "var(--ink)",
                             border: "1px solid var(--line)",
                             cursor: "pointer",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "4px",
                           }}
                         >
-                          📑 查看实战复盘 ➔
+                          查看衍生笔记 ➔
                         </button>
                       )}
                     </div>
                   </div>
 
-                  {/* 3-Phase Execution Pipeline */}
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "16px" }}>
-                    {wf.phases.map((phase) => (
-                      <div
-                        key={phase.phaseNumber}
-                        style={{
-                          background: "var(--paper)",
-                          border: "1px solid var(--line)",
-                          borderRadius: "10px",
-                          padding: "16px",
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: "12px",
-                        }}
-                      >
-                        <div style={{ borderBottom: "1px solid var(--line)", paddingBottom: "8px" }}>
-                          <div style={{ fontSize: "10px", fontFamily: "var(--mono)", color: "var(--accent)", fontWeight: 700 }}>
-                            PHASE 0{phase.phaseNumber}
-                          </div>
-                          <h4 style={{ fontSize: "13.5px", fontWeight: 700, color: "var(--ink)", margin: "2px 0 4px" }}>
-                            {phase.title}
-                          </h4>
-                          <p style={{ fontSize: "11px", color: "var(--ink-2)", margin: 0, lineHeight: 1.4 }}>
-                            {phase.summary}
-                          </p>
-                        </div>
-
-                        {/* Steps List */}
-                        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                          {phase.steps.map((step) => (
-                            <div
-                              key={step.id}
-                              style={{
-                                background: "var(--card)",
-                                border: "1px solid var(--line)",
-                                borderRadius: "8px",
-                                padding: "10px 12px",
-                              }}
-                            >
-                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
-                                <span style={{ fontSize: "12px", fontWeight: 600, color: "var(--ink)" }}>
-                                  {step.name}
-                                </span>
-                                <span
-                                  style={{
-                                    fontSize: "9px",
-                                    fontFamily: "var(--mono)",
-                                    padding: "1px 5px",
-                                    borderRadius: "3px",
-                                    background: "var(--line)",
-                                    color: "var(--ink-2)",
-                                    textTransform: "uppercase",
-                                  }}
-                                >
-                                  {step.type}
-                                </span>
-                              </div>
-                              <p style={{ fontSize: "11px", color: "var(--ink-2)", margin: "0 0 6px", lineHeight: 1.4 }}>
-                                {step.description}
-                              </p>
-                              {step.entityName && (
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    onSelectEntityName(step.entityName!);
-                                  }}
-                                  style={{
-                                    fontSize: "10px",
-                                    fontFamily: "var(--mono)",
-                                    color: "var(--accent)",
-                                    fontWeight: 600,
-                                    border: "1px dashed var(--accent)",
-                                    borderRadius: "4px",
-                                    padding: "2px 6px",
-                                    cursor: "pointer",
-                                    background: "transparent",
-                                  }}
-                                >
-                                  🔗 实体: {step.entityName}
-                                </button>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  {/* Vertical SVG Flowchart Canvas */}
+                  <WorkflowFlowchartSvg workflow={wf} onSelectEntityName={onSelectEntityName} />
                 </div>
               )}
             </div>

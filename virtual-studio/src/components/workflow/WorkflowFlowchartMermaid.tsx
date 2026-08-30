@@ -27,48 +27,99 @@ export function WorkflowFlowchartMermaid({ workflow, onSelectEntityName }: Workf
       securityLevel: "loose",
       fontFamily: "var(--mono), -apple-system, sans-serif",
       themeVariables: {
-        primaryColor: "#F6F2EA",
+        primaryColor: "#FFFDF9",
         primaryTextColor: "#161310",
         primaryBorderColor: "#C2431B",
-        lineColor: "#C2431B",
-        secondaryColor: "#EAE5D9",
+        lineColor: "#8E5034",
+        secondaryColor: "#F4EFE6",
         tertiaryColor: "#FFFFFF",
       },
     });
 
-    let code = `flowchart TD\n`;
+    let code = "";
 
-    // Render Phases as subgraphs
-    workflow.phases.forEach((phase) => {
-      code += `  subgraph P${phase.phaseNumber} ["阶段 0${phase.phaseNumber} · ${phase.title}"]\n`;
-      phase.steps.forEach((step, sIdx) => {
-        const stepNodeId = `S_${phase.phaseNumber}_${sIdx + 1}`;
-        const cleanName = step.name.replace(/["']/g, "");
-        const cleanDesc = step.description.replace(/["']/g, "");
-        code += `    ${stepNodeId}["<b>${cleanName}</b><br/><small style='color:#666;'>${cleanDesc}</small>"]\n`;
+    if (workflow.id === "wf-obviously-awesome") {
+      // Full Complete Edition optimized for Layout, Typography & Self-Healing Loops
+      code = `flowchart TD
+    %% 样式表定义
+    classDef init fill:#FFFBEB,stroke:#F59E0B,stroke-width:1.5px,color:#161310,rx:8px,ry:8px;
+    classDef action fill:#FFF1F2,stroke:#F43F5E,stroke-width:1.5px,color:#161310,rx:8px,ry:8px;
+    classDef process fill:#F0F9FF,stroke:#0284C7,stroke-width:1.5px,color:#161310,rx:8px,ry:8px;
+    classDef review fill:#ECFDF5,stroke:#10B981,stroke-width:1.5px,color:#161310,rx:8px,ry:8px;
+    classDef memory fill:#F5F3FF,stroke:#8B5CF6,stroke-width:1.5px,color:#161310,rx:8px,ry:8px;
+    classDef check fill:#FFF7ED,stroke:#EA580C,stroke-width:1.5px,color:#161310,rx:8px,ry:8px;
+    classDef output fill:#FEF2F2,stroke:#C2431B,stroke-width:2.5px,color:#161310,rx:10px,ry:10px;
+
+    subgraph Phase1 ["阶段 01 · 前置清洗与意图对齐"]
+        direction TB
+        A(["PDF 导入 Antigravity 工作区"]) ---> Cleaning["Python 脚本正则去噪"]
+        Cleaning ---> A2["脱水 Markdown 章节骨架"]
+        A2 ---> B["执行 /grill-me 意图拷问模式"]
+        B ---> C["AI 发起多轮深度交互问答"]
+        C ---> D{"锁定初始术语字典 (Glossary)<br/>并确认全局文风调性"}
+    end
+
+    subgraph Phase2 ["阶段 02 · 人机双轨迭代与习惯固化 (核心)"]
+        direction TB
+        E["Gemini 3.5 Flash (初译层)<br/><small style='color:#555'>100万 Token 大上下文确保文风连贯</small>"]
+        E ---> Translation["输出章节初译稿"]
+        Translation ---> F["DeepSeek 网页端专家模式 (审校层)<br/><small style='color:#555'>双引擎协作挑错与高水平精润</small>"]
+        F ---> Feedback["整理精润与调优反馈"]
+        Feedback ---> G["AGENTS.md: 固化翻译习惯<br/>walkthrough.md: 错题本自愈"]
+        G ---> Loop["滚动翻译下一章节"]
+        Loop ---> E
+    end
+
+    subgraph Phase3 ["阶段 03 · 算法排版与校验自愈"]
+        direction TB
+        H["执行自动化编译排版脚本"]
+        H ---> I1["EPUB 电子书打包 (Pandoc)"]
+        H ---> I2["PDF 排版导出 (Word COM 驱动)"]
+        I1 ---> J{"verify.py 自动校验页数与格式"}
+        I2 ---> J
+        J --->|校验失败| Debug["查阅 walkthrough 错题本并修正"]
+        Debug ---> H
+        J --->|校验通过| K(["交付精排全译本 (PDF / EPUB)"])
+    end
+
+    %% 连接三个阶段的主线
+    D ===>|术语字典与文风基调锁定| E
+    G ===>|全书翻译完成| H
+    G -.->|动态微调术语字典| D
+
+    %% 应用样式
+    class A,A2,B,C,D init;
+    class Cleaning,Translation,Feedback,Loop action;
+    class E process;
+    class F review;
+    class G memory;
+    class H,I1,I2,J,Debug check;
+    class K output;
+`;
+    } else {
+      // Generic Workflow Flowchart
+      code = `flowchart TD\n`;
+      workflow.phases.forEach((phase) => {
+        code += `  subgraph P${phase.phaseNumber} ["阶段 0${phase.phaseNumber} · ${phase.title}"]\n`;
+        phase.steps.forEach((step, sIdx) => {
+          const stepNodeId = `S_${phase.phaseNumber}_${sIdx + 1}`;
+          const cleanName = step.name.replace(/["']/g, "");
+          const cleanDesc = step.description.replace(/["']/g, "");
+          code += `    ${stepNodeId}["<b>${cleanName}</b><br/><small style='color:#666;'>${cleanDesc}</small>"]\n`;
+        });
+        for (let i = 0; i < phase.steps.length - 1; i++) {
+          code += `    S_${phase.phaseNumber}_${i + 1} --> S_${phase.phaseNumber}_${i + 2}\n`;
+        }
+        code += `  end\n`;
       });
 
-      // Connect steps sequentially inside phase
-      for (let i = 0; i < phase.steps.length - 1; i++) {
-        code += `    S_${phase.phaseNumber}_${i + 1} --> S_${phase.phaseNumber}_${i + 2}\n`;
+      for (let p = 0; p < workflow.phases.length - 1; p++) {
+        const lastStepOfCurrent = `S_${workflow.phases[p].phaseNumber}_${workflow.phases[p].steps.length}`;
+        const firstStepOfNext = `S_${workflow.phases[p + 1].phaseNumber}_1`;
+        code += `  ${lastStepOfCurrent} ==> ${firstStepOfNext}\n`;
       }
-      code += `  end\n`;
-    });
-
-    // Inter-phase connections
-    for (let p = 0; p < workflow.phases.length - 1; p++) {
-      const lastStepOfCurrent = `S_${workflow.phases[p].phaseNumber}_${workflow.phases[p].steps.length}`;
-      const firstStepOfNext = `S_${workflow.phases[p + 1].phaseNumber}_1`;
-      code += `  ${lastStepOfCurrent} ==> ${firstStepOfNext}\n`;
+      code += `  classDef default fill:#F6F2EA,stroke:#C2431B,stroke-width:1.5px,color:#161310,rx:8px,ry:8px;\n`;
     }
-
-    // If Obviously Awesome, add the self-healing feedback loop
-    if (workflow.id === "wf-obviously-awesome") {
-      code += `  S_2_3 -.->|"自愈反馈回路 (Feedback Loop)"| S_2_1\n`;
-    }
-
-    // Styling classes
-    code += `  classDef default fill:#F6F2EA,stroke:#C2431B,stroke-width:1.5px,color:#161310,rx:8px,ry:8px;\n`;
 
     const renderId = `mermaid_${chartId}_${Date.now()}`;
     mermaid
@@ -108,7 +159,7 @@ export function WorkflowFlowchartMermaid({ workflow, onSelectEntityName }: Workf
             流程蓝图 · Mermaid Flowchart
           </span>
           <span style={{ fontSize: "10.5px", fontFamily: "var(--mono)", color: "var(--ink-3)" }}>
-            {workflow.phases.length} 个执行阶段 · {workflow.phases.reduce((a, b) => a + b.steps.length, 0)} 个节点
+            全景拓扑 · 3 阶段自愈闭环
           </span>
         </div>
 
@@ -220,7 +271,7 @@ export function WorkflowFlowchartMermaid({ workflow, onSelectEntityName }: Workf
       {workflow.keyEntities && workflow.keyEntities.length > 0 && onSelectEntityName && (
         <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap", borderTop: "1px solid var(--line)", paddingTop: "12px", marginTop: "8px" }}>
           <span style={{ fontSize: "10.5px", fontFamily: "var(--mono)", color: "var(--ink-3)" }}>
-            关联实体定位:
+            关联要素快速定位:
           </span>
           {workflow.keyEntities.map((entity) => (
             <button

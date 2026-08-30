@@ -82,6 +82,27 @@ export const ASTROLABE_PALETTE = {
   note: "#A65B32",     // 熟赭附录
 };
 
+export function getLogoForNode(name: string, iconUrl?: string | null): string {
+  if (iconUrl && iconUrl.startsWith("http")) return iconUrl;
+  const n = name.toLowerCase().trim();
+  if (n.includes("gemini")) return "/logos/gemini.svg";
+  if (n.includes("deepseek")) return "/logos/deepseek.svg";
+  if (n.includes("antigravity")) return "/logos/antigravity.svg";
+  if (n.includes("pandoc")) return "/logos/pandoc.svg";
+  if (n.includes("python") || n.includes("verify.py") || n.includes("脚本")) return "/logos/python.svg";
+  if (n.includes("notion")) return "/logos/notion.svg";
+  if (n.includes("notebook") || n.includes("notebooklm")) return "/logos/notebooklm.svg";
+  if (n.includes("claude")) return "/logos/claude.svg";
+  if (n.includes("cursor")) return "/logos/cursor.svg";
+  if (n.includes("three")) return "/logos/threejs.svg";
+  if (n.includes("midjourney")) return "/logos/midjourney.svg";
+  if (n.includes("whisper")) return "/logos/whisper.svg";
+  if (n.includes("z-library") || n.includes("z library") || n.includes("libgen") || n.includes("kgbook") || n.includes("anna") || n.includes("welib")) return "/logos/zlibrary.svg";
+  if (n.includes("qbittorrent")) return "/logos/qbittorrent.svg";
+  if (n.includes("prompt") || n.includes("提示词") || n.includes("法则") || n.includes("错题本") || n.includes("grill-me")) return "/logos/prompt.svg";
+  return "/logos/script.svg";
+}
+
 export function buildWorkflowGraph(
   notionItems: RawWorkflowItem[] = [],
   presets: PresetWorkflow[] = WORKFLOW_PRESETS,
@@ -149,7 +170,7 @@ export function buildWorkflowGraph(
       type,
       category: item.section,
       description: item.description || "暂无详细描述。",
-      iconUrl: item.iconUrl,
+      iconUrl: getLogoForNode(cleanName, item.iconUrl),
       emoji: item.emoji,
       badge: item.badge,
       siteUrl: item.siteUrl,
@@ -192,6 +213,7 @@ export function buildWorkflowGraph(
       relatedEntityNames: wf.keyEntities,
       linkedNoteId: matchedNote ? matchedNote.id : wf.appendixNoteId,
       linkedNoteTitle: matchedNote ? matchedNote.title : wf.appendixNoteTitle,
+      iconUrl: "/logos/antigravity.svg",
       x: 0,
       y: 0,
       z: 0,
@@ -219,6 +241,7 @@ export function buildWorkflowGraph(
           type,
           category: type === "model" ? "AI模型" : type === "prompt" ? "提示词" : "效率工具",
           description: `在工作流《${wf.title}》中作为核心生产力要素参与协作。`,
+          iconUrl: getLogoForNode(entName),
           tags: [wf.category],
           workflowCount: count,
           relatedWorkflowIds: [wf.id],
@@ -226,7 +249,7 @@ export function buildWorkflowGraph(
           x: 0,
           y: 0,
           z: 0,
-          radius: Math.min(22, Math.max(9, 9 + count * 3)),
+          radius: Math.min(8, Math.max(4, 4 + count * 1.2)),
           color: ASTROLABE_PALETTE[type] || ASTROLABE_PALETTE.tool,
         });
       } else {

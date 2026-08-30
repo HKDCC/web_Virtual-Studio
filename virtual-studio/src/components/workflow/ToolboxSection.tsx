@@ -5,7 +5,6 @@ import { GraphNode } from "@/lib/graphEngine";
 
 interface ToolboxSectionProps {
   nodes: GraphNode[];
-  onSelectNode: (node: GraphNode) => void;
   onFilterWorkflowsByEntity: (entityName: string) => void;
 }
 
@@ -150,7 +149,6 @@ function PromptItemCard({ node }: { node: GraphNode }) {
 
 export function ToolboxSection({
   nodes,
-  onSelectNode,
   onFilterWorkflowsByEntity,
 }: ToolboxSectionProps) {
   const [activeTab, setActiveTab] = useState<"tools" | "models" | "websites" | "prompts">("tools");
@@ -276,22 +274,35 @@ export function ToolboxSection({
         </div>
 
         {/* Search */}
-        <input
-          type="text"
-          placeholder="筛选此分类要素..."
-          value={searchFilter}
-          onChange={(e) => setSearchFilter(e.target.value)}
-          style={{
-            padding: "6px 12px",
-            fontSize: "11.5px",
-            borderRadius: "6px",
-            border: "1px solid var(--line)",
-            background: "var(--card)",
-            color: "var(--ink)",
-            minWidth: "200px",
-            outline: "none",
-          }}
-        />
+        <div style={{ position: "relative", minWidth: "180px" }}>
+          <input
+            type="text"
+            value={searchFilter}
+            onChange={(e) => setSearchFilter(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "6px 12px 6px 26px",
+              fontSize: "11.5px",
+              borderRadius: "6px",
+              border: "1px solid var(--line)",
+              background: "var(--paper)",
+              color: "var(--ink)",
+              outline: "none",
+            }}
+          />
+          <svg
+            width="11"
+            height="11"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            style={{ position: "absolute", left: "8px", top: "50%", transform: "translateY(-50%)", color: "var(--ink-3)" }}
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+        </div>
       </div>
 
       {/* Content Grid */}
@@ -306,7 +317,6 @@ export function ToolboxSection({
           {currentNodes.map((node) => (
             <div
               key={node.id}
-              onClick={() => onSelectNode(node)}
               style={{
                 background: "var(--card)",
                 border: "1px solid var(--line)",
@@ -315,16 +325,13 @@ export function ToolboxSection({
                 display: "flex",
                 flexDirection: "column",
                 gap: "10px",
-                cursor: "pointer",
                 transition: "all 0.2s ease",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.borderColor = "var(--accent)";
-                e.currentTarget.style.transform = "translateY(-2px)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = "var(--line)";
-                e.currentTarget.style.transform = "translateY(0)";
               }}
             >
               {/* Card Header */}

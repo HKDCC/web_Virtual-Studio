@@ -62,15 +62,15 @@ export function ThreeWorkflowGalaxy({
     return clean.slice(0, 1);
   };
 
-  // Create crisp canvas texture for node sphere
-  const createNodeTexture = useCallback((name: string, isHub: boolean, colorHex: string) => {
+  // Create crisp canvas texture for node sphere with real vector logo
+  const createNodeTexture = useCallback((name: string, isHub: boolean, colorHex: string, iconUrl?: string | null) => {
     const canvas = document.createElement("canvas");
     canvas.width = 256;
     canvas.height = 256;
     const ctx = canvas.getContext("2d");
     if (!ctx) return null;
 
-    // Outer circle
+    // Default base background
     ctx.fillStyle = colorHex;
     ctx.beginPath();
     ctx.arc(128, 128, 120, 0, Math.PI * 2);
@@ -81,16 +81,43 @@ export function ThreeWorkflowGalaxy({
     ctx.lineWidth = 8;
     ctx.stroke();
 
-    // Monogram text
-    const text = isHub ? "WF" : getMonogram(name);
-    ctx.font = `bold ${isHub ? "72px" : "64px"} "JetBrains Mono", sans-serif`;
-    ctx.fillStyle = "#ffffff";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(text, 128, 128);
-
     const texture = new THREE.CanvasTexture(canvas);
     texture.minFilter = THREE.LinearFilter;
+
+    // Load and draw actual vector logo
+    const resolvedIcon = iconUrl || (isHub ? "/logos/antigravity.svg" : null);
+    if (resolvedIcon) {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        ctx.clearRect(0, 0, 256, 256);
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(128, 128, 120, 0, Math.PI * 2);
+        ctx.clip();
+        ctx.drawImage(img, 0, 0, 256, 256);
+        ctx.restore();
+
+        // Outer circular border
+        ctx.beginPath();
+        ctx.arc(128, 128, 120, 0, Math.PI * 2);
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.6)";
+        ctx.lineWidth = 10;
+        ctx.stroke();
+
+        texture.needsUpdate = true;
+      };
+      img.src = resolvedIcon;
+    } else {
+      // Monogram fallback
+      const text = isHub ? "WF" : getMonogram(name);
+      ctx.font = `bold ${isHub ? "72px" : "64px"} "JetBrains Mono", sans-serif`;
+      ctx.fillStyle = "#ffffff";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(text, 128, 128);
+    }
+
     return texture;
   }, []);
 
@@ -214,21 +241,22 @@ export function ThreeWorkflowGalaxy({
     graphData.nodes.forEach((node) => {
       const isHub = node.type === "workflow";
       const sphereGeo = new THREE.SphereGeometry(node.radius, 32, 32);
-      const nodeTexture = createNodeTexture(node.name, isHub, node.color);
+      const nodeTexture = createNodeTexture(node.name, isHub, node.color, node.iconUrl);
       
-      const nodeColor = new THREE.Color(node.color);
       const sphereMat = new THREE.MeshStandardMaterial({
         map: nodeTexture || undefined,
-        color: nodeColor,
+        color: 0xffffff,
         roughness: isHub ? 0.25 : 0.35,
         metalness: isHub ? 0.3 : 0.1,
-        emissive: nodeColor,
-        emissiveIntensity: isLight ? 0.2 : 0.35,
+        emissive: isHub ? new THREE.Color(0x331105) : new THREE.Color(0x111111),
+        emissiveIntensity: isLight ? 0.15 : 0.3,
       });
 
       const sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
       sphereMesh.position.set(node.x, node.y, node.z);
       sphereMesh.userData = { node };
+
+      const nodeColor = new THREE.Color(node.color);
 
       // Add Orbit Ring for Hubs and high-frequency tools
       if (isHub || node.workflowCount >= 2) {
@@ -344,6 +372,7 @@ export function ThreeWorkflowGalaxy({
             const wfId = node.id.replace(/^node-/, "");
             onSelectWorkflow(wfId);
           }
+          controls.target.set(node.x, node.y, node.z);
           onSelectNode(node);
         }
       }

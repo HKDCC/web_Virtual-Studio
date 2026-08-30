@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { PresetWorkflow } from "@/data/workflowPresets";
-import { WorkflowFlowchartSvg } from "./WorkflowFlowchartSvg";
+import { WorkflowFlowchartMermaid } from "./WorkflowFlowchartMermaid";
 
 interface WorkflowAccordionProps {
   workflows: PresetWorkflow[];
@@ -156,11 +156,10 @@ export function WorkflowAccordion({
           })}
         </div>
 
-        {/* Real-time Search Input */}
-        <div style={{ position: "relative", minWidth: "220px" }}>
+        {/* Real-time Search Input (No Emoji, No Placeholder Text) */}
+        <div style={{ position: "relative", minWidth: "200px" }}>
           <input
             type="text"
-            placeholder="搜索工作流、工具、标签..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             style={{
@@ -174,9 +173,26 @@ export function WorkflowAccordion({
               outline: "none",
             }}
           />
-          <span style={{ position: "absolute", left: "8px", top: "50%", transform: "translateY(-50%)", fontSize: "11px", color: "var(--ink-3)", pointerEvents: "none" }}>
-            🔍
-          </span>
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            style={{
+              position: "absolute",
+              left: "9px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              color: "var(--ink-3)",
+              pointerEvents: "none",
+            }}
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
@@ -326,8 +342,8 @@ export function WorkflowAccordion({
                     </div>
                   </div>
 
-                  {/* Vertical SVG Flowchart Canvas */}
-                  <WorkflowFlowchartSvg workflow={wf} onSelectEntityName={onSelectEntityName} />
+                  {/* Mermaid Flowchart Canvas */}
+                  <WorkflowFlowchartMermaid workflow={wf} onSelectEntityName={onSelectEntityName} />
                 </div>
               )}
             </div>

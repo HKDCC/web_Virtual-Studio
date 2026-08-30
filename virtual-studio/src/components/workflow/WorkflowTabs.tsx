@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useMemo } from "react";
 import { buildWorkflowGraph, GraphNode, RawWorkflowItem, RawNoteItem } from "@/lib/graphEngine";
@@ -7,7 +7,6 @@ import { ThreeWorkflowGalaxy } from "./ThreeWorkflowGalaxy";
 import { WorkflowAccordion } from "./WorkflowAccordion";
 import { ToolboxSection } from "./ToolboxSection";
 import { WorkflowAppendix } from "./WorkflowAppendix";
-import { NodeDetailDrawer } from "./NodeDetailDrawer";
 
 export type WorkflowItem = RawWorkflowItem;
 
@@ -52,7 +51,7 @@ export function WorkflowTabs({ items, notes = [] }: WorkflowTabsProps) {
 
   return (
     <div className="workflow-root-container" style={{ width: "100%", maxWidth: "72rem", margin: "0 auto" }}>
-      {/* ─── 1. Top Section: Three.js Astrolabe 3D Galaxy ─── */}
+      {/* ─── 1. Top Section: Three.js 3D Relationship Graph ─── */}
       <ThreeWorkflowGalaxy
         graphData={graphData}
         activeWorkflowId={activeWorkflowId}
@@ -73,20 +72,11 @@ export function WorkflowTabs({ items, notes = [] }: WorkflowTabsProps) {
       {/* ─── 3. Toolbox & Model Centrality Ranking Section ─── */}
       <ToolboxSection
         nodes={graphData.nodes}
-        onSelectNode={setSelectedNode}
         onFilterWorkflowsByEntity={handleFilterWorkflowsByEntity}
       />
 
       {/* ─── 4. Independent Practical Notes & Appendix Section ─── */}
       <WorkflowAppendix notes={notes} />
-
-      {/* ─── 5. Node Bidirectional Link Sliding Drawer ─── */}
-      <NodeDetailDrawer
-        node={selectedNode}
-        workflows={graphData.workflows}
-        onClose={() => setSelectedNode(null)}
-        onSelectWorkflow={(wfId) => setActiveWorkflowId(wfId)}
-      />
     </div>
   );
 }

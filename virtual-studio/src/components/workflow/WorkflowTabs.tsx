@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { buildWorkflowGraph, GraphNode, RawWorkflowItem, RawNoteItem } from "@/lib/graphEngine";
 import { WORKFLOW_PRESETS } from "@/data/workflowPresets";
-import { ObsidianWorkflowGraph } from "./ObsidianWorkflowGraph";
+import { ObsidianThreeGraph } from "./ObsidianThreeGraph";
 import { WorkflowAccordion } from "./WorkflowAccordion";
 import { ToolboxSection } from "./ToolboxSection";
 import { WorkflowAppendix } from "./WorkflowAppendix";
@@ -51,8 +51,8 @@ export function WorkflowTabs({ items, notes = [] }: WorkflowTabsProps) {
 
   return (
     <div className="workflow-root-container" style={{ width: "100%", maxWidth: "72rem", margin: "0 auto" }}>
-      {/* ─── 1. Top Section: Obsidian-Style Dynamic Force Graph ─── */}
-      <ObsidianWorkflowGraph
+      {/* ─── 1. Top Section: 3D Obsidian-Style Three.js Relationship Graph ─── */}
+      <ObsidianThreeGraph
         graphData={graphData}
         activeWorkflowId={activeWorkflowId}
         selectedNodeId={selectedNode?.id || null}

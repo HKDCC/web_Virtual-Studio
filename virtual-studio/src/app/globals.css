@@ -221,7 +221,63 @@ html:not([data-theme="dark"]) .i-sun {
 
 /* ═══════════════ 卷首语 ═══════════════ */
 .statement {
-  padding-block: clamp(56px, 9vw, 100px) 0;
+  padding-block: clamp(48px, 8vw, 88px) clamp(20px, 3vw, 36px);
+}
+
+.statement-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(24px, 4vw, 56px);
+}
+
+.statement-content {
+  flex: 1 1 0%;
+  min-width: 0;
+  max-width: 42rem;
+}
+
+.statement-line {
+  display: block;
+  white-space: nowrap;
+}
+
+.statement-logo-wrap {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.statement-logo-img {
+  width: clamp(160px, 22vw, 250px);
+  height: clamp(160px, 22vw, 250px);
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.06));
+  transition: transform 0.3s ease;
+}
+
+[data-theme="dark"] .statement-logo-img {
+  mix-blend-mode: normal;
+  border-radius: 50%;
+  background: var(--card);
+  filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.35));
+}
+
+@media (max-width: 768px) {
+  .statement-hero {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: 24px;
+  }
+  .statement-line {
+    white-space: normal;
+  }
+  .statement-logo-img {
+    width: 130px;
+    height: 130px;
+  }
 }
 
 .kicker {

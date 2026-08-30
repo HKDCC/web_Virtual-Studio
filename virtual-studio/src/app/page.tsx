@@ -27,34 +27,26 @@ export default async function HomePage() {
   return (
     <>
       {/* ═══════════ 卷首语 ═══════════ */}
-      <section className="statement wrap" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", alignItems: "center", gap: "40px", paddingBottom: "32px" }}>
-        <div>
+      <section className="statement wrap statement-hero">
+        <div className="statement-content">
           <p className="kicker">VOL.02 · 2026 — VIRTUAL STUDIO · PERSONAL MAGAZINE</p>
           <h1 className="display">
-            我们所有疯狂的行动，
-            <br />
-            最终目的或许只是
-            <br />
-            <em>体验更多的奇妙</em>。
+            <span className="statement-line">我们所有疯狂的行动，</span>
+            <span className="statement-line">最终目的或许只是</span>
+            <span className="statement-line">
+              <em>体验更多的奇妙</em>。
+            </span>
           </h1>
           <p className="lede">
             这里记录生产力探索、自我成长、AI 实践，以及那些值得收藏的生活细节。每一个模块，都是一种思维方式的入口。
           </p>
         </div>
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <div className="statement-logo-wrap">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/logo.png"
             alt="Virtual Studio Logo"
-            style={{
-              width: "clamp(200px, 28vw, 300px)",
-              height: "clamp(200px, 28vw, 300px)",
-              borderRadius: "50%",
-              objectFit: "contain",
-              border: "1.5px solid var(--line)",
-              background: "var(--card)",
-              boxShadow: "0 12px 36px rgba(0, 0, 0, 0.06)",
-            }}
+            className="statement-logo-img"
           />
         </div>
       </section>

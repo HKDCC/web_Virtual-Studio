@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { fetchMagazineData } from "@/lib/magazineData";
+import { WorkflowSection } from "@/components/magazine/WorkflowSection";
 import { ArchiveSection } from "@/components/magazine/ArchiveSection";
 import { PauseSection } from "@/components/magazine/PauseSection";
 import { TagPill } from "@/components/common/TagPill";
@@ -9,7 +10,18 @@ export const revalidate = 0;
 
 export default async function HomePage() {
   const data = await fetchMagazineData();
-  const { books = [], lab = [], timeline = [], pause = [], notes = [], log = [] } = data || {};
+  const {
+    books = [],
+    lab = [],
+    timeline = [],
+    pause = [],
+    notes = [],
+    log = [],
+    flow = [],
+    tools = [],
+    sites = [],
+    prompts = [],
+  } = data || {};
 
   const safeLab = Array.isArray(lab) ? lab : [];
   const safeNotes = Array.isArray(notes) ? notes : [];
@@ -146,11 +158,14 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════ 02 笔记 · Notes ═══════════ */}
+      {/* ═══════════ 02 工作流 · Workflow ═══════════ */}
+      <WorkflowSection flow={flow} tools={tools} sites={sites} prompts={prompts} />
+
+      {/* ═══════════ 03 笔记 · Notes ═══════════ */}
       <section id="notes" className="block wrap">
         <div className="sec-head reveal">
           <p className="kicker">
-            <b>02</b> / 片段层 · FRAGMENTS
+            <b>03</b> / 片段层 · FRAGMENTS
           </p>
           <Link className="util" href="/archive?tab=notes" title="查看全部笔记">
             全部笔记 ↗

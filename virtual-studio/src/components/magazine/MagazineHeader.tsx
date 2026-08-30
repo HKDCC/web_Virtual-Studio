@@ -19,9 +19,9 @@ interface MagazineHeaderProps {
 
 const SECTIONS = [
   { id: "lab", num: "01", name: "实验室", icon: "⚗️" },
-  { id: "notes", num: "02", name: "笔记", icon: "📝" },
-  { id: "archive", num: "03", name: "库", icon: "📚" },
-  { id: "timeline", num: "04", name: "时间线", icon: "⏳" },
+  { id: "workflow", num: "02", name: "工作流", icon: "🌀" },
+  { id: "notes", num: "03", name: "笔记", icon: "📝" },
+  { id: "archive", num: "04", name: "库", icon: "📚" },
   { id: "pause", num: "05", name: "隙", icon: "🌿" },
   { id: "changelog", num: "06", name: "足迹", icon: "👣" },
 ];
@@ -138,11 +138,25 @@ export function MagazineHeader({
       {/* ═══════════ 原生顶栏导航（首屏展示） ═══════════ */}
       <header className="masthead wrap">
         <div className="brand-row">
-          <div>
-            <Link href="/" className="brand">
-              tl; <b>{"//"}</b> lab
-            </Link>
-            <div className="issue">VIRTUAL STUDIO · VOL.02 · 杂志版</div>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.png"
+              alt="Logo"
+              style={{
+                width: "36px",
+                height: "36px",
+                borderRadius: "50%",
+                objectFit: "contain",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+              }}
+            />
+            <div>
+              <Link href="/" className="brand">
+                tl; <b>{"//"}</b> lab
+              </Link>
+              <div className="issue">VIRTUAL STUDIO · VOL.02 · 杂志版</div>
+            </div>
           </div>
           <div className="actions">
             <div className="theme-versions" style={{ display: "flex", gap: "6px", alignItems: "center" }}>

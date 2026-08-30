@@ -85,6 +85,7 @@ export function SiteHeader() {
         <Link
           className="logo"
           href="/"
+          style={{ display: "flex", alignItems: "center", gap: "8px" }}
           onMouseEnter={() => {
             hoverTimer.current = window.setTimeout(() => {
               setAwakened(true);
@@ -96,6 +97,17 @@ export function SiteHeader() {
             if (!open) setAwakened(false);
           }}
         >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.png"
+            alt="Logo"
+            style={{
+              width: "26px",
+              height: "26px",
+              borderRadius: "50%",
+              objectFit: "contain",
+            }}
+          />
           <span style={{ opacity: awakened ? 0 : 1, transition: "var(--transition)" }}>tl; // lab</span>
           <span
             style={{
@@ -118,14 +130,14 @@ export function SiteHeader() {
           <Link href="/aievolutionlog" data-active={isActive(pathname, "/aievolutionlog")}>
             AI 模型更迭
           </Link>
-          <Link href="/archive" data-active={isActive(pathname, "/archive")}>
-            库 Archive
-          </Link>
           <Link href="/lab" data-active={isActive(pathname, "/lab")}>
             实验室 Lab
           </Link>
           <Link href="/workflow" data-active={isActive(pathname, "/workflow")}>
             工作流 Workflow
+          </Link>
+          <Link href="/archive" data-active={isActive(pathname, "/archive")}>
+            库 Archive
           </Link>
           <Link href="/pause" data-active={isActive(pathname, "/pause")}>
             隙 Pause

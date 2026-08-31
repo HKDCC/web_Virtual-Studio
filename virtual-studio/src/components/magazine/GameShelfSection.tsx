@@ -710,24 +710,28 @@ export function GameShelfSection() {
         state.cur = state.target;
       }
 
-      // Dynamic Halo & Lighting Multi-Color Spectrum Interpolation
+      // Dynamic Halo & Lighting 2-Color Fan Breathing Flow
       const activeIdx = ((Math.round(state.cur) % N) + N) % N;
       const activeGame = GAMES_DATA[activeIdx];
       if (activeGame && activeGame.pal) {
         const primTarget = new THREE.Color(activeGame.pal[0] || "#E9683A");
-        const secTarget = new THREE.Color(activeGame.pal[1] || "#FFD900");
+        const secTarget = new THREE.Color(activeGame.pal[1] || activeGame.pal[0] || "#FFD900");
 
         currentPrimaryColor.lerp(primTarget, 0.075);
         currentSecondaryColor.lerp(secTarget, 0.075);
 
-        if (haloMat) haloMat.color.copy(currentPrimaryColor);
-        if (glowMat) glowMat.color.copy(currentPrimaryColor);
-        if (backPointLight) backPointLight.color.copy(currentPrimaryColor);
+        // Ultra-slow breathing flow between the 2 colors (like PC case RGB fan)
+        const fanWave = (Math.sin(t * 0.45) + 1) * 0.5;
+        const blendedColor = currentPrimaryColor.clone().lerp(currentSecondaryColor, fanWave);
+
+        if (haloMat) haloMat.color.copy(blendedColor);
+        if (glowMat) glowMat.color.copy(blendedColor);
+        if (backPointLight) backPointLight.color.copy(blendedColor);
 
         // Infuse front softboxes with dynamic game ambiance
         if (frontLightL) {
           frontLightL.color.copy(
-            currentPrimaryColor.clone().lerp(new THREE.Color(state.isDark ? 0xfff6ed : 0xffffff), 0.5)
+            blendedColor.clone().lerp(new THREE.Color(state.isDark ? 0xfff6ed : 0xffffff), 0.5)
           );
         }
         if (frontLightR) {
@@ -968,10 +972,14 @@ export function GameShelfSection() {
   const ambilightStyle = React.useMemo(() => {
     if (!currentGame || !currentGame.pal) return {};
     const pal = currentGame.pal;
+    const colorA = pal[0] || "#E9683A";
+    const colorB = pal[1] || pal[0] || "#FFD900";
     return {
-      "--game-glow-1": pal[0] || "#E9683A",
-      "--game-glow-2": pal[2] && pal[2] !== "#000000" ? pal[2] : pal[0],
-      "--game-glow-3": pal[1] || pal[0] || "#FFD900",
+      "--game-color-a": colorA,
+      "--game-color-b": colorB,
+      "--game-glow-1": colorA,
+      "--game-glow-2": colorB,
+      "--game-glow-3": colorA,
     } as React.CSSProperties;
   }, [currentGame]);
 

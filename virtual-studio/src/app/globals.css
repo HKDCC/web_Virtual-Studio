@@ -4390,10 +4390,25 @@ footer {
   z-index: 0;
 }
 
-/* ═══════════════ 游戏展架虚拟流光氛围灯投影 (Ambilight) ═══════════════ */
+/* ═══════════════ 游戏展架虚拟流光氛围灯投影 (Ambilight PC Fan RGB) ═══════════════ */
 .shelf-stage-container {
   position: relative;
   width: 100%;
+}
+
+@keyframes rgbFanBreathing {
+  0% {
+    background-position: 0% 50%;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    background-position: 100% 50%;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+  100% {
+    background-position: 0% 50%;
+    transform: translate(-50%, -50%) scale(1);
+  }
 }
 
 .shelf-ambilight-aura {
@@ -4403,14 +4418,14 @@ footer {
   transform: translate(-50%, -50%);
   width: 100vw;
   max-width: 100vw;
-  height: 135%;
-  min-height: 840px;
+  height: 230%;
+  min-height: 1350px;
   pointer-events: none;
   z-index: 0;
   opacity: 0;
-  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1);
-  filter: blur(85px);
-  will-change: opacity, background;
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: blur(140px);
+  will-change: opacity, background, transform;
   overflow: visible;
 }
 
@@ -4420,29 +4435,31 @@ footer {
 
 [data-theme="dark"] .shelf-ambilight-aura {
   background: linear-gradient(
-    90deg,
-    var(--game-glow-1, rgba(233, 104, 58, 0.6)) 0%,
-    var(--game-glow-1, rgba(233, 104, 58, 0.45)) 28%,
-    var(--game-glow-2, rgba(255, 217, 0, 0.38)) 50%,
-    var(--game-glow-3, rgba(168, 85, 247, 0.45)) 72%,
-    var(--game-glow-3, rgba(168, 85, 247, 0.6)) 100%
+    135deg,
+    var(--game-color-a, #e9683a) 0%,
+    var(--game-color-b, #ffd900) 35%,
+    var(--game-color-a, #e9683a) 70%,
+    var(--game-color-b, #ffd900) 100%
   );
-  mask-image: radial-gradient(ellipse 52% 46% at 50% 50%, black 15%, rgba(0, 0, 0, 0.85) 45%, rgba(0, 0, 0, 0.3) 72%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 52% 46% at 50% 50%, black 15%, rgba(0, 0, 0, 0.85) 45%, rgba(0, 0, 0, 0.3) 72%, transparent 100%);
+  background-size: 260% 260%;
+  animation: rgbFanBreathing 14s ease-in-out infinite;
+  mask-image: radial-gradient(ellipse 75% 68% at 50% 50%, black 30%, rgba(0, 0, 0, 0.85) 60%, rgba(0, 0, 0, 0.25) 85%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 75% 68% at 50% 50%, black 30%, rgba(0, 0, 0, 0.85) 60%, rgba(0, 0, 0, 0.25) 85%, transparent 100%);
 }
 
 :root:not([data-theme="dark"]) .shelf-ambilight-aura {
   background: linear-gradient(
-    90deg,
-    var(--game-glow-1, rgba(233, 104, 58, 0.45)) 0%,
-    var(--game-glow-1, rgba(233, 104, 58, 0.35)) 28%,
-    var(--game-glow-2, rgba(220, 160, 20, 0.28)) 50%,
-    var(--game-glow-3, rgba(168, 85, 247, 0.35)) 72%,
-    var(--game-glow-3, rgba(168, 85, 247, 0.45)) 100%
+    135deg,
+    var(--game-color-a, #e9683a) 0%,
+    var(--game-color-b, #ffd900) 35%,
+    var(--game-color-a, #e9683a) 70%,
+    var(--game-color-b, #ffd900) 100%
   );
+  background-size: 260% 260%;
+  animation: rgbFanBreathing 14s ease-in-out infinite;
   mix-blend-mode: multiply;
-  mask-image: radial-gradient(ellipse 52% 46% at 50% 50%, black 15%, rgba(0, 0, 0, 0.85) 45%, rgba(0, 0, 0, 0.3) 72%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 52% 46% at 50% 50%, black 15%, rgba(0, 0, 0, 0.85) 45%, rgba(0, 0, 0, 0.3) 72%, transparent 100%);
+  mask-image: radial-gradient(ellipse 75% 68% at 50% 50%, black 30%, rgba(0, 0, 0, 0.85) 60%, rgba(0, 0, 0, 0.25) 85%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 75% 68% at 50% 50%, black 30%, rgba(0, 0, 0, 0.85) 60%, rgba(0, 0, 0, 0.25) 85%, transparent 100%);
 }
 
 

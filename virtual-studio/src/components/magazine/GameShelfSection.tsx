@@ -5,12 +5,14 @@ import * as THREE from "three";
 import { GAMES_DATA, GameItem, STATUS_META } from "@/data/gamesData";
 
 export function GameShelfSection() {
+  const sectionRef = useRef<HTMLElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedGame, setSelectedGame] = useState<GameItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isInView, setIsInView] = useState(false);
 
   const N = GAMES_DATA.length;
 
@@ -86,6 +88,21 @@ export function GameShelfSection() {
     setIsModalOpen(false);
   }, []);
 
+  // Intersection Observer to activate Ambilight Aura when in viewport
+  useEffect(() => {
+    const sec = sectionRef.current;
+    if (!sec) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.15 }
+    );
+    observer.observe(sec);
+    return () => observer.disconnect();
+  }, []);
+
   // Main Three.js setup & lifecycle
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -141,7 +158,7 @@ export function GameShelfSection() {
       const rg = x.createRadialGradient(128, 128, 10, 128, 128, 128);
       rg.addColorStop(0, "rgba(255, 255, 255, 1.0)");
       rg.addColorStop(0.35, "rgba(255, 255, 255, 0.65)");
-      rg.addColorStop(0.7, "rgba(255, 255, 255, 0.18)");
+      rg.addColorStop(0.7, "rgba(255, 255, 255, 0.22)");
       rg.addColorStop(1, "rgba(255, 255, 255, 0)");
       x.fillStyle = rg;
       x.fillRect(0, 0, 256, 256);
@@ -190,17 +207,19 @@ export function GameShelfSection() {
     scene.add(shadowMesh);
 
     // 5. Dynamic Theme-Adaptive Halo Ring & Glow Disc
-    const haloColor = new THREE.Color(GAMES_DATA[0].pal[0] || "#E9683A");
-    const currentHaloColor = haloColor.clone();
+    const primaryInit = new THREE.Color(GAMES_DATA[0].pal[0] || "#E9683A");
+    const secondaryInit = new THREE.Color(GAMES_DATA[0].pal[1] || "#FFD900");
+    const currentPrimaryColor = primaryInit.clone();
+    const currentSecondaryColor = secondaryInit.clone();
 
     // Crisp Luminous Ring
-    const haloGeo = new THREE.RingGeometry(1.68, 1.82, 64);
+    const haloGeo = new THREE.RingGeometry(1.68, 1.84, 64);
     const haloMat = new THREE.MeshBasicMaterial({
-      color: currentHaloColor,
+      color: currentPrimaryColor,
       transparent: true,
-      opacity: isInitialDark ? 0.65 : 0.45,
+      opacity: isInitialDark ? 0.75 : 0.85,
       side: THREE.DoubleSide,
-      blending: THREE.AdditiveBlending,
+      blending: isInitialDark ? THREE.AdditiveBlending : THREE.NormalBlending,
       depthWrite: false,
     });
     const haloMesh = new THREE.Mesh(haloGeo, haloMat);
@@ -211,13 +230,13 @@ export function GameShelfSection() {
     const glowTex = texOf(createSoftGlowTexture());
     const glowMat = new THREE.MeshBasicMaterial({
       map: glowTex,
-      color: currentHaloColor,
+      color: currentPrimaryColor,
       transparent: true,
-      opacity: isInitialDark ? 0.38 : 0.22,
-      blending: THREE.AdditiveBlending,
+      opacity: isInitialDark ? 0.45 : 0.38,
+      blending: isInitialDark ? THREE.AdditiveBlending : THREE.NormalBlending,
       depthWrite: false,
     });
-    const glowMesh = new THREE.Mesh(new THREE.PlaneGeometry(7.2, 7.2), glowMat);
+    const glowMesh = new THREE.Mesh(new THREE.PlaneGeometry(7.6, 7.6), glowMat);
     glowMesh.position.set(0, 0.35, -1.75);
     scene.add(glowMesh);
 
@@ -229,7 +248,7 @@ export function GameShelfSection() {
     );
     scene.add(hemiLight);
 
-    // Dual Symmetrical Key Softboxes (for luxury clearcoat reflections)
+    // Dual Symmetrical Key Softboxes (infused with game palette reflections)
     const frontLightL = new THREE.DirectionalLight(0xfff6ed, isInitialDark ? 2.4 : 2.6);
     frontLightL.position.set(-4.0, 3.5, 7.0);
     scene.add(frontLightL);
@@ -239,7 +258,7 @@ export function GameShelfSection() {
     scene.add(frontLightR);
 
     // Back Accent Light (Casting dynamic rim color)
-    const backPointLight = new THREE.PointLight(currentHaloColor, isInitialDark ? 3.8 : 2.5, 12, 1.2);
+    const backPointLight = new THREE.PointLight(currentPrimaryColor, isInitialDark ? 4.2 : 3.0, 12, 1.2);
     backPointLight.position.set(0, 0.4, -1.4);
     scene.add(backPointLight);
 
@@ -275,8 +294,8 @@ export function GameShelfSection() {
 
       // Base gradient
       const g1 = x.createLinearGradient(0, H, W, 0);
-      g1.addColorStop(0, g.pal[1]);
-      g1.addColorStop(1, g.pal[0]);
+      g1.addColorStop(0, g.pal[1] || "#20150d");
+      g1.addColorStop(1, g.pal[0] || "#e8601c");
       x.fillStyle = g1;
       x.fillRect(0, 0, W, H);
 
@@ -637,8 +656,17 @@ export function GameShelfSection() {
 
       if (bgMat) bgMat.color.setHex(bgColorHex);
       if (shadowMat) shadowMat.opacity = dark ? 0.75 : 0.45;
-      if (haloMat) haloMat.opacity = dark ? 0.65 : 0.45;
-      if (glowMat) glowMat.opacity = dark ? 0.38 : 0.22;
+
+      if (haloMat) {
+        haloMat.blending = dark ? THREE.AdditiveBlending : THREE.NormalBlending;
+        haloMat.opacity = dark ? 0.75 : 0.85;
+        haloMat.needsUpdate = true;
+      }
+      if (glowMat) {
+        glowMat.blending = dark ? THREE.AdditiveBlending : THREE.NormalBlending;
+        glowMat.opacity = dark ? 0.45 : 0.38;
+        glowMat.needsUpdate = true;
+      }
 
       hemiLight.color.setHex(dark ? 0x8a99b5 : 0xfff8f0);
       hemiLight.groundColor.setHex(dark ? 0x181412 : 0xd8cbba);
@@ -646,7 +674,7 @@ export function GameShelfSection() {
 
       if (frontLightL) frontLightL.intensity = dark ? 2.4 : 2.6;
       if (frontLightR) frontLightR.intensity = dark ? 2.0 : 2.2;
-      if (backPointLight) backPointLight.intensity = dark ? 3.8 : 2.5;
+      if (backPointLight) backPointLight.intensity = dark ? 4.2 : 3.0;
 
       darkMat.color.setHex(dark ? 0x0f0c0a : 0xd8d2c4);
 
@@ -667,7 +695,7 @@ export function GameShelfSection() {
     threeState.current.backPointLight = backPointLight;
     threeState.current.updateThemeFn = updateTheme;
 
-    // Animation Loop with Infinite Carousel & Dynamic Halo Breathing
+    // Animation Loop with Infinite Carousel & Dynamic Multi-Color Lighting Spectrum
     let mouseX = 0;
     let mouseY = 0;
 
@@ -682,15 +710,31 @@ export function GameShelfSection() {
         state.cur = state.target;
       }
 
-      // Dynamic Halo Color Interpolation to Active Game
+      // Dynamic Halo & Lighting Multi-Color Spectrum Interpolation
       const activeIdx = ((Math.round(state.cur) % N) + N) % N;
       const activeGame = GAMES_DATA[activeIdx];
-      if (activeGame && activeGame.pal && activeGame.pal[0]) {
-        const targetColor = new THREE.Color(activeGame.pal[0]);
-        currentHaloColor.lerp(targetColor, 0.075);
-        if (haloMat) haloMat.color.copy(currentHaloColor);
-        if (glowMat) glowMat.color.copy(currentHaloColor);
-        if (backPointLight) backPointLight.color.copy(currentHaloColor);
+      if (activeGame && activeGame.pal) {
+        const primTarget = new THREE.Color(activeGame.pal[0] || "#E9683A");
+        const secTarget = new THREE.Color(activeGame.pal[1] || "#FFD900");
+
+        currentPrimaryColor.lerp(primTarget, 0.075);
+        currentSecondaryColor.lerp(secTarget, 0.075);
+
+        if (haloMat) haloMat.color.copy(currentPrimaryColor);
+        if (glowMat) glowMat.color.copy(currentPrimaryColor);
+        if (backPointLight) backPointLight.color.copy(currentPrimaryColor);
+
+        // Infuse front softboxes with dynamic game ambiance
+        if (frontLightL) {
+          frontLightL.color.copy(
+            currentPrimaryColor.clone().lerp(new THREE.Color(state.isDark ? 0xfff6ed : 0xffffff), 0.5)
+          );
+        }
+        if (frontLightR) {
+          frontLightR.color.copy(
+            currentSecondaryColor.clone().lerp(new THREE.Color(state.isDark ? 0xfff2e8 : 0xffffff), 0.5)
+          );
+        }
       }
 
       // Breathing Pulse on Halo
@@ -920,8 +964,19 @@ export function GameShelfSection() {
   const currentGame = GAMES_DATA[currentIndex] || GAMES_DATA[0];
   const currentStatus = currentGame ? STATUS_META[currentGame.status] : null;
 
+  // Compute CSS Variables for Ambilight Aura Projection
+  const ambilightStyle = React.useMemo(() => {
+    if (!currentGame || !currentGame.pal) return {};
+    const pal = currentGame.pal;
+    return {
+      "--game-glow-1": pal[0] || "#E9683A",
+      "--game-glow-2": pal[1] || "#FFD900",
+      "--game-glow-3": pal[2] || pal[0] || "#DC2626",
+    } as React.CSSProperties;
+  }, [currentGame]);
+
   return (
-    <section id="games" className="block wrap">
+    <section ref={sectionRef} id="games" className="block wrap">
       <div className="sec-head reveal">
         <p className="kicker">
           <b>06</b> / 体验层 · GAMES
@@ -935,91 +990,96 @@ export function GameShelfSection() {
         交互式 3D 游戏档案盒。沉淀游戏世界中的震撼、感动与思维共鸣。
       </p>
 
-      {/* 3D Stage Container */}
+      {/* 3D Stage Container with Ambilight Backdrop Projection */}
       <div className="sec-body reveal">
-        <div ref={containerRef} className="game-shelf-wrap">
-          <canvas ref={canvasRef} className="game-shelf-canvas" />
+        <div className="shelf-stage-container" style={ambilightStyle}>
+          {/* Virtual RGB Ambilight Projection Aura */}
+          <div className={`shelf-ambilight-aura ${isInView ? "is-in-view" : ""}`} />
 
-          {/* Top HUD Branding */}
-          <div className="shelf-hud-top-left">
-            <b>VIRTUAL STUDIO</b>
-            <span>GAME ARCHIVE · 游戏展架</span>
-          </div>
+          <div ref={containerRef} className="game-shelf-wrap">
+            <canvas ref={canvasRef} className="game-shelf-canvas" />
 
-          {/* Top HUD Counter (Clean index) */}
-          <div className="shelf-hud-top-right">
-            <div className="shelf-counter">
-              <em>{String(currentIndex + 1).padStart(2, "0")}</em> /{" "}
-              <span>{String(GAMES_DATA.length).padStart(2, "0")}</span>
+            {/* Top HUD Branding */}
+            <div className="shelf-hud-top-left">
+              <b>VIRTUAL STUDIO</b>
+              <span>GAME ARCHIVE · 游戏展架</span>
             </div>
-          </div>
 
-          {/* Left / Right Nav Arrows */}
-          <button
-            type="button"
-            className="shelf-arrow shelf-prev"
-            onClick={() => navigate(-1)}
-            aria-label="上一个游戏"
-          >
-            <svg viewBox="0 0 24 40">
-              <path d="M20 2 4 20l16 18" fill="none" stroke="currentColor" strokeWidth="4" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            className="shelf-arrow shelf-next"
-            onClick={() => navigate(1)}
-            aria-label="下一个游戏"
-          >
-            <svg viewBox="0 0 24 40">
-              <path d="M4 2l16 18L4 38" fill="none" stroke="currentColor" strokeWidth="4" />
-            </svg>
-          </button>
+            {/* Top HUD Counter (Clean index) */}
+            <div className="shelf-hud-top-right">
+              <div className="shelf-counter">
+                <em>{String(currentIndex + 1).padStart(2, "0")}</em> /{" "}
+                <span>{String(GAMES_DATA.length).padStart(2, "0")}</span>
+              </div>
+            </div>
 
-          {/* Clean Horizontal Bottom Dock (No visual obstruction) */}
-          {currentGame && (
-            <div
-              className="shelf-dock-bar"
-              onClick={() => openDetail(currentGame)}
-              title="点击卡带或此栏查看完整长评"
+            {/* Left / Right Nav Arrows */}
+            <button
+              type="button"
+              className="shelf-arrow shelf-prev"
+              onClick={() => navigate(-1)}
+              aria-label="上一个游戏"
             >
-              {/* Left Column: Meta badges + Title */}
-              <div className="shelf-dock-left">
-                <div className="shelf-meta-row">
-                  {currentStatus && (
-                    <span
-                      className="shelf-badge"
-                      style={{ color: currentStatus.color, borderColor: currentStatus.color }}
-                    >
-                      <span>{currentStatus.label}</span>
-                    </span>
-                  )}
-                  <span className="shelf-chip">
-                    <span>{currentGame.hours != null ? `${currentGame.hours} h` : "时长 —"}</span>
-                  </span>
-                  <span className="shelf-chip">
-                    <span>{currentGame.rating != null ? `★ ${currentGame.rating} / 10` : "未评分"}</span>
-                  </span>
-                </div>
-                <div className="shelf-dock-title-row">
-                  <h3 className="shelf-game-title">{currentGame.title}</h3>
-                  <span className="shelf-game-en">{currentGame.en}</span>
-                </div>
-              </div>
+              <svg viewBox="0 0 24 40">
+                <path d="M20 2 4 20l16 18" fill="none" stroke="currentColor" strokeWidth="4" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              className="shelf-arrow shelf-next"
+              onClick={() => navigate(1)}
+              aria-label="下一个游戏"
+            >
+              <svg viewBox="0 0 24 40">
+                <path d="M4 2l16 18L4 38" fill="none" stroke="currentColor" strokeWidth="4" />
+              </svg>
+            </button>
 
-              {/* Right Column: Single Sentence Core Review & Tags */}
-              <div className="shelf-dock-right">
-                <p className="shelf-core-review">“{currentGame.coreReview}”</p>
-                <div className="shelf-game-tags">
-                  {currentGame.tags.map((tag) => (
-                    <span key={tag} className="shelf-tag-pill">
-                      {tag}
+            {/* Clean Horizontal Bottom Dock (No visual obstruction) */}
+            {currentGame && (
+              <div
+                className="shelf-dock-bar"
+                onClick={() => openDetail(currentGame)}
+                title="点击卡带或此栏查看完整长评"
+              >
+                {/* Left Column: Meta badges + Title */}
+                <div className="shelf-dock-left">
+                  <div className="shelf-meta-row">
+                    {currentStatus && (
+                      <span
+                        className="shelf-badge"
+                        style={{ color: currentStatus.color, borderColor: currentStatus.color }}
+                      >
+                        <span>{currentStatus.label}</span>
+                      </span>
+                    )}
+                    <span className="shelf-chip">
+                      <span>{currentGame.hours != null ? `${currentGame.hours} h` : "时长 —"}</span>
                     </span>
-                  ))}
+                    <span className="shelf-chip">
+                      <span>{currentGame.rating != null ? `★ ${currentGame.rating} / 10` : "未评分"}</span>
+                    </span>
+                  </div>
+                  <div className="shelf-dock-title-row">
+                    <h3 className="shelf-game-title">{currentGame.title}</h3>
+                    <span className="shelf-game-en">{currentGame.en}</span>
+                  </div>
+                </div>
+
+                {/* Right Column: Single Sentence Core Review & Tags */}
+                <div className="shelf-dock-right">
+                  <p className="shelf-core-review">“{currentGame.coreReview}”</p>
+                  <div className="shelf-game-tags">
+                    {currentGame.tags.map((tag) => (
+                      <span key={tag} className="shelf-tag-pill">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 

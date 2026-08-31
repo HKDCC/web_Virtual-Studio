@@ -4,6 +4,7 @@ import { MagazineHeader } from "@/components/magazine/MagazineHeader";
 import { MagazineFooter } from "@/components/magazine/MagazineFooter";
 import { RevealObserver } from "@/components/magazine/RevealObserver";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { AntigravityParticles } from "@/components/common/AntigravityParticles";
 import { fetchMagazineData } from "@/lib/magazineData";
 
 export const metadata: Metadata = {
@@ -38,6 +39,7 @@ export default async function RootLayout({
         <a className="skip" href="#main">
           跳到主要内容
         </a>
+        <AntigravityParticles />
         <ThemeProvider>
           <MagazineHeader
             books={data.books}

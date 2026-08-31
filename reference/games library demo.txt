@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>QUAX STUDIO · 游戏影像档案架</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--yl:#ffd900;--bg:#060608;--line:#2a2a33}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:#fff;overflow:hidden;font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased;user-select:none}
+#stage{position:fixed;inset:0;touch-action:none;cursor:grab;display:block}
+#stage.grab{cursor:grabbing}
+.vig{position:fixed;inset:0;z-index:4;pointer-events:none;background:radial-gradient(120% 92% at 50% 42%,transparent 52%,rgba(0,0,0,.62))}
+.grain{position:fixed;inset:0;z-index:5;pointer-events:none;opacity:.055;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+#hud{position:fixed;inset:0;z-index:10;pointer-events:none}
+.logo{position:absolute;top:20px;left:24px;line-height:1.3}
+.logo b{font-size:20px;font-weight:900;font-style:italic}
+.logo span{display:block;font-size:10px;letter-spacing:3px;color:#8b93a4;font-weight:700}
+.archives{position:absolute;top:18px;right:24px;display:flex;align-items:center;background:rgba(9,9,12,.86);border:1px solid var(--line);clip-path:polygon(14px 0,100% 0,100% 100%,0 100%,0 14px)}
+.archives .bars{width:26px;height:30px;margin-left:12px;background:repeating-linear-gradient(90deg,var(--yl) 0 3px,transparent 3px 7px)}
+.archives .txt{padding:6px 16px 8px 10px}
+.archives small{display:block;font-size:9px;letter-spacing:2.5px;color:#7f8798;font-weight:700}
+.archives b{display:block;font-size:15px;font-weight:900;font-style:italic;max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#count{position:absolute;top:74px;right:24px;font-size:13px;font-weight:900;font-style:italic;letter-spacing:2px;color:#aab0bf}
+#count em{font-style:normal;color:var(--yl);font-size:15px}
+.arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:11;pointer-events:auto;background:none;border:0;color:#e8ebf2;cursor:pointer;padding:16px 10px;opacity:.85;transition:.18s}
+.arrow:hover{color:var(--yl);opacity:1}
+.arrow.dim{opacity:.15;pointer-events:none}
+#prev{left:2px}#next{right:2px}
+.arrow svg{width:30px;height:56px;display:block}
+#info{position:absolute;left:26px;bottom:26px;max-width:440px;pointer-events:auto}
+#info .meta{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.badge{display:inline-block;font-size:11px;font-weight:900;border:1.5px solid;padding:2px 9px;letter-spacing:2px;transform:skewX(-8deg);background:rgba(0,0,0,.35)}
+.badge>span{display:inline-block;transform:skewX(8deg)}
+.chip{font-size:11.5px;font-weight:700;color:#c7ccd8;background:rgba(255,255,255,.07);border:1px solid #33343e;padding:3px 9px;transform:skewX(-8deg)}
+.chip>span{display:inline-block;transform:skewX(8deg)}
+.h{color:#9aa1b0;font-size:12px;font-weight:700;letter-spacing:1px}
+#iTitle{font-size:30px;font-weight:900;font-style:italic;letter-spacing:1px;line-height:1.12;text-shadow:0 3px 18px rgba(0,0,0,.8)}
+#iEn{font-size:11px;font-weight:700;letter-spacing:3px;color:#79808f;margin:3px 0 7px}
+#iTags i,#dTags i{font-style:normal;font-size:11px;color:#a9b1c0;border:1px solid #3a3d49;padding:2px 8px;margin-right:6px}
+#iReview{margin-top:9px;font-size:12.5px;line-height:1.75;color:#b7bdca;max-width:400px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#more{margin-top:9px;background:none;border:0;color:var(--yl);font-family:inherit;font-weight:900;font-size:12px;letter-spacing:1.5px;cursor:pointer;padding:2px 0}
+#more:hover{text-decoration:underline}
+#tabs{position:absolute;right:24px;bottom:26px;display:flex;gap:8px;pointer-events:auto}
+.tab{font-family:inherit;transform:skewX(-10deg);background:rgba(10,10,14,.78);border:1px solid #383b46;color:#c6cbd7;font-weight:700;font-size:13px;padding:8px 15px;cursor:pointer;transition:.16s;white-space:nowrap}
+.tab>span{display:inline-block;transform:skewX(10deg)}
+.tab em{font-style:normal;font-size:10px;color:#7d8494;margin-left:5px}
+.tab:hover{border-color:#6a6e7c;color:#fff}
+.tab.on{background:var(--yl);border-color:var(--yl);color:#0c0b06}
+.tab.on em{color:rgba(12,11,6,.55)}
+#hint{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);font-size:11px;letter-spacing:2px;color:#5f6674;transition:opacity 1.2s;white-space:nowrap}
+#detail{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(3,3,5,.7);backdrop-filter:blur(9px);opacity:0;pointer-events:none;transition:opacity .22s}
+#detail.show{opacity:1;pointer-events:auto}
+.card{position:relative;width:min(880px,94vw);max-height:86vh;overflow:auto;background:#0b0b0f;border:1px solid #26262f;box-shadow:0 40px 90px rgba(0,0,0,.75);display:grid;grid-template-columns:260px 1fr;transform:translateY(16px);transition:transform .25s}
+#detail.show .card{transform:none}
+.card img{width:100%;height:100%;object-fit:cover;display:block}
+.card .body{padding:28px 30px 22px}
+#close{position:absolute;top:10px;right:12px;background:rgba(0,0,0,.5);border:1px solid #3a3d48;color:#dfe2ea;width:32px;height:32px;cursor:pointer;font-size:14px;font-weight:900}
+#close:hover{background:var(--yl);color:#000;border-color:var(--yl)}
+.card .meta{display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.card h3{font-size:26px;font-weight:900;font-style:italic;line-height:1.15}
+#dEn{font-size:11px;letter-spacing:3px;color:#79808f;font-weight:700;margin:4px 0 10px}
+#dReview{margin-top:14px;font-size:13.5px;line-height:1.9;color:#c6ccd8;white-space:pre-wrap}
+.card .foot{margin-top:18px;padding-top:12px;border-top:1px dashed #2c2f3a;font-size:10px;letter-spacing:3px;color:#5b6170;font-weight:700}
+#loader{position:fixed;inset:0;z-index:30;background:var(--bg);display:flex;flex-direction:column;gap:16px;align-items:center;justify-content:center;transition:opacity .5s}
+#loader.off{opacity:0;pointer-events:none}
+#loader span{font-size:12px;letter-spacing:5px;color:#8b93a4;font-weight:700}
+.ring{width:34px;height:34px;border:3px solid #2c2c36;border-top-color:var(--yl);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:780px){
+ #info{left:14px;right:14px;bottom:76px;max-width:none}
+ #iTitle{font-size:21px}
+ #iReview,#more{display:none}
+ #tabs{left:50%;right:auto;transform:translateX(-50%);bottom:16px;max-width:94vw;overflow-x:auto;padding:2px}
+ .archives b{font-size:13px;max-width:150px}
+ .card{grid-template-columns:1fr}
+ .card img{max-height:240px}
+ .arrow svg{width:20px;height:38px}
+ #hint{display:none}
+}
+</style>
+</head>
+<body>
+<canvas id="stage"></canvas>
+<div class="vig"></div><div class="grain"></div>
+
+<div id="hud">
+  <div class="logo"><b>QUAX STUDIO</b><span>GAME ARCHIVE SHELF · 游戏档案架</span></div>
+  <div class="archives"><div class="bars"></div><div class="txt"><small>GAME ARCHIVES ///</small><b id="hudTitle">—</b></div></div>
+  <div id="count"><em id="cNow">01</em> / <span id="cAll">24</span></div>
+
+  <button class="arrow" id="prev" aria-label="上一个"><svg viewBox="0 0 24 40"><path d="M20 2 4 20l16 18" fill="none" stroke="currentColor" stroke-width="4"/></svg></button>
+  <button class="arrow" id="next" aria-label="下一个"><svg viewBox="0 0 24 40"><path d="M4 2l16 18L4 38" fill="none" stroke="currentColor" stroke-width="4"/></svg></button>
+
+  <div id="info">
+    <div class="meta">
+      <span class="badge" id="iStatus"><span>—</span></span>
+      <span class="h" id="iHours">—</span>
+      <span class="h" id="iRating">—</span>
+    </div>
+    <h2 id="iTitle">—</h2>
+    <div id="iEn">—</div>
+    <div id="iTags"></div>
+    <p id="iReview"></p>
+    <button id="more">查看完整评价 ›</button>
+  </div>
+
+  <div id="tabs"></div>
+  <div id="hint">◂ 滚轮 / 拖拽 / ← → 切换档案 ▸　点击中央盒子查看详情</div>
+</div>
+
+<div id="detail">
+  <div class="card">
+    <img id="dCover" alt="封面"/>
+    <div class="body">
+      <button id="close" aria-label="关闭">✕</button>
+      <div class="meta" id="dMeta"></div>
+      <h3 id="dTitle"></h3><div id="dEn"></div>
+      <div id="dTags"></div>
+      <p id="dReview"></p>
+      <div class="foot">QUAX STUDIO · GAME ARCHIVE</div>
+    </div>
+  </div>
+</div>
+
+<div id="loader"><div class="ring"></div><span>LOADING ARCHIVES…</span></div>
+
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+const $=s=>document.querySelector(s);
+const REDUCED=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ============ 1. 数据层：把 Excel 内容贴进来（评价为示意，请替换完整文案） ============ */
+const STATUS_META={completed:{label:'已通关',color:'#8fe05a'},playing:{label:'游玩中',color:'#ffd900'},
+ dropped:{label:'已弃坑',color:'#ff5c5c'},wishlist:{label:'愿望单',color:'#9d8cff'}};
+
+const GAMES=[
+{t:'丧尸围城3',en:'DEAD RISING 3',status:'completed',hours:10,rating:8,tags:['动作','冒险'],pal:['#c05a1d','#260d05'],cover:null,
+ review:'大二还是大三的冬天，用人生第一台笔记本艰难地打通关了，算是人生最早通关的单机游戏之一。'},
+{t:'逃生',en:'OUTLAST',status:'completed',hours:5,rating:9,tags:['恐怖','生存'],pal:['#8a1f1f','#12060b'],cover:null,
+ review:'鼎鼎大名的生存恐怖游戏，还在读高中的时候就云过多次，上了大学有电脑了才亲自通关。补票的性质偏高，更多的是情怀和回忆，和恶灵附身一起成为我的恐怖游戏启蒙。'},
+{t:'逃生：告密者',en:'WHISTLEBLOWER',status:'completed',hours:3,rating:9,tags:['恐怖','生存'],pal:['#8c2b2b','#160a10'],cover:null,
+ review:'印象中比逃生本体更血腥。'},
+{t:'尼尔：机械纪元',en:'AUTOMATA',status:'completed',hours:35.7,rating:10,tags:['动作','冒险','角色扮演'],pal:['#6b7684','#10141b'],cover:null,
+ review:'「在生与死的螺旋之中，他们一直被囚禁着。但是……在那些轮回中的挣扎，那便是活着的意义。」如果有生之年我要自己写一次剧本的话，那一定会借鉴尼尔。'},
+{t:'只狼：影逝二度',en:'SEKIRO',status:'completed',hours:59.9,rating:9,tags:['动作','冒险'],pal:['#a03322','#1c0f08'],cover:null,
+ review:'以后如果有谁说自己喜欢打游戏，那我首先就问有没有打过只狼。打只狼的日子算是研二暑假和研三寒假印象深刻的回忆，论文答辩＋只狼的双重折磨下居然没有拖延症发作。'},
+{t:'生化危机4重制版',en:'RESIDENT EVIL 4',status:'completed',hours:49.2,rating:10,tags:['恐怖','射击'],pal:['#8a1f1f','#150808'],cover:null,
+ review:'应该是装新电脑以来第一个首发购买并通关的游戏。从来没见过其他游戏里的枪械和体术能配合得这么丝滑。'},
+{t:'恶灵附身',en:'THE EVIL WITHIN',status:'completed',hours:18.2,rating:9,tags:['恐怖','生存'],pal:['#5f1d2b','#0c0608'],cover:null,
+ review:'同样是补票，真自己玩上了才感觉到比逃生还吓人，确实是神作级别。'},
+{t:'泰坦陨落2',en:'TITANFALL 2',status:'completed',hours:6.6,rating:10,tags:['第一人称','射击'],pal:['#d97b29','#241206'],cover:null,
+ review:'感觉机甲没有比人打得更爽（也可能是我不擅长开机甲），流程太短，其他满分。'},
+{t:'黑神话：悟空',en:'WUKONG',status:'completed',hours:54.2,rating:8,tags:['动作','角色扮演'],pal:['#c9a13b','#1d1306'],cover:null,
+ review:'首发没有地图，一直在迷路，打Boss卡建模吞伤害……（评价待补全）'},
+{t:'生化危机3重制版',en:'RESIDENT EVIL 3',status:'completed',hours:8,rating:8,tags:['动作','冒险'],pal:['#a33b2a','#180a08'],cover:null,
+ review:'魔改不尊重原著，除了过场动画和情绪＋氛围塑造比较惊喜之外……（评价待补全）'},
+{t:'米塔',en:'MISIDE',status:'completed',hours:5,rating:10,tags:['恐怖','冒险','恋爱'],pal:['#d4526e','#260d16'],cover:null,
+ review:'是我2025年1月迷茫压抑的生活中最大的乐趣之一。像素画风里最顶尖的恐怖氛围营造，每一个米塔的角色设计和关卡的各种细节做得也很有意思。'},
+{t:'死亡岛2',en:'DEAD ISLAND 2',status:'completed',hours:34.5,rating:8,tags:['动作','角色扮演'],pal:['#c9a12a','#1e1708'],cover:null,
+ review:'（评价待补全）'},
+{t:'泡姆泡姆',en:'POPUCOM',status:'completed',hours:21.3,rating:9,tags:['多人合作','三消'],pal:['#3fa7a0','#0a1d20'],cover:null,
+ review:'应该是第一个用上最高配置通关的单机游戏，第一个二次元游戏……（评价待补全）'},
+{t:'生化危机2重制版',en:'RESIDENT EVIL 2',status:'completed',hours:10.3,rating:7,tags:['动作','冒险'],pal:['#8f2222','#130808'],cover:null,
+ review:'克莱尔线就不打了，太容易迷路了。'},
+{t:'空洞骑士',en:'HOLLOW KNIGHT',status:'playing',hours:null,rating:null,tags:['动作','冒险','2D'],pal:['#5a6fb5','#0c1024'],cover:null,
+ review:'（评价待补全）'},
+{t:'赛博朋克2077',en:'CYBERPUNK 2077',status:'playing',hours:null,rating:null,tags:['角色扮演','开放世界','射击'],pal:['#e3cf3f','#161206'],cover:null,
+ review:'（评价待补全）'},
+{t:'女神异闻录5',en:'PERSONA 5',status:'playing',hours:null,rating:null,tags:['角色扮演'],pal:['#d81e3f','#150409'],cover:null,
+ review:'这游戏挺耐玩的，预计「练习时长」得两年半——2023年暑假开坑，二周目还没通。'},
+{t:'亚托莉 -我挚爱的时光-',en:'ATRI',status:'playing',hours:null,rating:null,tags:['视觉小说'],pal:['#7fd0e8','#0c1a24'],cover:null,
+ review:'（评价待补全）'},
+{t:'生化危机9：安魂曲',en:'REQUIEM',status:'completed',hours:21.2,rating:10,tags:['恐怖'],pal:['#8f2436','#110609'],cover:null,
+ review:'卖生化2情怀，回到警察局比回老家了还熟悉……（评价待补全）'},
+{t:'心魔',en:'INNER DEMON',status:'dropped',hours:5.4,rating:null,tags:['恐怖'],pal:['#4a4a55','#0a0a0e'],cover:null,
+ review:'弃坑，太太太太恐怖不敢玩了。'},
+{t:'魔法少女的魔女审判',en:'WITCH TRIAL',status:'completed',hours:36.2,rating:10,tags:['视觉小说'],pal:['#b0459a','#1c0a1c'],cover:null,
+ review:'剧情、角色设计、立绘、CG、音乐、配音都是超高水准。印象最深的反转：蕾雅、安安的真实杀人动机揭示……（评价待补全）'},
+{t:'影之刃：零',en:'PHANTOM BLADE ZERO',status:'wishlist',hours:null,rating:null,tags:['动作','角色扮演'],pal:['#c23b2e','#150807'],cover:null,
+ review:'愿望单：等待发售中。'},
+{t:'光与影：33号远征队',en:'EXPEDITION 33',status:'completed',hours:26.5,rating:9,tags:['角色扮演','回合制'],pal:['#2f5f9e','#0a1220'],cover:null,
+ review:'第一印象：美术和音乐非常契合……后期四手剑客的处决做得非常惊艳。（评价待补全）'},
+{t:'识质存在',en:'EXISTENCE',status:'completed',hours:13,rating:8,tags:['动作','角色扮演'],pal:['#4fae6a','#0a1a10'],cover:null,
+ review:'（评价待补全）'}
+];
+
+/* ============ 2. 状态 ============ */
+let list=[],cur=0,target=0,cases=[];
+let isDown=false,downX=0,movedPx=0,dragTarget=0,dragCur=0,mx=0,my=0,detailOpen=false;
+
+/* ============ 3. 场景基础 ============ */
+const canvas=$('#stage');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth,innerHeight);
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.12;
+
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x050507);
+scene.fog=new THREE.FogExp2(0x050507,0.058);
+const camera=new THREE.PerspectiveCamera(40,innerWidth/innerHeight,0.1,80);
+camera.position.set(0,0.5,7.2);
+
+const composer=new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene,camera));
+composer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight),0.5,0.6,0.62));
+
+scene.add(new THREE.HemisphereLight(0x46506b,0x0a0a0d,0.55));
+const key=new THREE.SpotLight(0xfff1d8,3,0,0.55,0.7,0);key.position.set(2.5,6,5);scene.add(key,key.target);
+const ctr=new THREE.SpotLight(0xffffff,2.2,0,0.5,0.9,0);ctr.position.set(0,3.6,3);ctr.target.position.set(0,0.2,0);scene.add(ctr,ctr.target);
+const rimL=new THREE.PointLight(0x5f7cff,1.1,0,0);rimL.position.set(-5.5,2.5,1.5);scene.add(rimL);
+const rimR=new THREE.PointLight(0xff8a3d,0.8,0,0);rimR.position.set(5.5,1.6,1.2);scene.add(rimR);
+
+function gridCanvas(){const c=document.createElement('canvas');c.width=c.height=256;const x=c.getContext('2d');
+ x.fillStyle='#0b0b10';x.fillRect(0,0,256,256);x.strokeStyle='rgba(255,255,255,.06)';x.lineWidth=2;
+ for(let i=0;i<=256;i+=64){x.beginPath();x.moveTo(i,0);x.lineTo(i,256);x.stroke();x.beginPath();x.moveTo(0,i);x.lineTo(256,i);x.stroke();}
+ x.fillStyle='rgba(255,217,0,.05)';x.fillRect(0,252,256,4);return c;}
+const wallTex=new THREE.CanvasTexture(gridCanvas());
+wallTex.wrapS=wallTex.wrapT=THREE.RepeatWrapping;wallTex.repeat.set(10,4);wallTex.colorSpace=THREE.SRGBColorSpace;
+const wall=new THREE.Mesh(new THREE.PlaneGeometry(48,18),new THREE.MeshStandardMaterial({map:wallTex,roughness:.95,color:0x9aa0b8}));
+wall.position.set(0,1.6,-6.5);scene.add(wall);
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(70,30),new THREE.MeshStandardMaterial({color:0x0d0d11,roughness:.85,metalness:.25}));
+floor.rotation.x=-Math.PI/2;floor.position.y=-1.7;scene.add(floor);
+const shelf=new THREE.Mesh(new THREE.BoxGeometry(46,.3,3.2),new THREE.MeshStandardMaterial({color:0x17171c,roughness:.6,metalness:.35}));
+shelf.position.set(0,-1.55,-.6);scene.add(shelf);
+const strip=new THREE.Mesh(new THREE.BoxGeometry(46,.05,.05),new THREE.MeshBasicMaterial({color:0xffd900}));
+strip.position.set(0,-1.39,1);scene.add(strip);
+
+function glowCanvas(){const c=document.createElement('canvas');c.width=c.height=256;const x=c.getContext('2d');
+ const g=x.createRadialGradient(128,128,10,128,128,128);g.addColorStop(0,'rgba(255,244,200,.9)');g.addColorStop(1,'rgba(255,244,200,0)');
+ x.fillStyle=g;x.fillRect(0,0,256,256);return c;}
+const pool=new THREE.Mesh(new THREE.PlaneGeometry(7.5,7.5),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(glowCanvas()),transparent:true,opacity:.14,blending:THREE.AdditiveBlending,depthWrite:false}));
+pool.rotation.x=-Math.PI/2;pool.position.set(0,-1.68,.2);scene.add(pool);
+
+function chevCanvas(){const c=document.createElement('canvas');c.width=128;c.height=64;const x=c.getContext('2d');
+ x.fillStyle='#ffd900';x.beginPath();x.moveTo(6,4);x.lineTo(64,40);x.lineTo(122,4);x.lineTo(122,22);x.lineTo(64,60);x.lineTo(6,22);x.closePath();x.fill();return c;}
+const chev=new THREE.Mesh(new THREE.PlaneGeometry(.55,.28),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(chevCanvas()),transparent:true,depthWrite:false}));
+chev.position.set(0,1.98,.55);scene.add(chev);
+
+const dGeo=new THREE.BufferGeometry();{const N=220,a=new Float32Array(N*3);
+ for(let i=0;i<N;i++){a[i*3]=(Math.random()-.5)*26;a[i*3+1]=-1.5+Math.random()*6;a[i*3+2]=-6+Math.random()*9;}
+ dGeo.setAttribute('position',new THREE.BufferAttribute(a,3));}
+const dust=new THREE.Points(dGeo,new THREE.PointsMaterial({color:0x93a8cc,size:.03,transparent:true,opacity:.5,depthWrite:false}));
+scene.add(dust);
+
+/* ============ 4. 程序化封面 / 书脊 / 背面 ============ */
+function texOf(cv){const t=new THREE.CanvasTexture(cv);t.colorSpace=THREE.SRGBColorSpace;
+ t.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());return t;}
+
+function makeCover(g,i){
+ const W=560,H=780,sharp=document.createElement('canvas');sharp.width=W;sharp.height=H;
+ const x=sharp.getContext('2d');
+ const g1=x.createLinearGradient(0,H,W,0);g1.addColorStop(0,g.pal[1]);g1.addColorStop(1,g.pal[0]);
+ x.fillStyle=g1;x.fillRect(0,0,W,H);
+ const rg=x.createRadialGradient(W*.22,H*.16,20,W*.22,H*.16,W*.85);
+ rg.addColorStop(0,'rgba(255,255,255,.15)');rg.addColorStop(1,'rgba(255,255,255,0)');
+ x.fillStyle=rg;x.fillRect(0,0,W,H);
+ x.save();x.translate(W*.5,H*.5);x.rotate(-.42);
+ x.fillStyle='rgba(0,0,0,.32)';x.fillRect(-W,-46,W*2,128);
+ x.fillStyle='rgba(255,255,255,.10)';x.fillRect(-W,98,W*2,24);
+ x.fillStyle='rgba(255,217,0,.9)';x.fillRect(-W,-70,W*2,10);x.restore();
+ x.save();x.globalAlpha=.12;x.fillStyle='#fff';x.font='900 210px Arial';x.textAlign='right';
+ x.fillText(String(i+1).padStart(2,'0'),W-14,H-120);x.restore();
+ x.fillStyle='rgba(0,0,0,.55)';x.fillRect(0,0,W,54);
+ x.fillStyle='#ffd900';x.font='900 21px Arial';x.textAlign='left';x.textBaseline='middle';
+ x.fillText('QUAX · TAPE '+String(i+1).padStart(2,'0'),18,28);
+ x.fillStyle='#dfe3ec';x.font='700 16px Arial';x.textAlign='right';x.fillText('GAME ARCHIVE',W-16,28);
+ x.shadowColor='rgba(0,0,0,.5)';x.shadowBlur=16;
+ x.beginPath();x.arc(W-96,140,52,0,Math.PI*2);
+ x.fillStyle=g.rating!=null?'#ffd900':'rgba(20,20,24,.85)';x.fill();x.shadowBlur=0;
+ x.fillStyle=g.rating!=null?'#111':'#8b93a6';x.font='900 44px Arial';x.textAlign='center';
+ x.fillText(g.rating!=null?String(g.rating):({completed:'✓',playing:'▶',dropped:'✕',wishlist:'+'}[g.status]),W-96,142);
+ x.fillStyle='rgba(255,255,255,.65)';x.font='700 13px Arial';
+ x.fillText(g.rating!=null?'RATING':STATUS_META[g.status].label,W-96,206);
+ const chars=[...g.t];const use=chars.length>10?chars.slice(0,10):chars;
+ const fs=use.length>=10?52:use.length>=8?62:use.length>=6?72:88;
+ x.font=`900 ${fs}px "Noto Sans SC","PingFang SC",sans-serif`;x.textAlign='center';x.textBaseline='middle';
+ x.shadowColor='rgba(0,0,0,.65)';x.shadowBlur=14;x.shadowOffsetY=5;x.fillStyle='#fff';
+ use.forEach((ch,j)=>x.fillText(ch,92,112+fs*1.04*j+fs*.55));
+ x.shadowBlur=0;x.shadowOffsetY=0;
+ let efs=40;do{x.font=`900 ${efs}px Arial`}while(x.measureText(g.en).width>W-70&&(efs-=2)>14);
+ x.fillStyle='rgba(255,255,255,.92)';x.fillText(g.en,W/2,H-88);
+ x.fillStyle='rgba(0,0,0,.62)';x.fillRect(0,H-58,W,58);
+ x.fillStyle='#ffd900';x.font='900 18px Arial';x.textAlign='left';x.fillText('QUAX STUDIO',18,H-29);
+ x.fillStyle='#cfd3dd';let bx=W-150;
+ while(bx<W-24){const w2=Math.random()<.3?3:1.5;x.fillRect(bx,H-46,w2,32);bx+=w2+2+Math.random()*4;}
+ return sharp;
+}
+function blurFrom(src){ // 下采样再放大 → 廉价可靠的「失焦」效果（兼容不支持 ctx.filter 的浏览器）
+ const k=.05,t=document.createElement('canvas');
+ t.width=Math.max(2,src.width*k|0);t.height=Math.max(2,src.height*k|0);
+ t.getContext('2d').drawImage(src,0,0,t.width,t.height);
+ const o=document.createElement('canvas');o.width=src.width;o.height=src.height;
+ const ox=o.getContext('2d');ox.imageSmoothingQuality='high';ox.drawImage(t,0,0,o.width,o.height);return o;
+}
+function makeSpine(g){const c=document.createElement('canvas');c.width=96;c.height=780;const x=c.getContext('2d');
+ const g1=x.createLinearGradient(0,0,96,0);g1.addColorStop(0,'#232329');g1.addColorStop(1,'#0a0a0d');
+ x.fillStyle=g1;x.fillRect(0,0,96,780);x.fillStyle='#ffd900';x.fillRect(0,0,96,8);x.fillRect(0,772,96,8);
+ x.fillStyle='#e8eaf1';x.font='900 30px "Noto Sans SC","PingFang SC",sans-serif';x.textAlign='center';x.textBaseline='middle';
+ [...g.t].slice(0,14).forEach((ch,j)=>x.fillText(ch,48,52+j*42));return c;}
+function makeBack(){const c=document.createElement('canvas');c.width=560;c.height=780;const x=c.getContext('2d');
+ x.fillStyle='#0d0d12';x.fillRect(0,0,560,780);x.strokeStyle='rgba(255,255,255,.04)';
+ for(let i=0;i<560;i+=40){x.beginPath();x.moveTo(i,0);x.lineTo(i,780);x.stroke();}
+ x.fillStyle='#3c414e';x.font='900 30px Arial';x.textAlign='center';x.fillText('QUAX GAME ARCHIVE',280,380);
+ x.fillStyle='#2a2e38';x.font='700 16px Arial';x.fillText('REW · PLAY · FF',280,416);return c;}
+function coverFit(cv,img){const x=cv.getContext('2d'),W=cv.width,H=cv.height;
+ const s=Math.max(W/img.width,H/img.height),w=img.width*s,h=img.height*s;
+ x.drawImage(img,(W-w)/2,(H-h)/2,w,h);
+ const g=x.createLinearGradient(0,H*.45,0,H);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.82)');
+ x.fillStyle=g;x.fillRect(0,0,W,H);}
+
+/* ============ 5. 档案盒构建 ============ */
+const caseGeo=new THREE.BoxGeometry(2,2.8,.24);
+const backMat=new THREE.MeshStandardMaterial({map:texOf(makeBack()),roughness:.85});
+const darkMat=new THREE.MeshStandardMaterial({color:0x0d0d11,roughness:.9});
+
+function buildCases(items){
+ cases.forEach(m=>{const u=m.userData;u.sharp.dispose();u.blur.dispose();
+  u.frontMat.dispose();u.spineMat.map.dispose();u.spineMat.dispose();scene.remove(m);});
+ cases.length=0;
+ items.forEach((g,i)=>{
+  const sharpCv=makeCover(g,i),blurCv=blurFrom(sharpCv);
+  const sharpT=texOf(sharpCv),blurT=texOf(blurCv);
+  const frontMat=new THREE.MeshStandardMaterial({map:sharpT,roughness:.5,metalness:.05});
+  const spineMat=new THREE.MeshStandardMaterial({map:texOf(makeSpine(g)),roughness:.72});
+  const mesh=new THREE.Mesh(caseGeo,[spineMat,spineMat,darkMat,darkMat,frontMat,backMat]);
+  mesh.userData={game:g,i,frontMat,spineMat,sharp:sharpT,blur:blurT,isBlur:false,spawn:-(i*.045)};
+  g._coverURL=sharpCv.toDataURL('image/jpeg',.82);
+  if(g.cover){ // 真实封面：加载后替换纹理
+   const img=new Image();img.crossOrigin='anonymous';
+   img.onload=()=>{const x=sharpCv.getContext('2d');x.clearRect(0,0,560,780);coverFit(sharpCv,img);
+    x.fillStyle='rgba(0,0,0,.62)';x.fillRect(0,722,560,58);
+    x.fillStyle='#ffd900';x.textAlign='left';x.textBaseline='middle';x.font='900 18px Arial';x.fillText('QUAX STUDIO',18,752);
+    x.fillStyle='rgba(255,255,255,.94)';x.textAlign='center';x.font='900 26px Arial';x.fillText(g.en,280,701);
+    sharpT.needsUpdate=true;blurT.image=blurFrom(sharpCv);blurT.needsUpdate=true;
+    g._coverURL=sharpCv.toDataURL('image/jpeg',.82);};
+   img.src=g.cover;
+  }
+  scene.add(mesh);cases.push(mesh);
+ });
+}
+
+/* ============ 6. 逐帧布局：一切由「到焦点的连续距离 d」驱动 ============ */
+function animate(){
+ requestAnimationFrame(animate);
+ const dt=Math.min(clock.getDelta(),.05),t=clock.elapsedTime;
+ dragCur+=(dragTarget-dragCur)*(1-Math.exp(-dt*9));
+ cur+=(target-cur)*(1-Math.exp(-dt*7.5));
+ if(Math.abs(target-cur)<.0005)cur=target;
+ if(list.length){
+  cases.forEach(m=>{
+   const u=m.userData,d=u.i-cur,a=Math.abs(d),s=d>=0?1:-1,e=Math.min(a,1);
+   const x=(a>.002?s:0)*2.3*Math.pow(a,.82);
+   const z=-1.05*Math.pow(a,1.12);
+   const sc=THREE.MathUtils.lerp(1.14,.94,e);
+   u.spawn+=dt;
+   const sp=THREE.MathUtils.clamp(u.spawn/.55,0,1),se=1-Math.pow(1-sp,3);
+   const bob=REDUCED?0:Math.sin(t*1.25)*.035*(1-e);
+   m.position.set(x,-1.4+1.4*sc+bob-(1-se)*2.8,z);
+   m.rotation.y=THREE.MathUtils.lerp(-.15,-s*.55,e)+dragCur*(1-e);
+   m.rotation.z=THREE.MathUtils.lerp(.012,-s*.05,e);
+   m.scale.setScalar(sc*(.78+.22*se));
+   const dim=THREE.MathUtils.lerp(1,.3,e);
+   u.frontMat.color.setScalar(dim);u.spineMat.color.setScalar(dim*.85);
+   const want=a>.5;
+   if(want!==u.isBlur){u.isBlur=want;u.frontMat.map=want?u.blur:u.sharp;u.frontMat.needsUpdate=true;}
+   m.visible=a<6.5;
+  });
+  chev.visible=true;chev.position.y=1.98+Math.sin(t*2.4)*.06;
+ }else chev.visible=false;
+ dust.rotation.y=t*.02;
+ camera.position.x+=(mx*.85-camera.position.x)*.045;
+ camera.position.y+=((.5-my*.45)-camera.position.y)*.045;
+ camera.lookAt(0,.12,0);
+ composer.render();
+}
+
+/* ============ 7. 交互 ============ */
+const raycaster=new THREE.Raycaster(),ndc=new THREE.Vector2();
+function pick(cx,cy){ndc.x=cx/innerWidth*2-1;ndc.y=-(cy/innerHeight)*2+1;
+ raycaster.setFromCamera(ndc,camera);
+ const hits=raycaster.intersectObjects(cases.filter(c=>c.visible),false);
+ return hits.length?hits[0].object:null;}
+
+canvas.addEventListener('pointerdown',e=>{isDown=true;movedPx=0;downX=e.clientX;
+ canvas.classList.add('grab');canvas.setPointerCapture(e.pointerId);});
+addEventListener('pointermove',e=>{mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5;
+ if(isDown){const dx=e.clientX-downX;movedPx=Math.max(movedPx,Math.abs(dx));
+  dragTarget=THREE.MathUtils.clamp(dx*.0045,-.55,.55);}});
+addEventListener('pointerup',e=>{if(!isDown)return;isDown=false;canvas.classList.remove('grab');
+ const dx=e.clientX-downX;dragTarget=0;
+ if(movedPx<6){const hit=pick(e.clientX,e.clientY);
+  if(hit){hit.userData.i===Math.round(cur)?openDetail(list[hit.userData.i]):setTarget(hit.userData.i);}}
+ else if(Math.abs(dx)>70)navigate(dx<0?1:-1);});
+
+let wheelT=0,accY=0;
+addEventListener('wheel',e=>{if(detailOpen)return;e.preventDefault();
+ accY+=e.deltaY;const now=performance.now();
+ if(now-wheelT>240&&Math.abs(accY)>25){navigate(accY>0?1:-1);wheelT=now;accY=0;}},{passive:false});
+
+addEventListener('keydown',e=>{
+ if(detailOpen){if(e.key==='Escape')closeDetail();return;}
+ if(e.key==='ArrowRight')navigate(1);
+ else if(e.key==='ArrowLeft')navigate(-1);
+ else if(e.key==='Enter')openDetail(list[target]);});
+
+function setTarget(i){const ni=THREE.MathUtils.clamp(i,0,list.length-1);
+ if(ni!==target){target=ni;syncHUD();}}
+function navigate(dir){setTarget(target+dir);}
+
+/* ============ 8. HUD / 详情 / 筛选 ============ */
+function syncHUD(){
+ const g=list[target];if(!g)return;
+ const st=STATUS_META[g.status];
+ $('#hudTitle').textContent=g.t;
+ $('#cNow').textContent=String(target+1).padStart(2,'0');
+ $('#cAll').textContent=String(list.length).padStart(2,'0');
+ $('#iStatus').firstElementChild.textContent=st.label;
+ $('#iStatus').style.color=st.color;$('#iStatus').style.borderColor=st.color;
+ $('#iHours').textContent=g.hours!=null?g.hours+' h':'时长 —';
+ $('#iRating').textContent=g.rating!=null?'★ '+g.rating+' / 10':'未评分';
+ $('#iTitle').textContent=g.t;$('#iEn').textContent=g.en;
+ $('#iTags').innerHTML=g.tags.map(t=>`<i>${t}</i>`).join('');
+ $('#iReview').textContent=g.review;
+ $('#prev').classList.toggle('dim',target<=0);
+ $('#next').classList.toggle('dim',target>=list.length-1);
+}
+function openDetail(g){if(!g)return;detailOpen=true;
+ $('#dCover').src=g._coverURL||'';
+ $('#dTitle').textContent=g.t;$('#dEn').textContent=g.en;
+ const st=STATUS_META[g.status];
+ $('#dMeta').innerHTML=
+  `<span class="badge" style="color:${st.color};border-color:${st.color}"><span>${st.label}</span></span>`+
+  `<span class="chip"><span>${g.hours!=null?g.hours+' h':'时长 —'}</span></span>`+
+  `<span class="chip"><span>${g.rating!=null?'★ '+g.rating+' / 10':'未评分'}</span></span>`;
+ $('#dTags').innerHTML=g.tags.map(t=>`<i>${t}</i>`).join('');
+ $('#dReview').textContent=g.review||'（暂无评价）';
+ $('#detail').classList.add('show');}
+function closeDetail(){detailOpen=false;$('#detail').classList.remove('show');}
+ $('#more').onclick=()=>openDetail(list[target]);
+ $('#close').onclick=closeDetail;
+ $('#detail').addEventListener('click',e=>{if(e.target.id==='detail')closeDetail();});
+ $('#prev').onclick=()=>navigate(-1);
+ $('#next').onclick=()=>navigate(1);
+
+const TABS=[['all','全部'],['completed','已通关'],['playing','游玩中'],['dropped','已弃坑'],['wishlist','愿望单']];
+TABS.forEach(([k,label],idx)=>{
+ const n=k==='all'?GAMES.length:GAMES.filter(g=>g.status===k).length;
+ const b=document.createElement('button');
+ b.className='tab'+(idx===0?' on':'');
+ b.innerHTML=`<span>${label}<em>${n}</em></span>`;
+ b.onclick=()=>{document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  b.classList.add('on');build(k==='all'?GAMES:GAMES.filter(g=>g.status===k));};
+ $('#tabs').appendChild(b);
+});
+
+/* ============ 9. 启动 ============ */
+function build(items){list=items;buildCases(items);cur=0;target=0;syncHUD();}
+function onResize(){
+ camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();
+ renderer.setSize(innerWidth,innerHeight);composer.setSize(innerWidth,innerHeight);
+ camera.position.z=camera.aspect<.75?11.2:camera.aspect<1.25?8.8:7.2;}
+addEventListener('resize',onResize);
+const clock=new THREE.Clock();
+function init(){build(GAMES);onResize();animate();$('#loader').classList.add('off');
+ setTimeout(()=>{$('#hint').style.opacity='0';},7000);}
+document.fonts&&document.fonts.ready
+ ?Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,1500))]).then(init)
+ :init();
+</script>
+</body>
+</html>

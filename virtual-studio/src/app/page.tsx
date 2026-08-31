@@ -4,6 +4,7 @@ import { WorkflowSection } from "@/components/magazine/WorkflowSection";
 import { ArchiveSection } from "@/components/magazine/ArchiveSection";
 import { ModelEvolutionSection } from "@/components/magazine/ModelEvolutionSection";
 import { PauseSection } from "@/components/magazine/PauseSection";
+import { GameShelfSection } from "@/components/magazine/GameShelfSection";
 import { TagPill } from "@/components/common/TagPill";
 
 export const dynamic = "force-dynamic";
@@ -318,11 +319,14 @@ export default async function HomePage() {
       {/* ═══════════ 05 隙 · Pause ═══════════ */}
       <PauseSection pause={pause} />
 
-      {/* ═══════════ 06 足迹 · Change Log ═══════════ */}
+      {/* ═══════════ 06 游戏 · Games ═══════════ */}
+      <GameShelfSection />
+
+      {/* ═══════════ 07 足迹 · Change Log ═══════════ */}
       <section id="changelog" className="block wrap">
         <div className="sec-head reveal">
           <p className="kicker">
-            <b>06</b> / 日志 · LOG
+            <b>07</b> / 日志 · LOG
           </p>
           <Link className="util" href="/changelog" title="全部足迹">
             全部足迹 ↗

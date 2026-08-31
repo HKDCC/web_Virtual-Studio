@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import * as THREE from "three";
-import { Reflector } from "three/examples/jsm/objects/Reflector.js";
 import { GAMES_DATA, GameItem, STATUS_META } from "@/data/gamesData";
 
 export function GameShelfSection() {
@@ -15,22 +14,19 @@ export function GameShelfSection() {
 
   const N = GAMES_DATA.length;
 
-  // References to communicate with Three.js loop
+  // References to communicate with Three.js animation loop
   const threeState = useRef<{
     scene: THREE.Scene | null;
     camera: THREE.PerspectiveCamera | null;
     renderer: THREE.WebGLRenderer | null;
-    reflector: Reflector | null;
-    wallMat: THREE.MeshStandardMaterial | null;
-    floorMat: THREE.MeshStandardMaterial | null;
-    shelfMat: THREE.MeshStandardMaterial | null;
+    woodMatBack: THREE.MeshStandardMaterial | null;
+    woodMatPlank: THREE.MeshStandardMaterial | null;
+    woodMatPillar: THREE.MeshStandardMaterial | null;
     hemiLight: THREE.HemisphereLight | null;
     frontLight: THREE.DirectionalLight | null;
-    keyLight: THREE.SpotLight | null;
-    centerLight: THREE.SpotLight | null;
-    rimL: THREE.PointLight | null;
-    rimR: THREE.PointLight | null;
-    dustMat: THREE.PointsMaterial | null;
+    spotC: THREE.SpotLight | null;
+    spotL: THREE.SpotLight | null;
+    spotR: THREE.SpotLight | null;
     cases: THREE.Mesh[];
     cur: number;
     target: number;
@@ -44,17 +40,14 @@ export function GameShelfSection() {
     scene: null,
     camera: null,
     renderer: null,
-    reflector: null,
-    wallMat: null,
-    floorMat: null,
-    shelfMat: null,
+    woodMatBack: null,
+    woodMatPlank: null,
+    woodMatPillar: null,
     hemiLight: null,
     frontLight: null,
-    keyLight: null,
-    centerLight: null,
-    rimL: null,
-    rimR: null,
-    dustMat: null,
+    spotC: null,
+    spotL: null,
+    spotR: null,
     cases: [],
     cur: 0,
     target: 0,
@@ -109,9 +102,9 @@ export function GameShelfSection() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(width, height);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.25;
+    renderer.toneMappingExposure = 1.3;
 
-    // Scene & Fog
+    // Scene & Theme setup
     const scene = new THREE.Scene();
     const isInitialDark =
       document.documentElement.getAttribute("data-theme") === "dark" ||
@@ -120,141 +113,192 @@ export function GameShelfSection() {
 
     threeState.current.isDark = isInitialDark;
 
-    const darkBgColor = new THREE.Color(0x161310);
-    const lightBgColor = new THREE.Color(0xf6f2ea);
+    const darkBgColor = new THREE.Color(0x130f0d);
+    const lightBgColor = new THREE.Color(0xf3ede3);
     scene.background = (isInitialDark ? darkBgColor : lightBgColor).clone();
-    scene.fog = new THREE.FogExp2(scene.background.getHex(), isInitialDark ? 0.022 : 0.016);
+    scene.fog = new THREE.FogExp2(scene.background.getHex(), isInitialDark ? 0.02 : 0.015);
 
     // Camera
-    const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 90);
+    const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 80);
     camera.position.set(0, 0.45, 7.2);
 
-    // High Brightness Realistic Studio Lighting
+    // Wood Texture Generators
+    function createWoodTexture(isDark: boolean, isBackWall: boolean) {
+      const cv = document.createElement("canvas");
+      cv.width = 512;
+      cv.height = 512;
+      const x = cv.getContext("2d");
+      if (!x) return cv;
+
+      // Base wood tone
+      const baseTone = isDark
+        ? isBackWall
+          ? "#181310"
+          : "#241d18"
+        : isBackWall
+        ? "#dfd6c8"
+        : "#e8dfd2";
+      x.fillStyle = baseTone;
+      x.fillRect(0, 0, 512, 512);
+
+      // Fine wood grain lines
+      const grainColor = isDark
+        ? isBackWall
+          ? "rgba(0, 0, 0, 0.22)"
+          : "rgba(0, 0, 0, 0.25)"
+        : isBackWall
+        ? "rgba(120, 100, 80, 0.12)"
+        : "rgba(140, 115, 90, 0.15)";
+      x.fillStyle = grainColor;
+
+      for (let i = 0; i < 480; i++) {
+        const y = Math.random() * 512;
+        const h = Math.random() * 2 + 1;
+        x.fillRect(0, y, 512, h);
+      }
+
+      // Vertical plank seam grooves
+      x.strokeStyle = isDark ? "rgba(0, 0, 0, 0.45)" : "rgba(100, 80, 60, 0.25)";
+      x.lineWidth = 2;
+      const step = isBackWall ? 128 : 256;
+      for (let px = step; px < 512; px += step) {
+        x.beginPath();
+        x.moveTo(px, 0);
+        x.lineTo(px, 512);
+        x.stroke();
+      }
+
+      // Subtle warm gradient
+      const grad = x.createLinearGradient(0, 0, 0, 512);
+      grad.addColorStop(0, isDark ? "rgba(255, 180, 120, 0.04)" : "rgba(255, 255, 255, 0.1)");
+      grad.addColorStop(1, isDark ? "rgba(0, 0, 0, 0.35)" : "rgba(0, 0, 0, 0.06)");
+      x.fillStyle = grad;
+      x.fillRect(0, 0, 512, 512);
+
+      return cv;
+    }
+
+    function texOf(cv: HTMLCanvasElement) {
+      const t = new THREE.CanvasTexture(cv);
+      t.colorSpace = THREE.SRGBColorSpace;
+      t.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+      return t;
+    }
+
+    // 3D Wooden Bookshelf Construction
+    const backTex = texOf(createWoodTexture(isInitialDark, true));
+    backTex.wrapS = THREE.RepeatWrapping;
+    backTex.wrapT = THREE.RepeatWrapping;
+    backTex.repeat.set(6, 2);
+
+    const plankTex = texOf(createWoodTexture(isInitialDark, false));
+    plankTex.wrapS = THREE.RepeatWrapping;
+    plankTex.wrapT = THREE.RepeatWrapping;
+    plankTex.repeat.set(8, 1);
+
+    const woodMatBack = new THREE.MeshStandardMaterial({
+      map: backTex,
+      roughness: 0.88,
+      metalness: 0.05,
+      color: isInitialDark ? 0x907e70 : 0xffffff,
+    });
+
+    const woodMatPlank = new THREE.MeshStandardMaterial({
+      map: plankTex,
+      roughness: 0.72,
+      metalness: 0.08,
+      color: isInitialDark ? 0x9e8c7c : 0xffffff,
+    });
+
+    const woodMatPillar = new THREE.MeshStandardMaterial({
+      map: plankTex,
+      roughness: 0.75,
+      metalness: 0.06,
+      color: isInitialDark ? 0x887768 : 0xf2eae0,
+    });
+
+    // 1. Back Wall panel
+    const backWall = new THREE.Mesh(new THREE.PlaneGeometry(42, 16), woodMatBack);
+    backWall.position.set(0, 1.4, -4.5);
+    scene.add(backWall);
+
+    // 2. Main Wooden Shelf Plank (where games sit)
+    const shelfPlank = new THREE.Mesh(new THREE.BoxGeometry(38, 0.38, 3.8), woodMatPlank);
+    shelfPlank.position.set(0, -1.48, -0.6);
+    scene.add(shelfPlank);
+
+    // 3. Lower Support Base
+    const shelfBase = new THREE.Mesh(new THREE.BoxGeometry(40, 1.5, 4.6), woodMatBack);
+    shelfBase.position.set(0, -2.3, -0.6);
+    scene.add(shelfBase);
+
+    // 4. Top Bookshelf Canopy / Valance
+    const topCanopy = new THREE.Mesh(new THREE.BoxGeometry(38, 0.45, 3.8), woodMatPlank);
+    topCanopy.position.set(0, 3.65, -0.6);
+    scene.add(topCanopy);
+
+    // 5. Left & Right Side Wooden Pillars (Framing the niche)
+    const leftPillar = new THREE.Mesh(new THREE.BoxGeometry(0.6, 5.5, 3.8), woodMatPillar);
+    leftPillar.position.set(-15.5, 1.1, -0.6);
+    scene.add(leftPillar);
+
+    const rightPillar = new THREE.Mesh(new THREE.BoxGeometry(0.6, 5.5, 3.8), woodMatPillar);
+    rightPillar.position.set(15.5, 1.1, -0.6);
+    scene.add(rightPillar);
+
+    // Realistic Bookshelf Downlights & Studio Lighting
     const hemiLight = new THREE.HemisphereLight(
-      isInitialDark ? 0x6a7590 : 0xfff8ee,
-      isInitialDark ? 0x221c16 : 0xe4dcd0,
-      isInitialDark ? 1.1 : 1.5
+      isInitialDark ? 0x7c8ba8 : 0xfff6ea,
+      isInitialDark ? 0x2e241c : 0xd8cbba,
+      isInitialDark ? 1.3 : 1.6
     );
     scene.add(hemiLight);
 
-    // Front soft fill light (directly illuminating cards)
-    const frontLight = new THREE.DirectionalLight(0xfff8f0, isInitialDark ? 2.6 : 3.0);
-    frontLight.position.set(0, 2.5, 7.5);
+    // Front soft fill light
+    const frontLight = new THREE.DirectionalLight(0xfff6ed, isInitialDark ? 2.8 : 3.0);
+    frontLight.position.set(0, 2.8, 7.5);
     scene.add(frontLight);
 
-    const keyLight = new THREE.SpotLight(0xfff5e6, isInitialDark ? 4.5 : 4.0, 0, 0.62, 0.65, 1.0);
-    keyLight.position.set(3.0, 6.5, 5.5);
-    scene.add(keyLight);
-    scene.add(keyLight.target);
+    // Top Recessed Shelf Downlights (shining down on the wooden shelf & cassettes)
+    const spotC = new THREE.SpotLight(0xffffff, isInitialDark ? 4.8 : 4.0, 14, 0.52, 0.75, 1.1);
+    spotC.position.set(0, 3.6, 1.8);
+    spotC.target.position.set(0, -1.4, 0);
+    scene.add(spotC);
+    scene.add(spotC.target);
 
-    const centerLight = new THREE.SpotLight(0xffffff, isInitialDark ? 3.4 : 3.0, 0, 0.55, 0.85, 1.0);
-    centerLight.position.set(0, 4.2, 3.5);
-    centerLight.target.position.set(0, 0.1, 0);
-    scene.add(centerLight);
-    scene.add(centerLight.target);
+    const spotL = new THREE.SpotLight(0xffecd2, isInitialDark ? 3.8 : 3.2, 14, 0.65, 0.7, 1.1);
+    spotL.position.set(-4.5, 3.6, 1.5);
+    spotL.target.position.set(-3.0, -1.4, 0);
+    scene.add(spotL);
+    scene.add(spotL.target);
 
-    const rimL = new THREE.PointLight(0x6b8eff, isInitialDark ? 1.6 : 1.0, 0, 1.2);
-    rimL.position.set(-5.5, 2.8, 1.8);
-    scene.add(rimL);
+    const spotR = new THREE.SpotLight(0xffe8d6, isInitialDark ? 3.8 : 3.2, 14, 0.65, 0.7, 1.1);
+    spotR.position.set(4.5, 3.6, 1.5);
+    spotR.target.position.set(3.0, -1.4, 0);
+    scene.add(spotR);
+    scene.add(spotR.target);
 
-    const rimR = new THREE.PointLight(0xffaa55, isInitialDark ? 1.4 : 0.9, 0, 1.2);
-    rimR.position.set(5.5, 2.0, 1.5);
-    scene.add(rimR);
-
-    // Background Wall Grid
-    function createWallGrid(isDark: boolean) {
-      const c = document.createElement("canvas");
-      c.width = 256;
-      c.height = 256;
-      const x = c.getContext("2d");
-      if (!x) return c;
-      x.fillStyle = isDark ? "#120f0c" : "#eae4d8";
-      x.fillRect(0, 0, 256, 256);
-      x.strokeStyle = isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)";
-      x.lineWidth = 1.5;
-      for (let i = 0; i <= 256; i += 64) {
-        x.beginPath();
-        x.moveTo(i, 0);
-        x.lineTo(i, 256);
-        x.stroke();
-        x.beginPath();
-        x.moveTo(0, i);
-        x.lineTo(256, i);
-        x.stroke();
-      }
-      x.fillStyle = isDark ? "rgba(233,104,58,0.08)" : "rgba(194,67,27,0.06)";
-      x.fillRect(0, 252, 256, 4);
-      return c;
-    }
-
-    const wallTex = new THREE.CanvasTexture(createWallGrid(isInitialDark));
-    wallTex.wrapS = THREE.RepeatWrapping;
-    wallTex.wrapT = THREE.RepeatWrapping;
-    wallTex.repeat.set(10, 4);
-    wallTex.colorSpace = THREE.SRGBColorSpace;
-
-    const wallMat = new THREE.MeshStandardMaterial({
-      map: wallTex,
-      roughness: 0.95,
-      color: isInitialDark ? 0x888e9f : 0xd8d2c4,
-    });
-    const wall = new THREE.Mesh(new THREE.PlaneGeometry(50, 20), wallMat);
-    wall.position.set(0, 1.6, -6.5);
-    scene.add(wall);
-
-    // Floor Base (matte absorbent gallery floor)
-    const floorMat = new THREE.MeshStandardMaterial({
-      color: isInitialDark ? 0x110e0c : 0xebe5da,
-      roughness: 0.92,
-      metalness: 0.08,
-    });
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(70, 30), floorMat);
-    floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -1.7;
-    scene.add(floor);
-
-    // Subtle Ground Reflector (subtle, non-harsh reflection)
-    const reflector = new Reflector(new THREE.PlaneGeometry(50, 22), {
-      clipBias: 0.003,
-      textureWidth: Math.min(width * (window.devicePixelRatio || 1), 1920),
-      textureHeight: Math.min(height * (window.devicePixelRatio || 1), 1080),
-      color: isInitialDark ? 0x0c0c10 : 0xb0aba0,
-    });
-    reflector.rotation.x = -Math.PI / 2;
-    reflector.position.y = -1.69;
-    scene.add(reflector);
-
-    // Studio Shelf Stand
-    const shelfMat = new THREE.MeshStandardMaterial({
-      color: isInitialDark ? 0x1e1915 : 0xd8d1c4,
-      roughness: 0.8,
-      metalness: 0.15,
-    });
-    const shelf = new THREE.Mesh(new THREE.BoxGeometry(46, 0.28, 3.2), shelfMat);
-    shelf.position.set(0, -1.55, -0.6);
-    scene.add(shelf);
-
-    // Ambient floating dust particles
-    const dustCount = 180;
+    // Warm Ambient floating dust particles
+    const dustCount = 140;
     const dustPos = new Float32Array(dustCount * 3);
     for (let i = 0; i < dustCount; i++) {
-      dustPos[i * 3] = (Math.random() - 0.5) * 24;
-      dustPos[i * 3 + 1] = -1.4 + Math.random() * 5.5;
-      dustPos[i * 3 + 2] = -5.5 + Math.random() * 8.5;
+      dustPos[i * 3] = (Math.random() - 0.5) * 22;
+      dustPos[i * 3 + 1] = -1.2 + Math.random() * 4.6;
+      dustPos[i * 3 + 2] = -4.0 + Math.random() * 7.5;
     }
     const dustGeo = new THREE.BufferGeometry();
     dustGeo.setAttribute("position", new THREE.BufferAttribute(dustPos, 3));
     const dustMat = new THREE.PointsMaterial({
-      color: isInitialDark ? 0x93a8cc : 0x82786a,
-      size: 0.032,
+      color: isInitialDark ? 0xe4b88a : 0xab957f,
+      size: 0.035,
       transparent: true,
-      opacity: 0.45,
+      opacity: 0.4,
       depthWrite: false,
     });
     const dust = new THREE.Points(dustGeo, dustMat);
     scene.add(dust);
 
-    // Focus indicator chevron
+    // Focus indicator chevron over active center cassette
     function createChevronCanvas(colorStr: string) {
       const c = document.createElement("canvas");
       c.width = 128;
@@ -282,13 +326,6 @@ export function GameShelfSection() {
     scene.add(chev);
 
     // Helper functions for box textures
-    function texOf(cv: HTMLCanvasElement) {
-      const t = new THREE.CanvasTexture(cv);
-      t.colorSpace = THREE.SRGBColorSpace;
-      t.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
-      return t;
-    }
-
     function makeProceduralCover(g: GameItem, idx: number, isDark: boolean) {
       const W = 560;
       const H = 780;
@@ -314,7 +351,7 @@ export function GameShelfSection() {
 
       // Top-Left Pill Badge: VIRTUAL STUDIO
       x.save();
-      x.fillStyle = "rgba(0, 0, 0, 0.65)";
+      x.fillStyle = "rgba(0, 0, 0, 0.7)";
       x.beginPath();
       if (x.roundRect) {
         x.roundRect(18, 18, 172, 34, 4);
@@ -322,7 +359,7 @@ export function GameShelfSection() {
         x.rect(18, 18, 172, 34);
       }
       x.fill();
-      x.strokeStyle = isDark ? "rgba(233, 104, 58, 0.65)" : "rgba(255, 217, 0, 0.65)";
+      x.strokeStyle = isDark ? "rgba(233, 104, 58, 0.75)" : "rgba(255, 217, 0, 0.75)";
       x.lineWidth = 1.5;
       x.stroke();
 
@@ -447,9 +484,9 @@ export function GameShelfSection() {
       const h = img.height * s;
       x.drawImage(img, (W - w) / 2, (H - h) / 2, w, h);
 
-      // Top-Left Brand Badge (no bottom obstruction)
+      // Top-Left Brand Badge
       x.save();
-      x.fillStyle = "rgba(0, 0, 0, 0.65)";
+      x.fillStyle = "rgba(0, 0, 0, 0.7)";
       x.beginPath();
       if (x.roundRect) {
         x.roundRect(18, 18, 168, 34, 4);
@@ -457,7 +494,7 @@ export function GameShelfSection() {
         x.rect(18, 18, 168, 34);
       }
       x.fill();
-      x.strokeStyle = isDark ? "rgba(233, 104, 58, 0.65)" : "rgba(255, 217, 0, 0.65)";
+      x.strokeStyle = isDark ? "rgba(233, 104, 58, 0.75)" : "rgba(255, 217, 0, 0.75)";
       x.lineWidth = 1.5;
       x.stroke();
 
@@ -500,7 +537,7 @@ export function GameShelfSection() {
         const sharpCv = makeProceduralCover(g, i, isDark);
         const sharpT = texOf(sharpCv);
 
-        // Front Face: MeshPhysicalMaterial with CLEARCOAT for glossy lacquer texture
+        // Front Face: MeshPhysicalMaterial with CLEARCOAT
         const frontMat = new THREE.MeshPhysicalMaterial({
           map: sharpT,
           roughness: 0.18,
@@ -557,32 +594,22 @@ export function GameShelfSection() {
       if (scene.fog) {
         scene.fog.color = bgColor.clone();
         if ("density" in scene.fog) {
-          (scene.fog as THREE.FogExp2).density = dark ? 0.022 : 0.016;
+          (scene.fog as THREE.FogExp2).density = dark ? 0.02 : 0.015;
         }
       }
 
-      hemiLight.color.setHex(dark ? 0x6a7590 : 0xfff8ee);
-      hemiLight.groundColor.setHex(dark ? 0x221c16 : 0xe4dcd0);
-      hemiLight.intensity = dark ? 1.1 : 1.5;
+      hemiLight.color.setHex(dark ? 0x7c8ba8 : 0xfff6ea);
+      hemiLight.groundColor.setHex(dark ? 0x2e241c : 0xd8cbba);
+      hemiLight.intensity = dark ? 1.3 : 1.6;
 
-      if (frontLight) {
-        frontLight.intensity = dark ? 2.6 : 3.0;
-      }
+      if (frontLight) frontLight.intensity = dark ? 2.8 : 3.0;
+      spotC.intensity = dark ? 4.8 : 4.0;
+      spotL.intensity = dark ? 3.8 : 3.2;
+      spotR.intensity = dark ? 3.8 : 3.2;
 
-      keyLight.intensity = dark ? 4.5 : 4.0;
-      centerLight.intensity = dark ? 3.4 : 3.0;
-      rimL.intensity = dark ? 1.6 : 1.0;
-      rimR.intensity = dark ? 1.4 : 0.9;
-
-      wallMat.color.setHex(dark ? 0x888e9f : 0xd8d2c4);
-      floorMat.color.setHex(dark ? 0x110e0c : 0xebe5da);
-      shelfMat.color.setHex(dark ? 0x1e1915 : 0xd8d1c4);
-
-      if (reflector.material && "color" in reflector.material) {
-        (reflector.material.color as THREE.Color).setHex(dark ? 0x0c0c10 : 0xb0aba0);
-      }
-
-      dustMat.color.setHex(dark ? 0x93a8cc : 0x82786a);
+      woodMatBack.color.setHex(dark ? 0x907e70 : 0xffffff);
+      woodMatPlank.color.setHex(dark ? 0x9e8c7c : 0xffffff);
+      woodMatPillar.color.setHex(dark ? 0x887768 : 0xf2eae0);
 
       buildCases(dark);
     }
@@ -590,17 +617,14 @@ export function GameShelfSection() {
     threeState.current.scene = scene;
     threeState.current.camera = camera;
     threeState.current.renderer = renderer;
-    threeState.current.reflector = reflector;
-    threeState.current.wallMat = wallMat;
-    threeState.current.floorMat = floorMat;
-    threeState.current.shelfMat = shelfMat;
+    threeState.current.woodMatBack = woodMatBack;
+    threeState.current.woodMatPlank = woodMatPlank;
+    threeState.current.woodMatPillar = woodMatPillar;
     threeState.current.hemiLight = hemiLight;
     threeState.current.frontLight = frontLight;
-    threeState.current.keyLight = keyLight;
-    threeState.current.centerLight = centerLight;
-    threeState.current.rimL = rimL;
-    threeState.current.rimR = rimR;
-    threeState.current.dustMat = dustMat;
+    threeState.current.spotC = spotC;
+    threeState.current.spotL = spotL;
+    threeState.current.spotR = spotR;
 
     // Animation Loop with Infinite Wrap-around Carousel
     let mouseX = 0;
@@ -638,13 +662,14 @@ export function GameShelfSection() {
           const se = 1 - Math.pow(1 - sp, 3);
           const bob = Math.sin(t * 1.25) * 0.035 * (1 - e);
 
+          // Position firmly on the wooden plank shelf (y=-1.45)
           m.position.set(x, -1.4 + 1.4 * sc + bob - (1 - se) * 2.8, z);
           m.rotation.y = THREE.MathUtils.lerp(-0.15, -s * 0.55, e) + state.dragCur * (1 - e);
           m.rotation.z = THREE.MathUtils.lerp(0.012, -s * 0.05, e);
           m.scale.setScalar(sc * (0.78 + 0.22 * se));
 
-          // Lift min brightness dim to 0.75 so non-focused cards remain vibrant and clear
-          const dim = THREE.MathUtils.lerp(1.0, 0.75, e);
+          // Non-focused cards remain bright and visible on the shelf
+          const dim = THREE.MathUtils.lerp(1.0, 0.78, e);
           u.frontMat.color.setScalar(dim);
           u.spineMat.color.setScalar(dim * 0.9);
 
@@ -720,7 +745,6 @@ export function GameShelfSection() {
           if (hitIdx === activeIdx) {
             openDetail(GAMES_DATA[hitIdx]);
           } else {
-            // Find shortest delta
             let delta = (hitIdx - activeIdx) % N;
             if (delta > N / 2) delta -= N;
             if (delta < -N / 2) delta += N;
@@ -820,10 +844,11 @@ export function GameShelfSection() {
         scene.remove(m);
       });
       caseGeo.dispose();
-      wallTex.dispose();
-      wallMat.dispose();
-      floorMat.dispose();
-      shelfMat.dispose();
+      backTex.dispose();
+      plankTex.dispose();
+      woodMatBack.dispose();
+      woodMatPlank.dispose();
+      woodMatPillar.dispose();
       dustGeo.dispose();
       dustMat.dispose();
       chevTex.dispose();
@@ -857,10 +882,10 @@ export function GameShelfSection() {
           {/* Top HUD Branding */}
           <div className="shelf-hud-top-left">
             <b>VIRTUAL STUDIO</b>
-            <span>GAME ARCHIVE · 游戏档案</span>
+            <span>GAME ARCHIVE · 游戏展架</span>
           </div>
 
-          {/* Top HUD Counter (Clean index only) */}
+          {/* Top HUD Counter (Clean index) */}
           <div className="shelf-hud-top-right">
             <div className="shelf-counter">
               <em>{String(currentIndex + 1).padStart(2, "0")}</em> /{" "}
@@ -890,53 +915,50 @@ export function GameShelfSection() {
             </svg>
           </button>
 
-          {/* Bottom-Left Game Info HUD */}
+          {/* Clean Horizontal Bottom Dock (No visual obstruction) */}
           {currentGame && (
-            <div className="shelf-info-hud">
-              <div className="shelf-meta-row">
-                {currentStatus && (
-                  <span
-                    className="shelf-badge"
-                    style={{ color: currentStatus.color, borderColor: currentStatus.color }}
-                  >
-                    <span>{currentStatus.label}</span>
+            <div
+              className="shelf-dock-bar"
+              onClick={() => openDetail(currentGame)}
+              title="点击卡带或此栏查看完整长评"
+            >
+              {/* Left Column: Meta badges + Title */}
+              <div className="shelf-dock-left">
+                <div className="shelf-meta-row">
+                  {currentStatus && (
+                    <span
+                      className="shelf-badge"
+                      style={{ color: currentStatus.color, borderColor: currentStatus.color }}
+                    >
+                      <span>{currentStatus.label}</span>
+                    </span>
+                  )}
+                  <span className="shelf-chip">
+                    <span>{currentGame.hours != null ? `${currentGame.hours} h` : "时长 —"}</span>
                   </span>
-                )}
-                <span className="shelf-chip">
-                  <span>{currentGame.hours != null ? `${currentGame.hours} h` : "时长 —"}</span>
-                </span>
-                <span className="shelf-chip">
-                  <span>{currentGame.rating != null ? `★ ${currentGame.rating} / 10` : "未评分"}</span>
-                </span>
+                  <span className="shelf-chip">
+                    <span>{currentGame.rating != null ? `★ ${currentGame.rating} / 10` : "未评分"}</span>
+                  </span>
+                </div>
+                <div className="shelf-dock-title-row">
+                  <h3 className="shelf-game-title">{currentGame.title}</h3>
+                  <span className="shelf-game-en">{currentGame.en}</span>
+                </div>
               </div>
 
-              <h3 className="shelf-game-title">{currentGame.title}</h3>
-              <p className="shelf-game-en">{currentGame.en}</p>
-
-              <div className="shelf-game-tags">
-                {currentGame.tags.map((tag) => (
-                  <span key={tag} className="shelf-tag-pill">
-                    {tag}
-                  </span>
-                ))}
+              {/* Right Column: Single Sentence Core Review & Tags */}
+              <div className="shelf-dock-right">
+                <p className="shelf-core-review">“{currentGame.coreReview}”</p>
+                <div className="shelf-game-tags">
+                  {currentGame.tags.map((tag) => (
+                    <span key={tag} className="shelf-tag-pill">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
-
-              <p className="shelf-core-review">{currentGame.coreReview}</p>
-
-              <button
-                type="button"
-                className="shelf-more-btn"
-                onClick={() => openDetail(currentGame)}
-              >
-                查看完整长评 ›
-              </button>
             </div>
           )}
-
-          {/* Interaction Bottom Hint */}
-          <div className="shelf-bottom-hint">
-            ◂ 拖拽 / 滚轮 / 键盘 ← → 无限循环 　 点击中央卡带盒查看长文回顾 ▸
-          </div>
         </div>
       </div>
 

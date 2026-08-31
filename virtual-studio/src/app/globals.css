@@ -4390,7 +4390,7 @@ footer {
   z-index: 0;
 }
 
-/* ═══════════════ 游戏展架虚拟流光氛围灯投影 (Ambilight PC Fan RGB) ═══════════════ */
+/* ═══════════════ 游戏展架虚拟流光氛围灯投影 (Ambilight TV Wall Backlight) ═══════════════ */
 .shelf-stage-container {
   position: relative;
   width: 100%;
@@ -4403,7 +4403,7 @@ footer {
   }
   50% {
     background-position: 100% 50%;
-    transform: translate(-50%, -50%) scale(1.05);
+    transform: translate(-50%, -50%) scale(1.03);
   }
   100% {
     background-position: 0% 50%;
@@ -4418,19 +4418,24 @@ footer {
   transform: translate(-50%, -50%);
   width: 100vw;
   max-width: 100vw;
-  height: 230%;
-  min-height: 1350px;
+  height: 195%;
+  min-height: 1180px;
   pointer-events: none;
   z-index: 0;
   opacity: 0;
   transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-  filter: blur(140px);
+  filter: blur(100px);
   will-change: opacity, background, transform;
   overflow: visible;
 }
 
-.shelf-ambilight-aura.is-in-view {
-  opacity: 1;
+/* 电视墙壁通透柔光：控制透明度，让文字清晰锐利 */
+[data-theme="dark"] .shelf-ambilight-aura.is-in-view {
+  opacity: 0.42;
+}
+
+:root:not([data-theme="dark"]) .shelf-ambilight-aura.is-in-view {
+  opacity: 0.22;
 }
 
 [data-theme="dark"] .shelf-ambilight-aura {
@@ -4441,10 +4446,10 @@ footer {
     var(--game-color-a, #e9683a) 70%,
     var(--game-color-b, #ffd900) 100%
   );
-  background-size: 260% 260%;
+  background-size: 240% 240%;
   animation: rgbFanBreathing 14s ease-in-out infinite;
-  mask-image: radial-gradient(ellipse 75% 68% at 50% 50%, black 30%, rgba(0, 0, 0, 0.85) 60%, rgba(0, 0, 0, 0.25) 85%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 75% 68% at 50% 50%, black 30%, rgba(0, 0, 0, 0.85) 60%, rgba(0, 0, 0, 0.25) 85%, transparent 100%);
+  mask-image: radial-gradient(ellipse 68% 58% at 50% 50%, black 25%, rgba(0, 0, 0, 0.75) 55%, rgba(0, 0, 0, 0.18) 80%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 68% 58% at 50% 50%, black 25%, rgba(0, 0, 0, 0.75) 55%, rgba(0, 0, 0, 0.18) 80%, transparent 100%);
 }
 
 :root:not([data-theme="dark"]) .shelf-ambilight-aura {
@@ -4455,11 +4460,11 @@ footer {
     var(--game-color-a, #e9683a) 70%,
     var(--game-color-b, #ffd900) 100%
   );
-  background-size: 260% 260%;
+  background-size: 240% 240%;
   animation: rgbFanBreathing 14s ease-in-out infinite;
   mix-blend-mode: multiply;
-  mask-image: radial-gradient(ellipse 75% 68% at 50% 50%, black 30%, rgba(0, 0, 0, 0.85) 60%, rgba(0, 0, 0, 0.25) 85%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 75% 68% at 50% 50%, black 30%, rgba(0, 0, 0, 0.85) 60%, rgba(0, 0, 0, 0.25) 85%, transparent 100%);
+  mask-image: radial-gradient(ellipse 68% 58% at 50% 50%, black 25%, rgba(0, 0, 0, 0.75) 55%, rgba(0, 0, 0, 0.18) 80%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 68% 58% at 50% 50%, black 25%, rgba(0, 0, 0, 0.75) 55%, rgba(0, 0, 0, 0.18) 80%, transparent 100%);
 }
 
 

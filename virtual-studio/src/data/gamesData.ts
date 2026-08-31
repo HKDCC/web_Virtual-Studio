@@ -491,7 +491,7 @@ export const GAMES_DATA: GameItem[] = [
       "动作",
       "角色扮演"
     ],
-    "cover": null,
+    "cover": "/covers/phantom-blade-zero.webp",
     "pal": [
       "#c23b2e",
       "#150807"

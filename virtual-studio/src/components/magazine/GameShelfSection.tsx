@@ -474,24 +474,67 @@ export function GameShelfSection() {
       return c;
     }
 
-    function coverFit(cv: HTMLCanvasElement, img: HTMLImageElement, isDark: boolean) {
+    function coverFit(cv: HTMLCanvasElement, img: HTMLImageElement, g: GameItem, idx: number, isDark: boolean) {
       const x = cv.getContext("2d");
       if (!x) return;
       const W = cv.width;
       const H = cv.height;
-      const s = Math.max(W / img.width, H / img.height);
-      const w = img.width * s;
-      const h = img.height * s;
-      x.drawImage(img, (W - w) / 2, (H - h) / 2, w, h);
 
-      // Top-Left Brand Badge
+      // 1. Ambient Background Layer (Palette tinted & dark gradient)
+      const baseColor = g.pal ? g.pal[1] : (isDark ? "#120f0d" : "#ded7cb");
+      x.fillStyle = baseColor;
+      x.fillRect(0, 0, W, H);
+
+      // Ambient scaled image fill
+      x.save();
+      x.globalAlpha = 0.22;
+      const bgScale = Math.max(W / img.width, H / img.height);
+      const bgW = img.width * bgScale;
+      const bgH = img.height * bgScale;
+      x.drawImage(img, (W - bgW) / 2, (H - bgH) / 2, bgW, bgH);
+      x.restore();
+
+      // Atmospheric Vignette Gradient
+      const grad = x.createLinearGradient(0, 0, 0, H);
+      grad.addColorStop(0, "rgba(0, 0, 0, 0.45)");
+      grad.addColorStop(0.5, "rgba(0, 0, 0, 0.15)");
+      grad.addColorStop(0.72, isDark ? "rgba(18, 14, 12, 0.85)" : "rgba(225, 218, 206, 0.85)");
+      grad.addColorStop(1, isDark ? "rgba(12, 9, 8, 0.98)" : "rgba(215, 207, 194, 0.98)");
+      x.fillStyle = grad;
+      x.fillRect(0, 0, W, H);
+
+      // 2. Main Key Art (100% full horizontal width, perfectly preserving character & logo center)
+      const artW = W;
+      const artH = Math.min((img.height / img.width) * artW, 460);
+      const artY = 60 + Math.max(0, (440 - artH) / 2);
+
+      x.save();
+      x.shadowColor = "rgba(0, 0, 0, 0.55)";
+      x.shadowBlur = 16;
+      x.drawImage(img, 0, artY, artW, artH);
+      x.restore();
+
+      // Key art top & bottom soft edge feathering
+      const topFade = x.createLinearGradient(0, artY, 0, artY + 30);
+      topFade.addColorStop(0, "rgba(0, 0, 0, 0.4)");
+      topFade.addColorStop(1, "rgba(0, 0, 0, 0)");
+      x.fillStyle = topFade;
+      x.fillRect(0, artY, artW, 30);
+
+      const btmFade = x.createLinearGradient(0, artY + artH - 45, 0, artY + artH);
+      btmFade.addColorStop(0, "rgba(0, 0, 0, 0)");
+      btmFade.addColorStop(1, isDark ? "rgba(12, 9, 8, 0.7)" : "rgba(215, 207, 194, 0.7)");
+      x.fillStyle = btmFade;
+      x.fillRect(0, artY + artH - 45, artW, 45);
+
+      // 3. Top-Left Brand Badge
       x.save();
       x.fillStyle = "rgba(0, 0, 0, 0.7)";
       x.beginPath();
       if (x.roundRect) {
-        x.roundRect(18, 18, 168, 34, 4);
+        x.roundRect(18, 18, 168, 32, 4);
       } else {
-        x.rect(18, 18, 168, 34);
+        x.rect(18, 18, 168, 32);
       }
       x.fill();
       x.strokeStyle = isDark ? "rgba(233, 104, 58, 0.75)" : "rgba(255, 217, 0, 0.75)";
@@ -499,10 +542,68 @@ export function GameShelfSection() {
       x.stroke();
 
       x.fillStyle = isDark ? "#E9683A" : "#FFD900";
-      x.font = "900 13px Arial, sans-serif";
+      x.font = "900 12.5px Arial, sans-serif";
       x.textAlign = "center";
       x.textBaseline = "middle";
-      x.fillText("VIRTUAL STUDIO", 102, 35);
+      x.fillText("VIRTUAL STUDIO", 102, 34);
+      x.restore();
+
+      // Top-Right Stamp Badge
+      x.save();
+      x.beginPath();
+      x.arc(W - 46, 34, 18, 0, Math.PI * 2);
+      x.fillStyle = g.rating != null ? (isDark ? "#E9683A" : "#C2431B") : "rgba(20, 20, 24, 0.85)";
+      x.fill();
+      x.fillStyle = "#ffffff";
+      x.font = "900 13px Arial";
+      x.textAlign = "center";
+      x.textBaseline = "middle";
+      x.fillText(
+        g.rating != null
+          ? String(g.rating)
+          : { completed: "✓", playing: "▶", dropped: "✕", wishlist: "+" }[g.status],
+        W - 46,
+        34
+      );
+      x.restore();
+
+      // 4. Bottom Title Plate & Typographic Layout
+      x.save();
+      // Main Chinese Title
+      x.fillStyle = isDark ? "#ffffff" : "#1a1612";
+      x.shadowColor = isDark ? "rgba(0, 0, 0, 0.8)" : "rgba(255, 255, 255, 0.6)";
+      x.shadowBlur = 10;
+      let tfs = 34;
+      x.font = `900 ${tfs}px "Noto Serif SC", "Songti SC", "PingFang SC", sans-serif`;
+      while (x.measureText(g.title).width > W - 60 && tfs > 22) {
+        tfs -= 2;
+        x.font = `900 ${tfs}px "Noto Serif SC", "Songti SC", "PingFang SC", sans-serif`;
+      }
+      x.textAlign = "center";
+      x.fillText(g.title, W / 2, H - 160);
+
+      // English Subtitle
+      x.shadowBlur = 0;
+      x.fillStyle = isDark ? "#E9683A" : "#C2431B";
+      let efs = 14;
+      x.font = `800 ${efs}px Arial, sans-serif`;
+      while (x.measureText(g.en).width > W - 70 && efs > 10) {
+        efs -= 1;
+        x.font = `800 ${efs}px Arial, sans-serif`;
+      }
+      x.fillText(g.en, W / 2, H - 122);
+
+      // Serial & Catalog Line
+      x.strokeStyle = isDark ? "rgba(255, 255, 255, 0.12)" : "rgba(0, 0, 0, 0.12)";
+      x.lineWidth = 1;
+      x.beginPath();
+      x.moveTo(40, H - 98);
+      x.lineTo(W - 40, H - 98);
+      x.stroke();
+
+      x.fillStyle = isDark ? "rgba(255, 255, 255, 0.45)" : "rgba(0, 0, 0, 0.45)";
+      x.font = "700 11px Arial, sans-serif";
+      x.fillText("VS-ARCHIVE · NO." + String(idx + 1).padStart(2, "0") + "  ///  " + g.tags.join(" · "), W / 2, H - 76);
       x.restore();
     }
 
@@ -569,7 +670,7 @@ export function GameShelfSection() {
             const x = sharpCv.getContext("2d");
             if (x) {
               x.clearRect(0, 0, 560, 780);
-              coverFit(sharpCv, img, isDark);
+              coverFit(sharpCv, img, g, i, isDark);
               sharpT.needsUpdate = true;
             }
           };

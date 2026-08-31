@@ -970,8 +970,8 @@ export function GameShelfSection() {
     const pal = currentGame.pal;
     return {
       "--game-glow-1": pal[0] || "#E9683A",
-      "--game-glow-2": pal[1] || "#FFD900",
-      "--game-glow-3": pal[2] || pal[0] || "#DC2626",
+      "--game-glow-2": pal[2] && pal[2] !== "#000000" ? pal[2] : pal[0],
+      "--game-glow-3": pal[1] || pal[0] || "#FFD900",
     } as React.CSSProperties;
   }, [currentGame]);
 

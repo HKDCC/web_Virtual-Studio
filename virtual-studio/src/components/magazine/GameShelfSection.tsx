@@ -19,14 +19,14 @@ export function GameShelfSection() {
     scene: THREE.Scene | null;
     camera: THREE.PerspectiveCamera | null;
     renderer: THREE.WebGLRenderer | null;
-    woodMatBack: THREE.MeshStandardMaterial | null;
-    woodMatPlank: THREE.MeshStandardMaterial | null;
-    woodMatPillar: THREE.MeshStandardMaterial | null;
+    bgMat: THREE.MeshStandardMaterial | null;
+    shadowMat: THREE.MeshBasicMaterial | null;
+    haloMat: THREE.MeshBasicMaterial | null;
+    glowMat: THREE.MeshBasicMaterial | null;
     hemiLight: THREE.HemisphereLight | null;
-    frontLight: THREE.DirectionalLight | null;
-    spotC: THREE.SpotLight | null;
-    spotL: THREE.SpotLight | null;
-    spotR: THREE.SpotLight | null;
+    frontLightL: THREE.DirectionalLight | null;
+    frontLightR: THREE.DirectionalLight | null;
+    backPointLight: THREE.PointLight | null;
     cases: THREE.Mesh[];
     cur: number;
     target: number;
@@ -35,19 +35,20 @@ export function GameShelfSection() {
     animId: number;
     clock: THREE.Clock;
     isDark: boolean;
-    buildCasesFn: (dark: boolean) => void;
+    hasSpawned: boolean;
+    updateThemeFn: (dark: boolean) => void;
   }>({
     scene: null,
     camera: null,
     renderer: null,
-    woodMatBack: null,
-    woodMatPlank: null,
-    woodMatPillar: null,
+    bgMat: null,
+    shadowMat: null,
+    haloMat: null,
+    glowMat: null,
     hemiLight: null,
-    frontLight: null,
-    spotC: null,
-    spotL: null,
-    spotR: null,
+    frontLightL: null,
+    frontLightR: null,
+    backPointLight: null,
     cases: [],
     cur: 0,
     target: 0,
@@ -56,7 +57,8 @@ export function GameShelfSection() {
     animId: 0,
     clock: new THREE.Clock(),
     isDark: true,
-    buildCasesFn: () => {},
+    hasSpawned: false,
+    updateThemeFn: () => {},
   });
 
   const handleIndexChange = useCallback(
@@ -102,9 +104,9 @@ export function GameShelfSection() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(width, height);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.3;
+    renderer.toneMappingExposure = 1.25;
 
-    // Scene & Theme setup
+    // Scene & Initial Theme Detection
     const scene = new THREE.Scene();
     const isInitialDark =
       document.documentElement.getAttribute("data-theme") === "dark" ||
@@ -113,70 +115,14 @@ export function GameShelfSection() {
 
     threeState.current.isDark = isInitialDark;
 
-    const darkBgColor = new THREE.Color(0x130f0d);
-    const lightBgColor = new THREE.Color(0xf3ede3);
-    scene.background = (isInitialDark ? darkBgColor : lightBgColor).clone();
-    scene.fog = new THREE.FogExp2(scene.background.getHex(), isInitialDark ? 0.02 : 0.015);
+    const darkBgHex = 0x0c0a09;
+    const lightBgHex = 0xf4efe6;
+    scene.background = new THREE.Color(isInitialDark ? darkBgHex : lightBgHex);
+    scene.fog = new THREE.FogExp2(scene.background.getHex(), isInitialDark ? 0.022 : 0.016);
 
     // Camera
     const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 80);
-    camera.position.set(0, 0.45, 7.2);
-
-    // Wood Texture Generators
-    function createWoodTexture(isDark: boolean, isBackWall: boolean) {
-      const cv = document.createElement("canvas");
-      cv.width = 512;
-      cv.height = 512;
-      const x = cv.getContext("2d");
-      if (!x) return cv;
-
-      // Base wood tone
-      const baseTone = isDark
-        ? isBackWall
-          ? "#181310"
-          : "#241d18"
-        : isBackWall
-        ? "#dfd6c8"
-        : "#e8dfd2";
-      x.fillStyle = baseTone;
-      x.fillRect(0, 0, 512, 512);
-
-      // Fine wood grain lines
-      const grainColor = isDark
-        ? isBackWall
-          ? "rgba(0, 0, 0, 0.22)"
-          : "rgba(0, 0, 0, 0.25)"
-        : isBackWall
-        ? "rgba(120, 100, 80, 0.12)"
-        : "rgba(140, 115, 90, 0.15)";
-      x.fillStyle = grainColor;
-
-      for (let i = 0; i < 480; i++) {
-        const y = Math.random() * 512;
-        const h = Math.random() * 2 + 1;
-        x.fillRect(0, y, 512, h);
-      }
-
-      // Vertical plank seam grooves
-      x.strokeStyle = isDark ? "rgba(0, 0, 0, 0.45)" : "rgba(100, 80, 60, 0.25)";
-      x.lineWidth = 2;
-      const step = isBackWall ? 128 : 256;
-      for (let px = step; px < 512; px += step) {
-        x.beginPath();
-        x.moveTo(px, 0);
-        x.lineTo(px, 512);
-        x.stroke();
-      }
-
-      // Subtle warm gradient
-      const grad = x.createLinearGradient(0, 0, 0, 512);
-      grad.addColorStop(0, isDark ? "rgba(255, 180, 120, 0.04)" : "rgba(255, 255, 255, 0.1)");
-      grad.addColorStop(1, isDark ? "rgba(0, 0, 0, 0.35)" : "rgba(0, 0, 0, 0.06)");
-      x.fillStyle = grad;
-      x.fillRect(0, 0, 512, 512);
-
-      return cv;
-    }
+    camera.position.set(0, 0.42, 7.2);
 
     function texOf(cv: HTMLCanvasElement) {
       const t = new THREE.CanvasTexture(cv);
@@ -185,145 +131,137 @@ export function GameShelfSection() {
       return t;
     }
 
-    // 3D Wooden Bookshelf Construction
-    const backTex = texOf(createWoodTexture(isInitialDark, true));
-    backTex.wrapS = THREE.RepeatWrapping;
-    backTex.wrapT = THREE.RepeatWrapping;
-    backTex.repeat.set(6, 2);
+    // 1. Procedural Soft Glow Texture for the Halo Ring
+    function createSoftGlowTexture() {
+      const cv = document.createElement("canvas");
+      cv.width = 256;
+      cv.height = 256;
+      const x = cv.getContext("2d");
+      if (!x) return cv;
+      const rg = x.createRadialGradient(128, 128, 10, 128, 128, 128);
+      rg.addColorStop(0, "rgba(255, 255, 255, 1.0)");
+      rg.addColorStop(0.35, "rgba(255, 255, 255, 0.65)");
+      rg.addColorStop(0.7, "rgba(255, 255, 255, 0.18)");
+      rg.addColorStop(1, "rgba(255, 255, 255, 0)");
+      x.fillStyle = rg;
+      x.fillRect(0, 0, 256, 256);
+      return cv;
+    }
 
-    const plankTex = texOf(createWoodTexture(isInitialDark, false));
-    plankTex.wrapS = THREE.RepeatWrapping;
-    plankTex.wrapT = THREE.RepeatWrapping;
-    plankTex.repeat.set(8, 1);
+    // 2. Procedural Elliptical Ground Soft Shadow Texture
+    function createGroundShadowTexture() {
+      const cv = document.createElement("canvas");
+      cv.width = 512;
+      cv.height = 256;
+      const x = cv.getContext("2d");
+      if (!x) return cv;
+      const rg = x.createRadialGradient(256, 128, 20, 256, 128, 230);
+      rg.addColorStop(0, "rgba(0, 0, 0, 0.85)");
+      rg.addColorStop(0.4, "rgba(0, 0, 0, 0.45)");
+      rg.addColorStop(0.75, "rgba(0, 0, 0, 0.12)");
+      rg.addColorStop(1, "rgba(0, 0, 0, 0)");
+      x.fillStyle = rg;
+      x.fillRect(0, 0, 512, 256);
+      return cv;
+    }
 
-    const woodMatBack = new THREE.MeshStandardMaterial({
-      map: backTex,
-      roughness: 0.88,
-      metalness: 0.05,
-      color: isInitialDark ? 0x907e70 : 0xffffff,
+    // 3. Modern Minimalist Seamless Cyclorama Backdrop
+    const bgGeo = new THREE.PlaneGeometry(60, 36);
+    const bgMat = new THREE.MeshStandardMaterial({
+      color: isInitialDark ? darkBgHex : lightBgHex,
+      roughness: 0.96,
+      metalness: 0.02,
     });
+    const bgMesh = new THREE.Mesh(bgGeo, bgMat);
+    bgMesh.position.set(0, 0.5, -5.5);
+    scene.add(bgMesh);
 
-    const woodMatPlank = new THREE.MeshStandardMaterial({
-      map: plankTex,
-      roughness: 0.72,
-      metalness: 0.08,
-      color: isInitialDark ? 0x9e8c7c : 0xffffff,
+    // 4. Contact Soft Ground Shadow (Suspended Floating Effect)
+    const shadowTex = texOf(createGroundShadowTexture());
+    const shadowMat = new THREE.MeshBasicMaterial({
+      map: shadowTex,
+      transparent: true,
+      opacity: isInitialDark ? 0.75 : 0.45,
+      depthWrite: false,
     });
+    const shadowMesh = new THREE.Mesh(new THREE.PlaneGeometry(16, 7.5), shadowMat);
+    shadowMesh.rotation.x = -Math.PI / 2;
+    shadowMesh.position.set(0, -1.48, -0.4);
+    scene.add(shadowMesh);
 
-    const woodMatPillar = new THREE.MeshStandardMaterial({
-      map: plankTex,
-      roughness: 0.75,
-      metalness: 0.06,
-      color: isInitialDark ? 0x887768 : 0xf2eae0,
+    // 5. Dynamic Theme-Adaptive Halo Ring & Glow Disc
+    const haloColor = new THREE.Color(GAMES_DATA[0].pal[0] || "#E9683A");
+    const currentHaloColor = haloColor.clone();
+
+    // Crisp Luminous Ring
+    const haloGeo = new THREE.RingGeometry(1.68, 1.82, 64);
+    const haloMat = new THREE.MeshBasicMaterial({
+      color: currentHaloColor,
+      transparent: true,
+      opacity: isInitialDark ? 0.65 : 0.45,
+      side: THREE.DoubleSide,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
     });
+    const haloMesh = new THREE.Mesh(haloGeo, haloMat);
+    haloMesh.position.set(0, 0.35, -1.6);
+    scene.add(haloMesh);
 
-    // 1. Back Wall panel
-    const backWall = new THREE.Mesh(new THREE.PlaneGeometry(42, 16), woodMatBack);
-    backWall.position.set(0, 1.4, -4.5);
-    scene.add(backWall);
+    // Soft Radial Aura Disc
+    const glowTex = texOf(createSoftGlowTexture());
+    const glowMat = new THREE.MeshBasicMaterial({
+      map: glowTex,
+      color: currentHaloColor,
+      transparent: true,
+      opacity: isInitialDark ? 0.38 : 0.22,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const glowMesh = new THREE.Mesh(new THREE.PlaneGeometry(7.2, 7.2), glowMat);
+    glowMesh.position.set(0, 0.35, -1.75);
+    scene.add(glowMesh);
 
-    // 2. Main Wooden Shelf Plank (where games sit)
-    const shelfPlank = new THREE.Mesh(new THREE.BoxGeometry(38, 0.38, 3.8), woodMatPlank);
-    shelfPlank.position.set(0, -1.48, -0.6);
-    scene.add(shelfPlank);
-
-    // 3. Lower Support Base
-    const shelfBase = new THREE.Mesh(new THREE.BoxGeometry(40, 1.5, 4.6), woodMatBack);
-    shelfBase.position.set(0, -2.3, -0.6);
-    scene.add(shelfBase);
-
-    // 4. Top Bookshelf Canopy / Valance
-    const topCanopy = new THREE.Mesh(new THREE.BoxGeometry(38, 0.45, 3.8), woodMatPlank);
-    topCanopy.position.set(0, 3.65, -0.6);
-    scene.add(topCanopy);
-
-    // 5. Left & Right Side Wooden Pillars (Framing the niche)
-    const leftPillar = new THREE.Mesh(new THREE.BoxGeometry(0.6, 5.5, 3.8), woodMatPillar);
-    leftPillar.position.set(-15.5, 1.1, -0.6);
-    scene.add(leftPillar);
-
-    const rightPillar = new THREE.Mesh(new THREE.BoxGeometry(0.6, 5.5, 3.8), woodMatPillar);
-    rightPillar.position.set(15.5, 1.1, -0.6);
-    scene.add(rightPillar);
-
-    // Realistic Bookshelf Downlights & Studio Lighting
+    // 6. Studio Lighting System
     const hemiLight = new THREE.HemisphereLight(
-      isInitialDark ? 0x7c8ba8 : 0xfff6ea,
-      isInitialDark ? 0x2e241c : 0xd8cbba,
-      isInitialDark ? 1.3 : 1.6
+      isInitialDark ? 0x8a99b5 : 0xfff8f0,
+      isInitialDark ? 0x181412 : 0xd8cbba,
+      isInitialDark ? 1.4 : 1.7
     );
     scene.add(hemiLight);
 
-    // Front soft fill light
-    const frontLight = new THREE.DirectionalLight(0xfff6ed, isInitialDark ? 2.8 : 3.0);
-    frontLight.position.set(0, 2.8, 7.5);
-    scene.add(frontLight);
+    // Dual Symmetrical Key Softboxes (for luxury clearcoat reflections)
+    const frontLightL = new THREE.DirectionalLight(0xfff6ed, isInitialDark ? 2.4 : 2.6);
+    frontLightL.position.set(-4.0, 3.5, 7.0);
+    scene.add(frontLightL);
 
-    // Top Recessed Shelf Downlights (shining down on the wooden shelf & cassettes)
-    const spotC = new THREE.SpotLight(0xffffff, isInitialDark ? 4.8 : 4.0, 14, 0.52, 0.75, 1.1);
-    spotC.position.set(0, 3.6, 1.8);
-    spotC.target.position.set(0, -1.4, 0);
-    scene.add(spotC);
-    scene.add(spotC.target);
+    const frontLightR = new THREE.DirectionalLight(0xfff2e8, isInitialDark ? 2.0 : 2.2);
+    frontLightR.position.set(4.0, 3.2, 7.0);
+    scene.add(frontLightR);
 
-    const spotL = new THREE.SpotLight(0xffecd2, isInitialDark ? 3.8 : 3.2, 14, 0.65, 0.7, 1.1);
-    spotL.position.set(-4.5, 3.6, 1.5);
-    spotL.target.position.set(-3.0, -1.4, 0);
-    scene.add(spotL);
-    scene.add(spotL.target);
+    // Back Accent Light (Casting dynamic rim color)
+    const backPointLight = new THREE.PointLight(currentHaloColor, isInitialDark ? 3.8 : 2.5, 12, 1.2);
+    backPointLight.position.set(0, 0.4, -1.4);
+    scene.add(backPointLight);
 
-    const spotR = new THREE.SpotLight(0xffe8d6, isInitialDark ? 3.8 : 3.2, 14, 0.65, 0.7, 1.1);
-    spotR.position.set(4.5, 3.6, 1.5);
-    spotR.target.position.set(3.0, -1.4, 0);
-    scene.add(spotR);
-    scene.add(spotR.target);
-
-    // Warm Ambient floating dust particles
-    const dustCount = 140;
+    // Floating Ambient Stardust Particles
+    const dustCount = 120;
     const dustPos = new Float32Array(dustCount * 3);
     for (let i = 0; i < dustCount; i++) {
       dustPos[i * 3] = (Math.random() - 0.5) * 22;
       dustPos[i * 3 + 1] = -1.2 + Math.random() * 4.6;
-      dustPos[i * 3 + 2] = -4.0 + Math.random() * 7.5;
+      dustPos[i * 3 + 2] = -3.8 + Math.random() * 7.0;
     }
     const dustGeo = new THREE.BufferGeometry();
     dustGeo.setAttribute("position", new THREE.BufferAttribute(dustPos, 3));
     const dustMat = new THREE.PointsMaterial({
-      color: isInitialDark ? 0xe4b88a : 0xab957f,
-      size: 0.035,
+      color: isInitialDark ? 0xe9d5b8 : 0xb8a490,
+      size: 0.032,
       transparent: true,
-      opacity: 0.4,
+      opacity: isInitialDark ? 0.35 : 0.25,
       depthWrite: false,
     });
     const dust = new THREE.Points(dustGeo, dustMat);
     scene.add(dust);
-
-    // Focus indicator chevron over active center cassette
-    function createChevronCanvas(colorStr: string) {
-      const c = document.createElement("canvas");
-      c.width = 128;
-      c.height = 64;
-      const x = c.getContext("2d");
-      if (!x) return c;
-      x.fillStyle = colorStr;
-      x.beginPath();
-      x.moveTo(10, 8);
-      x.lineTo(64, 42);
-      x.lineTo(118, 8);
-      x.lineTo(118, 24);
-      x.lineTo(64, 58);
-      x.lineTo(10, 24);
-      x.closePath();
-      x.fill();
-      return c;
-    }
-    const chevTex = new THREE.CanvasTexture(createChevronCanvas(isInitialDark ? "#E9683A" : "#C2431B"));
-    const chev = new THREE.Mesh(
-      new THREE.PlaneGeometry(0.55, 0.28),
-      new THREE.MeshBasicMaterial({ map: chevTex, transparent: true, depthWrite: false })
-    );
-    chev.position.set(0, 1.98, 0.55);
-    scene.add(chev);
 
     // Helper functions for box textures
     function makeProceduralCover(g: GameItem, idx: number, isDark: boolean) {
@@ -354,9 +292,9 @@ export function GameShelfSection() {
       x.fillStyle = "rgba(0, 0, 0, 0.7)";
       x.beginPath();
       if (x.roundRect) {
-        x.roundRect(18, 18, 172, 34, 4);
+        x.roundRect(18, 18, 172, 32, 4);
       } else {
-        x.rect(18, 18, 172, 34);
+        x.rect(18, 18, 172, 32);
       }
       x.fill();
       x.strokeStyle = isDark ? "rgba(233, 104, 58, 0.75)" : "rgba(255, 217, 0, 0.75)";
@@ -364,65 +302,66 @@ export function GameShelfSection() {
       x.stroke();
 
       x.fillStyle = isDark ? "#E9683A" : "#FFD900";
-      x.font = "900 13px Arial, sans-serif";
+      x.font = "900 12.5px Arial, sans-serif";
       x.textAlign = "center";
       x.textBaseline = "middle";
-      x.fillText("VIRTUAL STUDIO", 104, 35);
+      x.fillText("VIRTUAL STUDIO", 104, 34);
       x.restore();
 
-      // Big index watermark
+      // Top-Right Status Stamp Badge
       x.save();
-      x.globalAlpha = 0.12;
-      x.fillStyle = "#ffffff";
-      x.font = "900 210px Arial";
-      x.textAlign = "right";
-      x.fillText(String(idx + 1).padStart(2, "0"), W - 14, H - 120);
-      x.restore();
-
-      // Stamp badge in top right
-      x.shadowColor = "rgba(0, 0, 0, 0.5)";
-      x.shadowBlur = 16;
       x.beginPath();
-      x.arc(W - 80, 52, 32, 0, Math.PI * 2);
+      x.arc(W - 46, 34, 18, 0, Math.PI * 2);
       x.fillStyle = g.rating != null ? (isDark ? "#E9683A" : "#C2431B") : "rgba(20, 20, 24, 0.85)";
       x.fill();
-      x.shadowBlur = 0;
-      x.fillStyle = g.rating != null ? "#ffffff" : "#8b93a6";
-      x.font = "900 24px Arial";
+      x.fillStyle = "#ffffff";
+      x.font = "900 13px Arial";
       x.textAlign = "center";
       x.textBaseline = "middle";
       x.fillText(
         g.rating != null
           ? String(g.rating)
           : { completed: "✓", playing: "▶", dropped: "✕", wishlist: "+" }[g.status],
-        W - 80,
-        52
+        W - 46,
+        34
       );
+      x.restore();
 
-      // Title vertical characters
-      const chars = [...g.title];
-      const useChars = chars.length > 10 ? chars.slice(0, 10) : chars;
-      const fs = useChars.length >= 10 ? 52 : useChars.length >= 8 ? 62 : useChars.length >= 6 ? 72 : 88;
-      x.font = `900 ${fs}px "Noto Serif SC", "Songti SC", "PingFang SC", sans-serif`;
-      x.textAlign = "center";
-      x.textBaseline = "middle";
-      x.shadowColor = "rgba(0, 0, 0, 0.7)";
-      x.shadowBlur = 14;
-      x.shadowOffsetY = 5;
-      x.fillStyle = "#ffffff";
-      useChars.forEach((ch, j) => x.fillText(ch, 92, 130 + fs * 1.04 * j + fs * 0.55));
-      x.shadowBlur = 0;
-      x.shadowOffsetY = 0;
-
-      // English title bottom
-      let efs = 36;
-      x.font = `900 ${efs}px Arial`;
-      while (x.measureText(g.en).width > W - 70 && efs > 14) {
-        efs -= 2;
-        x.font = `900 ${efs}px Arial`;
+      // Bottom Title Typography Plate
+      x.save();
+      x.fillStyle = isDark ? "#ffffff" : "#1a1612";
+      x.shadowColor = isDark ? "rgba(0, 0, 0, 0.8)" : "rgba(255, 255, 255, 0.6)";
+      x.shadowBlur = 10;
+      let tfs = 34;
+      x.font = `900 ${tfs}px "Noto Serif SC", "Songti SC", "PingFang SC", sans-serif`;
+      while (x.measureText(g.title).width > W - 60 && tfs > 22) {
+        tfs -= 2;
+        x.font = `900 ${tfs}px "Noto Serif SC", "Songti SC", "PingFang SC", sans-serif`;
       }
-      x.fillStyle = "rgba(255, 255, 255, 0.94)";
-      x.fillText(g.en, W / 2, H - 42);
+      x.textAlign = "center";
+      x.fillText(g.title, W / 2, H - 160);
+
+      x.shadowBlur = 0;
+      x.fillStyle = isDark ? "#E9683A" : "#C2431B";
+      let efs = 14;
+      x.font = `800 ${efs}px Arial, sans-serif`;
+      while (x.measureText(g.en).width > W - 70 && efs > 10) {
+        efs -= 1;
+        x.font = `800 ${efs}px Arial, sans-serif`;
+      }
+      x.fillText(g.en, W / 2, H - 122);
+
+      x.strokeStyle = isDark ? "rgba(255, 255, 255, 0.12)" : "rgba(0, 0, 0, 0.12)";
+      x.lineWidth = 1;
+      x.beginPath();
+      x.moveTo(40, H - 98);
+      x.lineTo(W - 40, H - 98);
+      x.stroke();
+
+      x.fillStyle = isDark ? "rgba(255, 255, 255, 0.45)" : "rgba(0, 0, 0, 0.45)";
+      x.font = "700 11px Arial, sans-serif";
+      x.fillText("VS-ARCHIVE · NO." + String(idx + 1).padStart(2, "0") + "  ///  " + g.tags.join(" · "), W / 2, H - 76);
+      x.restore();
 
       return cv;
     }
@@ -434,7 +373,7 @@ export function GameShelfSection() {
       const x = c.getContext("2d");
       if (!x) return c;
       const g1 = x.createLinearGradient(0, 0, 96, 0);
-      g1.addColorStop(0, isDark ? "#231f1c" : "#dcd6ca");
+      g1.addColorStop(0, isDark ? "#201c19" : "#ded7cc");
       g1.addColorStop(1, isDark ? "#0d0b09" : "#c6c0b3");
       x.fillStyle = g1;
       x.fillRect(0, 0, 96, 780);
@@ -503,7 +442,7 @@ export function GameShelfSection() {
       x.fillStyle = grad;
       x.fillRect(0, 0, W, H);
 
-      // 2. Main Key Art (100% full horizontal width, perfectly preserving character & logo center)
+      // 2. Main Key Art (100% full horizontal width, zero side clipping)
       const artW = W;
       const artH = Math.min((img.height / img.width) * artW, 460);
       const artY = 60 + Math.max(0, (440 - artH) / 2);
@@ -548,7 +487,7 @@ export function GameShelfSection() {
       x.fillText("VIRTUAL STUDIO", 102, 34);
       x.restore();
 
-      // Top-Right Stamp Badge
+      // Top-Right Status Stamp Badge
       x.save();
       x.beginPath();
       x.arc(W - 46, 34, 18, 0, Math.PI * 2);
@@ -567,9 +506,8 @@ export function GameShelfSection() {
       );
       x.restore();
 
-      // 4. Bottom Title Plate & Typographic Layout
+      // 4. Bottom Title Typography Plate
       x.save();
-      // Main Chinese Title
       x.fillStyle = isDark ? "#ffffff" : "#1a1612";
       x.shadowColor = isDark ? "rgba(0, 0, 0, 0.8)" : "rgba(255, 255, 255, 0.6)";
       x.shadowBlur = 10;
@@ -582,7 +520,6 @@ export function GameShelfSection() {
       x.textAlign = "center";
       x.fillText(g.title, W / 2, H - 160);
 
-      // English Subtitle
       x.shadowBlur = 0;
       x.fillStyle = isDark ? "#E9683A" : "#C2431B";
       let efs = 14;
@@ -593,7 +530,6 @@ export function GameShelfSection() {
       }
       x.fillText(g.en, W / 2, H - 122);
 
-      // Serial & Catalog Line
       x.strokeStyle = isDark ? "rgba(255, 255, 255, 0.12)" : "rgba(0, 0, 0, 0.12)";
       x.lineWidth = 1;
       x.beginPath();
@@ -616,7 +552,7 @@ export function GameShelfSection() {
 
     let currentCases: THREE.Mesh[] = [];
 
-    function buildCases(isDark: boolean) {
+    function buildCases(isDark: boolean, isInitial = false) {
       currentCases.forEach((m) => {
         const u = m.userData;
         if (u.sharp) u.sharp.dispose();
@@ -660,7 +596,8 @@ export function GameShelfSection() {
           frontMat,
           spineMat,
           sharp: sharpT,
-          spawn: -(i * 0.045),
+          // Only play spawn entrance once on initial mount; keep 1.0 on subsequent theme changes
+          spawn: isInitial ? -(i * 0.045) : 1.0,
         };
 
         if (g.cover) {
@@ -684,50 +621,53 @@ export function GameShelfSection() {
       threeState.current.cases = currentCases;
     }
 
-    threeState.current.buildCasesFn = buildCases;
-    buildCases(isInitialDark);
+    buildCases(isInitialDark, true);
 
-    // Dynamic Theme Updater
+    // Dynamic Theme Updater (Smooth, No Position Glitch)
     function updateTheme(dark: boolean) {
       threeState.current.isDark = dark;
-      const bgColor = dark ? darkBgColor : lightBgColor;
-      scene.background = bgColor.clone();
+      const bgColorHex = dark ? darkBgHex : lightBgHex;
+      scene.background = new THREE.Color(bgColorHex);
       if (scene.fog) {
-        scene.fog.color = bgColor.clone();
+        scene.fog.color = new THREE.Color(bgColorHex);
         if ("density" in scene.fog) {
-          (scene.fog as THREE.FogExp2).density = dark ? 0.02 : 0.015;
+          (scene.fog as THREE.FogExp2).density = dark ? 0.022 : 0.016;
         }
       }
 
-      hemiLight.color.setHex(dark ? 0x7c8ba8 : 0xfff6ea);
-      hemiLight.groundColor.setHex(dark ? 0x2e241c : 0xd8cbba);
-      hemiLight.intensity = dark ? 1.3 : 1.6;
+      if (bgMat) bgMat.color.setHex(bgColorHex);
+      if (shadowMat) shadowMat.opacity = dark ? 0.75 : 0.45;
+      if (haloMat) haloMat.opacity = dark ? 0.65 : 0.45;
+      if (glowMat) glowMat.opacity = dark ? 0.38 : 0.22;
 
-      if (frontLight) frontLight.intensity = dark ? 2.8 : 3.0;
-      spotC.intensity = dark ? 4.8 : 4.0;
-      spotL.intensity = dark ? 3.8 : 3.2;
-      spotR.intensity = dark ? 3.8 : 3.2;
+      hemiLight.color.setHex(dark ? 0x8a99b5 : 0xfff8f0);
+      hemiLight.groundColor.setHex(dark ? 0x181412 : 0xd8cbba);
+      hemiLight.intensity = dark ? 1.4 : 1.7;
 
-      woodMatBack.color.setHex(dark ? 0x907e70 : 0xffffff);
-      woodMatPlank.color.setHex(dark ? 0x9e8c7c : 0xffffff);
-      woodMatPillar.color.setHex(dark ? 0x887768 : 0xf2eae0);
+      if (frontLightL) frontLightL.intensity = dark ? 2.4 : 2.6;
+      if (frontLightR) frontLightR.intensity = dark ? 2.0 : 2.2;
+      if (backPointLight) backPointLight.intensity = dark ? 3.8 : 2.5;
 
-      buildCases(dark);
+      darkMat.color.setHex(dark ? 0x0f0c0a : 0xd8d2c4);
+
+      // Re-render textures without resetting case spawn positions
+      buildCases(dark, false);
     }
 
     threeState.current.scene = scene;
     threeState.current.camera = camera;
     threeState.current.renderer = renderer;
-    threeState.current.woodMatBack = woodMatBack;
-    threeState.current.woodMatPlank = woodMatPlank;
-    threeState.current.woodMatPillar = woodMatPillar;
+    threeState.current.bgMat = bgMat;
+    threeState.current.shadowMat = shadowMat;
+    threeState.current.haloMat = haloMat;
+    threeState.current.glowMat = glowMat;
     threeState.current.hemiLight = hemiLight;
-    threeState.current.frontLight = frontLight;
-    threeState.current.spotC = spotC;
-    threeState.current.spotL = spotL;
-    threeState.current.spotR = spotR;
+    threeState.current.frontLightL = frontLightL;
+    threeState.current.frontLightR = frontLightR;
+    threeState.current.backPointLight = backPointLight;
+    threeState.current.updateThemeFn = updateTheme;
 
-    // Animation Loop with Infinite Wrap-around Carousel
+    // Animation Loop with Infinite Carousel & Dynamic Halo Breathing
     let mouseX = 0;
     let mouseY = 0;
 
@@ -741,6 +681,22 @@ export function GameShelfSection() {
       if (Math.abs(state.target - state.cur) < 0.0005) {
         state.cur = state.target;
       }
+
+      // Dynamic Halo Color Interpolation to Active Game
+      const activeIdx = ((Math.round(state.cur) % N) + N) % N;
+      const activeGame = GAMES_DATA[activeIdx];
+      if (activeGame && activeGame.pal && activeGame.pal[0]) {
+        const targetColor = new THREE.Color(activeGame.pal[0]);
+        currentHaloColor.lerp(targetColor, 0.075);
+        if (haloMat) haloMat.color.copy(currentHaloColor);
+        if (glowMat) glowMat.color.copy(currentHaloColor);
+        if (backPointLight) backPointLight.color.copy(currentHaloColor);
+      }
+
+      // Breathing Pulse on Halo
+      const pulseScale = 1.0 + Math.sin(t * 1.5) * 0.038;
+      haloMesh.scale.setScalar(pulseScale);
+      glowMesh.scale.setScalar(pulseScale * 1.02);
 
       if (state.cases.length) {
         state.cases.forEach((m) => {
@@ -758,35 +714,37 @@ export function GameShelfSection() {
           const z = -1.05 * Math.pow(a, 1.12);
           const sc = THREE.MathUtils.lerp(1.14, 0.94, e);
 
-          u.spawn += dt;
-          const sp = THREE.MathUtils.clamp(u.spawn / 0.55, 0, 1);
+          // Initial entrance spawn animation (only plays once)
+          if (u.spawn < 1) {
+            u.spawn += dt * 1.6;
+          }
+          const sp = THREE.MathUtils.clamp(u.spawn, 0, 1);
           const se = 1 - Math.pow(1 - sp, 3);
-          const bob = Math.sin(t * 1.25) * 0.035 * (1 - e);
+          const bob = Math.sin(t * 1.25 + u.i * 0.25) * 0.035 * (1 - e);
 
-          // Position firmly on the wooden plank shelf (y=-1.45)
-          m.position.set(x, -1.4 + 1.4 * sc + bob - (1 - se) * 2.8, z);
+          // Suspended floating positioning in space
+          m.position.set(x, 0.05 + bob - (1 - se) * 2.8, z);
           m.rotation.y = THREE.MathUtils.lerp(-0.15, -s * 0.55, e) + state.dragCur * (1 - e);
           m.rotation.z = THREE.MathUtils.lerp(0.012, -s * 0.05, e);
           m.scale.setScalar(sc * (0.78 + 0.22 * se));
 
-          // Non-focused cards remain bright and visible on the shelf
-          const dim = THREE.MathUtils.lerp(1.0, 0.78, e);
-          u.frontMat.color.setScalar(dim);
-          u.spineMat.color.setScalar(dim * 0.9);
-
-          m.visible = a < 5.8;
+          if (m.position.z < -4.8) {
+            m.visible = false;
+          } else {
+            m.visible = true;
+          }
         });
-
-        chev.visible = true;
-        chev.position.y = 1.98 + Math.sin(t * 2.4) * 0.06;
-      } else {
-        chev.visible = false;
       }
 
-      dust.rotation.y = t * 0.02;
-      camera.position.x += (mouseX * 0.75 - camera.position.x) * 0.045;
-      camera.position.y += (0.45 - mouseY * 0.4 - camera.position.y) * 0.045;
-      camera.lookAt(0, 0.12, 0);
+      // Parallax Camera Sway
+      camera.position.x += (mouseX * 0.45 - camera.position.x) * 0.05;
+      camera.position.y += (0.42 + mouseY * -0.28 - camera.position.y) * 0.05;
+      camera.lookAt(0, 0.05, 0);
+
+      // Ambient Dust Drift
+      if (dust) {
+        dust.rotation.y = t * 0.018;
+      }
 
       renderer.render(scene, camera);
       state.animId = requestAnimationFrame(animate);
@@ -794,7 +752,7 @@ export function GameShelfSection() {
 
     threeState.current.animId = requestAnimationFrame(animate);
 
-    // Raycasting for click
+    // Raycasting for Interactivity
     const raycaster = new THREE.Raycaster();
     const ndc = new THREE.Vector2();
 
@@ -945,14 +903,16 @@ export function GameShelfSection() {
         scene.remove(m);
       });
       caseGeo.dispose();
-      backTex.dispose();
-      plankTex.dispose();
-      woodMatBack.dispose();
-      woodMatPlank.dispose();
-      woodMatPillar.dispose();
+      bgGeo.dispose();
+      bgMat.dispose();
+      shadowTex.dispose();
+      shadowMat.dispose();
+      haloGeo.dispose();
+      haloMat.dispose();
+      glowTex.dispose();
+      glowMat.dispose();
       dustGeo.dispose();
       dustMat.dispose();
-      chevTex.dispose();
       renderer.dispose();
     };
   }, [handleIndexChange, navigate, openDetail, closeDetail, isModalOpen, N]);

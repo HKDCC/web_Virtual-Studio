@@ -3981,69 +3981,30 @@ footer {
   font-family: var(--mono);
 }
 
-/* Top Right Archive Tag & Counter */
+/* Top Right Counter (Minimal) */
 .shelf-hud-top-right {
   position: absolute;
-  top: 20px;
+  top: 22px;
   right: 24px;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
+  align-items: center;
   pointer-events: none;
   z-index: 5;
 }
 
-.shelf-archive-tag {
-  display: flex;
-  align-items: center;
-  background: var(--card);
-  border: 1px solid var(--line);
-  padding: 4px 12px 6px 8px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 4px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
-}
-
-.shelf-bars {
-  width: 18px;
-  height: 24px;
-  margin-right: 10px;
-  background: repeating-linear-gradient(
-    90deg,
-    var(--accent) 0 3px,
-    transparent 3px 6px
-  );
-}
-
-.shelf-txt small {
-  display: block;
-  font-size: 9px;
-  letter-spacing: 2px;
-  color: var(--ink-3);
-  font-weight: 700;
-  font-family: var(--mono);
-}
-
-.shelf-txt b {
-  display: block;
+.shelf-counter {
   font-size: 14px;
   font-weight: 900;
-  color: var(--ink);
-  max-width: 260px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-family: var(--serif);
-}
-
-.shelf-counter {
-  font-size: 13px;
-  font-weight: 900;
   font-family: var(--mono);
   letter-spacing: 2px;
-  color: var(--ink-3);
+  color: var(--ink-2);
+  background: var(--card);
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
 }
 
 .shelf-counter em {
@@ -4059,28 +4020,24 @@ footer {
   transform: translateY(-50%);
   z-index: 8;
   pointer-events: auto;
-  background: rgba(var(--paper), 0.5);
+  background: var(--card);
   border: 1px solid var(--line);
   color: var(--ink);
   cursor: pointer;
   padding: 18px 10px;
   border-radius: 6px;
-  opacity: 0.85;
+  opacity: 0.88;
   transition: all 0.2s ease;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 }
 
 .shelf-arrow:hover {
   color: var(--accent);
   border-color: var(--accent);
   opacity: 1;
-  transform: translateY(-50%) scale(1.05);
-}
-
-.shelf-arrow.dim {
-  opacity: 0.15;
-  pointer-events: none;
+  transform: translateY(-50%) scale(1.06);
 }
 
 .shelf-prev {
@@ -4123,7 +4080,7 @@ footer {
   padding: 2px 8px;
   letter-spacing: 1.5px;
   transform: skewX(-8deg);
-  background: rgba(0, 0, 0, 0.06);
+  background: rgba(0, 0, 0, 0.08);
   border-radius: 2px;
 }
 
@@ -4140,11 +4097,12 @@ footer {
   font-size: 11.5px;
   font-weight: 700;
   color: var(--ink-2);
-  background: rgba(128, 128, 128, 0.08);
+  background: var(--card);
   border: 1px solid var(--line);
   padding: 2px 8px;
   transform: skewX(-8deg);
   border-radius: 2px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
 .shelf-chip > span {
@@ -4152,27 +4110,46 @@ footer {
   transform: skewX(8deg);
 }
 
+/* High Contrast Title with Dual-Theme Shadow & Glow */
 .shelf-game-title {
   font-size: 28px;
   font-weight: 900;
   letter-spacing: 0.5px;
-  line-height: 1.15;
+  line-height: 1.18;
   color: var(--ink);
   font-family: var(--serif);
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  text-shadow: 
+    0 0 16px var(--paper),
+    0 0 8px var(--paper),
+    0 2px 4px var(--paper),
+    0 1px 2px var(--paper);
+  -webkit-text-stroke: 0.25px var(--paper);
+  transition: color 0.3s;
 }
 
 [data-theme="dark"] .shelf-game-title {
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
+  text-shadow: 
+    0 2px 16px rgba(0, 0, 0, 0.95),
+    0 0 10px rgba(0, 0, 0, 0.9),
+    0 0 4px rgba(0, 0, 0, 0.85);
+  -webkit-text-stroke: 0px transparent;
 }
 
 .shelf-game-en {
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 2.5px;
-  color: var(--ink-3);
+  color: var(--ink-2);
   margin: 3px 0 8px;
   font-family: var(--mono);
+  text-shadow: 
+    0 0 12px var(--paper),
+    0 0 4px var(--paper);
+}
+
+[data-theme="dark"] .shelf-game-en {
+  color: var(--ink-3);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
 }
 
 .shelf-game-tags {
@@ -4190,6 +4167,7 @@ footer {
   background: var(--card);
   border-radius: 3px;
   font-family: var(--sans);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
 .shelf-core-review {
@@ -4205,85 +4183,33 @@ footer {
   padding: 8px 12px;
   border-radius: 6px;
   border: 1px solid var(--line);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .shelf-more-btn {
   margin-top: 8px;
-  background: none;
-  border: 0;
+  background: var(--card);
+  border: 1px solid var(--line);
   color: var(--accent);
   font-weight: 800;
-  font-size: 12.5px;
-  letter-spacing: 1px;
+  font-size: 12px;
+  letter-spacing: 0.5px;
   cursor: pointer;
-  padding: 4px 0;
+  padding: 5px 12px;
+  border-radius: 4px;
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  transition: transform 0.2s;
-}
-
-.shelf-more-btn:hover {
-  transform: translateX(4px);
-  text-decoration: underline;
-}
-
-/* Bottom Right Tabs */
-.shelf-tabs-hud {
-  position: absolute;
-  right: 24px;
-  bottom: 24px;
-  display: flex;
-  gap: 8px;
-  pointer-events: auto;
-  z-index: 6;
-}
-
-.shelf-tab-btn {
-  font-family: inherit;
-  transform: skewX(-8deg);
-  background: var(--card);
-  border: 1px solid var(--line);
-  color: var(--ink-2);
-  font-weight: 700;
-  font-size: 13px;
-  padding: 7px 14px;
-  cursor: pointer;
   transition: all 0.2s ease;
-  white-space: nowrap;
-  border-radius: 3px;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
 
-.shelf-tab-btn > span {
-  display: inline-block;
-  transform: skewX(8deg);
-}
-
-.shelf-tab-btn em {
-  font-style: normal;
-  font-size: 10.5px;
-  color: var(--ink-3);
-  margin-left: 6px;
-  font-family: var(--mono);
-}
-
-.shelf-tab-btn:hover {
+.shelf-more-btn:hover {
   border-color: var(--accent);
-  color: var(--ink);
-}
-
-.shelf-tab-btn.active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #ffffff;
-}
-
-.shelf-tab-btn.active em {
-  color: rgba(255, 255, 255, 0.85);
+  transform: translateX(3px);
 }
 
 /* Bottom Hint */
@@ -4443,34 +4369,17 @@ footer {
   .shelf-info-hud {
     left: 14px;
     right: 14px;
-    bottom: 64px;
+    bottom: 40px;
     max-width: none;
   }
   .shelf-game-title {
     font-size: 21px;
   }
-  .shelf-core-review,
-  .shelf-more-btn {
+  .shelf-core-review {
     display: none;
-  }
-  .shelf-tabs-hud {
-    left: 14px;
-    right: 14px;
-    bottom: 14px;
-    justify-content: center;
-    overflow-x: auto;
-    padding-bottom: 4px;
-  }
-  .shelf-tab-btn {
-    padding: 5px 10px;
-    font-size: 12px;
   }
   .shelf-bottom-hint {
     display: none;
-  }
-  .shelf-archive-tag b {
-    font-size: 12px;
-    max-width: 140px;
   }
   .shelf-modal-card {
     grid-template-columns: 1fr;

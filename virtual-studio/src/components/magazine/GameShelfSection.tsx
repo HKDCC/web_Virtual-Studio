@@ -983,7 +983,7 @@ export function GameShelfSection() {
             <div className="shelf-modal-cover-wrap">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={selectedGame.cover || "/covers/nier-automata.png"}
+                src={selectedGame.cover || "/covers/nier-automata.webp"}
                 alt={selectedGame.title}
                 className="shelf-modal-cover"
               />

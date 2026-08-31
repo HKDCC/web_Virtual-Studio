@@ -463,70 +463,70 @@ export const FALLBACK_SITE_DATA = {
         "d": "2024·11·10",
         "loc": "上海",
         "t": "闲逛",
-        "img": "/photos/photo_1_.jpeg"
+        "img": "/photos/photo_1_.webp"
     },
     {
         "id": "3284b57f-e15a-8014-9fa7-f82ee91b9201",
         "d": "2024·08·17",
         "loc": "上海",
         "t": "原神fes 2024",
-        "img": "/photos/photo_2_.jpeg"
+        "img": "/photos/photo_2_.webp"
     },
     {
         "id": "3284b57f-e15a-80a5-8c76-d922f306d860",
         "d": "2024·03·29",
         "loc": "上海",
         "t": "徐汇滨江",
-        "img": "/photos/photo_3_.jpeg"
+        "img": "/photos/photo_3_.webp"
     },
     {
         "id": "3284b57f-e15a-80a2-97b7-d1cb37456715",
         "d": "2024·03·24",
         "loc": "上海",
         "t": "闲逛",
-        "img": "/photos/photo_4_.jpeg"
+        "img": "/photos/photo_4_.webp"
     },
     {
         "id": "3284b57f-e15a-8004-be00-e7f017406a6c",
         "d": "2023·12·30",
         "loc": "上海",
         "t": "田子坊闲逛",
-        "img": "/photos/photo_5_.jpeg"
+        "img": "/photos/photo_5_.webp"
     },
     {
         "id": "3284b57f-e15a-8000-84cf-c55f190eec26",
         "d": "2023·08·11",
         "loc": "上海",
         "t": "原神Fes 2023",
-        "img": "/photos/photo_6_.jpeg"
+        "img": "/photos/photo_6_.webp"
     },
     {
         "id": "3284b57f-e15a-80a3-a00e-cf771ea00cb2",
         "d": "2022·07·12",
         "loc": "萍乡",
         "t": "武功山",
-        "img": "/photos/photo_7_.jpeg"
+        "img": "/photos/photo_7_.webp"
     },
     {
         "id": "3284b57f-e15a-8025-b461-cbb612f0e4b8",
         "d": "2021·10·30",
         "loc": "上海",
         "t": "上理大草坪",
-        "img": "/photos/photo_8_.jpeg"
+        "img": "/photos/photo_8_.webp"
     },
     {
         "id": "3284b57f-e15a-803a-bec4-db4ace549f45",
         "d": "2023·12·29",
         "loc": "杭州",
         "t": "闲逛",
-        "img": "/photos/photo_9_.jpg"
+        "img": "/photos/photo_9_.webp"
     },
     {
         "id": "3274b57f-e15a-805e-b2ae-c5a06302f164",
         "d": "2023·04·11",
         "loc": "上海",
         "t": "迪士尼TB",
-        "img": "/photos/photo_10_.jpg"
+        "img": "/photos/photo_10_.webp"
     }
 ] as PauseItem[],
 
@@ -1451,7 +1451,7 @@ export async function fetchMagazineData(): Promise<MagazineDataPayload> {
     try {
       pause = pauseRes.value.map((p) => {
         const props = p.properties as Record<string, unknown>;
-        const coverUrl = extractFileUrl(p, "Cover") || "/photos/photo_1_.jpeg";
+        const coverUrl = extractFileUrl(p, "Cover") || "/photos/photo_1_.webp";
         const rawDate = getDate(props, "Date") || "2026·05";
         return {
           id: p.id,
@@ -1476,8 +1476,8 @@ export async function fetchMagazineData(): Promise<MagazineDataPayload> {
           const tags = getMultiSelect(props, "Tags");
           const readTime = getNumber(props, "ReadTime") || 20;
           const htmlContent = getUrl(props, "HTMLContent");
-          const heroLight = p.id ? `/notes_heroes/${p.id}_light.png` : null;
-          const heroDark = p.id ? `/notes_heroes/${p.id}_dark.png` : null;
+          const heroLight = p.id ? `/notes_heroes/${p.id}_light.webp` : null;
+          const heroDark = p.id ? `/notes_heroes/${p.id}_dark.webp` : null;
           const excerpt = getRichText(props, "Excerpt") || getPageTitle(p);
           const title = getPageTitle(p);
 

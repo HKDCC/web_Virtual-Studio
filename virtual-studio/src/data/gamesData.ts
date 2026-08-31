@@ -55,7 +55,7 @@ export const GAMES_DATA: GameItem[] = [
       "动作",
       "冒险"
     ],
-    "cover": "/covers/dead-rising-3.jpg",
+    "cover": "/covers/dead-rising-3.webp",
     "pal": [
       "#c05a1d",
       "#260d05"
@@ -74,7 +74,7 @@ export const GAMES_DATA: GameItem[] = [
       "恐怖",
       "生存"
     ],
-    "cover": "/covers/outlast.png",
+    "cover": "/covers/outlast.webp",
     "pal": [
       "#8a1f1f",
       "#12060b"
@@ -93,7 +93,7 @@ export const GAMES_DATA: GameItem[] = [
       "恐怖",
       "生存"
     ],
-    "cover": "/covers/outlast-whistleblower.png",
+    "cover": "/covers/outlast-whistleblower.webp",
     "pal": [
       "#8c2b2b",
       "#160a10"
@@ -113,7 +113,7 @@ export const GAMES_DATA: GameItem[] = [
       "冒险",
       "角色扮演"
     ],
-    "cover": "/covers/nier-automata.png",
+    "cover": "/covers/nier-automata.webp",
     "pal": [
       "#6b7684",
       "#10141b"
@@ -132,7 +132,7 @@ export const GAMES_DATA: GameItem[] = [
       "动作",
       "冒险"
     ],
-    "cover": "/covers/sekiro.png",
+    "cover": "/covers/sekiro.webp",
     "pal": [
       "#a03322",
       "#1c0f08"
@@ -151,7 +151,7 @@ export const GAMES_DATA: GameItem[] = [
       "恐怖",
       "射击"
     ],
-    "cover": "/covers/re4-remake.png",
+    "cover": "/covers/re4-remake.webp",
     "pal": [
       "#8a1f1f",
       "#150808"
@@ -170,7 +170,7 @@ export const GAMES_DATA: GameItem[] = [
       "恐怖",
       "生存"
     ],
-    "cover": "/covers/evil-within.png",
+    "cover": "/covers/evil-within.webp",
     "pal": [
       "#5f1d2b",
       "#0c0608"
@@ -189,7 +189,7 @@ export const GAMES_DATA: GameItem[] = [
       "第一人称",
       "射击"
     ],
-    "cover": "/covers/titanfall-2.png",
+    "cover": "/covers/titanfall-2.webp",
     "pal": [
       "#d97b29",
       "#241206"
@@ -208,7 +208,7 @@ export const GAMES_DATA: GameItem[] = [
       "动作",
       "角色扮演"
     ],
-    "cover": "/covers/black-myth-wukong.png",
+    "cover": "/covers/black-myth-wukong.webp",
     "pal": [
       "#c9a13b",
       "#1d1306"
@@ -227,7 +227,7 @@ export const GAMES_DATA: GameItem[] = [
       "动作",
       "冒险"
     ],
-    "cover": "/covers/re3-remake.png",
+    "cover": "/covers/re3-remake.webp",
     "pal": [
       "#a33b2a",
       "#180a08"
@@ -247,7 +247,7 @@ export const GAMES_DATA: GameItem[] = [
       "冒险",
       "恋爱"
     ],
-    "cover": "/covers/miside.png",
+    "cover": "/covers/miside.webp",
     "pal": [
       "#d4526e",
       "#260d16"
@@ -266,7 +266,7 @@ export const GAMES_DATA: GameItem[] = [
       "动作",
       "角色扮演"
     ],
-    "cover": "/covers/dead-island-2.png",
+    "cover": "/covers/dead-island-2.webp",
     "pal": [
       "#c9a12a",
       "#1e1708"
@@ -285,7 +285,7 @@ export const GAMES_DATA: GameItem[] = [
       "多人合作",
       "三消"
     ],
-    "cover": "/covers/popucom.png",
+    "cover": "/covers/popucom.webp",
     "pal": [
       "#3fa7a0",
       "#0a1d20"
@@ -304,7 +304,7 @@ export const GAMES_DATA: GameItem[] = [
       "动作",
       "冒险"
     ],
-    "cover": "/covers/re2-remake.png",
+    "cover": "/covers/re2-remake.webp",
     "pal": [
       "#8f2222",
       "#130808"
@@ -324,7 +324,7 @@ export const GAMES_DATA: GameItem[] = [
       "冒险",
       "2D"
     ],
-    "cover": "/covers/hollow-knight.png",
+    "cover": "/covers/hollow-knight.webp",
     "pal": [
       "#5a6fb5",
       "#0c1024"
@@ -344,7 +344,7 @@ export const GAMES_DATA: GameItem[] = [
       "开放世界",
       "第一人称"
     ],
-    "cover": "/covers/cyberpunk-2077.png",
+    "cover": "/covers/cyberpunk-2077.webp",
     "pal": [
       "#e3cf3f",
       "#161206"
@@ -362,7 +362,7 @@ export const GAMES_DATA: GameItem[] = [
     "tags": [
       "角色扮演"
     ],
-    "cover": "/covers/persona-5.png",
+    "cover": "/covers/persona-5.webp",
     "pal": [
       "#d81e3f",
       "#150409"
@@ -380,7 +380,7 @@ export const GAMES_DATA: GameItem[] = [
     "tags": [
       "视觉小说"
     ],
-    "cover": "/covers/atri.png",
+    "cover": "/covers/atri.webp",
     "pal": [
       "#7fd0e8",
       "#0c1a24"
@@ -398,7 +398,7 @@ export const GAMES_DATA: GameItem[] = [
     "tags": [
       "恐怖"
     ],
-    "cover": "/covers/re9-requiem.png",
+    "cover": "/covers/re9-requiem.webp",
     "pal": [
       "#8f2436",
       "#110609"
@@ -416,7 +416,7 @@ export const GAMES_DATA: GameItem[] = [
     "tags": [
       "恐怖"
     ],
-    "cover": "/covers/inner-demon.png",
+    "cover": "/covers/inner-demon.webp",
     "pal": [
       "#4a4a55",
       "#0a0a0e"
@@ -434,7 +434,7 @@ export const GAMES_DATA: GameItem[] = [
     "tags": [
       "视觉小说"
     ],
-    "cover": "/covers/witch-trial.png",
+    "cover": "/covers/witch-trial.webp",
     "pal": [
       "#b0459a",
       "#1c0a1c"
@@ -453,7 +453,7 @@ export const GAMES_DATA: GameItem[] = [
       "角色扮演",
       "回合制"
     ],
-    "cover": "/covers/expedition-33.png",
+    "cover": "/covers/expedition-33.webp",
     "pal": [
       "#2f5f9e",
       "#0a1220"
@@ -472,7 +472,7 @@ export const GAMES_DATA: GameItem[] = [
       "动作",
       "角色扮演"
     ],
-    "cover": "/covers/pragmata-existence.jpg",
+    "cover": "/covers/pragmata-existence.webp",
     "pal": [
       "#4fae6a",
       "#0a1a10"

@@ -55,7 +55,7 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
-  const [duration, setDuration] = useState<number>(BGM_PLAYLIST[0].duration || 0);
+  const [duration, setDuration] = useState<number>(BGM_PLAYLIST[0].duration);
   const [volume, setVolumeState] = useState<number>(0.6);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [playMode, setPlayMode] = useState<PlayMode>("list-loop");
@@ -63,29 +63,27 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
   const [hasPlayedOnce, setHasPlayedOnce] = useState<boolean>(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const fadeIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const nextPreloadAudioRef = useRef<HTMLAudioElement | null>(null);
+  const loadingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const currentTrack = playlist[currentIndex] || playlist[0];
 
-  // Preload audio files in background to eliminate initial delay
-  useEffect(() => {
+  // Smart preload for next track in background
+  const preloadNext = useCallback((nextIndex: number) => {
     if (typeof window === "undefined") return;
-    const preloadAudios: HTMLAudioElement[] = [];
-    playlist.forEach((track) => {
-      const a = new Audio();
-      a.preload = "auto";
-      a.src = track.src;
-      preloadAudios.push(a);
-    });
+    const nextSong = playlist[nextIndex];
+    if (!nextSong) return;
 
-    return () => {
-      preloadAudios.forEach((a) => {
-        a.src = "";
-      });
-    };
+    if (!nextPreloadAudioRef.current) {
+      nextPreloadAudioRef.current = new Audio();
+      nextPreloadAudioRef.current.preload = "auto";
+    }
+    if (nextPreloadAudioRef.current.src !== window.location.origin + nextSong.src) {
+      nextPreloadAudioRef.current.src = nextSong.src;
+    }
   }, [playlist]);
 
-  // Initialize main audio element and restore preferences
+  // Initialize main audio element
   useEffect(() => {
     const audio = new Audio();
     audio.preload = "auto";
@@ -116,23 +114,23 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
       }
 
       const savedIndex = localStorage.getItem(STORAGE_KEYS.LAST_INDEX);
+      let initialIdx = 0;
       if (savedIndex !== null) {
         const idx = parseInt(savedIndex, 10);
         if (!isNaN(idx) && idx >= 0 && idx < BGM_PLAYLIST.length) {
-          setCurrentIndex(idx);
-          audio.src = BGM_PLAYLIST[idx].src;
-          setDuration(BGM_PLAYLIST[idx].duration || 0);
-        } else {
-          audio.src = BGM_PLAYLIST[0].src;
-          setDuration(BGM_PLAYLIST[0].duration || 0);
+          initialIdx = idx;
         }
-      } else {
-        audio.src = BGM_PLAYLIST[0].src;
-        setDuration(BGM_PLAYLIST[0].duration || 0);
       }
+      setCurrentIndex(initialIdx);
+      audio.src = BGM_PLAYLIST[initialIdx].src;
+      setDuration(BGM_PLAYLIST[initialIdx].duration);
+
+      // Preload next track quietly
+      const nextIdx = (initialIdx + 1) % BGM_PLAYLIST.length;
+      preloadNext(nextIdx);
     } catch {
       audio.src = BGM_PLAYLIST[0].src;
-      setDuration(BGM_PLAYLIST[0].duration || 0);
+      setDuration(BGM_PLAYLIST[0].duration);
     }
 
     const onTimeUpdate = () => {
@@ -140,36 +138,44 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
     };
 
     const onLoadedMetadata = () => {
-      if (audio.duration && !isNaN(audio.duration) && isFinite(audio.duration)) {
-        setDuration(audio.duration);
+      if (audio.duration && !isNaN(audio.duration) && isFinite(audio.duration) && audio.duration > 0) {
+        setDuration(Math.round(audio.duration));
       }
-      setIsLoading(false);
     };
 
     const onDurationChange = () => {
-      if (audio.duration && !isNaN(audio.duration) && isFinite(audio.duration)) {
-        setDuration(audio.duration);
+      if (audio.duration && !isNaN(audio.duration) && isFinite(audio.duration) && audio.duration > 0) {
+        setDuration(Math.round(audio.duration));
       }
     };
 
+    // Debounced loading spinner (only show if buffering takes > 350ms)
     const onWaiting = () => {
-      setIsLoading(true);
+      if (loadingTimerRef.current) clearTimeout(loadingTimerRef.current);
+      loadingTimerRef.current = setTimeout(() => {
+        setIsLoading(true);
+      }, 350);
     };
 
     const onPlaying = () => {
+      if (loadingTimerRef.current) clearTimeout(loadingTimerRef.current);
       setIsLoading(false);
       setIsPlaying(true);
     };
 
     const onPause = () => {
+      if (loadingTimerRef.current) clearTimeout(loadingTimerRef.current);
+      setIsLoading(false);
       setIsPlaying(false);
     };
 
     const onCanPlay = () => {
+      if (loadingTimerRef.current) clearTimeout(loadingTimerRef.current);
       setIsLoading(false);
     };
 
     const onError = () => {
+      if (loadingTimerRef.current) clearTimeout(loadingTimerRef.current);
       setIsLoading(false);
       setIsPlaying(false);
     };
@@ -184,7 +190,7 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
     audio.addEventListener("error", onError);
 
     return () => {
-      if (fadeIntervalRef.current) clearInterval(fadeIntervalRef.current);
+      if (loadingTimerRef.current) clearTimeout(loadingTimerRef.current);
       audio.removeEventListener("timeupdate", onTimeUpdate);
       audio.removeEventListener("loadedmetadata", onLoadedMetadata);
       audio.removeEventListener("durationchange", onDurationChange);
@@ -195,97 +201,48 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
       audio.removeEventListener("error", onError);
       audio.pause();
       audio.src = "";
+
+      if (nextPreloadAudioRef.current) {
+        nextPreloadAudioRef.current.src = "";
+      }
     };
-  }, []);
+  }, [preloadNext]);
 
-  const clearFade = () => {
-    if (fadeIntervalRef.current) {
-      clearInterval(fadeIntervalRef.current);
-      fadeIntervalRef.current = null;
-    }
-  };
-
-  // Instant play with quick 80ms volume ramp
+  // Instant play
   const play = useCallback(async () => {
     const audio = audioRef.current;
     if (!audio) return;
-
-    clearFade();
-    const targetVol = isMuted ? 0 : volume;
 
     try {
       if (!audio.src || !audio.src.includes(currentTrack.src)) {
         audio.src = currentTrack.src;
       }
 
-      audio.volume = targetVol * 0.4;
-      const playPromise = audio.play();
-      setHasPlayedOnce(true);
+      audio.volume = isMuted ? 0 : volume;
+      audio.muted = isMuted;
+
+      // Optimistic UI state
       setIsPlaying(true);
+      setHasPlayedOnce(true);
 
-      if (playPromise !== undefined) {
-        await playPromise;
-      }
+      await audio.play();
 
-      // Fast volume ramp (80ms total) for smooth instant start
-      const steps = 4;
-      const stepTime = 20;
-      const volStep = (targetVol - audio.volume) / steps;
-      let currentStep = 0;
-
-      fadeIntervalRef.current = setInterval(() => {
-        currentStep++;
-        if (!audioRef.current) {
-          clearFade();
-          return;
-        }
-        const nextVol = Math.min(targetVol, audioRef.current.volume + volStep);
-        audioRef.current.volume = nextVol;
-        if (currentStep >= steps) {
-          audioRef.current.volume = targetVol;
-          clearFade();
-        }
-      }, stepTime);
+      // Preload next track
+      const nextIdx = (currentIndex + 1) % playlist.length;
+      preloadNext(nextIdx);
     } catch (err) {
-      console.warn("BGM play prevented/cancelled:", err);
+      console.warn("BGM play prevented:", err);
       setIsPlaying(false);
     }
-  }, [currentTrack.src, isMuted, volume]);
+  }, [currentTrack.src, isMuted, volume, currentIndex, playlist.length, preloadNext]);
 
-  // Smooth fast pause
+  // Instant pause
   const pause = useCallback(async () => {
     const audio = audioRef.current;
-    if (!audio || audio.paused) return;
-
-    clearFade();
-    const startVol = audio.volume;
-    const steps = 5;
-    const stepTime = 16;
-    const volStep = startVol / steps;
-    let currentStep = 0;
-
-    return new Promise<void>((resolve) => {
-      fadeIntervalRef.current = setInterval(() => {
-        currentStep++;
-        if (!audioRef.current) {
-          clearFade();
-          resolve();
-          return;
-        }
-        const nextVol = Math.max(0, startVol - volStep * currentStep);
-        audioRef.current.volume = nextVol;
-        if (currentStep >= steps || nextVol <= 0) {
-          clearFade();
-          if (audioRef.current) {
-            audioRef.current.pause();
-            audioRef.current.volume = isMuted ? 0 : volume;
-          }
-          setIsPlaying(false);
-          resolve();
-        }
-      }, stepTime);
-    });
-  }, [isMuted, volume]);
+    if (!audio) return;
+    audio.pause();
+    setIsPlaying(false);
+  }, []);
 
   const togglePlay = useCallback(() => {
     if (isPlaying) {
@@ -295,13 +252,13 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
     }
   }, [isPlaying, pause, play]);
 
-  // Select track by index - instantaneous switch
+  // Instant track selection (0ms latency)
   const selectTrack = useCallback(
     (index: number) => {
       if (index < 0 || index >= playlist.length) return;
       setCurrentIndex(index);
       const nextSong = playlist[index];
-      setDuration(nextSong.duration || 0);
+      setDuration(nextSong.duration);
 
       try {
         localStorage.setItem(STORAGE_KEYS.LAST_INDEX, String(index));
@@ -314,17 +271,21 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
       audio.currentTime = 0;
       setCurrentTime(0);
 
+      // Preload the one after next
+      const afterNextIdx = (index + 1) % playlist.length;
+      preloadNext(afterNextIdx);
+
       if (isPlaying || hasPlayedOnce) {
         audio.volume = isMuted ? 0 : volume;
-        audio.play().then(() => {
-          setIsPlaying(true);
-          setHasPlayedOnce(true);
-        }).catch((err) => {
-          console.warn("Auto switch play caught:", err);
+        audio.muted = isMuted;
+        setIsPlaying(true);
+        setHasPlayedOnce(true);
+        audio.play().catch((err) => {
+          console.warn("Audio play catch:", err);
         });
       }
     },
-    [playlist, isPlaying, hasPlayedOnce, isMuted, volume]
+    [playlist, isPlaying, hasPlayedOnce, isMuted, volume, preloadNext]
   );
 
   const nextTrack = useCallback(() => {
@@ -386,12 +347,12 @@ export function AudioPlayerProvider({ children }: { children: ReactNode }) {
     if (!audio) return;
     const targetDuration = (audio.duration && !isNaN(audio.duration) && isFinite(audio.duration) && audio.duration > 0)
       ? audio.duration
-      : (currentTrack.duration || duration || 100);
+      : currentTrack.duration;
 
     const clamped = Math.max(0, Math.min(time, targetDuration));
     audio.currentTime = clamped;
     setCurrentTime(clamped);
-  }, [currentTrack.duration, duration]);
+  }, [currentTrack.duration]);
 
   const setVolume = useCallback((vol: number) => {
     const clamped = Math.max(0, Math.min(1, vol));

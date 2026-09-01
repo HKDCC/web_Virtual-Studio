@@ -6,6 +6,7 @@ export interface Track {
   src: string;
   year?: string;
   description?: string;
+  duration?: number; // Pre-known duration in seconds
 }
 
 export const BGM_PLAYLIST: Track[] = [
@@ -17,6 +18,7 @@ export const BGM_PLAYLIST: Track[] = [
     src: "/music/breaking-the-loop.mp3",
     year: "2026",
     description: "打破循环的节奏与清澈律动",
+    duration: 115,
   },
   {
     id: "breaking-loop-remix",
@@ -26,6 +28,7 @@ export const BGM_PLAYLIST: Track[] = [
     src: "/music/breaking-loop-remix.mp3",
     year: "2026",
     description: "更强劲的低音鼓点与空间混音",
+    duration: 130,
   },
   {
     id: "cold-cup-tea",
@@ -35,6 +38,7 @@ export const BGM_PLAYLIST: Track[] = [
     src: "/music/cold-cup-tea.mp3",
     year: "2026",
     description: "放凉的茶与午后的安静思考",
+    duration: 105,
   },
   {
     id: "fax-machine-singing",
@@ -44,6 +48,7 @@ export const BGM_PLAYLIST: Track[] = [
     src: "/music/fax-machine-singing.mp3",
     year: "2026",
     description: "复古传真机与数字故障音的奇妙合唱",
+    duration: 151,
   },
   {
     id: "plastic-spoon",
@@ -53,6 +58,7 @@ export const BGM_PLAYLIST: Track[] = [
     src: "/music/plastic-spoon.mp3",
     year: "2026",
     description: "日常微小器物里的旋律共振",
+    duration: 131,
   },
   {
     id: "plastic-spoon-remix",
@@ -62,5 +68,6 @@ export const BGM_PLAYLIST: Track[] = [
     src: "/music/plastic-spoon-remix.mp3",
     year: "2026",
     description: "跳跃电子质感的节奏重构",
+    duration: 143,
   },
 ];

@@ -1,7 +1,11 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useAudioPlayer, PlayMode } from "./AudioPlayerContext";
+
+type Corner = "bottom-right" | "bottom-left" | "top-right" | "top-left";
+
+const CORNER_KEY = "tl-bgm-corner";
 
 function formatTime(seconds: number): string {
   if (isNaN(seconds) || seconds < 0) return "00:00";
@@ -36,11 +40,42 @@ export function FloatingBgmPlayer() {
     setExpanded,
   } = useAudioPlayer();
 
-  const [isSeeking, setIsSeeking] = useState(false);
-  const [seekValue, setSeekValue] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [corner, setCorner] = useState<Corner>("bottom-right");
+  const [isDragging, setIsDragging] = useState(false);
+  const [isFlying, setIsFlying] = useState(false);
+  const [dragPos, setDragPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [tilt, setTilt] = useState<number>(0);
 
-  // Close when clicked outside
+  // Scrubber state
+  const [isScrubbing, setIsScrubbing] = useState(false);
+  const [scrubTime, setScrubTime] = useState(0);
+  const scrubberTrackRef = useRef<HTMLDivElement>(null);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const pillRef = useRef<HTMLDivElement>(null);
+
+  // Drag physics tracking refs
+  const dragStartRef = useRef<{ startX: number; startY: number; pillLeft: number; pillTop: number; time: number }>({
+    startX: 0,
+    startY: 0,
+    pillLeft: 0,
+    pillTop: 0,
+    time: 0,
+  });
+  const samplesRef = useRef<Array<{ x: number; y: number; time: number }>>([]);
+  const hasMovedRef = useRef(false);
+
+  // Restore saved corner
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(CORNER_KEY) as Corner;
+      if (saved && ["bottom-right", "bottom-left", "top-right", "top-left"].includes(saved)) {
+        setCorner(saved);
+      }
+    } catch {}
+  }, []);
+
+  // Close panel on outside click or Escape key
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
       if (
@@ -66,19 +101,194 @@ export function FloatingBgmPlayer() {
     };
   }, [isExpanded, setExpanded]);
 
-  const currentSeekTime = isSeeking ? seekValue : currentTime;
-  const displayProgress = duration > 0 ? (currentSeekTime / duration) * 100 : 0;
+  // Compute corner target positions
+  const getCornerCoords = useCallback((c: Corner, pillW = 200, pillH = 42) => {
+    const margin = 24;
+    const vw = typeof window !== "undefined" ? window.innerWidth : 1200;
+    const vh = typeof window !== "undefined" ? window.innerHeight : 800;
 
-  const handleSeekChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsSeeking(true);
-    setSeekValue(parseFloat(e.target.value));
+    switch (c) {
+      case "top-left":
+        return { x: margin, y: margin };
+      case "top-right":
+        return { x: vw - pillW - margin, y: margin };
+      case "bottom-left":
+        return { x: margin, y: vh - pillH - margin };
+      case "bottom-right":
+      default:
+        return { x: vw - pillW - margin, y: vh - pillH - margin };
+    }
+  }, []);
+
+  // Drag Pointer Handlers
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    // If clicking on the action button inside pill, let it handle directly
+    if ((e.target as HTMLElement).closest(".tl-bgm-dock-action-btn")) {
+      return;
+    }
+
+    if (!pillRef.current) return;
+    const rect = pillRef.current.getBoundingClientRect();
+    dragStartRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      pillLeft: rect.left,
+      pillTop: rect.top,
+      time: performance.now(),
+    };
+    samplesRef.current = [{ x: e.clientX, y: e.clientY, time: performance.now() }];
+    hasMovedRef.current = false;
+
+    // Set active pointer capture
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
   };
 
-  const handleSeekCommit = (e: React.MouseEvent<HTMLInputElement> | React.TouchEvent<HTMLInputElement>) => {
-    const target = e.currentTarget as HTMLInputElement;
-    const time = parseFloat(target.value);
-    seek(time);
-    setIsSeeking(false);
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (dragStartRef.current.time === 0) return;
+
+    const dx = e.clientX - dragStartRef.current.startX;
+    const dy = e.clientY - dragStartRef.current.startY;
+    const dist = Math.hypot(dx, dy);
+
+    if (!hasMovedRef.current && dist > 5) {
+      hasMovedRef.current = true;
+      setIsDragging(true);
+      if (isExpanded) setExpanded(false);
+    }
+
+    if (hasMovedRef.current) {
+      const now = performance.now();
+      const samples = samplesRef.current;
+      samples.push({ x: e.clientX, y: e.clientY, time: now });
+      if (samples.length > 8) samples.shift();
+
+      // Calculate instantaneous tilt from recent horizontal speed
+      const oldest = samples[0];
+      const dt = now - oldest.time;
+      const vx = dt > 0 ? (e.clientX - oldest.x) / dt : 0;
+      const targetTilt = Math.max(-25, Math.min(25, vx * 16));
+      setTilt(targetTilt);
+
+      setDragPos({
+        x: dragStartRef.current.pillLeft + dx,
+        y: dragStartRef.current.pillTop + dy,
+      });
+    }
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (dragStartRef.current.time === 0) return;
+
+    try {
+      (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
+    } catch {}
+
+    if (!hasMovedRef.current) {
+      // Just a click, toggle expand
+      dragStartRef.current.time = 0;
+      toggleExpanded();
+      return;
+    }
+
+    // Process drag release / fling physics
+    const now = performance.now();
+    const samples = samplesRef.current;
+    let vx = 0;
+    let vy = 0;
+
+    if (samples.length >= 2) {
+      const oldest = samples[0];
+      const dt = now - oldest.time;
+      if (dt > 10) {
+        vx = (e.clientX - oldest.x) / dt; // px/ms
+        vy = (e.clientY - oldest.y) / dt;
+      }
+    }
+
+    const speed = Math.hypot(vx, vy);
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    let targetCorner: Corner = corner;
+
+    if (speed > 0.35) {
+      // Fling / Throw gesture detected!
+      if (vx < 0 && vy < 0) targetCorner = "top-left";
+      else if (vx >= 0 && vy < 0) targetCorner = "top-right";
+      else if (vx < 0 && vy >= 0) targetCorner = "bottom-left";
+      else targetCorner = "bottom-right";
+    } else {
+      // Snapping based on closest corner
+      const currentX = dragPos.x + 36; // capsule center approx
+      const currentY = dragPos.y + 16;
+
+      const distTL = Math.hypot(currentX, currentY);
+      const distTR = Math.hypot(vw - currentX, currentY);
+      const distBL = Math.hypot(currentX, vh - currentY);
+      const distBR = Math.hypot(vw - currentX, vh - currentY);
+
+      const minDist = Math.min(distTL, distTR, distBL, distBR);
+      if (minDist === distTL) targetCorner = "top-left";
+      else if (minDist === distTR) targetCorner = "top-right";
+      else if (minDist === distBL) targetCorner = "bottom-left";
+      else targetCorner = "bottom-right";
+    }
+
+    // Trigger smooth flying spring animation to target corner
+    const targetCoords = getCornerCoords(targetCorner, 80, 36);
+    setDragPos(targetCoords);
+    setTilt(0);
+    setIsFlying(true);
+
+    setTimeout(() => {
+      setCorner(targetCorner);
+      setIsDragging(false);
+      setIsFlying(false);
+      try {
+        localStorage.setItem(CORNER_KEY, targetCorner);
+      } catch {}
+    }, 320);
+
+    dragStartRef.current.time = 0;
+    samplesRef.current = [];
+  };
+
+  // Custom Precision Scrubber Interaction
+  const effectiveDuration = duration > 0 ? duration : (currentTrack.duration || 120);
+  const activeTime = isScrubbing ? scrubTime : currentTime;
+  const progressRatio = Math.max(0, Math.min(1, effectiveDuration > 0 ? activeTime / effectiveDuration : 0));
+
+  const handleScrubberPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    if (!scrubberTrackRef.current) return;
+    const rect = scrubberTrackRef.current.getBoundingClientRect();
+    const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const targetTime = ratio * effectiveDuration;
+
+    setIsScrubbing(true);
+    setScrubTime(targetTime);
+
+    const onPointerMove = (moveEvent: PointerEvent) => {
+      if (!scrubberTrackRef.current) return;
+      const r = scrubberTrackRef.current.getBoundingClientRect();
+      const newRatio = Math.max(0, Math.min(1, (moveEvent.clientX - r.left) / r.width));
+      setScrubTime(newRatio * effectiveDuration);
+    };
+
+    const onPointerUp = (upEvent: PointerEvent) => {
+      if (scrubberTrackRef.current) {
+        const r = scrubberTrackRef.current.getBoundingClientRect();
+        const finalRatio = Math.max(0, Math.min(1, (upEvent.clientX - r.left) / r.width));
+        const finalTime = finalRatio * effectiveDuration;
+        seek(finalTime);
+      }
+      setIsScrubbing(false);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+    };
+
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
   };
 
   const getModeTitle = (mode: PlayMode) => {
@@ -92,17 +302,42 @@ export function FloatingBgmPlayer() {
     }
   };
 
+  const isTop = corner.startsWith("top");
+  const isLeft = corner.endsWith("left");
+
+  // Dynamic floating coordinates during drag/fling
+  const floatingStyle: React.CSSProperties = (isDragging || isFlying)
+    ? {
+        position: "fixed",
+        left: `${dragPos.x}px`,
+        top: `${dragPos.y}px`,
+        right: "auto",
+        bottom: "auto",
+        transform: `rotate(${tilt}deg) scale(${isDragging ? 1.08 : 1})`,
+        transition: isFlying ? "all 0.32s cubic-bezier(0.18, 0.9, 0.28, 1.15)" : "none",
+        zIndex: 9999,
+        cursor: "grabbing",
+      }
+    : {};
+
   return (
     <div
       ref={containerRef}
-      className={`tl-bgm-container ${isExpanded ? "is-expanded" : ""} ${
+      className={`tl-bgm-container tl-corner-${corner} ${isExpanded ? "is-expanded" : ""} ${
         isPlaying ? "is-playing" : ""
-      }`}
+      } ${isDragging ? "is-dragging" : ""} ${isFlying ? "is-flying" : ""}`}
+      style={floatingStyle}
       aria-label="背景音乐播放器"
     >
       {/* ═══════════ 展开态：毛玻璃卡片面板 ═══════════ */}
-      {isExpanded && (
-        <div className="tl-bgm-panel reveal-in" role="dialog" aria-label="音乐播放详情与歌单">
+      {isExpanded && !isDragging && (
+        <div
+          className={`tl-bgm-panel reveal-in ${isTop ? "open-down" : "open-up"} ${
+            isLeft ? "align-left" : "align-right"
+          }`}
+          role="dialog"
+          aria-label="音乐播放详情与歌单"
+        >
           {/* 面板头部 */}
           <div className="tl-bgm-panel-header">
             <div className="tl-bgm-header-left">
@@ -143,29 +378,30 @@ export function FloatingBgmPlayer() {
             </div>
           </div>
 
-          {/* 进度条与时间 */}
+          {/* 进度条与时间 (高精度无缝 Scrub 体验) */}
           <div className="tl-bgm-progress-section">
-            <div className="tl-bgm-slider-wrap">
+            <div
+              ref={scrubberTrackRef}
+              className="tl-bgm-slider-wrap"
+              onPointerDown={handleScrubberPointerDown}
+              role="slider"
+              aria-label="播放进度调节"
+              aria-valuemin={0}
+              aria-valuemax={effectiveDuration}
+              aria-valuenow={activeTime}
+            >
               <div
                 className="tl-bgm-slider-bar"
-                style={{ width: `${Math.min(100, Math.max(0, displayProgress))}%` }}
+                style={{ width: `${(progressRatio * 100).toFixed(2)}%` }}
               />
-              <input
-                type="range"
-                min="0"
-                max={duration || 100}
-                step="0.1"
-                value={currentSeekTime}
-                onChange={handleSeekChange}
-                onMouseUp={handleSeekCommit}
-                onTouchEnd={handleSeekCommit}
-                className="tl-bgm-progress-input"
-                aria-label="播放进度调节"
+              <div
+                className="tl-bgm-slider-thumb"
+                style={{ left: `${(progressRatio * 100).toFixed(2)}%` }}
               />
             </div>
             <div className="tl-bgm-time-row">
-              <span className="tl-bgm-time">{formatTime(currentSeekTime)}</span>
-              <span className="tl-bgm-time">{formatTime(duration)}</span>
+              <span className="tl-bgm-time">{formatTime(activeTime)}</span>
+              <span className="tl-bgm-time">{formatTime(effectiveDuration)}</span>
             </div>
           </div>
 
@@ -341,14 +577,19 @@ export function FloatingBgmPlayer() {
         </div>
       )}
 
-      {/* ═══════════ 收起态：右下角常驻胶囊挂件 ═══════════ */}
+      {/* ═══════════ 悬浮挂件 / 拖拽仿真胶囊 ═══════════ */}
       <div
-        className={`tl-bgm-dock-pill ${!hasPlayedOnce && !isPlaying ? "tl-bgm-breathe" : ""}`}
-        onClick={toggleExpanded}
+        ref={pillRef}
+        className={`tl-bgm-dock-pill ${!hasPlayedOnce && !isPlaying ? "tl-bgm-breathe" : ""} ${
+          isDragging || isFlying ? "is-morphed" : ""
+        }`}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
         role="button"
         tabIndex={0}
         aria-expanded={isExpanded}
-        aria-label="音乐播放器控制胶囊"
+        aria-label="音乐播放器控制胶囊，可按住拖拽至四个角落"
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
@@ -356,47 +597,64 @@ export function FloatingBgmPlayer() {
           }
         }}
       >
-        {/* 迷你黑胶唱片 */}
-        <div className={`tl-bgm-mini-vinyl ${isPlaying ? "spinning" : ""}`}>
-          <div className="tl-bgm-mini-vinyl-center"></div>
-        </div>
+        {isDragging || isFlying ? (
+          /* ═══════════ 拖拽时：左黑右红 3D 仿真药丸胶囊 ═══════════ */
+          <div className="tl-bgm-real-capsule">
+            <div className="tl-capsule-half tl-capsule-black">
+              <div className="tl-capsule-gloss"></div>
+            </div>
+            <div className="tl-capsule-seam"></div>
+            <div className="tl-capsule-half tl-capsule-red">
+              <div className="tl-capsule-gloss"></div>
+            </div>
+          </div>
+        ) : (
+          /* ═══════════ 常规态：精致播放器挂件（直接单行显示歌名） ═══════════ */
+          <>
+            {/* 迷你黑胶唱片 */}
+            <div className={`tl-bgm-mini-vinyl ${isPlaying ? "spinning" : ""}`}>
+              <div className="tl-bgm-mini-vinyl-center"></div>
+            </div>
 
-        {/* 4柱动态声波动画 */}
-        <div className={`tl-bgm-bars ${isPlaying ? "is-animating" : ""}`} aria-hidden="true">
-          <span className="tl-bar bar-1"></span>
-          <span className="tl-bar bar-2"></span>
-          <span className="tl-bar bar-3"></span>
-          <span className="tl-bar bar-4"></span>
-        </div>
+            {/* 4柱动态声波动画 */}
+            <div className={`tl-bgm-bars ${isPlaying ? "is-animating" : ""}`} aria-hidden="true">
+              <span className="tl-bar bar-1"></span>
+              <span className="tl-bar bar-2"></span>
+              <span className="tl-bar bar-3"></span>
+              <span className="tl-bar bar-4"></span>
+            </div>
 
-        {/* 曲目简要文本 */}
-        <div className="tl-bgm-dock-text">
-          <span className="tl-bgm-dock-title">{currentTrack.title}</span>
-          <span className="tl-bgm-dock-artist">BGM · tl; // lab</span>
-        </div>
+            {/* 单行居中直显歌名 */}
+            <div className="tl-bgm-dock-text">
+              <span className="tl-bgm-dock-title" title={currentTrack.title}>
+                {currentTrack.title}
+              </span>
+            </div>
 
-        {/* 快捷 Play/Pause 按钮 */}
-        <button
-          type="button"
-          className="tl-bgm-dock-action-btn"
-          onClick={(e) => {
-            e.stopPropagation();
-            togglePlay();
-          }}
-          title={isPlaying ? "暂停" : "播放"}
-          aria-label={isPlaying ? "暂停" : "播放"}
-        >
-          {isPlaying ? (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <rect x="6" y="4" width="4" height="16" rx="1"></rect>
-              <rect x="14" y="4" width="4" height="16" rx="1"></rect>
-            </svg>
-          ) : (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="6 3 20 12 6 21 6 3"></polygon>
-            </svg>
-          )}
-        </button>
+            {/* 快捷 Play/Pause 按钮 */}
+            <button
+              type="button"
+              className="tl-bgm-dock-action-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                togglePlay();
+              }}
+              title={isPlaying ? "暂停" : "播放"}
+              aria-label={isPlaying ? "暂停" : "播放"}
+            >
+              {isPlaying ? (
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <rect x="6" y="4" width="4" height="16" rx="1"></rect>
+                  <rect x="14" y="4" width="4" height="16" rx="1"></rect>
+                </svg>
+              ) : (
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="6 3 20 12 6 21 6 3"></polygon>
+                </svg>
+              )}
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

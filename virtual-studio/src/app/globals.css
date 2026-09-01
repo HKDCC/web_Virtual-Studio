@@ -4470,11 +4470,39 @@ footer {
 /* ═══════════════ 全局悬浮音乐播放器 (Floating BGM Player) ═══════════════ */
 .tl-bgm-container {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
   z-index: 888;
   font-family: var(--sans);
   user-select: none;
+  touch-action: none;
+}
+
+/* 4 角停靠定位 */
+.tl-bgm-container.tl-corner-bottom-right {
+  bottom: 24px;
+  right: 24px;
+  left: auto;
+  top: auto;
+}
+
+.tl-bgm-container.tl-corner-bottom-left {
+  bottom: 24px;
+  left: 24px;
+  right: auto;
+  top: auto;
+}
+
+.tl-bgm-container.tl-corner-top-right {
+  top: 24px;
+  right: 24px;
+  left: auto;
+  bottom: auto;
+}
+
+.tl-bgm-container.tl-corner-top-left {
+  top: 24px;
+  left: 24px;
+  right: auto;
+  bottom: auto;
 }
 
 /* 胶囊挂件 */
@@ -4488,7 +4516,7 @@ footer {
   border: 1px solid var(--line);
   border-radius: 9999px;
   box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.06);
-  cursor: pointer;
+  cursor: grab;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -4498,6 +4526,10 @@ footer {
   transform: translateY(-2px);
   border-color: var(--accent);
   box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.18), 0 4px 10px -1px rgba(0, 0, 0, 0.08);
+}
+
+.tl-bgm-dock-pill:active {
+  cursor: grabbing;
 }
 
 /* 首次未播放时的呼吸动效 */
@@ -4581,32 +4613,22 @@ footer {
   50% { height: 14px; }
 }
 
-/* 胶囊文字 */
+/* 胶囊单行歌名（直显歌名，垂直居中） */
 .tl-bgm-dock-text {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-width: 130px;
+  align-items: center;
+  max-width: 150px;
   overflow: hidden;
-  line-height: 1.2;
 }
 
 .tl-bgm-dock-title {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.tl-bgm-dock-artist {
-  font-size: 10px;
-  color: var(--ink-3);
-  font-family: var(--mono);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.2;
 }
 
 /* 快捷操作按键 */
@@ -4634,11 +4656,80 @@ footer {
   transform: scale(0.95);
 }
 
+/* ═══════════ 拖拽时：左黑右红 3D 仿真药丸胶囊 ═══════════ */
+.tl-bgm-dock-pill.is-morphed {
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.tl-bgm-real-capsule {
+  display: flex;
+  width: 84px;
+  height: 36px;
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+  box-shadow:
+    0 20px 40px -4px rgba(0, 0, 0, 0.45),
+    0 8px 16px -2px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(233, 104, 58, 0.4);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  cursor: grabbing;
+  user-select: none;
+  background: #111;
+  animation: tlCapsulePop 0.22s cubic-bezier(0.18, 0.9, 0.32, 1.2);
+}
+
+@keyframes tlCapsulePop {
+  from { transform: scale(0.85); opacity: 0.7; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* 左半部：极夜曜石黑 */
+.tl-capsule-black {
+  flex: 1;
+  background: linear-gradient(180deg, #3f3f46 0%, #18181b 40%, #09090b 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 右半部：高光绯红/珊瑚朱红 */
+.tl-capsule-red {
+  flex: 1;
+  background: linear-gradient(180deg, #ff7a59 0%, #e9683a 42%, #b53812 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 仿真接缝金属反光圈 */
+.tl-capsule-seam {
+  width: 2.5px;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(120,120,120,0.6) 45%, rgba(20,20,20,0.9) 100%);
+  position: relative;
+  z-index: 3;
+  box-shadow: 0 0 2px rgba(0,0,0,0.7);
+}
+
+/* 3D 胶囊顶面圆弧高光 */
+.tl-capsule-gloss {
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  right: 4px;
+  height: 11px;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.05) 100%);
+  pointer-events: none;
+}
+
 /* ═══════════ 展开态面板 ═══════════ */
 .tl-bgm-panel {
   position: absolute;
-  bottom: 54px;
-  right: 0;
   width: 320px;
   background: var(--card);
   border: 1px solid var(--line);
@@ -4648,13 +4739,43 @@ footer {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   animation: tlPanelIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 890;
+}
+
+.tl-bgm-panel.open-up {
+  bottom: 54px;
+  top: auto;
+}
+
+.tl-bgm-panel.open-down {
+  top: 54px;
+  bottom: auto;
+}
+
+.tl-bgm-panel.align-right {
+  right: 0;
+  left: auto;
   transform-origin: bottom right;
+}
+
+.tl-bgm-panel.align-left {
+  left: 0;
+  right: auto;
+  transform-origin: bottom left;
+}
+
+.tl-bgm-panel.open-down.align-right {
+  transform-origin: top right;
+}
+
+.tl-bgm-panel.open-down.align-left {
+  transform-origin: top left;
 }
 
 @keyframes tlPanelIn {
   from {
     opacity: 0;
-    transform: scale(0.92) translateY(12px);
+    transform: scale(0.92) translateY(10px);
   }
   to {
     opacity: 1;
@@ -4792,42 +4913,51 @@ footer {
   font-family: var(--mono);
 }
 
-/* 进度条 */
+/* 进度条 (Custom Precision Scrubber) */
 .tl-bgm-progress-section {
   margin-bottom: 12px;
 }
 
 .tl-bgm-slider-wrap {
   position: relative;
-  height: 6px;
+  height: 8px;
   background: var(--bg-3);
-  border-radius: 3px;
-  overflow: hidden;
+  border-radius: 4px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  touch-action: none;
 }
 
 .tl-bgm-slider-bar {
   height: 100%;
   background: var(--accent);
-  border-radius: 3px;
-  transition: width 0.1s linear;
+  border-radius: 4px;
+  pointer-events: none;
 }
 
-.tl-bgm-progress-input {
+.tl-bgm-slider-thumb {
   position: absolute;
-  top: -6px;
-  left: 0;
-  width: 100%;
-  height: 18px;
-  opacity: 0;
-  cursor: pointer;
-  margin: 0;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border: 2.5px solid var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+  transition: transform 0.1s ease;
+}
+
+.tl-bgm-slider-wrap:hover .tl-bgm-slider-thumb {
+  transform: translate(-50%, -50%) scale(1.25);
 }
 
 .tl-bgm-time-row {
   display: flex;
   justify-content: space-between;
-  margin-top: 4px;
+  margin-top: 5px;
   font-size: 10px;
   font-family: var(--mono);
   color: var(--ink-3);
@@ -5057,21 +5187,32 @@ footer {
 
 /* 移动端适配 */
 @media (max-width: 640px) {
-  .tl-bgm-container {
+  .tl-bgm-container.tl-corner-bottom-right,
+  .tl-bgm-container.tl-corner-bottom-left {
     bottom: 16px;
+  }
+  .tl-bgm-container.tl-corner-top-right,
+  .tl-bgm-container.tl-corner-top-left {
+    top: 16px;
+  }
+  .tl-bgm-container.tl-corner-bottom-right,
+  .tl-bgm-container.tl-corner-top-right {
     right: 16px;
+  }
+  .tl-bgm-container.tl-corner-bottom-left,
+  .tl-bgm-container.tl-corner-top-left {
+    left: 16px;
   }
 
   .tl-bgm-panel {
     width: calc(100vw - 32px);
-    right: 0;
-    bottom: 50px;
   }
 
   .tl-bgm-dock-text {
-    max-width: 100px;
+    max-width: 110px;
   }
 }
+
 
 
 

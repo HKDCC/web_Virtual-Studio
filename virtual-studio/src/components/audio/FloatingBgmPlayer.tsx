@@ -43,6 +43,7 @@ export function FloatingBgmPlayer() {
   const [corner, setCorner] = useState<Corner>("bottom-right");
   const [isDragging, setIsDragging] = useState(false);
   const [isFlying, setIsFlying] = useState(false);
+  const [isMorphed, setIsMorphed] = useState(false);
   const [dragPos, setDragPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [tilt, setTilt] = useState<number>(0);
 
@@ -101,8 +102,8 @@ export function FloatingBgmPlayer() {
     };
   }, [isExpanded, setExpanded]);
 
-  // Compute corner target positions
-  const getCornerCoords = useCallback((c: Corner, pillW = 200, pillH = 42) => {
+  // Compute corner target coordinates
+  const getCornerCoords = useCallback((c: Corner, pillW = 84, pillH = 36) => {
     const margin = 24;
     const vw = typeof window !== "undefined" ? window.innerWidth : 1200;
     const vh = typeof window !== "undefined" ? window.innerHeight : 800;
@@ -122,7 +123,6 @@ export function FloatingBgmPlayer() {
 
   // Drag Pointer Handlers
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    // If clicking on the action button inside pill, let it handle directly
     if ((e.target as HTMLElement).closest(".tl-bgm-dock-action-btn")) {
       return;
     }
@@ -139,7 +139,6 @@ export function FloatingBgmPlayer() {
     samplesRef.current = [{ x: e.clientX, y: e.clientY, time: performance.now() }];
     hasMovedRef.current = false;
 
-    // Set active pointer capture
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
   };
 
@@ -153,6 +152,7 @@ export function FloatingBgmPlayer() {
     if (!hasMovedRef.current && dist > 5) {
       hasMovedRef.current = true;
       setIsDragging(true);
+      setIsMorphed(true);
       if (isExpanded) setExpanded(false);
     }
 
@@ -162,11 +162,10 @@ export function FloatingBgmPlayer() {
       samples.push({ x: e.clientX, y: e.clientY, time: now });
       if (samples.length > 8) samples.shift();
 
-      // Calculate instantaneous tilt from recent horizontal speed
       const oldest = samples[0];
       const dt = now - oldest.time;
       const vx = dt > 0 ? (e.clientX - oldest.x) / dt : 0;
-      const targetTilt = Math.max(-25, Math.min(25, vx * 16));
+      const targetTilt = Math.max(-22, Math.min(22, vx * 15));
       setTilt(targetTilt);
 
       setDragPos({
@@ -184,7 +183,6 @@ export function FloatingBgmPlayer() {
     } catch {}
 
     if (!hasMovedRef.current) {
-      // Just a click, toggle expand
       dragStartRef.current.time = 0;
       toggleExpanded();
       return;
@@ -200,7 +198,7 @@ export function FloatingBgmPlayer() {
       const oldest = samples[0];
       const dt = now - oldest.time;
       if (dt > 10) {
-        vx = (e.clientX - oldest.x) / dt; // px/ms
+        vx = (e.clientX - oldest.x) / dt;
         vy = (e.clientY - oldest.y) / dt;
       }
     }
@@ -212,15 +210,13 @@ export function FloatingBgmPlayer() {
     let targetCorner: Corner = corner;
 
     if (speed > 0.35) {
-      // Fling / Throw gesture detected!
       if (vx < 0 && vy < 0) targetCorner = "top-left";
       else if (vx >= 0 && vy < 0) targetCorner = "top-right";
       else if (vx < 0 && vy >= 0) targetCorner = "bottom-left";
       else targetCorner = "bottom-right";
     } else {
-      // Snapping based on closest corner
-      const currentX = dragPos.x + 36; // capsule center approx
-      const currentY = dragPos.y + 16;
+      const currentX = dragPos.x + 42;
+      const currentY = dragPos.y + 18;
 
       const distTL = Math.hypot(currentX, currentY);
       const distTR = Math.hypot(vw - currentX, currentY);
@@ -235,7 +231,7 @@ export function FloatingBgmPlayer() {
     }
 
     // Trigger smooth flying spring animation to target corner
-    const targetCoords = getCornerCoords(targetCorner, 80, 36);
+    const targetCoords = getCornerCoords(targetCorner, 84, 36);
     setDragPos(targetCoords);
     setTilt(0);
     setIsFlying(true);
@@ -244,6 +240,8 @@ export function FloatingBgmPlayer() {
       setCorner(targetCorner);
       setIsDragging(false);
       setIsFlying(false);
+      // Trigger elastic unfold
+      setIsMorphed(false);
       try {
         localStorage.setItem(CORNER_KEY, targetCorner);
       } catch {}
@@ -305,7 +303,6 @@ export function FloatingBgmPlayer() {
   const isTop = corner.startsWith("top");
   const isLeft = corner.endsWith("left");
 
-  // Dynamic floating coordinates during drag/fling
   const floatingStyle: React.CSSProperties = (isDragging || isFlying)
     ? {
         position: "fixed",
@@ -313,7 +310,7 @@ export function FloatingBgmPlayer() {
         top: `${dragPos.y}px`,
         right: "auto",
         bottom: "auto",
-        transform: `rotate(${tilt}deg) scale(${isDragging ? 1.08 : 1})`,
+        transform: `rotate(${tilt}deg) scale(${isDragging ? 1.05 : 1})`,
         transition: isFlying ? "all 0.32s cubic-bezier(0.18, 0.9, 0.28, 1.15)" : "none",
         zIndex: 9999,
         cursor: "grabbing",
@@ -577,11 +574,11 @@ export function FloatingBgmPlayer() {
         </div>
       )}
 
-      {/* ═══════════ 悬浮挂件 / 拖拽仿真胶囊 ═══════════ */}
+      {/* ═══════════ 悬浮挂件 (单一持续 DOM，左右元素向心相吸形变) ═══════════ */}
       <div
         ref={pillRef}
         className={`tl-bgm-dock-pill ${!hasPlayedOnce && !isPlaying ? "tl-bgm-breathe" : ""} ${
-          isDragging || isFlying ? "is-morphed" : ""
+          isMorphed ? "is-morphed" : ""
         }`}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
@@ -597,64 +594,64 @@ export function FloatingBgmPlayer() {
           }
         }}
       >
-        {isDragging || isFlying ? (
-          /* ═══════════ 拖拽时：左黑右红 3D 仿真药丸胶囊 ═══════════ */
-          <div className="tl-bgm-real-capsule">
-            <div className="tl-capsule-half tl-capsule-black">
-              <div className="tl-capsule-gloss"></div>
-            </div>
-            <div className="tl-capsule-seam"></div>
-            <div className="tl-capsule-half tl-capsule-red">
-              <div className="tl-capsule-gloss"></div>
-            </div>
+        {/* 左侧变形单元：黑胶唱片 ➔ 曜石黑 3D 半壳 */}
+        <div className="tl-morph-left">
+          <div className={`tl-bgm-mini-vinyl ${isPlaying ? "spinning" : ""}`}>
+            <div className="tl-bgm-mini-vinyl-center"></div>
           </div>
-        ) : (
-          /* ═══════════ 常规态：精致播放器挂件（直接单行显示歌名） ═══════════ */
-          <>
-            {/* 迷你黑胶唱片 */}
-            <div className={`tl-bgm-mini-vinyl ${isPlaying ? "spinning" : ""}`}>
-              <div className="tl-bgm-mini-vinyl-center"></div>
-            </div>
+          <div className="tl-capsule-black">
+            <div className="tl-capsule-gloss"></div>
+          </div>
+        </div>
 
-            {/* 4柱动态声波动画 */}
-            <div className={`tl-bgm-bars ${isPlaying ? "is-animating" : ""}`} aria-hidden="true">
-              <span className="tl-bar bar-1"></span>
-              <span className="tl-bar bar-2"></span>
-              <span className="tl-bar bar-3"></span>
-              <span className="tl-bar bar-4"></span>
-            </div>
+        {/* 中间坍缩内容区：声波 + 歌名 */}
+        <div className="tl-morph-center">
+          {/* 4柱动态声波 */}
+          <div className={`tl-bgm-bars ${isPlaying ? "is-animating" : ""}`} aria-hidden="true">
+            <span className="tl-bar bar-1"></span>
+            <span className="tl-bar bar-2"></span>
+            <span className="tl-bar bar-3"></span>
+            <span className="tl-bar bar-4"></span>
+          </div>
 
-            {/* 单行居中直显歌名 */}
-            <div className="tl-bgm-dock-text">
-              <span className="tl-bgm-dock-title" title={currentTrack.title}>
-                {currentTrack.title}
-              </span>
-            </div>
+          {/* 单行居中歌名 */}
+          <div className="tl-bgm-dock-text">
+            <span className="tl-bgm-dock-title" title={currentTrack.title}>
+              {currentTrack.title}
+            </span>
+          </div>
+        </div>
 
-            {/* 快捷 Play/Pause 按钮 */}
-            <button
-              type="button"
-              className="tl-bgm-dock-action-btn"
-              onClick={(e) => {
-                e.stopPropagation();
-                togglePlay();
-              }}
-              title={isPlaying ? "暂停" : "播放"}
-              aria-label={isPlaying ? "暂停" : "播放"}
-            >
-              {isPlaying ? (
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                  <rect x="6" y="4" width="4" height="16" rx="1"></rect>
-                  <rect x="14" y="4" width="4" height="16" rx="1"></rect>
-                </svg>
-              ) : (
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                  <polygon points="6 3 20 12 6 21 6 3"></polygon>
-                </svg>
-              )}
-            </button>
-          </>
-        )}
+        {/* 中缝吸合金属圈 */}
+        <div className="tl-capsule-seam"></div>
+
+        {/* 右侧变形单元：橙红播放按钮 ➔ 高光朱红 3D 半壳 */}
+        <div className="tl-morph-right">
+          <button
+            type="button"
+            className="tl-bgm-dock-action-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              togglePlay();
+            }}
+            title={isPlaying ? "暂停" : "播放"}
+            aria-label={isPlaying ? "暂停" : "播放"}
+          >
+            {isPlaying ? (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="6" y="4" width="4" height="16" rx="1"></rect>
+                <rect x="14" y="4" width="4" height="16" rx="1"></rect>
+              </svg>
+            ) : (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="6 3 20 12 6 21 6 3"></polygon>
+              </svg>
+            )}
+          </button>
+          <div className="tl-capsule-red">
+            <div className="tl-capsule-gloss"></div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -4505,13 +4505,16 @@ footer {
   bottom: auto;
 }
 
-/* 胶囊挂件 */
+/* 胶囊外壳容器 (支持向心收缩与破壳延展) */
 .tl-bgm-dock-pill {
   display: flex;
   align-items: center;
-  gap: 10px;
+  position: relative;
+  overflow: hidden;
   height: 42px;
-  padding: 0 12px 0 6px;
+  min-width: 170px;
+  max-width: 230px;
+  padding: 0 10px 0 6px;
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: 9999px;
@@ -4519,10 +4522,20 @@ footer {
   cursor: grab;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  /* 弹性展开过渡 (Morph Out / Landing) */
+  transition:
+    width 0.28s cubic-bezier(0.34, 1.45, 0.64, 1),
+    min-width 0.28s cubic-bezier(0.34, 1.45, 0.64, 1),
+    max-width 0.28s cubic-bezier(0.34, 1.45, 0.64, 1),
+    height 0.28s cubic-bezier(0.34, 1.45, 0.64, 1),
+    padding 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.28s cubic-bezier(0.34, 1.45, 0.64, 1),
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.tl-bgm-dock-pill:hover {
+.tl-bgm-dock-pill:hover:not(.is-morphed) {
   transform: translateY(-2px);
   border-color: var(--accent);
   box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.18), 0 4px 10px -1px rgba(0, 0, 0, 0.08);
@@ -4542,8 +4555,20 @@ footer {
   }
 }
 
-.tl-bgm-breathe {
+.tl-bgm-breathe:not(.is-morphed) {
   animation: tlBreathe 3s infinite ease-in-out;
+}
+
+/* ═══════════ 左半侧形变单元 ═══════════ */
+.tl-morph-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  transition: width 0.22s cubic-bezier(0.25, 1, 0.5, 1), height 0.22s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* 迷你黑胶 */
@@ -4556,9 +4581,12 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  flex-shrink: 0;
+  position: absolute;
+  inset: 0;
   box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.8);
+  transition: opacity 0.18s ease, transform 0.22s cubic-bezier(0.34, 1.45, 0.64, 1);
+  opacity: 1;
+  transform: scale(1);
 }
 
 .tl-bgm-mini-vinyl-center {
@@ -4576,6 +4604,38 @@ footer {
 
 .spinning {
   animation: tlSpin 8s linear infinite;
+}
+
+/* 3D 曜石黑半壳 */
+.tl-capsule-black {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #3f3f46 0%, #18181b 40%, #09090b 100%);
+  border-radius: 9999px 0 0 9999px;
+  opacity: 0;
+  transform: scale(0.6) translateX(-8px);
+  transition: opacity 0.2s ease, transform 0.22s cubic-bezier(0.25, 1, 0.5, 1);
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ═══════════ 中间内容区 (向心坍缩 / 舒展露出) ═══════════ */
+.tl-morph-center {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 8px;
+  flex: 1;
+  min-width: 0;
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity 0.22s cubic-bezier(0.34, 1.45, 0.64, 1) 0.03s,
+    transform 0.22s cubic-bezier(0.34, 1.45, 0.64, 1) 0.03s,
+    margin 0.2s ease,
+    max-width 0.22s cubic-bezier(0.25, 1, 0.5, 1);
+  max-width: 160px;
+  overflow: hidden;
 }
 
 /* 声波律动条 */
@@ -4613,22 +4673,49 @@ footer {
   50% { height: 14px; }
 }
 
-/* 胶囊单行歌名（直显歌名，垂直居中） */
+/* 胶囊单行歌名 */
 .tl-bgm-dock-text {
   display: flex;
   align-items: center;
-  max-width: 150px;
   overflow: hidden;
 }
 
 .tl-bgm-dock-title {
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 600;
   color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1.2;
+}
+
+/* ═══════════ 中缝吸合金属圈 ═══════════ */
+.tl-capsule-seam {
+  width: 2.5px;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(120,120,120,0.6) 45%, rgba(20,20,20,0.9) 100%);
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  transform: translateX(-50%) scaleY(0);
+  opacity: 0;
+  z-index: 5;
+  box-shadow: 0 0 3px rgba(0,0,0,0.8);
+  transition: opacity 0.15s ease, transform 0.18s cubic-bezier(0.18, 0.9, 0.32, 1.2);
+}
+
+/* ═══════════ 右半侧形变单元 ═══════════ */
+.tl-morph-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  transition: width 0.22s cubic-bezier(0.25, 1, 0.5, 1), height 0.22s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* 快捷操作按键 */
@@ -4643,9 +4730,11 @@ footer {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  flex-shrink: 0;
-  transition: transform 0.15s ease, background 0.15s ease;
-  margin-left: 2px;
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.18s ease, transform 0.22s cubic-bezier(0.34, 1.45, 0.64, 1), background 0.15s ease;
+  opacity: 1;
+  transform: scale(1);
 }
 
 .tl-bgm-dock-action-btn:hover {
@@ -4656,75 +4745,107 @@ footer {
   transform: scale(0.95);
 }
 
-/* ═══════════ 拖拽时：左黑右红 3D 仿真药丸胶囊 ═══════════ */
-.tl-bgm-dock-pill.is-morphed {
-  padding: 0;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-}
-
-.tl-bgm-real-capsule {
-  display: flex;
-  width: 84px;
-  height: 36px;
-  border-radius: 9999px;
-  overflow: hidden;
-  position: relative;
-  box-shadow:
-    0 20px 40px -4px rgba(0, 0, 0, 0.45),
-    0 8px 16px -2px rgba(0, 0, 0, 0.3),
-    0 0 20px rgba(233, 104, 58, 0.4);
-  border: 1.5px solid rgba(255, 255, 255, 0.35);
-  cursor: grabbing;
-  user-select: none;
-  background: #111;
-  animation: tlCapsulePop 0.22s cubic-bezier(0.18, 0.9, 0.32, 1.2);
-}
-
-@keyframes tlCapsulePop {
-  from { transform: scale(0.85); opacity: 0.7; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-/* 左半部：极夜曜石黑 */
-.tl-capsule-black {
-  flex: 1;
-  background: linear-gradient(180deg, #3f3f46 0%, #18181b 40%, #09090b 100%);
-  position: relative;
-  overflow: hidden;
-}
-
-/* 右半部：高光绯红/珊瑚朱红 */
+/* 3D 高光朱红半壳 */
 .tl-capsule-red {
-  flex: 1;
+  position: absolute;
+  inset: 0;
   background: linear-gradient(180deg, #ff7a59 0%, #e9683a 42%, #b53812 100%);
-  position: relative;
+  border-radius: 0 9999px 9999px 0;
+  opacity: 0;
+  transform: scale(0.6) translateX(8px);
+  transition: opacity 0.2s ease, transform 0.22s cubic-bezier(0.25, 1, 0.5, 1);
+  pointer-events: none;
   overflow: hidden;
-}
-
-/* 仿真接缝金属反光圈 */
-.tl-capsule-seam {
-  width: 2.5px;
-  height: 100%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(120,120,120,0.6) 45%, rgba(20,20,20,0.9) 100%);
-  position: relative;
-  z-index: 3;
-  box-shadow: 0 0 2px rgba(0,0,0,0.7);
 }
 
 /* 3D 胶囊顶面圆弧高光 */
 .tl-capsule-gloss {
   position: absolute;
   top: 3px;
-  left: 4px;
-  right: 4px;
+  left: 3px;
+  right: 3px;
   height: 11px;
   border-radius: 9999px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.05) 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.05) 100%);
   pointer-events: none;
+}
+
+/* ═══════════ 形变激活态：左右向心相吸成 3D 胶囊 ═══════════ */
+.tl-bgm-dock-pill.is-morphed {
+  width: 84px !important;
+  min-width: 84px !important;
+  max-width: 84px !important;
+  height: 36px !important;
+  padding: 0 !important;
+  background: #111 !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.35) !important;
+  box-shadow:
+    0 20px 40px -4px rgba(0, 0, 0, 0.45),
+    0 8px 16px -2px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(233, 104, 58, 0.4) !important;
+  cursor: grabbing;
+  /* 极速相吸过渡 (Morph In) */
+  transition:
+    width 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+    min-width 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+    max-width 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+    padding 0.18s ease,
+    background 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.2s ease,
+    transform 0.1s linear;
+}
+
+/* 左侧向中心扩展为黑半壳 */
+.tl-bgm-dock-pill.is-morphed .tl-morph-left {
+  width: 42px;
+  height: 100%;
+}
+
+.tl-bgm-dock-pill.is-morphed .tl-bgm-mini-vinyl {
+  opacity: 0;
+  transform: scale(0.3) translateX(-10px);
+  pointer-events: none;
+}
+
+.tl-bgm-dock-pill.is-morphed .tl-capsule-black {
+  opacity: 1;
+  transform: scale(1) translateX(0);
+}
+
+/* 中间内容向心坍缩 */
+.tl-bgm-dock-pill.is-morphed .tl-morph-center {
+  max-width: 0 !important;
+  margin: 0 !important;
+  opacity: 0 !important;
+  transform: scale(0.4) !important;
+  pointer-events: none;
+  transition: opacity 0.14s ease, transform 0.16s ease, max-width 0.18s ease, margin 0.18s ease;
+}
+
+/* 中缝金属接缝吸合定型 */
+.tl-bgm-dock-pill.is-morphed .tl-capsule-seam {
+  opacity: 1;
+  transform: translateX(-50%) scaleY(1);
+  transition-delay: 0.06s;
+}
+
+/* 右侧向中心吸附为红半壳 */
+.tl-bgm-dock-pill.is-morphed .tl-morph-right {
+  width: 42px;
+  height: 100%;
+}
+
+.tl-bgm-dock-pill.is-morphed .tl-bgm-dock-action-btn {
+  opacity: 0;
+  transform: scale(0.3) translateX(10px);
+  pointer-events: none;
+}
+
+.tl-bgm-dock-pill.is-morphed .tl-capsule-red {
+  opacity: 1;
+  transform: scale(1) translateX(0);
 }
 
 /* ═══════════ 展开态面板 ═══════════ */

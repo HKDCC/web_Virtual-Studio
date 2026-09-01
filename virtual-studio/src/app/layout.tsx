@@ -5,6 +5,8 @@ import { MagazineFooter } from "@/components/magazine/MagazineFooter";
 import { RevealObserver } from "@/components/magazine/RevealObserver";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AntigravityParticles } from "@/components/common/AntigravityParticles";
+import { AudioPlayerProvider } from "@/components/audio/AudioPlayerContext";
+import { FloatingBgmPlayer } from "@/components/audio/FloatingBgmPlayer";
 import { fetchMagazineData } from "@/lib/magazineData";
 
 export const metadata: Metadata = {
@@ -41,21 +43,25 @@ export default async function RootLayout({
         </a>
         <AntigravityParticles />
         <ThemeProvider>
-          <MagazineHeader
-            books={data.books}
-            lab={data.lab}
-            tools={data.tools}
-            sites={data.sites}
-            pause={data.pause}
-            timeline={data.timeline}
-            notes={data.notes}
-            log={data.log}
-          />
-          <main id="main">{children}</main>
-          <MagazineFooter />
-          <RevealObserver />
+          <AudioPlayerProvider>
+            <MagazineHeader
+              books={data.books}
+              lab={data.lab}
+              tools={data.tools}
+              sites={data.sites}
+              pause={data.pause}
+              timeline={data.timeline}
+              notes={data.notes}
+              log={data.log}
+            />
+            <main id="main">{children}</main>
+            <MagazineFooter />
+            <FloatingBgmPlayer />
+            <RevealObserver />
+          </AudioPlayerProvider>
         </ThemeProvider>
       </body>
     </html>
   );
 }
+

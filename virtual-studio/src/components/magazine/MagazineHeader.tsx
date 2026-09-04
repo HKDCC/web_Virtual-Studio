@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SearchOverlay } from "./SearchOverlay";
-import { BookItem, LabItem, ToolItem, SiteItem, PauseItem, TimelineItem, NoteItem, LogItem } from "@/lib/magazineData";
+import type { BookItem, LabItem, ToolItem, SiteItem, PauseItem, TimelineItem, NoteItem, LogItem } from "@/types/magazine";
 
 interface MagazineHeaderProps {
   books?: BookItem[];

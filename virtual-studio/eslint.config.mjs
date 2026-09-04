@@ -8,6 +8,7 @@ const __dirname = dirname(__filename);
 const compat = new FlatCompat({ baseDirectory: __dirname });
 
 export default [
+  { ignores: ["scripts/**/*.cjs"] },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];
 

@@ -8,7 +8,7 @@ import { LabDetailHeader } from "@/components/detail/LabDetailHeader";
 import { PauseDetailHeader } from "@/components/detail/PauseDetailHeader";
 import { NoteDetailHeader } from "@/components/detail/NoteDetailHeader";
 import { DetailBreadcrumb } from "@/components/detail/DetailBreadcrumb";
-import { FALLBACK_SITE_DATA } from "@/lib/magazineData";
+import { FALLBACK_SITE_DATA } from "@/data/fallbackMagazineData";
 
 type RichText = {
   plain_text: string;

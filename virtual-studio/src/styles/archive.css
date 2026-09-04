@@ -1,0 +1,298 @@
+/* ═══════════════ 全量归档页 (Archive & Notes Page Layout) ═══════════════ */
+.archive-page-wrap {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 40px clamp(20px, 4vw, 40px) 100px;
+  min-height: 80vh;
+}
+
+.archive-header-box {
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 24px;
+}
+
+.archive-breadcrumb-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink-3);
+  margin-bottom: 16px;
+}
+
+.archive-breadcrumb-link {
+  color: var(--ink-2);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.archive-breadcrumb-link:hover {
+  color: var(--accent);
+}
+
+.archive-page-title {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  font-weight: 900;
+  line-height: 1.2;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.archive-page-desc {
+  font-size: 0.95rem;
+  color: var(--ink-2);
+  line-height: 1.6;
+  max-width: 780px;
+}
+
+/* 选项卡切换器 (Tab Switcher) */
+.archive-tab-switcher {
+  display: inline-flex;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  padding: 4px;
+  border-radius: 10px;
+  gap: 4px;
+  margin-bottom: 28px;
+}
+
+.archive-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 7px;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-2);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.archive-tab-btn:hover {
+  color: var(--ink);
+}
+
+.archive-tab-btn.active {
+  background: var(--card);
+  color: var(--accent);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.archive-tab-count {
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--ink-3);
+}
+
+.archive-tab-btn.active .archive-tab-count {
+  background: var(--accent-soft);
+  border-color: rgba(194, 65, 12, 0.2);
+  color: var(--accent);
+}
+
+/* 搜索与多维过滤区 (Search & Filter Section) */
+.archive-filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px 22px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+}
+
+.archive-search-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 9px 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.archive-search-box:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.archive-search-icon {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.archive-search-input-field {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 13.5px;
+  font-family: inherit;
+  color: var(--ink);
+  outline: none;
+}
+
+.archive-search-clear {
+  background: none;
+  border: none;
+  color: var(--ink-3);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: color 0.15s;
+}
+
+.archive-search-clear:hover {
+  color: var(--accent);
+}
+
+.archive-search-stats {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+/* 标签云过滤栏 (Tag Cloud Filter Bar) */
+.archive-tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+}
+
+.archive-tag-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.archive-tag-filter-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.archive-tag-filter-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(194, 65, 12, 0.25);
+}
+
+.archive-tag-filter-btn .tag-badge-num {
+  font-size: 10px;
+  opacity: 0.8;
+}
+
+/* 笔记 2 列杂志瀑布流网格 (Notes 2-Col Magazine Grid) */
+.notes-archive-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 768px) {
+  .notes-archive-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1150px) {
+  .notes-archive-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+  }
+}
+
+.notes-archive-grid .note-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0;
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+  height: 100%;
+}
+
+.notes-archive-grid .note-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+}
+
+.notes-archive-grid .note-title {
+  margin-top: 14px;
+  margin-bottom: 8px;
+  font-size: 1.18rem;
+  line-height: 1.4;
+}
+
+.notes-archive-grid .note-excerpt {
+  flex: 1;
+  margin-top: 8px;
+  margin-bottom: 16px;
+  line-height: 1.65;
+  font-size: 0.9rem;
+}
+
+.notes-archive-grid .note-links {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px dashed var(--line);
+}
+
+.archive-empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: var(--card);
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  color: var(--ink-3);
+  font-size: 14px;
+}
+
+.archive-empty-reset-btn {
+  margin-top: 12px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid rgba(194, 65, 12, 0.2);
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.archive-empty-reset-btn:hover {
+  background: var(--accent);
+  color: #fff;
+}

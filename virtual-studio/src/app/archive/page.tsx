@@ -1,5 +1,10 @@
 import { fetchMagazineData } from "@/lib/magazineData";
-import { ArchiveTabs, ArchiveBook, ArchiveNote } from "@/components/archive/ArchiveTabs";
+import {
+  ArchiveTabs,
+  ArchiveBook,
+  ArchiveNote,
+  LocalNoteFile,
+} from "@/components/archive/ArchiveTabs";
 import fs from "fs";
 import path from "path";
 
@@ -9,21 +14,33 @@ export const revalidate = 0;
 export default async function ArchivePage() {
   const data = await fetchMagazineData();
 
-  const localNotes: string[] = [];
+  const localNotes: LocalNoteFile[] = [];
   try {
     const articlesDir = path.join(process.cwd(), "public", "articles");
     if (fs.existsSync(articlesDir)) {
       const artFiles = fs.readdirSync(articlesDir).filter(
-        (f) => f.endsWith(".html") || f.endsWith(".md")
+        (f) => (f.endsWith(".html") || f.endsWith(".md")) && !f.startsWith("【读书笔记】")
       );
-      localNotes.push(...artFiles);
+      localNotes.push(
+        ...artFiles.map((name) => ({
+          name,
+          url: `/articles/${encodeURIComponent(name)}`,
+          format: name.endsWith(".md") ? ("md" as const) : ("html" as const),
+        }))
+      );
     }
     const notesDir = path.join(process.cwd(), "public", "notes");
     if (fs.existsSync(notesDir)) {
       const nFiles = fs.readdirSync(notesDir).filter(
         (f) => f.endsWith(".html") || f.endsWith(".md")
       );
-      localNotes.push(...nFiles);
+      localNotes.push(
+        ...nFiles.map((name) => ({
+          name,
+          url: `/notes/${encodeURIComponent(name)}`,
+          format: name.endsWith(".md") ? ("md" as const) : ("html" as const),
+        }))
+      );
     }
   } catch (err) {
     console.error("Failed to read local notes directory:", err);
@@ -55,7 +72,9 @@ export default async function ArchivePage() {
     <ArchiveTabs
       books={books}
       notes={notes}
-      localNotes={Array.from(new Set(localNotes))}
+      localNotes={localNotes.filter(
+        (note, index, notesList) => notesList.findIndex((candidate) => candidate.url === note.url) === index
+      )}
     />
   );
 }

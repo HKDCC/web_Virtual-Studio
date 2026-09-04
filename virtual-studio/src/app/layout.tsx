@@ -13,9 +13,9 @@ export const metadata: Metadata = {
   title: "tl; // lab — Virtual Studio · 杂志版",
   description: "基于 Next.js + Notion 的杂志编辑式个人站（方案 C）",
   icons: {
-    icon: "/icon.png",
+    icon: "/logo.png",
     shortcut: "/favicon.ico",
-    apple: "/icon.png",
+    apple: "/logo.png",
   },
 };
 
@@ -64,4 +64,3 @@ export default async function RootLayout({
     </html>
   );
 }
-

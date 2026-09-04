@@ -3,6 +3,7 @@ import { env } from "@/lib/env";
 import { getDate, getMultiSelect, getPageTitle, getRichText, getUrl, getNumber } from "@/lib/notionHelpers";
 import { SetupNotice } from "@/components/SetupNotice";
 import { ArchiveTabs } from "@/components/archive/ArchiveTabs";
+import type { LocalNoteFile } from "@/components/archive/ArchiveTabs";
 import fs from "fs";
 import path from "path";
 
@@ -45,13 +46,18 @@ export default async function Demo0ArchivePage() {
     queryDatabaseAll({ databaseId: notesDb, pageSize: 50, maxPages: 6 }),
   ]);
 
-  let localNotes: string[] = [];
+  let localNotes: LocalNoteFile[] = [];
   try {
     const notesDir = path.join(process.cwd(), "public", "notes");
     if (fs.existsSync(notesDir)) {
-      localNotes = fs.readdirSync(notesDir).filter(
-        (f) => f.endsWith(".html") || f.endsWith(".md")
-      );
+      localNotes = fs
+        .readdirSync(notesDir)
+        .filter((name) => name.endsWith(".html") || name.endsWith(".md"))
+        .map((name) => ({
+          name,
+          url: `/notes/${encodeURIComponent(name)}`,
+          format: name.endsWith(".md") ? ("md" as const) : ("html" as const),
+        }));
     }
   } catch (err) {
     console.error("Failed to read local notes directory:", err);

@@ -21,9 +21,9 @@ async function main() {
     // We try to fetch other axes if available
     let codeData = { models: [] }, agentData = { models: [] }, visionData = { models: [] };
     
-    try { codeData = await fetchJson(`${REPO_URL}/${datePath}/code.json`); } catch (e) { console.log("No code data"); }
-    try { agentData = await fetchJson(`${REPO_URL}/${datePath}/agent.json`); } catch (e) { console.log("No agent data"); }
-    try { visionData = await fetchJson(`${REPO_URL}/${datePath}/vision.json`); } catch (e) { console.log("No vision data"); }
+    try { codeData = await fetchJson(`${REPO_URL}/${datePath}/code.json`); } catch { console.log("No code data"); }
+    try { agentData = await fetchJson(`${REPO_URL}/${datePath}/agent.json`); } catch { console.log("No agent data"); }
+    try { visionData = await fetchJson(`${REPO_URL}/${datePath}/vision.json`); } catch { console.log("No vision data"); }
     
     // Create lookup maps
     const mapByModel = (data) => {

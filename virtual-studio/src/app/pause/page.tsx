@@ -34,7 +34,7 @@ export default async function PausePage() {
       <div className="pause-masonry">
         {items.map((p, idx) => {
           const title = p?.t || "";
-          const coverUrl = p?.img || `/photos/photo_${(idx % 10) + 1}_.jpeg`;
+          const coverUrl = p?.img || `/photos/photo_${(idx % 10) + 1}_.webp`;
           const date = p?.d || "";
           const location = p?.loc || "";
           const emoji = title?.trim()?.slice(0, 2) || "🌿";

@@ -16,9 +16,10 @@ def fetch_latest_pkl():
     pkl_files.sort()
     latest_pkl = pkl_files[-1]
     
-    # We save it in a data dir if needed, but let's just use current dir for temp
-    pkl_path = os.path.join(os.path.dirname(__file__), "..", "data", "latest.pkl")
-    os.makedirs(os.path.dirname(pkl_path), exist_ok=True)
+    # The pickle is an intermediate download, not deployable site data.
+    cache_dir = os.path.join(os.path.dirname(__file__), "..", ".cache", "arena")
+    pkl_path = os.path.join(cache_dir, "latest.pkl")
+    os.makedirs(cache_dir, exist_ok=True)
     
     pkl_url = f"https://huggingface.co/spaces/lmsys/chatbot-arena-leaderboard/resolve/main/{latest_pkl}"
     print(f"Downloading {latest_pkl} from HF...")

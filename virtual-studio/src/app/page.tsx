@@ -187,8 +187,8 @@ export default async function HomePage() {
             const noteTags = Array.isArray(n?.tags) ? n.tags : [];
             const noteText = n?.text || "";
 
-            const heroLight = n?.heroLight || (n?.id ? `/notes_heroes/${n.id}_light.png` : null);
-            const heroDark = n?.heroDark || (n?.id ? `/notes_heroes/${n.id}_dark.png` : null);
+            const heroLight = n?.heroLight || (n?.id ? `/notes_heroes/${n.id}_light.webp` : null);
+            const heroDark = n?.heroDark || (n?.id ? `/notes_heroes/${n.id}_dark.webp` : null);
             const targetUrl = n?.htmlContent || (n?.id ? `/p/${n.id}` : "#notes");
             const isExternal = Boolean(n?.htmlContent);
 

@@ -27,6 +27,12 @@ export type ArchiveNote = {
   htmlContent?: string | null;
 };
 
+export type LocalNoteFile = {
+  name: string;
+  url: string;
+  format: "html" | "md";
+};
+
 type MappedNote = {
   id: string;
   title: string;
@@ -71,8 +77,24 @@ function BookCover(props: { title: string; coverUrl?: string | null; tone: numbe
   );
 }
 
-function getRelatedNotes(book: ArchiveBook, allNotes: ArchiveNote[], localFiles: string[]): MappedNote[] {
+function normalizeNoteUrl(url: string): string {
+  try {
+    return decodeURIComponent(new URL(url, "https://quaxstudio.xyz").pathname).replace(/\/$/, "");
+  } catch {
+    return url;
+  }
+}
+
+function getRelatedNotes(book: ArchiveBook, allNotes: ArchiveNote[], localFiles: LocalNoteFile[]): MappedNote[] {
   const related: MappedNote[] = [];
+  const seenUrls = new Set<string>();
+
+  const addRelatedNote = (note: MappedNote) => {
+    const normalizedUrl = normalizeNoteUrl(note.url);
+    if (seenUrls.has(normalizedUrl)) return;
+    seenUrls.add(normalizedUrl);
+    related.push(note);
+  };
 
   const isMatch = (bookTitle: string, bookAuthor: string, targetName: string) => {
     const bt = bookTitle.toLowerCase();
@@ -97,7 +119,7 @@ function getRelatedNotes(book: ArchiveBook, allNotes: ArchiveNote[], localFiles:
   // 1. Notion Notes
   allNotes.forEach((n) => {
     if (isMatch(book.title, book.author || "", n.title) || n.tags.some((t) => isMatch(book.title, book.author || "", t))) {
-      related.push({
+      addRelatedNote({
         id: n.id,
         title: n.title,
         type: n.htmlContent ? "html" : "notion",
@@ -112,15 +134,14 @@ function getRelatedNotes(book: ArchiveBook, allNotes: ArchiveNote[], localFiles:
 
   // 2. Local Files
   localFiles.forEach((file) => {
-    if (isMatch(book.title, book.author || "", file)) {
-      const isMd = file.endsWith(".md");
-      let displayTitle = file.replace(/\.(html|md)$/, "");
+    if (isMatch(book.title, book.author || "", file.name)) {
+      let displayTitle = file.name.replace(/\.(html|md)$/, "");
       displayTitle = displayTitle.replace(/^【读书笔记】/, "");
-      related.push({
-        id: file,
+      addRelatedNote({
+        id: file.url,
         title: displayTitle,
-        type: isMd ? "md" : "html",
-        url: `/notes/${file}`,
+        type: file.format,
+        url: file.url,
       });
     }
   });
@@ -184,7 +205,7 @@ function renderStars(rating: number) {
   );
 }
 
-function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[]; localNotes: string[] }) {
+function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[]; localNotes: LocalNoteFile[] }) {
   const searchParams = useSearchParams();
   const initialTab = searchParams?.get("tab") === "notes" ? "notes" : "books";
   const [activeTab, setActiveTab] = useState<"books" | "notes">(initialTab);
@@ -500,8 +521,8 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
             <div className="notes-archive-grid">
               {filteredNotes.map((n) => {
                 const targetUrl = n.htmlContent || `/p/${n.id}`;
-                const heroLight = `/notes_heroes/${n.id}_light.png`;
-                const heroDark = `/notes_heroes/${n.id}_dark.png`;
+                const heroLight = `/notes_heroes/${n.id}_light.webp`;
+                const heroDark = `/notes_heroes/${n.id}_dark.webp`;
                 const isExternal = Boolean(n.htmlContent);
 
                 return (
@@ -758,7 +779,7 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
   );
 }
 
-export function ArchiveTabs(props: { books: ArchiveBook[]; notes: ArchiveNote[]; localNotes: string[] }) {
+export function ArchiveTabs(props: { books: ArchiveBook[]; notes: ArchiveNote[]; localNotes: LocalNoteFile[] }) {
   return (
     <Suspense fallback={<div className="shelf-empty">加载中...</div>}>
       <ArchiveTabsContent {...props} />

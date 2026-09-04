@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { BookItem, LabItem, ToolItem, SiteItem, PauseItem, TimelineItem, NoteItem, LogItem } from "@/lib/magazineData";
+import type { BookItem, LabItem, ToolItem, SiteItem, PauseItem, TimelineItem, NoteItem, LogItem } from "@/types/magazine";
 
 export interface SearchIndexItem {
   k: string;

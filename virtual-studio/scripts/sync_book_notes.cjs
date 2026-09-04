@@ -3,17 +3,19 @@ const path = require('path');
 const { Client } = require('@notionhq/client');
 require('dotenv').config({ path: path.join(__dirname, '..', '.env.local') });
 
+const SHOULD_SYNC_NOTION = process.argv.includes('--sync-notion');
 const NOTION_TOKEN = process.env.NOTION_TOKEN;
 const DB_NOTES_ID = process.env.NOTION_NOTES_DB_ID || '3254b57fe15a809990affde8cced6794';
+const SITE_ORIGIN = (process.env.SITE_ORIGIN || 'https://quaxstudio.xyz').replace(/\/$/, '');
 
-if (!NOTION_TOKEN) {
+if (SHOULD_SYNC_NOTION && !NOTION_TOKEN) {
   console.error('NOTION_TOKEN missing in .env.local!');
   process.exit(1);
 }
 
-const notion = new Client({ auth: NOTION_TOKEN });
+const notion = SHOULD_SYNC_NOTION ? new Client({ auth: NOTION_TOKEN }) : null;
 
-const SOURCE_DIR = 'D:\\Books\\AI笔记';
+const SOURCE_DIR = process.env.BOOK_NOTES_SOURCE_DIR || 'D:\\Books\\AI笔记';
 const TARGET_DIR = path.join(__dirname, '..', 'public', 'articles');
 
 if (!fs.existsSync(TARGET_DIR)) {
@@ -29,6 +31,35 @@ function toSlug(filename) {
     .replace(/[\s_—–]+/g, '-')
     .replace(/[^\w\u4e00-\u9fa5\.-]/g, '')
     .toLowerCase() + '.html';
+}
+
+function escapeHtml(value) {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function createLegacyRedirectHtml(slug) {
+  const target = `./${encodeURI(slug)}`;
+  const escapedTarget = escapeHtml(target);
+
+  return `<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex,follow">
+  <meta http-equiv="refresh" content="0;url=${escapedTarget}">
+  <link rel="canonical" href="${escapedTarget}">
+  <title>正在跳转…</title>
+</head>
+<body>
+  <p>文章地址已更新，正在跳转。<a href="${escapedTarget}">如未自动跳转，请点击这里</a>。</p>
+  <script>location.replace(${JSON.stringify(target)});</script>
+</body>
+</html>
+`;
 }
 
 function extractMetadata(filepath, filename) {
@@ -101,8 +132,9 @@ async function main() {
   const bookFiles = allFiles.filter(f => f.includes('【读书笔记】') && f.endsWith('.html'));
   console.log(`Found ${bookFiles.length} book note HTML files.`);
 
-  console.log('--- Step 2: Copying HTML files to public/articles/ ---');
+  console.log('--- Step 2: Generating canonical articles and compatibility redirects ---');
   const items = [];
+  const legacyRedirects = [];
   for (const filename of bookFiles) {
     const srcPath = path.join(SOURCE_DIR, filename);
     const meta = extractMetadata(srcPath, filename);
@@ -111,14 +143,39 @@ async function main() {
     const targetSlugPath = path.join(TARGET_DIR, meta.slug);
     fs.copyFileSync(srcPath, targetSlugPath);
 
-    // Also copy with exact filename for backward-compatibility
+    // Only preserve legacy filenames that were already published. New articles
+    // are exposed through their canonical slug and do not need a second URL.
     const targetExactPath = path.join(TARGET_DIR, filename);
-    fs.copyFileSync(srcPath, targetExactPath);
+    if (fs.existsSync(targetExactPath)) {
+      fs.writeFileSync(targetExactPath, createLegacyRedirectHtml(meta.slug), 'utf8');
+      legacyRedirects.push({ filename, slug: meta.slug });
+    }
 
-    meta.url = `https://quaxstudio.xyz/articles/${meta.slug}`;
+    meta.url = `${SITE_ORIGIN}/articles/${meta.slug}`;
     items.push(meta);
   }
-  console.log(`Copied ${items.length} files to public/articles/`);
+  console.log(`Generated ${items.length} canonical files and ${legacyRedirects.length} legacy redirects.`);
+
+  for (const item of items) {
+    const canonicalPath = path.join(TARGET_DIR, item.slug);
+    if (!fs.existsSync(canonicalPath)) {
+      throw new Error(`Missing canonical article: ${canonicalPath}`);
+    }
+  }
+
+  for (const legacy of legacyRedirects) {
+    const legacyPath = path.join(TARGET_DIR, legacy.filename);
+    const redirectTarget = `./${encodeURI(legacy.slug)}`;
+    const legacyHtml = fs.readFileSync(legacyPath, 'utf8');
+    if (!legacyHtml.includes(`location.replace(${JSON.stringify(redirectTarget)})`)) {
+      throw new Error(`Invalid legacy redirect: ${legacyPath}`);
+    }
+  }
+
+  if (!SHOULD_SYNC_NOTION) {
+    console.log('Local article generation complete. Notion sync was not requested.');
+    return;
+  }
 
   console.log('--- Step 3: Querying existing Notion DB_Notes ---');
   let existingPages = [];
@@ -229,4 +286,7 @@ async function main() {
   console.log(`Notion pages updated: ${updatedCount}`);
 }
 
-main();
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});

@@ -2,13 +2,15 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { BookItem } from "@/lib/magazineData";
+import { useRouter } from "next/navigation";
+import type { BookItem } from "@/types/magazine";
 
 interface ArchiveSectionProps {
   books: BookItem[];
 }
 
 export function ArchiveSection({ books = [] }: ArchiveSectionProps) {
+  const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState("全部");
 
   const categories = useMemo(() => {
@@ -54,8 +56,14 @@ export function ArchiveSection({ books = [] }: ArchiveSectionProps) {
         </div>
         <div className="booklist" id="bookList">
           {filteredBooks.map((b, i) => {
-            const cardInner = (
-              <div className="bookrow" data-cat={b.c}>
+            return (
+              <div
+                key={b.id || i}
+                className="bookrow"
+                data-cat={b.c}
+                onClick={() => b.id && router.push(`/p/${b.id}`)}
+                style={{ cursor: b.id ? "pointer" : undefined }}
+              >
                 <span className="idx">{String(i + 1).padStart(2, "0")}</span>
                 
                 {/* Book Cover Thumbnail */}
@@ -81,7 +89,15 @@ export function ArchiveSection({ books = [] }: ArchiveSectionProps) {
 
                 <div className="b-main">
                   <div className="b-title-row">
-                    <h3>{b.t}</h3>
+                    <h3>
+                      {b.id ? (
+                        <Link href={`/p/${b.id}`} style={{ color: "inherit", textDecoration: "none" }}>
+                          {b.t}
+                        </Link>
+                      ) : (
+                        b.t
+                      )}
+                    </h3>
                     {b.rating && (
                       <span className="book-stars">
                         {"★".repeat(Math.min(5, Math.floor(b.rating)))} <b style={{ color: "var(--accent)" }}>{b.rating}</b>
@@ -111,15 +127,6 @@ export function ArchiveSection({ books = [] }: ArchiveSectionProps) {
                 </div>
               </div>
             );
-
-            if (b.id) {
-              return (
-                <Link key={b.id || i} href={`/p/${b.id}`} style={{ textDecoration: "none", color: "inherit" }}>
-                  {cardInner}
-                </Link>
-              );
-            }
-            return <div key={i}>{cardInner}</div>;
           })}
         </div>
       </div>

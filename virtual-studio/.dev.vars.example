@@ -9,4 +9,5 @@ NOTION_WORKFLOW_DB_ID=your-workflow-db-id
 NOTION_LAB_DB_ID=your-lab-db-id
 NOTION_PAUSE_DB_ID=your-pause-db-id
 NOTION_CHANGELOG_DB_ID=your-changelog-db-id
+NOTION_AINEWS_DB_ID=your-ai-news-db-id
 REVALIDATE_TOKEN=your-revalidate-token

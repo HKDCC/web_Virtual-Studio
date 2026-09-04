@@ -1,0 +1,22 @@
+# Repository-level local files
+.claude/
+.idea/
+.vscode/
+Thumbs.db
+Desktop.ini
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# The deployable application keeps its own detailed ignore rules.
+virtual-studio/.env*
+virtual-studio/.dev.vars
+virtual-studio/.next/
+virtual-studio/.open-next/
+virtual-studio/.wrangler/
+virtual-studio/node_modules/
+virtual-studio/.cache/
+virtual-studio/scratch/
+virtual-studio/*.tsbuildinfo
+virtual-studio/data/*.pkl

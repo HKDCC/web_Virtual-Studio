@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { PauseItem } from "@/lib/magazineData";
+import type { PauseItem } from "@/types/magazine";
 
 interface PauseSectionProps {
   pause?: PauseItem[];
@@ -26,7 +26,7 @@ export function PauseSection({ pause = [] }: PauseSectionProps) {
         <div className="strip" id="strip">
           {safePause.map((p, i) => {
             const title = typeof p?.t === "string" ? p.t : "照片";
-            const img = typeof p?.img === "string" && p.img ? p.img : `/photos/photo_${(i % 10) + 1}_.jpeg`;
+            const img = typeof p?.img === "string" && p.img ? p.img : `/photos/photo_${(i % 10) + 1}_.webp`;
             const date = typeof p?.d === "string" ? p.d : "";
             const loc = typeof p?.loc === "string" ? p.loc : "";
             const pageId = p?.id;
@@ -43,7 +43,7 @@ export function PauseSection({ pause = [] }: PauseSectionProps) {
                     onError={(e) => {
                       const target = e.currentTarget as HTMLImageElement;
                       if (!target.src.includes("/photos/")) {
-                        target.src = `/photos/photo_${(i % 10) + 1}_.jpeg`;
+                        target.src = `/photos/photo_${(i % 10) + 1}_.webp`;
                       }
                     }}
                   />

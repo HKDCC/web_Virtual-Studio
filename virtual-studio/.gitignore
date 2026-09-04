@@ -13,3 +13,8 @@ dist
 coverage
 .DS_Store
 scratch/
+.cache/
+data/*.pkl
+*.log
+Thumbs.db
+Desktop.ini

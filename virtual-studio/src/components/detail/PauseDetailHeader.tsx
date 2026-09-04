@@ -57,7 +57,7 @@ export function PauseDetailHeader(props: {
   const rawDate = dateVal(p["Date"]) || richTextPlain(p["Date"]) || "2026·05";
   const dateStr = rawDate.replace(/-/g, "·");
   const desc = richTextPlain(p["Description"]) || "";
-  const photoUrl = firstFileUrl(p["Cover"]) || props.pageCover || "/photos/photo_1_.jpeg";
+  const photoUrl = firstFileUrl(p["Cover"]) || props.pageCover || "/photos/photo_1_.webp";
 
   return (
     <div className="pause-detail-header-wrapper">

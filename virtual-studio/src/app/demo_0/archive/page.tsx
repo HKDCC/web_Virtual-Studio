@@ -52,7 +52,7 @@ export default async function Demo0ArchivePage() {
     if (fs.existsSync(notesDir)) {
       localNotes = fs
         .readdirSync(notesDir)
-        .filter((name) => name.endsWith(".html") || name.endsWith(".md"))
+        .filter((name) => (name.endsWith(".html") || name.endsWith(".md")) && !name.startsWith("【读书笔记】"))
         .map((name) => ({
           name,
           url: `/notes/${encodeURIComponent(name)}`,

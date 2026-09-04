@@ -32,7 +32,7 @@ export default async function ArchivePage() {
     const notesDir = path.join(process.cwd(), "public", "notes");
     if (fs.existsSync(notesDir)) {
       const nFiles = fs.readdirSync(notesDir).filter(
-        (f) => f.endsWith(".html") || f.endsWith(".md")
+        (f) => (f.endsWith(".html") || f.endsWith(".md")) && !f.startsWith("【读书笔记】")
       );
       localNotes.push(
         ...nFiles.map((name) => ({

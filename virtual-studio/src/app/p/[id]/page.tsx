@@ -1,7 +1,6 @@
 import { NotionBlocks } from "@/components/NotionBlocks";
 import { getPageTitle } from "@/lib/notionHelpers";
-import { listBlockChildrenAll, notion, type NotionFullBlock } from "@/lib/notion";
-import Link from "next/link";
+import { listBlockChildrenAll, notion, withNotionDeadline, type NotionFullBlock } from "@/lib/notion";
 import { TableOfContentsWrapper } from "@/components/TableOfContentsWrapper";
 import { BookDetailHeader } from "@/components/detail/BookDetailHeader";
 import { LabDetailHeader } from "@/components/detail/LabDetailHeader";
@@ -9,6 +8,9 @@ import { PauseDetailHeader } from "@/components/detail/PauseDetailHeader";
 import { NoteDetailHeader } from "@/components/detail/NoteDetailHeader";
 import { DetailBreadcrumb } from "@/components/detail/DetailBreadcrumb";
 import { FALLBACK_SITE_DATA } from "@/data/fallbackMagazineData";
+import { DetailLoadError } from "@/components/detail/DetailLoadError";
+
+const DETAIL_LOAD_DEADLINE_MS = 7000;
 
 type RichText = {
   plain_text: string;
@@ -62,12 +64,26 @@ export default async function NotionPageRoute(props: {
   let blocks: NotionFullBlock[] = [];
 
   try {
-    const client = notion();
-    const res = await client.pages.retrieve({ page_id: id });
-    if ("properties" in res) {
-      page = res as unknown as Record<string, unknown>;
-      blocks = await listBlockChildrenAll({ blockId: id });
-    }
+    const loaded = await withNotionDeadline(
+      (async () => {
+        const client = notion();
+        const res = await client.pages.retrieve({ page_id: id });
+        if ("properties" in res) {
+          const pageRecord = res as unknown as Record<string, unknown>;
+
+          // HTML-backed notes are already complete documents. Avoid a second,
+          // potentially expensive block-pagination request for them.
+          const pageProperties = (res as unknown as { properties?: Record<string, unknown> }).properties ?? {};
+          const loadedBlocks = getHtmlContent(pageProperties) ? [] : await listBlockChildrenAll({ blockId: id });
+          return { page: pageRecord, blocks: loadedBlocks };
+        }
+        return { page: null, blocks: [] as NotionFullBlock[] };
+      })(),
+      DETAIL_LOAD_DEADLINE_MS,
+      `Notion detail ${id}`,
+    );
+    page = loaded.page;
+    blocks = loaded.blocks;
   } catch (e) {
     console.warn("Could not retrieve Notion page:", id, e);
   }
@@ -149,15 +165,7 @@ export default async function NotionPageRoute(props: {
       pageCover = fbPause.img;
       pageIcon = { type: "emoji", value: "🌿" };
     } else {
-      return (
-        <div className="wrap" style={{ padding: "80px 24px", textAlign: "center" }}>
-          <h2 style={{ fontFamily: "var(--serif)", fontSize: "1.5rem", marginBottom: "16px" }}>内容未找到或已归档</h2>
-          <p style={{ color: "var(--ink-2)", marginBottom: "24px" }}>该条目可能已被移除或暂未发布。</p>
-          <Link href="/" className="version-pill" style={{ display: "inline-block", padding: "8px 18px" }}>
-            ← 返回首页
-          </Link>
-        </div>
-      );
+      return <DetailLoadError retryHref={`/p/${encodeURIComponent(id)}`} backHref="/archive" />;
     }
   }
 

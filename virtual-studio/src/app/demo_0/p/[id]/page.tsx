@@ -1,9 +1,12 @@
 import { NotionBlocks } from "@/components/NotionBlocks";
 import { getPageTitle } from "@/lib/notionHelpers";
-import { listBlockChildrenAll, notion } from "@/lib/notion";
+import { listBlockChildrenAll, notion, withNotionDeadline } from "@/lib/notion";
 import Link from "next/link";
 import { BookOverviewHeader } from "@/components/BookOverviewHeader";
 import { TableOfContentsWrapper } from "@/components/TableOfContentsWrapper";
+import { DetailLoadError } from "@/components/detail/DetailLoadError";
+
+const DETAIL_LOAD_DEADLINE_MS = 7000;
 
 type RichText = {
   plain_text: string;
@@ -44,14 +47,36 @@ export default async function Demo0NotionPageRoute(props: { params: Promise<{ id
   const { id } = await props.params;
   const { from, embed } = await props.searchParams;
 
-  const page = await notion().pages.retrieve({ page_id: id });
-  if (page.object !== "page") {
-    return <div style={{ padding: "40px 48px" }}>Not a page.</div>;
+  let page: { object?: string; properties?: Record<string, unknown> } | null = null;
+  let blocks: Awaited<ReturnType<typeof listBlockChildrenAll>> = [];
+
+  try {
+    const loaded = await withNotionDeadline(
+      (async () => {
+        const res = await notion().pages.retrieve({ page_id: id });
+        if (res.object === "page") {
+          const pageRecord = res as unknown as { object: string; properties: Record<string, unknown> };
+          const pageProperties = (res as unknown as { properties?: Record<string, unknown> }).properties ?? {};
+          const loadedBlocks = getHtmlContent(pageProperties) ? [] : await listBlockChildrenAll({ blockId: id });
+          return { page: pageRecord, blocks: loadedBlocks };
+        }
+        return { page: null, blocks: [] as Awaited<ReturnType<typeof listBlockChildrenAll>> };
+      })(),
+      DETAIL_LOAD_DEADLINE_MS,
+      `demo_0 Notion detail ${id}`,
+    );
+    page = loaded.page;
+    blocks = loaded.blocks;
+  } catch (error) {
+    console.warn("Could not retrieve demo_0 Notion page:", id, error);
   }
 
-  const pageWithProps = page as unknown as { properties: Record<string, unknown> };
+  if (!page || page.object !== "page") {
+    return <DetailLoadError retryHref={`/demo_0/p/${encodeURIComponent(id)}`} backHref="/demo_0/archive" />;
+  }
+
+  const pageWithProps = page as { properties: Record<string, unknown> };
   const title = getPageTitle(pageWithProps);
-  const blocks = await listBlockChildrenAll({ blockId: id });
   const headings = extractHeadings(blocks);
 
   const propsRecord = pageWithProps.properties ?? {};

@@ -11,9 +11,9 @@
     "deploy": "npx opennextjs-cloudflare build && npx opennextjs-cloudflare deploy",
     "lint": "eslint src scripts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "sync:arena": "node scripts/update_arena_data.mjs",
-    "sync:notes": "node scripts/sync_book_notes.cjs",
-    "sync:notes:notion": "node scripts/sync_book_notes.cjs --sync-notion"
+    "sync:arena": "node scripts/update-arena-data.mjs",
+    "sync:notes": "node scripts/sync-book-notes.cjs",
+    "sync:notes:notion": "node scripts/sync-book-notes.cjs --sync-notion"
   },
   "dependencies": {
     "@gradio/client": "^2.3.1",

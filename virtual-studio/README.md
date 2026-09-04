@@ -141,11 +141,15 @@ npx opennextjs-cloudflare deploy
 
 > `src/app/demo_0/` 是保留的旧版公开路由（如仍需兼容 `/demo_0`）。独立的旧版工程副本已移除，避免被 TypeScript 和 AI Agent 当作第二个应用维护。
 
-> `data/*.pkl`、`.next/`、`.open-next/` 和 `scratch/` 都是本地生成物，不应提交到 Git。网站音乐以 `public/music/` 为发布版本；`reference/` 仅保存原始资料。
+> `data/*.pkl`、`.next/`、`.open-next/` 和 `scratch/` 都是本地生成物，不应提交到 Git。网站音乐以 `public/music/` 为发布版本；仓库根目录的 `reference/` 按 `demos/`、`articles/`、`game-library/` 和 `music/` 分类保存原始资料，详见 `reference/README.md`。
 
 > 兼容资源复核（2026-09-04）：`public/covers/book_1.webp` 至 `book_18.webp`、`public/lab/minireader.mp4`、`public/lab/whisperx_gui.gif` 和 `public/lab/whisperx_gui.png` 暂无源码字面引用，但线上 URL 仍可访问，因此继续保留。只有在确认无外链或取得可靠访问日志后再删除。
 
 > `public/articles/` 中以 slug 命名的文件是规范正文；`【读书笔记】*.html` 仅用于旧 URL 兼容跳转。`sync:notes` 默认不会写入 Notion，只有显式运行 `sync:notes:notion` 才会执行外部更新。源目录可通过 `BOOK_NOTES_SOURCE_DIR` 覆盖。
+
+> `public/notes/` 中的旧中文文件同样只作为兼容跳转页；`public/photos/photo_N_.webp`、`public/covers/book_N.webp` 和 `public/notes_heroes/{id}_{theme}.webp` 属于运行时或历史兼容资源，重命名前必须先更新所有动态 URL 生成逻辑并保留旧地址。
+
+> 详情页 Notion 请求设有 3500ms 单请求超时与 7000ms 总截止时间；超时会优先使用本地回退数据，未知条目显示可重试的友好错误页，以避免 Cloudflare Worker 资源超限。
 
 ### 3.1 页面功能 / Pages
 

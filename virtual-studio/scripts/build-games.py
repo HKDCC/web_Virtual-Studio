@@ -2,7 +2,7 @@
 import json
 import os
 
-df = pd.read_excel(r'..\reference\单机游戏清单_数据表_表格.xlsx').fillna('')
+df = pd.read_excel(r'..\reference\game-library\game-list.xlsx').fillna('')
 
 mapping = [
   ('dead-rising-3', 'DEAD RISING 3', '/covers/dead-rising-3.webp', ['#c05a1d', '#260d05'], '人生最早通关的单机游戏之一，寒冬里用第一台笔记本艰难打完的青春回忆。'),

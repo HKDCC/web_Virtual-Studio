@@ -5,12 +5,16 @@ import { env } from "@/lib/env";
 let cachedClient: Client | null = null;
 let cachedToken: string | null = null;
 
+// Keep server-rendered detail requests from consuming the whole Worker budget
+// when the Notion API is slow or temporarily unavailable.
+export const NOTION_REQUEST_TIMEOUT_MS = 3500;
+
 export function notionClient(): Client | null {
   const token = env.NOTION_TOKEN || process.env.NOTION_TOKEN;
   if (!token || token.trim().length === 0) return null;
   if (cachedClient && cachedToken === token) return cachedClient;
   cachedToken = token;
-  cachedClient = new Client({ auth: token });
+  cachedClient = new Client({ auth: token, timeoutMs: NOTION_REQUEST_TIMEOUT_MS });
   return cachedClient;
 }
 
@@ -20,6 +24,24 @@ export function notion(): Client {
     throw new Error("Missing env: NOTION_TOKEN");
   }
   return client;
+}
+
+/**
+ * Bound a server-side Notion operation so a slow upstream cannot exhaust the
+ * hosting runtime. The Notion client also has a per-request timeout; this
+ * deadline protects multi-page operations such as block pagination.
+ */
+export async function withNotionDeadline<T>(task: Promise<T>, timeoutMs: number, label: string): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`${label} timed out after ${timeoutMs}ms`)), timeoutMs);
+  });
+
+  try {
+    return await Promise.race([task, timeout]);
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
 }
 
 export type NotionPage = Extract<

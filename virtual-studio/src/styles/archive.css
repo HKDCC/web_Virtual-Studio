@@ -296,3 +296,21 @@
   background: var(--accent);
   color: #fff;
 }
+
+@media (max-width: 600px) {
+  .archive-search-box {
+    flex-wrap: wrap;
+    gap: 8px 10px;
+  }
+
+  .archive-search-input-field {
+    min-width: 0;
+    flex: 1 1 calc(100% - 42px);
+  }
+
+  .archive-search-stats {
+    flex: 0 0 100%;
+    padding-left: 24px;
+    text-align: right;
+  }
+}

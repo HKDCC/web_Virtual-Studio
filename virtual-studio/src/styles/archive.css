@@ -12,6 +12,82 @@
   padding-bottom: 24px;
 }
 
+.archive-header-title-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.archive-compact-search {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 7px 14px;
+  min-width: 270px;
+  max-width: 360px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s ease;
+  margin-bottom: 10px;
+}
+
+.archive-compact-search:focus-within {
+  border-color: var(--accent);
+  background: var(--card);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.archive-compact-search-icon {
+  font-size: 13px;
+  opacity: 0.65;
+  flex-shrink: 0;
+}
+
+.archive-compact-search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--ink);
+  min-width: 0;
+}
+
+.archive-compact-search-input::placeholder {
+  color: var(--ink-3);
+}
+
+.archive-compact-search-clear {
+  border: none;
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+  padding: 0 4px;
+  font-size: 11px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+
+.archive-compact-search-clear:hover {
+  color: var(--accent);
+}
+
+.archive-compact-search-count {
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--ink-3);
+  white-space: nowrap;
+  background: var(--card);
+  padding: 2px 7px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+}
+
 .archive-breadcrumb-nav {
   display: flex;
   align-items: center;
@@ -98,116 +174,6 @@
   background: var(--accent-soft);
   border-color: rgba(194, 65, 12, 0.2);
   color: var(--accent);
-}
-
-/* 搜索与多维过滤区 (Search & Filter Section) */
-.archive-filter-bar {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 32px;
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 18px 22px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
-}
-
-.archive-search-box {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 9px 14px;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.archive-search-box:focus-within {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-soft);
-}
-
-.archive-search-icon {
-  font-size: 14px;
-  opacity: 0.7;
-}
-
-.archive-search-input-field {
-  flex: 1;
-  border: none;
-  background: transparent;
-  font-size: 13.5px;
-  font-family: inherit;
-  color: var(--ink);
-  outline: none;
-}
-
-.archive-search-clear {
-  background: none;
-  border: none;
-  color: var(--ink-3);
-  font-size: 13px;
-  cursor: pointer;
-  padding: 2px 6px;
-  border-radius: 4px;
-  transition: color 0.15s;
-}
-
-.archive-search-clear:hover {
-  color: var(--accent);
-}
-
-.archive-search-stats {
-  font-family: var(--mono);
-  font-size: 12px;
-  color: var(--ink-3);
-  white-space: nowrap;
-}
-
-/* 标签云过滤栏 (Tag Cloud Filter Bar) */
-.archive-tag-cloud {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px 8px;
-}
-
-.archive-tag-filter-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-family: var(--mono);
-  font-size: 11px;
-  font-weight: 500;
-  padding: 3px 10px;
-  border-radius: 999px;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  color: var(--ink-2);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  user-select: none;
-}
-
-.archive-tag-filter-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  transform: translateY(-1px);
-}
-
-.archive-tag-filter-btn.active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
-  font-weight: 600;
-  box-shadow: 0 2px 8px rgba(194, 65, 12, 0.25);
-}
-
-.archive-tag-filter-btn .tag-badge-num {
-  font-size: 10px;
-  opacity: 0.8;
 }
 
 /* 笔记 2 列杂志瀑布流网格 (Notes 2-Col Magazine Grid) */

@@ -15,6 +15,7 @@ import { FALLBACK_SITE_DATA } from "@/data/fallbackMagazineData";
 import type {
   AppIconInfo,
   MagazineDataPayload,
+  NoteItem,
   PromptItem,
   SiteItem,
   ToolItem,
@@ -122,6 +123,7 @@ export async function fetchMagazineData(): Promise<MagazineDataPayload> {
   let timeline = FALLBACK_SITE_DATA.timeline;
   let pause = FALLBACK_SITE_DATA.pause;
   let notes = FALLBACK_SITE_DATA.notes;
+  let workflowNotes: NoteItem[] = [];
   let log = FALLBACK_SITE_DATA.log;
 
   const [booksRes, labRes, workflowRes, timelineRes, pauseRes, notesRes, logRes] = await Promise.allSettled([
@@ -296,7 +298,7 @@ export async function fetchMagazineData(): Promise<MagazineDataPayload> {
 
   if (notesRes.status === "fulfilled" && notesRes.value && notesRes.value.length > 0) {
     try {
-      notes = notesRes.value
+      const allParsedNotes = notesRes.value
         .map((p) => {
           const props = p.properties as Record<string, unknown>;
           const rawDate = getDate(props, "Date") || "2026·03·19";
@@ -324,6 +326,13 @@ export async function fetchMagazineData(): Promise<MagazineDataPayload> {
           };
         })
         .sort((a, b) => (b.d || "").localeCompare(a.d || ""));
+
+      // 严格分类隔离：区分【读书笔记】与【人工探索】
+      const isExploration = (n: (typeof allParsedNotes)[number]) =>
+        n.cat === "人工探索" || (Array.isArray(n.tags) && n.tags.includes("人工探索"));
+
+      notes = allParsedNotes.filter((n) => !isExploration(n));
+      workflowNotes = allParsedNotes.filter((n) => isExploration(n));
     } catch (e) {
       console.warn("Error parsing notes:", e);
     }
@@ -363,6 +372,7 @@ export async function fetchMagazineData(): Promise<MagazineDataPayload> {
     timeline: Array.isArray(timeline) ? timeline : [],
     pause: Array.isArray(pause) ? pause : [],
     notes: Array.isArray(notes) ? notes : [],
+    workflowNotes: Array.isArray(workflowNotes) ? workflowNotes : [],
     log: Array.isArray(log) ? log : [],
   };
 

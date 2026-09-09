@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useMemo, useState } from "react";
 import type { TimelineEntry } from "@/lib/changelog";
@@ -23,24 +23,26 @@ const FILTER_MODELS = [
   "Mimo",
 ];
 
-// Official Artificial Analysis Intelligence Index v4.1.1 benchmark data
+// Official Artificial Analysis Intelligence Index v4.3 benchmark data
 const OFFICIAL_AA_INDEX = [
-  { name: "Claude Opus 5 (max)", provider: "Claude", score: 63, color: "#D97757", tag: "Anthropic" },
-  { name: "Claude Fable 5 (with fallback)", provider: "Claude", score: 62, color: "#D97757", tag: "Anthropic" },
-  { name: "GPT-5.6 Sol (max)", provider: "GPT", score: 61, color: "#10A37F", tag: "OpenAI" },
-  { name: "Grok 4.6 (high)", provider: "Grok", score: 61, color: "#1D9BF0", tag: "xAI" },
-  { name: "Kimi K3 (max)", provider: "Kimi", score: 60, color: "#5046E5", tag: "Moonshot" },
-  { name: "GLM-5.3 (max)", provider: "GLM", score: 60, color: "#3B82F6", tag: "Z.ai" },
-  { name: "Qwen3.8 2.4T A95B", provider: "Qwen", score: 58, color: "#FF6A00", tag: "Alibaba" },
-  { name: "GLM-5.3-Flash", provider: "GLM", score: 57, color: "#3B82F6", tag: "Z.ai" },
-  { name: "GPT-5.6 Terra (max)", provider: "GPT", score: 57, color: "#10A37F", tag: "OpenAI" },
-  { name: "Gemini 3.7 Flash (high)", provider: "Gemini", score: 56, color: "#4285F4", tag: "Google" },
-  { name: "DeepSeek V4 Pro 0813 (max)", provider: "DeepSeek", score: 53, color: "#4D6BFE", tag: "DeepSeek" },
-  { name: "GPT-5.6 Luna (max)", provider: "GPT", score: 52, color: "#10A37F", tag: "OpenAI" },
-  { name: "Qwen3.8 27B (xhigh)", provider: "Qwen", score: 52, color: "#FF6A00", tag: "Alibaba" },
-  { name: "MiniMax-M3", provider: "MiniMax", score: 45, color: "#FF3366", tag: "MiniMax" },
-  { name: "Gemini 3.5 Flash-Lite", provider: "Gemini", score: 37, color: "#4285F4", tag: "Google" },
-  { name: "Claude 4.5 Haiku", provider: "Claude", score: 30, color: "#D97757", tag: "Anthropic" },
+  { name: "Claude Fable 5.1 (max)", provider: "Claude", score: 53.4, color: "#D97757", tag: "Anthropic" },
+  { name: "GPT-6 Astra (max)", provider: "GPT", score: 52.8, color: "#10A37F", tag: "OpenAI" },
+  { name: "Claude Opus 5 (max)", provider: "Claude", score: 50.7, color: "#D97757", tag: "Anthropic" },
+  { name: "Claude Fable 5 (max)", provider: "Claude", score: 49.7, color: "#D97757", tag: "Anthropic" },
+  { name: "Muse Spark 1.3 (max)", provider: "Meta", score: 48.2, color: "#0081FB", tag: "Meta" },
+  { name: "GPT-5.6 Sol (max)", provider: "GPT", score: 47.1, color: "#10A37F", tag: "OpenAI" },
+  { name: "GLM-5.3 (max)", provider: "GLM", score: 44.9, color: "#3B82F6", tag: "Z.ai" },
+  { name: "Grok 4.6 (high)", provider: "Grok", score: 44.4, color: "#1D9BF0", tag: "xAI" },
+  { name: "Kimi K3 (max)", provider: "Kimi", score: 43.8, color: "#5046E5", tag: "Moonshot" },
+  { name: "GPT-5.6 Terra (max)", provider: "GPT", score: 42.3, color: "#10A37F", tag: "OpenAI" },
+  { name: "GLM-5.3-Flash", provider: "GLM", score: 41.9, color: "#3B82F6", tag: "Z.ai" },
+  { name: "Gemini 3.8 Flash (high)", provider: "Gemini", score: 41.2, color: "#4285F4", tag: "Google" },
+  { name: "Qwen3.8 2.4T A95B", provider: "Qwen", score: 40.0, color: "#FF6A00", tag: "Alibaba" },
+  { name: "GPT-5.6 Luna (max)", provider: "GPT", score: 37.5, color: "#10A37F", tag: "OpenAI" },
+  { name: "DeepSeek V4 Pro 0813 (max)", provider: "DeepSeek", score: 36.3, color: "#4D6BFE", tag: "DeepSeek" },
+  { name: "Qwen3.8 27B (xhigh)", provider: "Qwen", score: 33.9, color: "#FF6A00", tag: "Alibaba" },
+  { name: "MiniMax-M3", provider: "MiniMax", score: 29.6, color: "#FF3366", tag: "MiniMax" },
+  { name: "Gemini 3.5 Flash-Lite", provider: "Gemini", score: 22.7, color: "#4285F4", tag: "Google" },
 ];
 
 function getModelLogoUrl(modelName: string): string | null {
@@ -57,6 +59,7 @@ function getModelLogoUrl(modelName: string): string | null {
   if (lower.includes("doubao") || lower.includes("豆包") || lower.includes("云雀")) return "https://unpkg.com/@lobehub/icons-static-svg@latest/icons/doubao.svg";
   if (lower.includes("mimo")) return "/mimo.png";
   if (lower.includes("tencent") || lower.includes("hunyuan") || lower.includes("hy4")) return "https://unpkg.com/@lobehub/icons-static-svg@latest/icons/tencent.svg";
+  if (lower.includes("meta") || lower.includes("muse")) return "https://unpkg.com/@lobehub/icons-static-svg@latest/icons/meta.svg";
   return null;
 }
 
@@ -174,7 +177,9 @@ export function TimelineView({ entries = [] }: TimelineViewProps) {
         <div className="aa-chart-grid">
           {activeBoard === "arena"
             ? displayedArena.map((item, idx) => {
-                const percentage = ((item.score - 1450) / (1691 - 1450)) * 100;
+                const arenaMax = ARENA_WEBDEV_LEADERBOARD[0]?.score || 1800;
+                const arenaMin = 1500;
+                const percentage = ((item.score - arenaMin) / (arenaMax - arenaMin)) * 100;
                 const isTop3 = idx < 3;
 
                 return (
@@ -215,7 +220,8 @@ export function TimelineView({ entries = [] }: TimelineViewProps) {
               })
             : displayedAA.map((item, idx) => {
                 const logo = getModelLogoUrl(item.provider);
-                const percentage = (item.score / 70) * 100;
+                const aaMax = OFFICIAL_AA_INDEX[0]?.score || 55;
+                const percentage = (item.score / aaMax) * 100;
                 const isTop3 = idx < 3;
 
                 return (
@@ -259,10 +265,6 @@ export function TimelineView({ entries = [] }: TimelineViewProps) {
 
       {/* ═══════════════ 2. 模型筛选器 ═══════════════ */}
       <div className="filter-bar">
-        <div className="filter-title">
-          <span>⚡</span>
-          <span>模型家族速选：</span>
-        </div>
         <div className="filter-chips">
           {FILTER_MODELS.map((model) => (
             <button

@@ -1,5 +1,6 @@
+import { redirect } from "next/navigation";
 import { NotionBlocks } from "@/components/NotionBlocks";
-import { getPageTitle } from "@/lib/notionHelpers";
+import { getPageTitle, getSelect, getMultiSelect } from "@/lib/notionHelpers";
 import { listBlockChildrenAll, notion, withNotionDeadline, type NotionFullBlock } from "@/lib/notion";
 import { TableOfContentsWrapper } from "@/components/TableOfContentsWrapper";
 import { BookDetailHeader } from "@/components/detail/BookDetailHeader";
@@ -60,6 +61,12 @@ export default async function NotionPageRoute(props: {
   const { id } = await props.params;
   const { from, embed } = await props.searchParams;
 
+  // 针对工作流笔记，自动重定向至工作流专属专栏
+  const cleanId = id.replace(/-/g, "").toLowerCase();
+  if (cleanId === "e774b57fe15a83e7b633818781fe9a41") {
+    redirect(`/workflow/notes?id=${encodeURIComponent(id)}`);
+  }
+
   let page: Record<string, unknown> | null = null;
   let blocks: NotionFullBlock[] = [];
 
@@ -98,6 +105,13 @@ export default async function NotionPageRoute(props: {
     title = getPageTitle(pageWithProps);
     propsRecord = pageWithProps.properties ?? {};
 
+    // 针对工作流笔记（人工探索），自动重定向至工作流专属专栏
+    const noteCategory = getSelect(propsRecord, "Category");
+    const noteTags = getMultiSelect(propsRecord, "Tags");
+    if (noteCategory === "人工探索" || noteTags.includes("人工探索")) {
+      redirect(`/workflow/notes?id=${encodeURIComponent(id)}`);
+    }
+
     // Extract Page Icon
     if (isObj(page.icon)) {
       const ic = page.icon as Record<string, unknown>;
@@ -121,6 +135,9 @@ export default async function NotionPageRoute(props: {
     const fbPause = FALLBACK_SITE_DATA.pause.find((p) => p.id === id || p.t === decodedId);
 
     if (fbNote) {
+      if (fbNote.cat === "人工探索" || fbNote.tags?.includes("人工探索")) {
+        redirect(`/workflow/notes?id=${encodeURIComponent(id)}`);
+      }
       title = fbNote.title;
       propsRecord = {
         Category: { type: "select", select: { name: fbNote.cat } },
@@ -261,4 +278,3 @@ export default async function NotionPageRoute(props: {
     </article>
   );
 }
-

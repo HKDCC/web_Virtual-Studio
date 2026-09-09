@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -7,10 +7,10 @@ import { ARENA_WEBDEV_LEADERBOARD } from "@/data/arenaLeaderboardData";
 export function ModelEvolutionSection() {
   const [showAll, setShowAll] = useState(false);
 
-  // Top score for calculating relative visual bar widths (max is 1691)
-  const maxScore = ARENA_WEBDEV_LEADERBOARD[0]?.score || 1700;
-  // Floor score for meaningful bar contrast (min scale 1400)
-  const minBaseScore = 1450;
+  // Top score for calculating relative visual bar widths (dynamic from #1 model)
+  const maxScore = ARENA_WEBDEV_LEADERBOARD[0]?.score || 1800;
+  // Floor score for meaningful bar contrast (min scale 1500)
+  const minBaseScore = 1500;
 
   const displayList = showAll ? ARENA_WEBDEV_LEADERBOARD : ARENA_WEBDEV_LEADERBOARD.slice(0, 6);
 

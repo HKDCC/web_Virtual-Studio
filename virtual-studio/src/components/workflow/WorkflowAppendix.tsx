@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { RawNoteItem } from "@/lib/graphEngine";
@@ -8,9 +8,24 @@ interface WorkflowAppendixProps {
 }
 
 export function WorkflowAppendix({ notes = [] }: WorkflowAppendixProps) {
-  // Filter for 人工探索 notes, fallback to all available notes if none
-  const explorationNotes = notes.filter((n) => n.category === "人工探索");
-  const displayNotes = explorationNotes.length > 0 ? explorationNotes : notes.slice(0, 8);
+  // Filter strictly for 人工探索 notes, fallback to default workflow exploration note if none
+  const explorationNotes = notes.filter(
+    (n) => n.category === "人工探索" || (Array.isArray(n.tags) && n.tags.includes("人工探索"))
+  );
+  const displayNotes =
+    explorationNotes.length > 0
+      ? explorationNotes
+      : [
+          {
+            id: "e774b57f-e15a-83e7-b633-818781fe9a41",
+            title: "AI agent如何在2天内从0到1产出出版社级别的译文？",
+            category: "人工探索",
+            date: "2026-07-19",
+            tags: ["大模型翻译", "Agent自愈", "Pandoc排版"],
+            excerpt:
+              "全书英文原版 31,136 单词，两日内完成高品质出版级汉化与自动排版。详细拆解为什么初译选择 Gemini 3.5 Flash 100万 Token 原生大窗口、审校阶段为何引入 DeepSeek V4 Pro 专家模式挑错，以及 Agent 错题本自愈机制如何彻底替代传统表格翻译。",
+          },
+        ];
 
   return (
     <section id="workflow-appendix" style={{ marginTop: "50px", marginBottom: "40px", borderTop: "1px solid var(--line)", paddingTop: "32px" }}>

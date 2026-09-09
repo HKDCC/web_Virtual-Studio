@@ -1,6 +1,6 @@
 import { queryDatabaseAll } from "@/lib/notion";
 import { env } from "@/lib/env";
-import { getPageTitle } from "@/lib/notionHelpers";
+import { getPageTitle, getSelect, getMultiSelect } from "@/lib/notionHelpers";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -18,12 +18,18 @@ export async function GET() {
     ]);
 
     const items = [
-      ...notes.map((p) => ({
-        id: p.id,
-        title: getPageTitle(p),
-        type: "note" as const,
-        url: `/p/${p.id}`,
-      })),
+      ...notes.map((p) => {
+        const props = p.properties as unknown as Record<string, unknown>;
+        const cat = getSelect(props, "Category");
+        const tags = getMultiSelect(props, "Tags");
+        const isExploration = cat === "人工探索" || tags.includes("人工探索");
+        return {
+          id: p.id,
+          title: getPageTitle(p),
+          type: isExploration ? ("workflow" as const) : ("note" as const),
+          url: isExploration ? `/workflow/notes?id=${p.id}` : `/p/${p.id}`,
+        };
+      }),
       ...books.map((p) => ({
         id: p.id,
         title: getPageTitle(p),

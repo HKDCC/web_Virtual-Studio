@@ -96,5 +96,6 @@ export interface MagazineDataPayload {
   timeline: TimelineItem[];
   pause: PauseItem[];
   notes: NoteItem[];
+  workflowNotes?: NoteItem[];
   log: LogItem[];
 }

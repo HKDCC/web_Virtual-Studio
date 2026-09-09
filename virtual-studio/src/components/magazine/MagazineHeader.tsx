@@ -14,6 +14,7 @@ interface MagazineHeaderProps {
   pause?: PauseItem[];
   timeline?: TimelineItem[];
   notes?: NoteItem[];
+  workflowNotes?: NoteItem[];
   log?: LogItem[];
 }
 
@@ -34,6 +35,7 @@ export function MagazineHeader({
   pause = [],
   timeline = [],
   notes = [],
+  workflowNotes = [],
   log = [],
 }: MagazineHeaderProps) {
   const pathname = usePathname();
@@ -159,24 +161,6 @@ export function MagazineHeader({
             </div>
           </div>
           <div className="actions">
-            <div className="theme-versions" style={{ display: "flex", gap: "6px", alignItems: "center" }}>
-              <Link
-                href="/demo_0"
-                className="version-pill"
-                title="切换至 demo_0 原版方案"
-                style={{
-                  fontFamily: "var(--mono)",
-                  fontSize: "11px",
-                  padding: "4px 8px",
-                  border: "1px solid var(--line)",
-                  borderRadius: "999px",
-                  color: "var(--ink-2)",
-                  textDecoration: "none",
-                }}
-              >
-                demo_0 备份
-              </Link>
-            </div>
             <button
               className="icon-btn"
               id="btnSearch"
@@ -313,6 +297,7 @@ export function MagazineHeader({
         pause={pause}
         timeline={timeline}
         notes={notes}
+        workflowNotes={workflowNotes}
         log={log}
       />
     </>

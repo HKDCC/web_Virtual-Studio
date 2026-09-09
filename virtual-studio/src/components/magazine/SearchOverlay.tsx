@@ -21,6 +21,7 @@ interface SearchOverlayProps {
   pause?: PauseItem[];
   timeline?: TimelineItem[];
   notes?: NoteItem[];
+  workflowNotes?: NoteItem[];
   log?: LogItem[];
 }
 
@@ -34,6 +35,7 @@ export function SearchOverlay({
   pause = [],
   timeline = [],
   notes = [],
+  workflowNotes = [],
   log = [],
 }: SearchOverlayProps) {
   const [query, setQuery] = useState("");
@@ -46,12 +48,23 @@ export function SearchOverlay({
     ...sites.map((x) => ({ k: "站点", t: x.t, s: x.d, href: "#workflow" })),
     ...pause.map((x) => ({ k: "隙", t: x.t, s: `${x.loc} · ${x.d}`, href: x.id ? `/p/${x.id}` : "#pause" })),
     ...timeline.map((x) => ({ k: "模型", t: x.t, s: x.note, href: "#timeline" })),
-    ...notes.map((x) => ({
-      k: "笔记",
+    ...workflowNotes.map((x) => ({
+      k: "工作流",
       t: x.title || x.text,
       s: x.src || x.cat || x.d,
-      href: x.htmlContent || (x.id ? `/p/${x.id}` : "#notes"),
+      href: `/workflow/notes?id=${x.id}`,
     })),
+    ...notes.map((x) => {
+      const isExploration = x.cat === "人工探索" || (Array.isArray(x.tags) && x.tags.includes("人工探索"));
+      return {
+        k: isExploration ? "工作流" : "笔记",
+        t: x.title || x.text,
+        s: x.src || x.cat || x.d,
+        href: isExploration
+          ? `/workflow/notes?id=${x.id}`
+          : (x.htmlContent || (x.id ? `/p/${x.id}` : "#notes")),
+      };
+    }),
     ...log.map((x) => ({ k: "足迹", t: x.t, s: x.d, href: x.id ? `/p/${x.id}` : "#changelog" })),
   ];
 

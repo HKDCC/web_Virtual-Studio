@@ -57,16 +57,18 @@ export default async function ArchivePage() {
     downloadUrl: b.downloadUrl,
   }));
 
-  const notes: ArchiveNote[] = data.notes.map((n) => ({
-    id: n.id || n.title,
-    title: n.title,
-    category: n.cat,
-    date: n.d,
-    excerpt: n.text,
-    tags: n.tags || [n.cat],
-    coverUrl: null,
-    htmlContent: n.htmlContent,
-  }));
+  const notes: ArchiveNote[] = data.notes
+    .filter((n) => n.cat !== "人工探索" && !n.tags?.includes("人工探索"))
+    .map((n) => ({
+      id: n.id || n.title,
+      title: n.title,
+      category: n.cat,
+      date: n.d,
+      excerpt: n.text,
+      tags: n.tags || [n.cat],
+      coverUrl: null,
+      htmlContent: n.htmlContent,
+    }));
 
   return (
     <ArchiveTabs

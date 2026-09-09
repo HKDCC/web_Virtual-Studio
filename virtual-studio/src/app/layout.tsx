@@ -52,6 +52,7 @@ export default async function RootLayout({
               pause={data.pause}
               timeline={data.timeline}
               notes={data.notes}
+              workflowNotes={data.workflowNotes}
               log={data.log}
             />
             <main id="main">{children}</main>

@@ -221,7 +221,8 @@
 }
 
 /* 2. 筛选器 */
-.model-filter-bar {
+.model-filter-bar,
+.filter-bar {
   display: flex;
   align-items: center;
   gap: 16px;

@@ -18,6 +18,57 @@ export interface TimelineEntry {
 
 export const MOCK_TIMELINE: TimelineEntry[] = [
   {
+    id: "timeline-2026-09-03-gpt",
+    name: "GPT-6 Astra",
+    model: "GPT",
+    date: "2026-09-03",
+    version: "GPT-6 Astra",
+    highlights: "新一代全能旗舰：1.05M Context、128K 输出，定价 $10/$50（每百万输入/输出 Token）；主打 Computer Use、Coding、Research、专业工作与长程 Agent。",
+    aaIntelligence: 66
+  },
+  {
+    id: "timeline-2026-09-02-gemini-cyber",
+    name: "Gemini 3.8 Flash Cyber",
+    model: "Gemini",
+    date: "2026-09-02",
+    version: "3.8 Flash Cyber",
+    highlights: "面向受信任防御方的特化网络安全版本：强化威胁建模、漏洞自动挖掘与红蓝对抗推演。"
+  },
+  {
+    id: "timeline-2026-09-02-gemini",
+    name: "Gemini 3.8 Flash",
+    model: "Gemini",
+    date: "2026-09-02",
+    version: "3.8 Flash",
+    highlights: "长程编程与 Autonomous Agents 专精：100 万 Context、64K 最大输出；限时促销价 $0.75/$3.75（每百万输入/输出 Token）。",
+    aaIntelligence: 59
+  },
+  {
+    id: "timeline-2026-09-02-qwen",
+    name: "Qwen3.8-Max-0902",
+    model: "Qwen",
+    date: "2026-09-02",
+    version: "Qwen3.8-Max-0902",
+    highlights: "3.8 Max 增强快照：原生 100 万 Context；重点提升 Coding、长程 Agent、多工具协作与复杂视觉理解。"
+  },
+  {
+    id: "timeline-2026-09-01-claude-mythos",
+    name: "Claude Mythos 5.1",
+    model: "Claude",
+    date: "2026-09-01",
+    version: "Mythos 5.1",
+    highlights: "特化安全分支：与 Fable 5.1 同底模——但收紧网络访问权限并执行更严苛的安全沙箱策略。"
+  },
+  {
+    id: "timeline-2026-09-01-claude-fable",
+    name: "Claude Fable 5.1",
+    model: "Claude",
+    date: "2026-09-01",
+    version: "Fable 5.1",
+    highlights: "Claude 5.1 前沿分支：聚焦高阶复杂推理与代码任务，全面适配开放工具链与动态 Agent 工作流。",
+    aaIntelligence: 66
+  },
+  {
     id: "timeline-2026-08-26-glm",
     name: "GLM-5.3-Flash",
     model: "GLM",

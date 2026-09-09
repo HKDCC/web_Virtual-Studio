@@ -254,38 +254,6 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
     }
   }, [activeNote]);
 
-  const [isExpandedTags, setIsExpandedTags] = useState(false);
-
-  // Extract all unique tags for active tab
-  const noteTagsList = useMemo(() => {
-    const map = new Map<string, number>();
-    props.notes.forEach((n) => {
-      n.tags?.forEach((t) => {
-        if (t !== "读书笔记") { // filter redundant category tag
-          map.set(t, (map.get(t) || 0) + 1);
-        }
-      });
-    });
-    return Array.from(map.entries())
-      .sort((a, b) => b[1] - a[1])
-      .map(([tag, count]) => ({ tag, count }));
-  }, [props.notes]);
-
-  const bookTagsList = useMemo(() => {
-    const map = new Map<string, number>();
-    props.books.forEach((b) => {
-      b.tags?.forEach((t) => {
-        map.set(t, (map.get(t) || 0) + 1);
-      });
-    });
-    return Array.from(map.entries())
-      .sort((a, b) => b[1] - a[1])
-      .map(([tag, count]) => ({ tag, count }));
-  }, [props.books]);
-
-  const currentTagsList = activeTab === "books" ? bookTagsList : noteTagsList;
-  const visibleTagsList = isExpandedTags ? currentTagsList : currentTagsList.slice(0, 12);
-
   const filteredBooks = useMemo(() => {
     let list = props.books;
     if (selectedTag) {
@@ -304,7 +272,7 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
   }, [props.books, selectedTag, searchQuery]);
 
   const filteredNotes = useMemo(() => {
-    let list = props.notes;
+    let list = props.notes.filter((n) => n.category !== "人工探索" && !n.tags?.includes("人工探索"));
     if (selectedTag) {
       list = list.filter((n) => n.tags?.includes(selectedTag));
     }
@@ -362,12 +330,40 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
 
       {/* Header Box */}
       <div className="archive-header-box">
-        <h1 className="archive-page-title">
-          {activeTab === "books" ? "书库 · 藏书与精选" : "全部笔记 · 智识资产"}
-        </h1>
-        <p className="archive-page-desc">
-          收藏、深度阅读与知识沉淀。这里存放所有经过系统化思考并值得反复研读的智识资产。
-        </p>
+        <div className="archive-header-title-row">
+          <div>
+            <h1 className="archive-page-title">
+              {activeTab === "books" ? "书库 · 藏书与精选" : "全部笔记 · 智识资产"}
+            </h1>
+            <p className="archive-page-desc">
+              收藏、深度阅读与知识沉淀。这里存放所有经过系统化思考并值得反复研读的智识资产。
+            </p>
+          </div>
+
+          <div className="archive-compact-search">
+            <span className="archive-compact-search-icon">🔍</span>
+            <input
+              type="text"
+              placeholder={activeTab === "books" ? "搜索藏书、作者、主题..." : "搜索笔记标题、关键词..."}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="archive-compact-search-input"
+            />
+            {searchQuery && (
+              <button
+                className="archive-compact-search-clear"
+                onClick={() => setSearchQuery("")}
+                title="清空搜索"
+                type="button"
+              >
+                ✕
+              </button>
+            )}
+            <span className="archive-compact-search-count">
+              {currentCount} / {totalCount} 篇
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Segmented Tab Switcher */}
@@ -381,7 +377,7 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
           }}
           type="button"
         >
-          <span>📚 书库 · Books</span>
+          <span>书库 · Books</span>
           <span className="archive-tab-count">{props.books.length}</span>
         </button>
         <button
@@ -393,85 +389,9 @@ function ArchiveTabsContent(props: { books: ArchiveBook[]; notes: ArchiveNote[];
           }}
           type="button"
         >
-          <span>📝 全部笔记 · Notes</span>
+          <span>全部笔记 · Notes</span>
           <span className="archive-tab-count">{props.notes.length}</span>
         </button>
-      </div>
-
-      {/* Search & Tag Filter Bar */}
-      <div className="archive-filter-bar">
-        <div className="archive-search-box">
-          <span className="archive-search-icon">🔍</span>
-          <input
-            type="text"
-            placeholder={activeTab === "books" ? "搜索书名、作者、标签、主题..." : "搜索笔记标题、标签、关键词、核心摘要..."}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="archive-search-input-field"
-          />
-          {searchQuery && (
-            <button
-              className="archive-search-clear"
-              onClick={() => setSearchQuery("")}
-              title="清空搜索"
-              type="button"
-            >
-              ✕
-            </button>
-          )}
-          <span className="archive-search-stats">
-            显示 {currentCount} / 共 {totalCount} 篇
-          </span>
-        </div>
-
-        {/* Dynamic Tag Filter Cloud */}
-        {currentTagsList.length > 0 && (
-          <div className="archive-tag-cloud">
-            <button
-              className={`archive-tag-filter-btn ${selectedTag === null ? "active" : ""}`}
-              onClick={() => setSelectedTag(null)}
-              type="button"
-            >
-              <span>全部</span>
-              <span className="tag-badge-num">({totalCount})</span>
-            </button>
-
-            {visibleTagsList.map(({ tag, count }) => {
-              const isSelected = selectedTag === tag;
-              return (
-                <button
-                  key={tag}
-                  className={`archive-tag-filter-btn ${isSelected ? "active" : ""}`}
-                  onClick={() => setSelectedTag(isSelected ? null : tag)}
-                  type="button"
-                >
-                  <span>{tag}</span>
-                  <span className="tag-badge-num">({count})</span>
-                </button>
-              );
-            })}
-
-            {currentTagsList.length > 12 && (
-              <button
-                className="archive-tag-filter-btn"
-                onClick={() => setIsExpandedTags(!isExpandedTags)}
-                type="button"
-                style={{
-                  background: "var(--accent-soft)",
-                  borderColor: "rgba(194, 65, 12, 0.2)",
-                  color: "var(--accent)",
-                  fontWeight: 600,
-                }}
-              >
-                <span>
-                  {isExpandedTags
-                    ? "收起 ▴"
-                    : `更多标签 (+${currentTagsList.length - 12}) ▾`}
-                </span>
-              </button>
-            )}
-          </div>
-        )}
       </div>
 
       {/* Main Content Area */}

@@ -1,4 +1,4 @@
-﻿import { notionClient, queryDatabaseAll, listBlockChildrenAll, NotionFullBlock } from "@/lib/notion";
+import { notionClient, queryDatabaseAll, listBlockChildrenAll, NotionFullBlock } from "@/lib/notion";
 import { getPageTitle, getDate, getSelect, getMultiSelect, getRichText } from "@/lib/notionHelpers";
 import { env } from "@/lib/env";
 import { NotionBlocks } from "@/components/NotionBlocks";
@@ -49,9 +49,11 @@ export default async function WorkflowNotesDocPage(props: {
     }
   }
 
-  // 2. Filter for 人工探索 notes, fallback to all notes
-  const explorationNotes = realNotes.filter((n) => n.category === "人工探索");
-  const displayNotes = explorationNotes.length > 0 ? explorationNotes : realNotes;
+  // 2. Filter strictly for 人工探索 notes, fallback to default workflow note
+  const explorationNotes = realNotes.filter(
+    (n) => n.category === "人工探索" || (Array.isArray(n.tags) && n.tags.includes("人工探索"))
+  );
+  const displayNotes = explorationNotes;
 
   // Safe fallback if Notion DB query returned empty
   const defaultNote: NoteDocItem = {

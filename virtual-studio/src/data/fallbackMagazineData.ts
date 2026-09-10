@@ -257,7 +257,7 @@ export const FALLBACK_SITE_DATA: MagazineDataPayload = {
       tag: "3D 空间",
       t: "余映 AFTER HOURS",
       d: "一间采用红砖、水泥与复古影音美学的可玩 3D 公寓。Three.js 离线单文件运行，包含 271 件独立资产与第一人称物理交互。",
-      links: [["GitHub", "https://github.com/HKDCC/apartment-retro"], ["Demo", "https://github.com/HKDCC/apartment-retro"]],
+      links: [["GitHub", "https://github.com/HKDCC/apartment-retro"], ["Demo", "/apartment-retro.html"]],
       iconUrl: "/lab/apartment_retro.png",
       appIcon: { type: "image", value: "/lab/icons/apartment_retro.png" },
     },

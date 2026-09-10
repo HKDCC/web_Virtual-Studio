@@ -151,8 +151,8 @@ export default async function HomePage() {
                         <a
                           key={li}
                           href={linkUrl}
-                          target={linkUrl.startsWith("http") ? "_blank" : undefined}
-                          rel={linkUrl.startsWith("http") ? "noopener noreferrer" : undefined}
+                          target={linkUrl.startsWith("http") || linkUrl.endsWith(".html") ? "_blank" : undefined}
+                          rel={linkUrl.startsWith("http") || linkUrl.endsWith(".html") ? "noopener noreferrer" : undefined}
                         >
                           {linkText} ↗
                         </a>

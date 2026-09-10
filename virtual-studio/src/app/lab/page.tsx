@@ -15,7 +15,8 @@ export default async function LabPage() {
     let appIcon = p.appIcon;
 
     if (!appIcon) {
-      if (t.includes("whisper")) appIcon = { type: "image", value: "/lab/icons/whisperx.png" };
+      if (t.includes("余映") || t.includes("apartment") || t.includes("after hours")) appIcon = { type: "image", value: "/lab/icons/apartment_retro.png" };
+      else if (t.includes("whisper")) appIcon = { type: "image", value: "/lab/icons/whisperx.png" };
       else if (t.includes("reader") || t.includes("minireader")) appIcon = { type: "image", value: "/lab/icons/minireader.png" };
       else if (t.includes("cassette") || t.includes("magiccutter") || t.includes("cutter")) appIcon = { type: "image", value: "/lab/icons/magiccutter.png" };
       else if (t.includes("memo") || t.includes("swiftmemo")) appIcon = { type: "image", value: "/lab/icons/swiftmemo.png" };
@@ -27,6 +28,8 @@ export default async function LabPage() {
     const ghLink = p.links?.find(([name]) => name.toLowerCase().includes("github") || name.toLowerCase().includes("源码"))?.[1] || null;
     const demoLink = p.links?.find(([name]) => name.toLowerCase().includes("demo") || name.toLowerCase().includes("演示") || name.toLowerCase().includes("在线") || name.toLowerCase().includes("体验") || name.toLowerCase().includes("下载"))?.[1] || p.links?.[0]?.[1] || null;
 
+    const defaultCover = (t.includes("余映") || t.includes("apartment") || t.includes("after hours")) ? "/lab/apartment_retro.png" : null;
+
     return {
       id: p.id || `lab-${idx}`,
       title,
@@ -35,7 +38,7 @@ export default async function LabPage() {
       description: p.d || "",
       github: ghLink,
       demo: demoLink,
-      iconUrl: p.iconUrl || null,
+      iconUrl: p.iconUrl || defaultCover || null,
       appIcon: appIcon || null,
     };
   });

@@ -73,6 +73,7 @@ export default async function HomePage() {
             const links = Array.isArray(p?.links) ? p.links : [];
 
             const localFallback =
+              title.includes("余映") || title.includes("apartment") || title.includes("Apartment") || title.includes("AFTER HOURS") ? "/lab/apartment_retro.png" :
               title.includes("WhisperX") || title.includes("Whisper") ? "/lab/whisperx_gui.mp4" :
               title.includes("MiniReader") || title.includes("Reader") ? "/lab/minireader.gif" :
               title.includes("Retro") || title.includes("Snake") ? "/lab/retro_pixel_snake.gif" :
@@ -82,6 +83,7 @@ export default async function HomePage() {
             const imgSrc = localFallback || p?.iconUrl;
 
             const localAppIcon =
+              title.includes("余映") || title.includes("apartment") || title.includes("Apartment") || title.includes("AFTER HOURS") ? { type: "image" as const, value: "/lab/icons/apartment_retro.png" } :
               title.includes("WhisperX") || title.includes("Whisper") ? { type: "image" as const, value: "/lab/icons/whisperx.png" } :
               title.includes("MiniReader") || title.includes("Reader") ? { type: "image" as const, value: "/lab/icons/minireader.png" } :
               title.includes("Cassette") || title.includes("MagicCutter") || title.includes("Cutter") ? { type: "image" as const, value: "/lab/icons/magiccutter.png" } :

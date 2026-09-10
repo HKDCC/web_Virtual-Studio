@@ -222,6 +222,22 @@ export async function fetchMagazineData(): Promise<MagazineDataPayload> {
           appIcon: extractPageIcon(p, title),
         };
       });
+
+      // 确保《余映 AFTER HOURS》固定排在实验室第一位
+      const apartmentIdx = lab.findIndex((item) => {
+        const title = (item.t || "").toLowerCase();
+        return title.includes("余映") || title.includes("apartment") || title.includes("after hours");
+      });
+      if (apartmentIdx > 0) {
+        const [aptItem] = lab.splice(apartmentIdx, 1);
+        lab.unshift(aptItem);
+      } else if (apartmentIdx === -1) {
+        const fallbackApt = FALLBACK_SITE_DATA.lab.find((item) => {
+          const title = (item.t || "").toLowerCase();
+          return title.includes("余映") || title.includes("apartment") || title.includes("after hours");
+        });
+        if (fallbackApt) lab.unshift(fallbackApt);
+      }
     } catch (e) {
       console.warn("Error parsing lab:", e);
     }

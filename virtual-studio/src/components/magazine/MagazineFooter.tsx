@@ -25,7 +25,7 @@ export function MagazineFooter() {
         <br />
         杂志编辑式个人站 · Noto Serif SC / JetBrains Mono · 深度接入 Notion 知识库与无头 CMS 架构
       </p>
-      <p className="colophon" style={{ textAlign: "center" }}>
+      <p className="colophon" style={{ textAlign: "center", maxWidth: "none" }}>
         <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">
           赣ICP备2026026184号-2
         </a>
